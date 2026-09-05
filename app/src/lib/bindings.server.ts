@@ -24,6 +24,11 @@ type AppEnv = {
   CONTAINER?: DurableObjectNamespace;
   HF_ENV?: string;
   APP_SLUG?: string;
+  /** systeme.io API key for newsletter sync. Set with:
+   *    wrangler secret put SYSTEME_API_KEY --config wrangler.production.jsonc
+   *  Absent is a supported state -- signups still persist to D1, they just
+   *  are not pushed to the provider until a key exists. */
+  SYSTEME_API_KEY?: string;
 };
 
 export function bindings(): AppEnv {

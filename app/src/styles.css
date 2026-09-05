@@ -1421,6 +1421,13 @@ html {
 }
 .newsletter-submit:hover { transform: scale(1.02); }
 .newsletter-thanks { margin-top: 2rem; color: #e3c569; font-size: 1.05rem; font-weight: 500; }
+.newsletter-error {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  /* The newsletter band sits on --sky-ink, so the error has to read on a dark
+     ground -- the site's usual #b3261e would all but vanish there. */
+  color: #ffb4a8;
+}
 .newsletter-privacy { margin-top: 1.25rem; color: #8a8172; font-size: 0.78rem; }
 
 /* ---- Homepage overview sections (trust line, advantages, booking spec, benefits, stats, globe, closing) ---- */
