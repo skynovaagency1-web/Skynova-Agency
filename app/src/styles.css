@@ -2745,6 +2745,69 @@ html {
 .blog-title-link:hover { color: var(--sky-coral-deep); }
 .blog-media-link { display: block; }
 
+/* ---- Page-level flight rail (components/site/FlightRail.tsx) ------------
+   A FIXED route down the left edge, visible across every section, with the
+   aircraft flying it over the whole page scroll and touching down at each
+   heading. Shown on phones too, at a narrower width -- it was asked for
+   there specifically, so the component does not gate on a breakpoint. */
+.flight-rail {
+  display: block;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 34px;
+  height: 100vh;
+  /* Above section backgrounds so the route reads as continuous across them,
+     but inert to input so it never eats a tap -- and so the aircraft's
+     backdrop sampling sees the page rather than its own canvas. */
+  z-index: 5;
+  pointer-events: none;
+  /* Hidden until the route's anchor section arrives; the component fades it
+     in by writing opacity. It must not show over the hero. */
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+@media (min-width: 1024px) { .flight-rail { width: 52px; } }
+@media (min-width: 1440px) { .flight-rail { width: 64px; } }
+
+.flight-rail-svg,
+.flight-rail-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.flight-rail-track {
+  fill: none;
+  stroke: var(--sky-line);
+  stroke-width: 2;
+  stroke-dasharray: 6 8;
+  stroke-linecap: round;
+}
+
+/* Drawn in as the aircraft descends: pathLength=1000 in the markup makes the
+   dashoffset the component sets a direct 0..1000 progress value. */
+.flight-rail-trail {
+  fill: none;
+  stroke: var(--sky-coral);
+  stroke-width: 2.5;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  stroke-linecap: round;
+}
+
+/* The strips the aircraft touches down on at the top and bottom of the page. */
+.flight-rail-surface {
+  stroke: var(--sky-line);
+  stroke-width: 1.5;
+  opacity: 0.85;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flight-rail-trail { stroke-dashoffset: 0; }
+}
+
 /* ---- Infinite marquee band (components/site/MarqueeBand.tsx) ------------
    Seamless because the track holds exactly two identical groups and travels
    -50%: at that point copy two sits where copy one began, so the reset is
