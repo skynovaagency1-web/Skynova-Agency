@@ -4,3 +4,14 @@ app/dist/
 app/.wrangler/
 .DS_Store
 *.log
+
+# Secrets. Production values live in Cloudflare's secret store
+# (wrangler secret put), never in the repo. These are the local equivalents.
+#   .dev.vars  -- what `wrangler dev` reads for Worker secrets
+#   .env*      -- what Vite reads; kept out too, in case one is ever added
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+.env
+.env.*
+!.env.example

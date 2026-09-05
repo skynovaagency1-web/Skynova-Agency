@@ -1,0 +1,11 @@
+# Local Worker secrets for `wrangler dev`. COMMITTED as a template -- copy to
+# .dev.vars and fill in. Never put real values in this file.
+#
+# Production does NOT read this. Set production values with:
+#   wrangler secret put <NAME> --config wrangler.production.jsonc
+#
+# systeme.io API key, used to sync newsletter signups to the contact list.
+# Get it from: systeme.io dashboard -> profile settings -> "Public API keys".
+# Optional: with no key, signups still persist to D1, they just are not
+# forwarded to systeme.io (the row's sync_error records why).
+SYSTEME_API_KEY=

@@ -18,11 +18,17 @@ const SYSTEME_CONTACTS_URL = "https://api.systeme.io/api/contacts";
  * successful signup into an error for the visitor.
  */
 async function syncToSysteme(apiKey: string, email: string): Promise<string | null> {
+  // Trimmed because the key arrives via `wrangler secret put`, which keeps
+  // whatever was pasted -- a trailing newline off the clipboard is invisible
+  // in the dashboard and rejects every request with a 401.
+  const key = apiKey.trim();
+  if (!key) return "api key is empty";
+
   let res: Response;
   try {
     res = await fetch(SYSTEME_CONTACTS_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "X-API-Key": apiKey },
+      headers: { "Content-Type": "application/json", "X-API-Key": key },
       body: JSON.stringify({ email, locale: "en" }),
     });
   } catch (err) {
@@ -34,8 +40,18 @@ async function syncToSysteme(apiKey: string, email: string): Promise<string | nu
   // address comes back as. Already being on the list is a success from our
   // side -- the goal is that the address is on it, not that we put it there.
   if (res.status === 422) return null;
-  if (res.status === 429) return "rate limited (429)";
-  return `http ${res.status}`;
+
+  // Record what the provider actually said. "http 401" alone cannot tell a
+  // bad key apart from a plan that does not include API access, and the
+  // subscriber is already saved, so there is nothing to lose by asking.
+  // Never includes the key itself -- only the response body.
+  let detail = "";
+  try {
+    detail = (await res.text()).slice(0, 200).replace(/\s+/g, " ").trim();
+  } catch {
+    /* body already consumed or unreadable; the status alone will do */
+  }
+  return detail ? `http ${res.status}: ${detail}` : `http ${res.status}`;
 }
 
 /**
