@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 
+import { loadGsap } from "@/lib/gsap";
+
 /**
  * Lenis smooth scrolling, scoped to whichever route mounts it.
  *
@@ -23,7 +25,13 @@ export function SmoothScroll() {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    let lenis: { raf: (time: number) => void; destroy: () => void } | null = null;
+    let lenis:
+      | {
+          raf: (time: number) => void;
+          destroy: () => void;
+          on: (event: "scroll", handler: () => void) => void;
+        }
+      | null = null;
     let raf = 0;
     let cancelled = false;
 
@@ -39,6 +47,16 @@ export function SmoothScroll() {
       if (cancelled) return;
 
       lenis = new Lenis({ duration: 1.05, smoothWheel: true, syncTouch: false });
+
+      // Lenis animates scrollTop itself, so ScrollTrigger has to be driven
+      // from Lenis's own scroll event. Without this, triggers on these routes
+      // read a scroll position up to a frame stale and fire late or twice.
+      // Loaded through the shared loader, so if GSAP is not on this page
+      // (nothing here animates) it simply resolves null and nothing happens.
+      void loadGsap().then((lib) => {
+        if (!lib || cancelled || !lenis) return;
+        lenis.on("scroll", lib.ScrollTrigger.update);
+      });
 
       const frame = (time: number) => {
         lenis?.raf(time);

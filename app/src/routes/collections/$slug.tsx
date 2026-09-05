@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 
 import { Nav } from "@/components/site/Nav";
+import { useReveal } from "@/hooks/use-reveal";
 import { Footer } from "@/components/site/Footer";
 import { Newsletter } from "@/components/site/Newsletter";
 import { CardActions } from "@/components/site/CardActions";
@@ -32,6 +33,7 @@ export const Route = createFileRoute("/collections/$slug")({
 });
 
 function CollectionPage() {
+  const gridRef = useReveal<HTMLDivElement>();
   const { collection, destinations } = Route.useLoaderData();
   const others = COLLECTIONS.filter((c) => c.slug !== collection.slug);
 
@@ -68,7 +70,7 @@ function CollectionPage() {
             <p className="site-eyebrow mb-5">
               {destinations.length} destinations in this collection
             </p>
-            <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+            <div ref={gridRef} className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
               {destinations.map((d) => (
                 <div key={d.slug} className="relative">
                   <Link to="/destinations/$slug" params={{ slug: d.slug }} className="collection-dest-card">

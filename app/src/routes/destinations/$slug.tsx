@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 
 import { Nav } from "@/components/site/Nav";
+import { useReveal } from "@/hooks/use-reveal";
 import { SmoothScroll } from "@/components/site/SmoothScroll";
 import { Footer } from "@/components/site/Footer";
 import { WishlistButton } from "@/components/site/WishlistButton";
@@ -43,6 +44,8 @@ export const Route = createFileRoute("/destinations/$slug")({
 });
 
 function DestinationPage() {
+  const attractionsRef = useReveal<HTMLDivElement>();
+  const foodRef = useReveal<HTMLDivElement>();
   const { destination, detail } = Route.useLoaderData();
   // Themed pages this destination appears in -- the return half of the
   // internal linking, so collections are reachable from anywhere.
@@ -105,7 +108,7 @@ function DestinationPage() {
           <div className="site-container">
             <p className="site-eyebrow mb-3">Why Visit {name}</p>
             <h2 className="site-h2 max-w-lg text-3xl md:text-4xl">What makes it worth the trip.</h2>
-            <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+            <div ref={attractionsRef} className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
               {detail.whyVisit.map((card) => (
                 <div key={card.title} className="site-panel adv-card p-6">
                   <h3 className="text-lg font-semibold leading-snug">{card.title}</h3>
@@ -150,7 +153,7 @@ function DestinationPage() {
             <p className="site-eyebrow mb-3">Eat & Drink</p>
             <h2 className="site-h2 max-w-lg text-3xl md:text-4xl">Local food in {name}.</h2>
             <p className="site-ink-muted mt-4 max-w-lg text-base leading-relaxed">{detail.foodIntro}</p>
-            <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+            <div ref={foodRef} className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
               {detail.dishes.map((dish, i) => {
                 const photo = FOOD_IMAGES[`${destination.slug}|${dish.name}`];
                 return (

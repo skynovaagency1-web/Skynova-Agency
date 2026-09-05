@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { Nav } from "@/components/site/Nav";
+import { useReveal } from "@/hooks/use-reveal";
 import { Footer } from "@/components/site/Footer";
 import { Newsletter } from "@/components/site/Newsletter";
 import { COLLECTIONS, collectionDestinations } from "@/data/collections";
@@ -20,6 +21,7 @@ export const Route = createFileRoute("/collections/")({
 });
 
 function CollectionsIndex() {
+  const gridRef = useReveal<HTMLDivElement>();
   return (
     <>
       <Nav />
@@ -36,7 +38,7 @@ function CollectionsIndex() {
               to booking.
             </p>
 
-            <div className="collection-grid mt-10">
+            <div ref={gridRef} className="collection-grid mt-10">
               {COLLECTIONS.map((c) => {
                 const dests = collectionDestinations(c);
                 return (

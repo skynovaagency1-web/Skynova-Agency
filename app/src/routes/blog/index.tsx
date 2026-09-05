@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { Nav } from "@/components/site/Nav";
+import { useReveal } from "@/hooks/use-reveal";
 import { Footer } from "@/components/site/Footer";
 import { getDestinationBySlug } from "@/data/destinations";
 import { POSTS, PHOTO_SLUGS, TAG_CLASSES } from "@/data/blog-posts";
@@ -43,6 +44,7 @@ function BlogMedia({ destinationSlug, alt }: { destinationSlug: string; alt: str
 }
 
 function BlogPage() {
+  const gridRef = useReveal<HTMLDivElement>();
   const featured = POSTS.find((p) => p.slug === "kenya-safari-basics")!;
   const rest = POSTS.filter((p) => p.slug !== featured.slug);
   const featuredReadable = hasArticle(featured.slug);
@@ -103,7 +105,7 @@ function BlogPage() {
               </div>
             </article>
 
-            <div className="blog-grid">
+            <div ref={gridRef} className="blog-grid">
               {rest.map((post) => {
                 const destination = getDestinationBySlug(post.destinationSlug);
                 // Only posts with a written article become links -- the rest

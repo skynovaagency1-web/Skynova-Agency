@@ -7,6 +7,7 @@ import { FaqSection } from "./FaqSection";
 import { Newsletter } from "./Newsletter";
 import { CardActions } from "./CardActions";
 import { DESTINATIONS } from "@/data/destinations";
+import { useReveal } from "@/hooks/use-reveal";
 
 type Bullet = { title: string; body: string };
 type Faq = { q: string; a: string };
@@ -55,6 +56,7 @@ export function VerticalPage({
    * (e.g. flight travel guides) -- optional, most verticals don't need it. */
   afterDestinations?: ReactNode;
 }) {
+  const gridRef = useReveal<HTMLDivElement>();
   const destinations = destinationSlugs
     .map((slug) => DESTINATIONS.find((d) => d.slug === slug))
     .filter((d): d is NonNullable<typeof d> => Boolean(d));
@@ -100,7 +102,7 @@ export function VerticalPage({
         </section>
 
         <section className="site-section">
-          <div className="site-container grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div ref={gridRef} className="site-container grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {bullets.map((b) => (
               <div key={b.title} className="site-panel p-7">
                 <p className="site-eyebrow mb-3">{b.title}</p>

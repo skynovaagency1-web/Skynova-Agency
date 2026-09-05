@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { Nav } from "@/components/site/Nav";
+import { useReveal } from "@/hooks/use-reveal";
 import { SmoothScroll } from "@/components/site/SmoothScroll";
 import { Footer } from "@/components/site/Footer";
 import { TiltCard } from "@/components/site/TiltCard";
@@ -46,6 +47,8 @@ function DestinationsIndex() {
   const { region } = Route.useSearch();
   const trending = findAll(TRENDING_SLUGS);
   const featured = findAll(FEATURED_SLUGS);
+  const trendingRef = useReveal<HTMLDivElement>();
+  const featuredRef = useReveal<HTMLDivElement>();
   const [activeRegion, setActiveRegion] = useState<Region | "all">(region ?? "all");
   // With 42 destinations the grouped view is good for browsing and poor for
   // finding a specific country, so the directory offers both.
@@ -79,7 +82,7 @@ function DestinationsIndex() {
         <section className="site-section pt-0">
           <div className="site-container">
             <p className="site-eyebrow mb-5">Trending now</p>
-            <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+            <div ref={trendingRef} className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
               {trending.map((d) => (
                 <div key={d.slug} className="relative h-full">
                   <Link to="/destinations/$slug" params={{ slug: d.slug }} className="block h-full">
@@ -108,7 +111,7 @@ function DestinationsIndex() {
         <section className="site-section pt-0">
           <div className="site-container">
             <p className="site-eyebrow mb-5">Featured destinations</p>
-            <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
+            <div ref={featuredRef} className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
               {featured.map((d) => (
                 <div key={d.slug} className="relative h-full">
                   <Link to="/destinations/$slug" params={{ slug: d.slug }} className="block h-full">
