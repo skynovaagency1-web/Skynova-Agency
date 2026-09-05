@@ -62,14 +62,28 @@ const START_LEAD = 0.5;
 
 /**
  * Two orientations, as explicit basis vectors: columns are where the model's
- * local axes land in world space. Both point the nose (-Z local) at +X, so
- * the aircraft always faces along the rail; what differs is the roll.
+ * local axes land in world space. Both point the nose (-Z local) DOWN the
+ * rail at -Y, which is the direction of travel; what differs is the roll.
  *   PLAN -- dorsal toward the viewer, so we look down on its back.
- *   SIDE -- dorsal up, so we see it in profile, level, as it touches down.
+ *   SIDE -- dorsal to one side, so we see it in profile as it settles.
  * Slerping between them reads as the aircraft banking out of a descent.
+ *
+ * These used to aim the nose at +X, which left the aircraft flying sideways
+ * down a vertical rail. Camera space here is y-up, so travelling down the
+ * page is -Y and the nose has to follow it.
  */
-const BASIS_PLAN = { x: [0, -1, 0], y: [0, 0, 1], z: [-1, 0, 0] } as const;
-const BASIS_SIDE = { x: [0, 0, 1], y: [0, 1, 0], z: [-1, 0, 0] } as const;
+const BASIS_PLAN = { x: [-1, 0, 0], y: [0, 0, 1], z: [0, 1, 0] } as const;
+const BASIS_SIDE = { x: [0, 0, 1], y: [1, 0, 0], z: [0, 1, 0] } as const;
+
+/**
+ * Scrolling back up reverses the direction of travel, so the aircraft turns
+ * to face it: a half turn about the viewing axis, eased rather than snapped
+ * so a flick of the wheel reads as the aircraft coming about. Built from an
+ * axis and an angle rather than slerped toward a 180-degree quaternion,
+ * because a slerp through exactly half a turn has no defined direction and
+ * can pick either way round frame to frame.
+ */
+const FLIP_AXIS = [0, 0, 1] as const;
 
 /**
  * The rail crosses cream sections and dark ones, so the aircraft carries two
@@ -174,6 +188,8 @@ export function FlightRail() {
         );
       const qPlan = quat(BASIS_PLAN);
       const qSide = quat(BASIS_SIDE);
+      const flipAxis = new THREE.Vector3(FLIP_AXIS[0], FLIP_AXIS[1], FLIP_AXIS[2]);
+      const flipQuat = new THREE.Quaternion();
 
       const plane = new THREE.Group(); // position only
       const inner = new THREE.Group(); // orientation only
@@ -254,6 +270,9 @@ export function FlightRail() {
       let planeY = routeY(0) * height;
       let levelEased = 0;
       let progress = 0;
+      /** 0 = nose down the page, 1 = nose back up it. */
+      let flipTarget = 0;
+      let flipEased = 0;
 
       function place(t: number) {
         const rx = routeX(t) * width;
@@ -287,8 +306,13 @@ export function FlightRail() {
         planeY += (targetY - planeY) * 0.12;
         levelEased += (level - levelEased) * 0.12;
 
+        flipEased += (flipTarget - flipEased) * 0.12;
+
         plane.position.set(rx, height - planeY, 0);
         inner.quaternion.copy(qPlan).slerp(qSide, levelEased);
+        // Applied in world space, after the roll, so the half turn happens
+        // about the viewer's axis rather than the aircraft's own.
+        inner.quaternion.premultiply(flipQuat.setFromAxisAngle(flipAxis, flipEased * Math.PI));
         applyLivery(sampleBackdrop(planeY));
 
         const trail = trailRef.current;
@@ -298,15 +322,19 @@ export function FlightRail() {
       let raf = 0;
       let lastY = -1;
       let lastLevel = -1;
+      let lastFlip = -1;
       function frame() {
         raf = 0;
         place(progress);
         // Keep running while either easing is still in flight, so the
         // approach finishes even after the scroll has stopped.
         const settling =
-          Math.abs(planeY - lastY) > 0.05 || Math.abs(levelEased - lastLevel) > 0.001;
+          Math.abs(planeY - lastY) > 0.05 ||
+          Math.abs(levelEased - lastLevel) > 0.001 ||
+          Math.abs(flipEased - lastFlip) > 0.001;
         lastY = planeY;
         lastLevel = levelEased;
+        lastFlip = flipEased;
         renderer.render(scene, camera);
         if (settling) raf = requestAnimationFrame(frame);
       }
@@ -336,7 +364,12 @@ export function FlightRail() {
         const doc = document.documentElement;
         const max = doc.scrollHeight - window.innerHeight;
         const span = Math.max(1, max - anchorScroll);
-        progress = Math.min(Math.max((window.scrollY - anchorScroll) / span, 0), 1);
+        const next = Math.min(Math.max((window.scrollY - anchorScroll) / span, 0), 1);
+        // Threshold ignores sub-pixel jitter, which would otherwise have the
+        // aircraft turning back and forth while the page is nearly still.
+        const delta = next - progress;
+        if (Math.abs(delta) > 0.0004) flipTarget = delta < 0 ? 1 : 0;
+        progress = next;
         setShown(window.scrollY >= anchorScroll - window.innerHeight * 0.15);
         measureAnchor();
         measureHeadings();
