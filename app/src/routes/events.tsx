@@ -1,0 +1,82 @@
+import { Music, Trophy, Drama, FerrisWheel, Landmark, Camera, Users, PartyPopper } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+
+import { VerticalPage } from "@/components/site/VerticalPage";
+import { CategoryGridSection } from "@/components/site/CategoryGrid";
+import { DestinationPicksSection } from "@/components/site/DestinationPicks";
+import { eventsLink } from "@/lib/affiliate";
+
+const TRENDING_EVENTS = [
+  { name: "Festival season", slug: "event-festival", detail: "Headline stages and the crowd that comes for them." },
+  { name: "Fireworks & celebrations", slug: "event-fireworks", detail: "New Year's, national days, and the nights built around a sky show." },
+  { name: "Opera & theatre", slug: "event-opera", detail: "A seat at the kind of venue that's part of the show." },
+  { name: "Big-match sport", slug: "event-stadium", detail: "The fixtures worth planning a trip around." },
+];
+
+export const Route = createFileRoute("/events")({
+  head: () => ({
+    meta: [
+      { title: "Events & Tickets | Skynova Agency" },
+      { name: "description", content: "Concerts, museums, attractions and skip-the-line passes in the cities you are already visiting." },
+    ],
+  }),
+  component: () => (
+    <VerticalPage
+      eyebrow="Events & tickets"
+      title="Your next unforgettable experience starts here."
+      description="Concerts, museums, attractions and skip-the-line passes in the cities you are already visiting."
+      heroImage="/assets/sections/events.webp"
+      heroAlt="Event ticket stub resting on a dark surface"
+      ctaHref={eventsLink()}
+      ctaLabel="Find events"
+      bullets={[
+        { title: "Skip-the-line passes", body: "Museums and landmark attractions without the wait." },
+        { title: "Mobile tickets", body: "Delivered to your inbox the moment you book." },
+        { title: "Local shows and concerts", body: "Booked in the same flow as the rest of the trip." },
+      ]}
+      destinationSlugs={["italy", "spain", "south-korea", "united-states"]}
+      faqHeading="Event & ticket questions, answered."
+      faqs={[
+        {
+          q: "Are tickets delivered instantly?",
+          a: "Most are -- mobile tickets land in your inbox right after checkout, ready to show at the door.",
+        },
+        {
+          q: "Can I get a refund if plans change?",
+          a: "Refund and exchange terms are set per event and shown before you pay.",
+        },
+        {
+          q: "Do skip-the-line passes guarantee entry?",
+          a: "They guarantee a faster queue, not a specific time slot -- some attractions also offer timed entry.",
+        },
+        {
+          q: "Are these official tickets?",
+          a: "Yes -- bookings go through the venue's or a licensed partner's own ticketing system.",
+        },
+      ]}
+    >
+      <CategoryGridSection
+        eyebrow="What's on"
+        heading="Whatever the city's known for, tonight."
+        href={eventsLink()}
+        categories={[
+          { icon: Music, title: "Concerts", detail: "Touring acts and local venues, booked ahead." },
+          { icon: Trophy, title: "Sports", detail: "Matches and races in the cities hosting them." },
+          { icon: Drama, title: "Theatre", detail: "West End, Broadway, and local stages alike." },
+          { icon: FerrisWheel, title: "Theme parks", detail: "Skip-the-line entry to the big ones." },
+          { icon: Landmark, title: "Museums", detail: "Timed entry to the exhibits worth planning around." },
+          { icon: Camera, title: "Attractions", detail: "Landmarks, viewpoints, and the photo-op stops." },
+          { icon: Users, title: "Family events", detail: "Paced and timed for kids, without the adult-only fine print." },
+          { icon: PartyPopper, title: "Seasonal events", detail: "Holiday markets, festivals, and the dates that only happen once a year." },
+        ]}
+      />
+      <DestinationPicksSection
+        eyebrow="Trending events"
+        heading="What's worth booking around right now."
+        items={TRENDING_EVENTS}
+        href={eventsLink()}
+        altSuffix="event"
+      />
+    </VerticalPage>
+  ),
+});

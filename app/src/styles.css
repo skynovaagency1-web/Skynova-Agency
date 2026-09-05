@@ -1,0 +1,3541 @@
+/* Cascade layer order: reset lowest, then Tailwind/Quanta base, then
+ * components and finally utilities — so Quanta's q-* utilities (e.g.
+ * q-button-*) always win over global element resets. */
+@layer reset, theme, base, components, utilities;
+
+@import "tailwindcss" source(none);
+@source "../src";
+@source "../packages/app-landing/src";
+@source "../packages/quanta/src";
+@import "@higgsfield/quanta/tailwind.css";
+
+/* New in-app Quanta-style components (moved out of the quanta package). Their
+ * CSS uses Tailwind v4 @utility/@source, so it must load through this tailwind
+ * entry. Ordering mirrors quanta's components.css (composer after button;
+ * media-card + generation-card after media). */
+@import "./components/composer/composer.css";
+@import "./components/media-card/media-card.css";
+@import "./components/generation-card/generation-card.css";
+@import "./components/setting-trigger/setting-trigger.css";
+@import "./components/prompt-box/prompt-box.css";
+@import "./components/icon-tile/icon-tile.css";
+
+@import "tw-animate-css";
+/* shadcn v4 base (scrollbar/scroll-fade utilities, toast base) for src/components/ui */
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:where([data-theme="default-dark"], [data-theme="default-dark"] *));
+
+/*
+ * Quanta is the visual source of truth. This file imports Quanta's Tailwind
+ * entry once; that entry brings in primitives, semantic theme variables,
+ * typography, z-index, border-width, and q-* component utilities.
+ *
+ * Generated app layout should use normal Tailwind spacing (`p-4`, `gap-2`,
+ * `mt-6`, `h-10`) and Quanta semantic utilities for color/type
+ * (`bg-q-background-primary`, `text-q-body-md-regular`). Do not use old numeric
+ * token classes such as `px-400` / `gap-200`, and do not reach for raw
+ * q-spacing vars in app code. Quanta component internals own their q-* classes.
+ *
+ * The `--spacing: 0.25rem` restoration keeps native Tailwind layout utilities
+ * stable for generated apps and legacy scaffold components. The inline theme
+ * aliases below keep shadcn-style imports rendering while new UI migrates to
+ * Quanta components.
+ */
+@theme {
+  --spacing: 0.25rem;
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  --color-background: var(--hf-color-background-primary);
+  --color-foreground: var(--hf-color-text-primary);
+  --color-card: var(--hf-color-background-secondary);
+  --color-card-foreground: var(--hf-color-text-primary);
+  --color-popover: var(--hf-color-background-secondary);
+  --color-popover-foreground: var(--hf-color-text-primary);
+  --color-primary: var(--hf-color-button-brand);
+  --color-primary-foreground: var(--hf-color-button-label-brand);
+  --color-secondary: var(--hf-color-background-secondary);
+  --color-secondary-foreground: var(--hf-color-text-primary);
+  --color-muted: var(--hf-color-background-tertiary);
+  --color-muted-foreground: var(--hf-color-text-secondary);
+  --color-accent: var(--hf-color-overlay-hover);
+  --color-accent-foreground: var(--hf-color-text-primary);
+  /* shadcn v4 components use text-destructive on tinted fills — needs the
+   * bright brand red, not the dark error surface */
+  --color-destructive: var(--hf-color-button-destructive);
+  --color-destructive-foreground: var(--hf-color-button-label-destructive);
+  --color-border: var(--hf-color-border-default);
+  --color-input: var(--hf-color-border-default);
+  --color-ring: var(--hf-color-border-focus);
+  --color-ring-offset-background: var(--hf-color-background-primary);
+
+  --color-chart-1: var(--hf-color-lime-500);
+  --color-chart-2: var(--hf-color-pink-500);
+  --color-chart-3: var(--hf-color-blue-500);
+  --color-chart-4: var(--hf-color-yellow-500);
+  --color-chart-5: var(--hf-color-purple-500);
+
+  --color-sidebar: var(--hf-color-background-secondary);
+  --color-sidebar-foreground: var(--hf-color-text-primary);
+  --color-sidebar-primary: var(--hf-color-button-brand);
+  --color-sidebar-primary-foreground: var(--hf-color-button-label-brand);
+  --color-sidebar-accent: var(--hf-color-overlay-hover);
+  --color-sidebar-accent-foreground: var(--hf-color-text-primary);
+  --color-sidebar-border: var(--hf-color-border-default);
+  --color-sidebar-ring: var(--hf-color-border-focus);
+
+  --font-grotesk: var(--hf-type-family-grotesk);
+}
+
+/* Fills used by src/components/ui (badge, tabs, marketing-button), mapped to
+ * Quanta's --hf-gradient-* tokens. */
+@utility badge-gradient-blue {
+  background-image: var(--hf-gradient-badge-blue);
+}
+@utility badge-gradient-pink {
+  background-image: var(--hf-gradient-badge-pink);
+}
+@utility badge-gradient-purple {
+  background-image: var(--hf-gradient-badge-purple);
+}
+@utility glass-sheen {
+  background-image: var(--hf-gradient-glass-sheen);
+}
+@utility gloss-lime {
+  background-image:
+    var(--hf-gradient-special-gloss-lime-angled),
+    linear-gradient(90deg, var(--hf-color-lime-500), var(--hf-color-lime-500));
+}
+@utility gloss-pink {
+  background-image:
+    var(--hf-gradient-special-gloss-pink),
+    linear-gradient(90deg, var(--hf-color-pink-500), var(--hf-color-pink-500));
+}
+
+/* Toast skin (Figma node 4085:2671): compact glass pill, kind-colored fills */
+[data-sonner-toast][data-styled="true"] {
+  width: fit-content;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--hf-color-transparent-light-05);
+  border-radius: var(--hf-radius-300, 12px);
+  background: var(--hf-color-glass-dark);
+  backdrop-filter: blur(40px);
+  box-shadow: 0 6px 6px rgb(0 0 0 / 0.25);
+  color: var(--hf-color-text-primary);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+[data-sonner-toast][data-type="success"] {
+  border-color: var(--hf-color-transparent-light-15);
+  background: #68b922; /* toast/success — raw value in Figma, no hf token */
+  backdrop-filter: none;
+}
+[data-sonner-toast].toast-new {
+  border-color: var(--hf-color-transparent-light-15);
+  background: #7a58ff; /* toast/new — raw value in Figma, no hf token */
+  backdrop-filter: none;
+}
+[data-sonner-toast] [data-close-button] {
+  position: static;
+  order: 9;
+  margin-left: 4px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  transform: none;
+}
+[data-sonner-toast] [data-close-button]:hover {
+  background: var(--hf-color-overlay-hover);
+}
+
+:root {
+  --radius: 0.625rem;
+}
+
+@layer base {
+  html {
+    background-color: var(--hf-color-background-primary);
+    color: var(--hf-color-text-primary);
+    color-scheme: dark;
+  }
+
+  body {
+    min-height: 100vh;
+    background-color: var(--hf-color-background-primary);
+    color: var(--hf-color-text-primary);
+    font-family: var(--hf-type-family-secondary);
+  }
+
+  * {
+    border-color: var(--hf-color-border-default);
+  }
+}
+
+/* ==========================================================================
+   Skynova Agency — brand layer (custom Tailwind/CSS only, no Quanta tokens)
+   ========================================================================== */
+/* Outfit + IBM Plex Mono are loaded by a <link> in routes/__root.tsx. They
+   used to be @import-ed here, but an @import is only valid before any other
+   rule -- sitting at this line it was stripped by the CSS optimizer and the
+   fonts never loaded at all. Do not reinstate it here. */
+
+:root {
+  --sky-bg: #ffffff;
+  --sky-bg-raised: #faf7f0;
+  --sky-line: #e7e0cd;
+  --sky-ink: #1c1a14;
+  --sky-ink-muted: #6e6555;
+  --sky-coral: #c9a227;
+  --sky-coral-deep: #93711d;
+  --sky-coral-ink: #1c1400;
+  --sky-coral-wash: rgba(201, 162, 39, 0.12);
+  --sky-shadow-sm: 0 1px 2px rgba(28, 26, 20, 0.04), 0 8px 20px -6px rgba(28, 26, 20, 0.08);
+  --sky-shadow-md: 0 2px 4px rgba(28, 26, 20, 0.05), 0 16px 32px -12px rgba(28, 26, 20, 0.12);
+  --sky-glass-bg: rgba(255, 255, 255, 0.52);
+  --sky-glass-bg-strong: rgba(255, 255, 255, 0.74);
+  --sky-glass-blur: 22px;
+  /* Liquid-glass rim: a soft gradient "edge-lit" border instead of a flat
+     line, via the two-layer background-clip trick (fill on padding-box,
+     gradient on border-box) -- respects border-radius, no pseudo-element. */
+  --sky-glass-edge: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.22) 22%,
+    rgba(255, 255, 255, 0) 42%,
+    rgba(255, 255, 255, 0) 58%,
+    rgba(255, 255, 255, 0.22) 78%,
+    rgba(255, 255, 255, 0.85) 100%
+  );
+  --sky-radius-sm: 12px;
+  --sky-radius-md: 16px;
+  --sky-radius-lg: 24px;
+  --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+html {
+  /* Belt-and-suspenders alongside .site-body's own overflow-x guard --
+     some browsers compute the scrollable area from the html root rather
+     than body, so a wide element (e.g. a third-party widget iframe that
+     doesn't shrink below its own content width) can still open
+     horizontal scroll on the document even with body clipped.
+
+     `clip`, NOT `hidden`. See the note on .site-body below: `hidden` on one
+     axis silently turns the element into a scroll container and kills every
+     position: sticky inside it. */
+  overflow-x: clip;
+}
+.site-body {
+  background:
+    radial-gradient(1100px 620px at 12% -8%, rgba(201, 162, 39, 0.12), transparent 60%),
+    radial-gradient(900px 520px at 102% 6%, rgba(201, 162, 39, 0.09), transparent 55%),
+    radial-gradient(70% 45% at 50% 100%, rgba(201, 162, 39, 0.07), transparent 60%),
+    var(--sky-bg);
+  background-attachment: fixed;
+  color: var(--sky-ink);
+  font-family: var(--font-display);
+  /* Guards against any element that visually pokes past the viewport edge
+     (e.g. the rotating .sim-float-card, or a wide table/diagram) turning
+     into page-wide horizontal scroll/pan.
+
+     It MUST be `clip` and not `hidden`. This rule used to say `hidden` on
+     the claim that "only the x-axis is clipped, so the sticky nav is
+     untouched" -- that claim is wrong. Per CSS Overflow 3, when one axis is
+     a scrolling value and the other is `visible`, the `visible` one computes
+     to `auto`. So `overflow-x: hidden` silently made this a scroll container
+     on BOTH axes; the sticky header then stuck to body's scrollport, which
+     never scrolls (the viewport does), so it never stuck at all and rode
+     the page up out of view -- taking the Explore and Company dropdowns,
+     which are absolutely positioned inside it, off-screen with it.
+
+     `clip` pairs with `visible` without forcing it to `auto`, so it clips
+     the x-axis without creating a scrollport. */
+  overflow-x: clip;
+}
+
+/* Card entrance: settles into place on mount. Transform-only (never
+   opacity-to-zero) so content is never hidden behind a scroll trigger --
+   safe for SSR and full-page screenshots taken before the animation ends. */
+@keyframes card-settle {
+  from { transform: translateY(14px) scale(0.98); }
+  to { transform: translateY(0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dest-mini-card, .dest-card, .site-panel { animation: none !important; }
+}
+
+/* Chapter-style scroll reveal (see hooks/use-scroll-reveal.ts): --reveal
+   defaults to 1 in plain CSS, so a section renders in its final position
+   with zero JS -- the hook only pulls cards down transiently as they
+   approach from below, easing back to place as the section settles into
+   view. Transform/scale only, never opacity, so nothing is ever hidden. */
+.scroll-reveal { --reveal: 1; }
+.scroll-reveal .site-panel,
+.scroll-reveal .benefit-tile {
+  animation: none;
+  transform: translateY(calc((1 - var(--reveal, 1)) * 30px)) scale(calc(0.96 + var(--reveal, 1) * 0.04));
+}
+
+.site-container {
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+@media (min-width: 768px) {
+  .site-container { padding-inline: 2.5rem; }
+}
+
+/* Glossy left-accent chip: same liquid-glass token as the rest of the site,
+   just in badge form -- a translucent frosted pill with a solid accent
+   border on the leading edge, instead of plain uppercase text. */
+.site-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sky-coral-deep);
+  border-left: 2px solid var(--sky-coral);
+  border-radius: 0 8px 8px 0;
+  padding: 0.4rem 0.75rem;
+  background: linear-gradient(var(--sky-glass-bg), var(--sky-glass-bg)) padding-box;
+  backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
+  box-shadow: var(--sky-shadow-sm);
+}
+
+.site-hairline { border-color: var(--sky-line); }
+.site-panel {
+  border-radius: var(--sky-radius-md);
+  background: linear-gradient(var(--sky-glass-bg), var(--sky-glass-bg)) padding-box, var(--sky-glass-edge) border-box;
+  backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
+  border: 1px solid transparent;
+  box-shadow: var(--sky-shadow-sm);
+  animation: card-settle 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.site-panel:nth-child(4n+1) { animation-delay: 0ms; }
+.site-panel:nth-child(4n+2) { animation-delay: 70ms; }
+.site-panel:nth-child(4n+3) { animation-delay: 140ms; }
+.site-panel:nth-child(4n+4) { animation-delay: 210ms; }
+.site-ink-muted { color: var(--sky-ink-muted); }
+
+/* ---- Nav (glass) ---- */
+.site-nav { border-bottom: 1px solid transparent; background: linear-gradient(var(--sky-glass-bg-strong), var(--sky-glass-bg-strong)) padding-box, var(--sky-glass-edge) border-box; backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%); -webkit-backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%); box-shadow: 0 8px 24px -16px rgba(28, 26, 20, 0.12); }
+.site-nav-mark { height: 24px; width: auto; display: block; }
+.site-nav-link { color: var(--sky-ink-muted); transition: color 0.2s ease; }
+.site-nav-link:hover { color: var(--sky-ink); }
+
+/* No overflow-x here on purpose -- setting overflow-x to anything but
+   visible forces overflow-y to compute as auto too (a CSS spec quirk),
+   which was silently clipping the Explore mega-menu and Company dropdown
+   (both position: absolute descendants) instead of letting them show. This
+   row is hidden below 768px anyway (see below), so there's no real need
+   for horizontal scroll here to guard against. */
+.site-nav-links { display: flex; align-items: center; gap: 1.1rem; }
+/* Tailwind's `hidden`/`md:*` utilities live in @layer utilities, and our
+   unlayered .site-nav-links/.site-menu-btn/.site-nav-cta rules always beat
+   layered rules regardless of the class list -- so responsive show/hide for
+   nav chrome is done here instead, in the same unlayered cascade. */
+@media (max-width: 767px) {
+  .site-nav-links { display: none; }
+}
+.btn-nav-pill.site-nav-cta { display: none; }
+@media (min-width: 768px) {
+  .btn-nav-pill.site-nav-cta { display: inline-flex; }
+}
+.site-nav-links::-webkit-scrollbar { display: none; }
+.site-nav-link { white-space: nowrap; }
+
+.site-nav-dropdown { position: relative; flex-shrink: 0; }
+.site-nav-dropdown-trigger { display: inline-flex; align-items: center; gap: 0.3rem; color: var(--sky-ink-muted); background: transparent; border: none; cursor: pointer; font-size: 0.875rem; white-space: nowrap; padding: 0; transition: color 0.2s ease; }
+.site-nav-dropdown-trigger:hover, .site-nav-dropdown-trigger[aria-expanded="true"] { color: var(--sky-ink); }
+.site-nav-dropdown-trigger .caret { font-size: 0.6rem; display: inline-block; transition: transform 0.2s ease; }
+.site-nav-dropdown-trigger[aria-expanded="true"] .caret { transform: rotate(180deg); }
+.site-nav-dropdown-menu {
+  position: absolute; top: calc(100% + 0.9rem); right: 0; min-width: 10.5rem;
+  border-radius: var(--sky-radius-sm); padding: 0.4rem; z-index: 50;
+  background: linear-gradient(var(--sky-glass-bg-strong), var(--sky-glass-bg-strong)) padding-box, var(--sky-glass-edge) border-box;
+  backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
+  border: 1px solid transparent;
+  box-shadow: var(--sky-shadow-md);
+}
+.site-nav-dropdown-item { display: block; padding: 0.55rem 0.75rem; border-radius: calc(var(--sky-radius-sm) - 4px); font-size: 0.875rem; color: var(--sky-ink); }
+.site-nav-dropdown-item:hover { background: var(--sky-coral-wash); color: var(--sky-coral-deep); }
+
+/* Nav mega menu ("Explore") -- one trigger standing in for eight separate
+   top-level links. Same list-then-preview interaction as the homepage's
+   vertical explorer (reuses its .region-explorer-preview-tag/title/
+   subtitle typography directly), so the two read as one pattern. */
+.site-nav-mega {
+  position: absolute;
+  top: calc(100% + 0.9rem);
+  left: 0;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: 13rem 14rem 12rem;
+  border-radius: var(--sky-radius-md);
+  overflow: hidden;
+  background: linear-gradient(var(--sky-glass-bg-strong), var(--sky-glass-bg-strong)) padding-box, var(--sky-glass-edge) border-box;
+  backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
+  border: 1px solid transparent;
+  box-shadow: var(--sky-shadow-md);
+}
+.site-nav-mega-list { display: flex; flex-direction: column; gap: 1px; padding: 0.6rem; }
+.site-nav-mega-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: calc(var(--sky-radius-sm) - 4px);
+  font-size: 0.875rem;
+  color: var(--sky-ink-muted);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.site-nav-mega-item:hover { background: var(--sky-coral-wash); color: var(--sky-coral-deep); }
+/* Active item is a solid dark pill, as in the reference -- a tinted wash
+   reads as hover, not as "you are here". */
+.site-nav-mega-item.is-active {
+  background: var(--sky-ink);
+  color: #f5f0e6;
+}
+
+/* ---- Grouped link columns (adapted from a side-menu reference) --------- */
+.site-nav-mega-group {
+  padding: 0.9rem 0.9rem 0.8rem;
+  border-left: 1px solid var(--sky-line);
+  display: flex;
+  flex-direction: column;
+}
+.site-nav-mega-heading {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sky-ink-muted);
+  padding: 0 0.4rem 0.5rem;
+}
+.site-nav-mega-links { display: flex; flex-direction: column; gap: 1px; }
+.site-nav-mega-sublink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.45rem;
+  border-radius: calc(var(--sky-radius-sm) - 5px);
+  font-size: 0.82rem;
+  color: var(--sky-ink);
+  white-space: nowrap;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.site-nav-mega-sublink:hover { background: var(--sky-coral-wash); color: var(--sky-coral-deep); }
+.site-nav-mega-more {
+  margin-top: auto;
+  padding: 0.6rem 0.45rem 0;
+  font-size: 0.78rem;
+  color: var(--sky-coral-deep);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.site-nav-mega-more .arrow { transition: transform 0.2s ease; }
+.site-nav-mega-more:hover .arrow { transform: translateX(4px); }
+.site-nav-mega-preview {
+  padding: 1.5rem;
+  border-left: 1px solid var(--sky-line);
+  background: linear-gradient(var(--sky-glass-bg), var(--sky-glass-bg)) padding-box;
+  display: flex;
+  align-items: center;
+}
+.site-nav-mega-preview-inner { animation: region-preview-in 0.3s ease both; }
+
+.site-nav-account-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 999px;
+  color: var(--sky-ink-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.site-nav-account-icon:hover,
+.site-nav-account-icon[aria-expanded="true"] { color: var(--sky-ink); background: var(--sky-coral-wash); }
+.site-nav-account-icon.is-signed-in { color: var(--sky-coral-deep); }
+.site-nav-account-menu { min-width: 14rem; }
+.site-nav-account-email {
+  padding: 0.5rem 0.75rem 0.6rem;
+  font-size: 0.78rem;
+  color: var(--sky-ink-muted);
+  border-bottom: 1px solid var(--sky-line);
+  margin-bottom: 0.3rem;
+  word-break: break-all;
+}
+.site-nav-account-signout {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+/* Nav pill CTA — magnetic, spring-return */
+.btn-nav-pill {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 55%), var(--sky-coral);
+  color: var(--sky-coral-ink);
+  border-radius: 999px;
+  padding: 0.5rem 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: transform 0.15s ease;
+  will-change: transform;
+}
+.btn-nav-pill:active { transform: scale(0.96); }
+
+/* ---- Hero: fixed full-screen video, hero copy, then a growing window photo ----
+   --hero-progress and --hero-grow are set on :root by Hero.tsx (not a
+   scoped element) so they stay live even after .hero-stage scrolls out of
+   view. Video, copy, and window photo are three INDEPENDENT fixed/sticky
+   stacking contexts (see Hero.tsx) so their paint order is set purely by
+   z-index here: video lowest, copy in the middle, window photo highest.
+
+   The window photo is a real alpha-transparent cutout (opaque cabin,
+   transparent glass), so the video is visible through the glass from the
+   very first frame -- even before any scroll. The pinned
+   .hero-scroll-wrapper holds the frame in place for a dedicated scroll
+   range (jeskojets.com-style): the window sits still through the first
+   stretch of that range (--hero-grow stays 0, see GROW_START in
+   Hero.tsx), then scales up and pushes its own opaque cabin edges
+   off-screen, revealing the static video underneath as a full-bleed loop.
+   The video itself never transforms -- only the window grows -- so what's
+   "revealed" is simply more of the same frame, with no separate cut to
+   time or tune. */
+/* Lengthened from 220vh: the pinned range now has to carry five beats
+   (runway, cabin, seat, window, then the window opening) instead of
+   just the opening, so each needs room to read before the next. */
+.hero-scroll-wrapper { position: relative; height: 380vh; }
+.hero-video-fixed {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+/* --hero-descent (0 -> 1 across the afterglow, set in Hero.tsx) sinks the
+   camera through the cloud deck once the portal is open. The cloud moves
+   UP the frame because that's what passing scenery does when you descend
+   through it, and the scale creeps in so it reads as sinking into the deck
+   rather than the whole shot sliding. Scale outruns the translate on
+   purpose -- 1.14 leaves 7% of overflow each side, comfortably more than
+   the 6% shift, so no edge of the video is ever exposed. */
+.hero-video-fixed-el {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: translateY(calc(var(--hero-descent, 0) * -6%))
+    scale(calc(1 + var(--hero-descent, 0) * 0.14));
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-video-fixed-el { transform: none; }
+}
+
+/* ---- Boarding sequence (see Hero.tsx) ----
+   Four opaque full-bleed layers sitting between the cloud video (z-index 0)
+   and the hero copy, crossfaded by --seq-1..4 which the scroll handler
+   sets. Stacked in DOM order, each one painting over the last, so a
+   crossfade is just the incoming layer's opacity rising -- no z-index
+   juggling and no frame where both are half-transparent over the video. */
+.hero-seq {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero-seq-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: opacity;
+}
+/* A warm base under the runway canvas: until the first frame decodes the
+   canvas is transparent, and without this the cloud video would flash
+   through it on first paint. Only stage 1 needs it -- the later stages are
+   opaque images, and the window stage must stay clear so its glass works. */
+.hero-seq-1 {
+  opacity: var(--seq-1, 1);
+  background-color: #2a1a0e;
+}
+.hero-seq-2 {
+  opacity: var(--seq-2, 0);
+  background-color: #2a1a0e;
+  /* Dolly toward the window during the seat shot. The origin is the window
+     in that final frame (~58%/40%), not the centre of the picture -- pushing
+     from the centre drifts away from the thing we are moving toward. Kept to
+     1.34x: these frames are 1200px wide shown full-bleed, and past roughly
+     1.4 the softening starts to show. */
+  transform-origin: 58% 40%;
+  transform: scale(calc(1 + var(--seq-2-push, 0) * 0.34));
+  will-change: transform, opacity;
+}
+
+/* The window beat also does the opening: it scales toward the viewer as
+   --hero-grow ramps, so the porthole grows past the edges of the screen
+   while the photo fades, uncovering the cloud video underneath. The origin
+   is the window's own centre in that photograph (~48%/50%), not the centre
+   of the frame -- scaling from the wrong point makes the opening drift
+   sideways and strand a band of cabin wall on the far side. */
+/* Also a scrubbed canvas, so it carries the same warm base as stage 1 --
+   a canvas is transparent until its first frame decodes, and without this
+   the cloud video would flash through. The base fades out with the layer,
+   since opacity applies to the background too. */
+.hero-seq-3 {
+  opacity: var(--seq-3, 0);
+  background-color: #2a1a0e;
+  transform-origin: 48% 50%;
+  transform: scale(calc(1 + var(--hero-grow, 0) * 6));
+  will-change: transform, opacity;
+}
+
+.hero-stage { position: sticky; top: 0; z-index: 1; height: 100dvh; min-height: 560px; overflow: hidden; }
+/* .hero-copy's text was designed against a light-photo hero -- these
+   dark-ground overrides keep it readable over the window photo's dark cabin. */
+.hero-stage-portal .hero-copy {
+  color: #f5f0e6;
+}
+.hero-stage-portal .site-eyebrow {
+  color: #f3e6b8;
+  border-left-color: #e3c569;
+  background: linear-gradient(rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.14)) padding-box;
+  box-shadow: none;
+}
+.hero-stage-portal .site-ink-muted { color: #b9b0a0; }
+.hero-stage-portal .btn-ghost-link { color: #f5f0e6; }
+.hero-copy {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 4.5rem;
+  /* This box is full-height/full-width (flex layout pushes its real
+     content to the bottom), and while invisible (opacity 0) at load it
+     was still fully hit-testable -- silently swallowing hover/click over
+     the entire hero area, including the nav's dropdowns sitting on top
+     of it. Only the actual controls inside need pointer-events back. */
+  pointer-events: none;
+  /* Subtle cursor drift (--hero-mx/my, set by Hero.tsx) layered with a
+     "diving forward" recede as the window grows: the copy fades and pulls
+     back slightly (scales down, drifts up) rather than staying pinned in
+     place while the frame launches past it. */
+  transform: translate3d(calc(var(--hero-mx, 0) * 16px), calc(var(--hero-my, 0) * 10px - var(--hero-grow, 0) * 22px), 0)
+    scale(calc(1 - var(--hero-grow, 0) * 0.1));
+  /* Stays fully invisible until the window has almost completely opened
+     (--hero-grow near 1, cloud video fully revealed), then fades in over
+     the last sliver of scroll -- not readable while the portal is still
+     mid-transition. */
+  opacity: clamp(0, calc((var(--hero-grow, 0) - 0.85) * 6.7), 1);
+}
+/* Give clickability back to the actual headline/CTA content -- its own
+   .site-container is naturally sized to the visible text, not the full
+   viewport, so this doesn't reopen the oversized hit-box above. */
+.hero-copy .site-container { pointer-events: auto; }
+.hero-scroll-hint {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--sky-ink-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: calc(1 - var(--hero-progress, 0) * 5);
+}
+
+/* Hero primary pill — nova-spark trail */
+/* Liquid-glass primary button.
+ *
+ * Adapted from a liquid-glass UI kit whose own guidance is "do not mix two
+ * glass recipes in one screen" -- so this deliberately uses the SAME recipe
+ * as the trip-cycle cards and the glass toggle: a bright specular edge along
+ * the top, an inner shade at the base to give the pill depth, and a coloured
+ * bloom beneath. The reference's neon palette was dropped; on a cream ground
+ * it would read as a different material entirely.
+ *
+ * Layer order in box-shadow matters: the inset highlight must come first so
+ * it paints over the fill, and the outer bloom last so it sits behind. */
+.btn-hero-pill {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.95rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 44%, rgba(255, 255, 255, 0) 62%),
+    linear-gradient(180deg, #f4cf72 0%, #e8b53f 52%, #c9a227 100%);
+  color: var(--sky-coral-ink);
+  border-radius: 999px;
+  padding: 0.9rem 1.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    inset 0 -12px 20px -14px rgba(104, 72, 0, 0.6),
+    0 10px 26px -14px rgba(201, 162, 39, 0.85),
+    0 2px 6px -2px rgba(28, 26, 20, 0.22);
+  transition: transform 0.18s ease, box-shadow 0.28s ease;
+}
+/* The sheen: a soft arc of light across the upper half, as in the reference.
+   Sits under the label because the button isolates its stacking context. */
+.btn-hero-pill::before {
+  content: "";
+  position: absolute;
+  inset: 1px 1px auto;
+  height: 46%;
+  border-radius: 999px 999px 40% 40% / 999px 999px 100% 100%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
+  pointer-events: none;
+  z-index: -1;
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn-hero-pill:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.98),
+      inset 0 -12px 20px -14px rgba(104, 72, 0, 0.5),
+      0 14px 32px -14px rgba(201, 162, 39, 0.95),
+      0 3px 8px -2px rgba(28, 26, 20, 0.24);
+  }
+}
+.btn-hero-pill:active { transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+  .btn-hero-pill { transition: none; }
+  .btn-hero-pill:hover { transform: none; }
+}
+.btn-hero-pill .spark { position: absolute; inset: 0; background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.35), transparent 60%); opacity: 0; transition: opacity 0.2s ease; }
+.btn-hero-pill:hover .spark { opacity: 1; }
+
+/* Ghost link — arrow slides */
+.btn-ghost-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--sky-ink); font-size: 0.95rem; }
+.btn-ghost-link .arrow { transition: transform 0.2s ease; }
+.btn-ghost-link:hover .arrow { transform: translateX(6px); }
+
+/* ---- Section rhythm ---- */
+/* Desktop rhythm. 7vw with a 6.5rem ceiling put 104px above AND below
+   every section on a 1512px screen -- 208px of air between each one, which
+   is what pushed the homepage past 10,000px and made the whole site read as
+   oversized. The mobile floor is deliberately unchanged; phones were never
+   the problem, so only the desktop ceiling comes down. */
+.site-section { padding-block: clamp(3.5rem, 5vw, 4.5rem); }
+
+/* Display headings are sized here, not on the 71 heading tags themselves.
+   Every large heading in the app already carries .site-h2, and an unlayered
+   rule beats Tailwind's layered `md:text-6xl` regardless of the class list
+   -- the same cascade trick .site-nav-links uses for responsive hiding.
+   Scoped to >=768px so the phone sizes stay exactly as they are. */
+@media (min-width: 768px) {
+  h1.site-h2 { font-size: clamp(2.5rem, 3.6vw, 3.125rem); }  /* was 60px */
+  h2.site-h2 { font-size: 1.875rem; }                        /* was 36px */
+}
+.site-h2 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; line-height: 1.05; }
+
+/* Underlined-link CTA (Flights) */
+.btn-underline { position: relative; display: inline-flex; align-items: center; gap: 0.4rem; color: var(--sky-ink); font-weight: 500; }
+.btn-underline::after { content: ""; position: absolute; left: 0; bottom: -4px; width: 100%; height: 1px; background: var(--sky-coral); transform: scaleX(1); transform-origin: left; }
+.btn-underline .arrow { color: var(--sky-coral-deep); transition: transform 0.25s ease; }
+.btn-underline:hover .arrow { transform: translateX(8px); }
+
+/* Framed-block CTA (Hotels) */
+.btn-framed { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid var(--sky-coral); color: var(--sky-ink); padding: 0.75rem 1.5rem; border-radius: var(--sky-radius-sm); z-index: 0; }
+.btn-framed::before { content: ""; position: absolute; inset: 0; background: var(--sky-coral); transform: translateX(-101%); transition: transform 0.3s ease; z-index: -1; }
+.btn-framed:hover { color: var(--sky-coral-ink); }
+.btn-framed:hover::before { transform: translateX(0); }
+
+/* Headline-as-button (Car Rentals) */
+.btn-headline { display: inline-flex; align-items: center; gap: 0.6rem; cursor: pointer; }
+.btn-headline .badge { display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; border-radius: 999px; background: var(--sky-coral-wash); color: var(--sky-coral-deep); transition: transform 0.2s ease; }
+.btn-headline:hover .badge { transform: translateX(4px) rotate(0deg); }
+
+/* Banner bar CTA (Airport Services) */
+.btn-banner-bar { display: flex; align-items: center; justify-content: space-between; width: 100%; background: linear-gradient(180deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0) 55%), var(--sky-coral); color: var(--sky-coral-ink); padding: 1rem 1.5rem; border-radius: var(--sky-radius-sm); font-weight: 600; }
+
+/* Solid pill CTA (Events — the page's one pill) */
+.btn-solid-pill { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 55%), var(--sky-coral); color: var(--sky-coral-ink); border-radius: 999px; padding: 0.7rem 1.4rem; font-weight: 600; }
+
+/* Chip CTA (SIM/eSIM) */
+.btn-chip {
+  display: inline-flex; align-items: center; gap: 0.5rem; color: var(--sky-ink);
+  border-radius: 999px; padding: 0.5rem 1rem; font-family: var(--font-mono); font-size: 0.8rem;
+  background: linear-gradient(var(--sky-glass-bg), var(--sky-glass-bg)) padding-box, var(--sky-glass-edge) border-box;
+  backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
+  border: 1px solid transparent;
+}
+.btn-chip .bars { display: inline-flex; align-items: flex-end; gap: 2px; height: 12px; }
+.btn-chip .bars span { width: 3px; background: var(--sky-coral); display: block; }
+.btn-chip:hover .bars span { animation: chip-bars 0.6s ease infinite alternate; }
+@keyframes chip-bars { from { opacity: 0.4; } to { opacity: 1; } }
+
+/* Circular icon-button (Tours) */
+.btn-circle {
+  display: inline-flex; align-items: center; justify-content: center; width: 3.25rem; height: 3.25rem;
+  border-radius: 999px; color: var(--sky-ink); transition: transform 0.3s ease, border-color 0.2s ease;
+  background: linear-gradient(var(--sky-glass-bg), var(--sky-glass-bg)) padding-box, var(--sky-glass-edge) border-box;
+  backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
+  border: 1px solid transparent;
+}
+.btn-circle:hover { border-color: var(--sky-coral); transform: rotate(45deg); }
+
+/* Final banner CTA — particle burst */
+.btn-final-banner { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 0.6rem; background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 55%), var(--sky-coral); color: var(--sky-coral-ink); border-radius: 999px; padding: 1rem 2.25rem; font-weight: 600; font-size: 1.05rem; }
+.btn-final-banner .burst { position: absolute; inset: -50%; background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, transparent 60%); opacity: 0; transform: scale(0.6); transition: opacity 0.3s ease, transform 0.4s ease; }
+.btn-final-banner:hover .burst { opacity: 1; transform: scale(1); }
+
+/* Masonry (Events) */
+.masonry-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem; }
+.masonry-item-a { grid-column: span 4; }
+.masonry-item-b { grid-column: span 2; }
+@media (max-width: 767px) {
+  .masonry-grid { grid-template-columns: 1fr; }
+  .masonry-item-a, .masonry-item-b { grid-column: span 1; }
+}
+
+/* Marquee (trust strip) */
+.marquee-track { display: flex; gap: 3rem; animation: marquee 26s linear infinite; width: max-content; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+}
+
+/* Horizontal scroll strip (SIM chips row) */
+.hscroll { display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x proximity; padding-bottom: 0.5rem; }
+.hscroll::-webkit-scrollbar { height: 6px; }
+.hscroll::-webkit-scrollbar-thumb { background: var(--sky-line); border-radius: 999px; }
+.hscroll > * { scroll-snap-align: start; flex: 0 0 auto; }
+
+/* ---- 3D tilt (destination cards) -- lightweight CSS 3D, no library ---- */
+.tilt-3d { perspective: 1200px; display: block; height: 100%; }
+.tilt-3d-inner {
+  height: 100%;
+  transform: rotateX(var(--tilt-rx, 0deg)) rotateY(var(--tilt-ry, 0deg));
+  transition: transform 0.15s ease-out;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tilt-3d-inner { transform: none !important; transition: none; }
+}
+
+/* ---- Destinations: trending/featured cards ---- */
+.dest-card { position: relative; border-radius: var(--sky-radius-lg); overflow: hidden; border: 1px solid transparent; background: linear-gradient(var(--sky-bg-raised), var(--sky-bg-raised)) padding-box, var(--sky-glass-edge) border-box; box-shadow: var(--sky-shadow-sm); transition: box-shadow 0.25s ease, transform 0.25s ease; animation: card-settle 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.dest-card:hover { box-shadow: var(--sky-shadow-md); transform: translateY(-2px); }
+.dest-card:nth-child(4n+1) { animation-delay: 0ms; }
+.dest-card:nth-child(4n+2) { animation-delay: 70ms; }
+.dest-card:nth-child(4n+3) { animation-delay: 140ms; }
+.dest-card:nth-child(4n+4) { animation-delay: 210ms; }
+.dest-card-media { position: relative; aspect-ratio: 4 / 5; overflow: hidden; }
+.dest-card-media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
+.dest-card:hover .dest-card-media img { transform: scale(1.06); }
+.dest-card-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--sky-bg) 0%, color-mix(in srgb, var(--sky-bg) 20%, transparent) 55%, transparent 75%);
+}
+.dest-card-copy { position: absolute; left: 0; right: 0; bottom: 0; padding: 1.1rem 1.2rem; z-index: 1; }
+.dest-card-flag { font-size: 1.5rem; line-height: 1; }
+.dest-pill-trending, .dest-pill-featured {
+  position: absolute; top: 0.9rem; left: 0.9rem; z-index: 2;
+  font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.3rem 0.6rem; border-radius: 999px; background: var(--sky-coral); color: var(--sky-coral-ink); font-weight: 600;
+}
+.tier-badge {
+  display: inline-block;
+  font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.3rem 0.6rem; border-radius: 999px; background: var(--sky-coral-wash); color: var(--sky-coral-deep); font-weight: 600;
+}
+/* Real interactive region filter (React state), not anchor links --
+   horizontally scrollable on mobile instead of shrinking to fit. */
+.region-filter-bar {
+  display: flex;
+  gap: 0.6rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.25rem;
+}
+.region-filter-btn {
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 0.55rem 1.25rem;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--sky-ink-muted);
+  border: 1px solid var(--sky-line);
+  background: var(--sky-bg-raised);
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.region-filter-btn:hover { color: var(--sky-ink); border-color: var(--sky-coral); }
+.region-filter-btn.is-active {
+  color: var(--sky-coral-ink);
+  background: var(--sky-coral);
+  border-color: var(--sky-coral);
+}
+/* Homepage vertical explorer preview panel -- hover/focus a vertical to
+   preview its title + subtitle here (see VerticalExplorer.tsx). */
+.region-explorer-preview {
+  border-radius: var(--sky-radius-md);
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  background: linear-gradient(var(--sky-glass-bg), var(--sky-glass-bg)) padding-box, var(--sky-glass-edge) border-box;
+  backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.region-explorer-preview-inner { animation: region-preview-in 0.35s ease both; }
+@keyframes region-preview-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.region-explorer-preview-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sky-coral-deep);
+}
+.region-explorer-preview-title { font-family: var(--font-display); font-size: clamp(1.3rem, 2.2vw, 1.75rem); margin-top: 0.6rem; }
+.region-explorer-preview-subtitle { color: var(--sky-ink-muted); margin-top: 0.6rem; max-width: 40ch; line-height: 1.6; }
+@media (prefers-reduced-motion: reduce) {
+  .region-explorer-preview-inner { animation: none; }
+}
+
+/* Vertical explorer -- 3-column, 2-row grid of the site's booking
+   verticals (see VerticalExplorer.tsx), same hover/focus-to-preview
+   pattern as the region explorer above, reusing its preview-panel
+   classes so both share one visual language. */
+.vertical-explorer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
+.vertical-explorer-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 1rem 1.1rem;
+  border-radius: var(--sky-radius-sm);
+  color: var(--sky-ink-muted);
+  font-weight: 600;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.vertical-explorer-item:hover,
+.vertical-explorer-item:focus-visible,
+.vertical-explorer-item.is-active { color: var(--sky-ink); background: var(--sky-coral-wash); }
+@media (max-width: 640px) {
+  .vertical-explorer-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.cloud-photo-section .vertical-explorer-item { color: #d8cdb0; }
+.cloud-photo-section .vertical-explorer-item:hover,
+.cloud-photo-section .vertical-explorer-item:focus-visible,
+.cloud-photo-section .vertical-explorer-item.is-active { color: #f5f0e6; background: rgba(255, 255, 255, 0.1); }
+
+.dest-region-heading { display: flex; align-items: center; gap: 0.5rem; }
+.dest-directory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.9rem; }
+.dest-mini-card {
+  display: block; border-radius: var(--sky-radius-sm); padding: 1.1rem;
+  background: linear-gradient(var(--sky-glass-bg), var(--sky-glass-bg)) padding-box, var(--sky-glass-edge) border-box;
+  backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
+  border: 1px solid transparent;
+  box-shadow: var(--sky-shadow-sm);
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  animation: card-settle 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.dest-mini-card:hover { border-color: var(--sky-coral); transform: translateY(-3px); box-shadow: var(--sky-shadow-md); }
+.dest-mini-card:nth-child(6n+1) { animation-delay: 0ms; }
+.dest-mini-card:nth-child(6n+2) { animation-delay: 60ms; }
+.dest-mini-card:nth-child(6n+3) { animation-delay: 120ms; }
+.dest-mini-card:nth-child(6n+4) { animation-delay: 180ms; }
+.dest-mini-card:nth-child(6n+5) { animation-delay: 240ms; }
+.dest-mini-card:nth-child(6n+6) { animation-delay: 300ms; }
+
+/* ---- Popular destinations slider (infinite loop, 3 cloned sets) ---- */
+/* Kept as plain uppercase text here (no glass badge) at the user's request,
+   even though .site-eyebrow is a glossy left-accent chip everywhere else. */
+.dest-slider-head .site-eyebrow {
+  display: inline;
+  border-left: none;
+  border-radius: 0;
+  padding: 0;
+  background: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+.dest-slider-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+.dest-slider-viewport { overflow: hidden; margin-top: 2.5rem; padding-block: 0.4rem; }
+.dest-slider-track {
+  display: flex;
+  gap: 1.25rem;
+  padding-inline: max(1.5rem, calc((100vw - 1240px) / 2 + 1.5rem));
+  transition: transform 640ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+.dest-slider-track.is-jumping { transition: none; }
+/* ---- Liquid-glass bezel for photo cards ----
+   Makes a photo card read as sitting behind a thick piece of rounded
+   glass: a crisp edge line, a bright specular along the top lip, a dimmer
+   bounce along the bottom, and a soft inner bloom just inside the rim.
+   Layered as two pseudo-elements on the card root (neither was in use)
+   and pointer-events:none throughout, so the card's own <Link> and the
+   CardActions pill on top of it keep every click.
+   Applied via .glass-bezel so photo cards opt in and the plainer text
+   cards (.dest-mini-card) stay flat. */
+.glass-bezel::before,
+.glass-bezel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 3;
+}
+/* Kept deliberately tight. These cards are ~145px wide, so a bloom scaled
+   for the reference's large cards covered most of the face and fogged the
+   photo. The glass has to live in the last few pixels of the edge. */
+.glass-bezel::before {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.42),
+    inset 0 1.5px 0.5px rgba(255, 255, 255, 0.5),
+    inset 0 -1.5px 0.5px rgba(255, 255, 255, 0.2),
+    inset 0 0 9px 1px rgba(255, 255, 255, 0.1);
+}
+/* Corner glints only -- light catching the curve of the glass at the two
+   opposite corners. It fades out by 8% so the middle of the photograph is
+   completely untouched. */
+.glass-bezel::after {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.18) 0%,
+    transparent 8%,
+    transparent 92%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+}
+
+.dest-slider-card {
+  position: relative;
+  flex: 0 0 clamp(240px, 26vw, 340px);
+  aspect-ratio: 3 / 4;
+  border-radius: var(--sky-radius-lg);
+  overflow: hidden;
+  border: 1px solid transparent;
+  background: linear-gradient(var(--sky-bg-raised), var(--sky-bg-raised)) padding-box, var(--sky-glass-edge) border-box;
+  box-shadow: var(--sky-shadow-sm);
+  transition: box-shadow 0.25s ease;
+}
+.dest-slider-card.is-active { box-shadow: var(--sky-shadow-md); }
+.dest-slider-card-link { position: absolute; inset: 0; display: block; }
+.dest-slider-card-link img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
+.dest-slider-card:hover .dest-slider-card-link img { transform: scale(1.06); }
+.dest-slider-card-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--sky-bg) 0%, color-mix(in srgb, var(--sky-bg) 25%, transparent) 55%, transparent 78%);
+}
+.dest-slider-card-copy { position: absolute; left: 0; right: 0; bottom: 0; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.2rem; z-index: 1; }
+.dest-slider-card-flag { font-size: 1.5rem; line-height: 1; margin-bottom: 0.2rem; }
+.dest-slider-card-name { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; color: var(--sky-ink); }
+.dest-slider-card-hook {
+  font-size: 0.85rem; color: var(--sky-ink-muted); line-height: 1.35;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+@media (max-width: 639px) {
+  .dest-slider-card { flex: 0 0 min(70vw, 280px); }
+  .dest-slider-track { gap: 0.9rem; padding-inline: 1.5rem; }
+}
+
+/* ---- Destination detail hero ---- */
+.dest-detail-hero { position: relative; height: 62vh; min-height: 420px; overflow: hidden; background: var(--sky-bg); }
+.dest-detail-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.dest-detail-media-fallback { display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 30% 30%, var(--sky-coral-wash), transparent 60%), var(--sky-bg-raised); }
+.dest-detail-flag-xl { font-size: 6rem; line-height: 1; }
+/* Video-window hero variant (see VerticalPage's heroVideo prop): a
+   looping video sits behind a photo with a transparent cutout (alpha
+   channel, not a CSS mask) so the video reads as the view "through" that
+   opening -- same technique the homepage hero used before the window
+   photo was removed from it per feedback, reused here deliberately. */
+.dest-detail-window-overlay { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+.dest-detail-mask {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--sky-bg) 0%, color-mix(in srgb, var(--sky-bg) 45%, transparent) 45%, transparent 75%);
+}
+.dest-detail-copy { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 3.5rem; }
+.dest-detail-mask-dark {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(to top, rgba(10, 8, 6, 0.85) 0%, rgba(10, 8, 6, 0.35) 45%, transparent 75%);
+}
+.dest-detail-copy-light { color: #f5f0e6; }
+.dest-detail-copy-light .site-eyebrow {
+  color: #f3e6b8;
+  border-left-color: #e3c569;
+  background: linear-gradient(rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.14)) padding-box;
+  box-shadow: none;
+}
+.dest-detail-copy-light .site-ink-muted { color: #d8cdb0; }
+
+/* ---- Mobile nav ---- */
+.site-menu-btn { display: inline-flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; width: 2.25rem; height: 2.25rem; padding: 0; background: transparent; border: none; cursor: pointer; }
+@media (min-width: 768px) {
+  .site-menu-btn { display: none; }
+}
+.site-menu-bar {
+  display: block;
+  width: 1.15rem;
+  height: 2px;
+  background: var(--sky-ink);
+  border-radius: 999px;
+  transition: transform 0.35s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.2s ease;
+  transform-origin: center;
+}
+/* Hamburger morphs into an X on open, rather than the panel just
+   appearing under an unchanged icon. */
+.site-menu-btn.is-open .site-menu-bar:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.site-menu-btn.is-open .site-menu-bar:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.site-menu-btn.is-open .site-menu-bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* Full-screen glass overlay rather than a small dropdown list -- large
+   display-type links with a mono index (the same numbered-step motif
+   used in flow-step elsewhere on the site), staggered in via --i on
+   open and reversed on close. Kept always mounted so the close
+   transition can play instead of the panel just vanishing. */
+.site-mobile-menu {
+  position: fixed;
+  inset: 4rem 0 0 0;
+  z-index: 45;
+  /* Nearly solid, not the small-strip glass tint -- a full-screen panel
+     needs to fully occlude the page behind it, or its own text collides
+     with whatever headline happens to sit underneath. */
+  background: linear-gradient(var(--sky-bg-raised), var(--sky-bg-raised)) padding-box, var(--sky-glass-edge) border-box;
+  overflow-y: auto;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.35s ease, visibility 0s linear 0.35s;
+}
+.site-mobile-menu.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 0.35s ease;
+}
+.site-mobile-menu::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(60% 45% at 85% 0%, var(--sky-coral-wash), transparent 70%);
+  pointer-events: none;
+}
+.site-mobile-menu-inner { display: flex; min-height: 100%; flex-direction: column; gap: 0.9rem; padding: 1.25rem 0 2.5rem; }
+
+/* Top icon row (Home / Contact) -- the drawer's own X-close is the
+   hamburger button in the main nav bar just above it, so this row isn't a
+   third close control, just the two real destinations from the KKday
+   reference's icon row (Settings/Chat had nothing to open on this site). */
+.mobile-menu-topbar { display: flex; justify-content: flex-end; gap: 0.5rem; }
+.mobile-menu-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  color: var(--sky-ink-muted);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.mobile-menu-icon-btn:hover { background: var(--sky-coral-wash); color: var(--sky-ink); }
+
+.mobile-account-block {
+  border-radius: var(--sky-radius-md);
+  padding: 1.5rem;
+  background: linear-gradient(var(--sky-glass-bg), var(--sky-glass-bg)) padding-box, var(--sky-glass-edge) border-box;
+  border: 1px solid transparent;
+}
+.mobile-account-title { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; margin-top: 0.15rem; }
+.mobile-account-subtitle { color: var(--sky-ink-muted); font-size: 0.9rem; margin-top: 0.4rem; }
+
+/* Grouped list cards -- the same icon+label+chevron row style stands in
+   for both the account extras (Wish list, Share, Gift) and the site's own
+   vertical nav (Flights, Hotels, ...), so the whole menu reads as one
+   structure instead of two different UIs stitched together. */
+.mobile-menu-card {
+  border-radius: var(--sky-radius-md);
+  overflow: hidden;
+  background: linear-gradient(var(--sky-glass-bg), var(--sky-glass-bg)) padding-box, var(--sky-glass-edge) border-box;
+  border: 1px solid transparent;
+}
+.mobile-menu-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.9rem 1.1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--sky-ink);
+  border-bottom: 1px solid var(--sky-line);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease, background 0.2s ease;
+  transition-delay: calc(var(--i, 0) * 35ms);
+}
+.mobile-menu-row:hover { background: var(--sky-coral-wash); }
+.mobile-menu-row:last-child { border-bottom: none; }
+.mobile-menu-row span { flex: 1; }
+.mobile-menu-row-chevron { color: var(--sky-ink-muted); flex: 0 0 auto !important; }
+.site-mobile-menu.is-open .mobile-menu-row,
+.site-mobile-menu.is-open .site-mobile-menu-footer { opacity: 1; transform: translateY(0); }
+
+.site-mobile-menu-footer {
+  margin-top: auto;
+  padding-top: 0.5rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition-delay: calc(var(--i, 0) * 35ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-mobile-menu, .mobile-menu-row, .site-mobile-menu-footer, .site-menu-bar { transition: none; }
+  .mobile-menu-row, .site-mobile-menu-footer { opacity: 1; transform: none; }
+}
+
+/* ---- View-all secondary link (uniform, used across homepage teaser sections) ---- */
+.btn-view-all { display: inline-flex; align-items: center; gap: 0.35rem; color: var(--sky-ink-muted); font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; transition: color 0.2s ease; }
+.btn-view-all:hover { color: var(--sky-coral-deep); }
+.btn-view-all .arrow { display: inline-block; transition: transform 0.2s ease; }
+.btn-view-all:hover .arrow { transform: translateX(4px); }
+
+/* ---- Mobile: two-per-row destination/mini cards, Booking.com-style compact sizing ---- */
+@media (max-width: 639px) {
+  .dest-card-media { aspect-ratio: 3 / 2; }
+  .dest-card-copy { padding: 0.7rem 0.8rem; }
+  .dest-card-flag { font-size: 1.15rem; }
+  .dest-card-copy p.font-semibold { font-size: 0.9rem; }
+  .dest-pill-trending, .dest-pill-featured {
+    top: 0.6rem; left: 0.6rem; font-size: 0.55rem; padding: 0.22rem 0.5rem;
+  }
+  .dest-mini-card { padding: 0.85rem; }
+  .dest-mini-card p.font-semibold { font-size: 0.9rem; }
+  .adv-card { padding: 0.85rem; }
+  .adv-card .text-lg { font-size: 0.95rem; }
+  .adv-card .text-sm { font-size: 0.8rem; }
+  .benefit-tile p.font-semibold { font-size: 0.9rem; }
+  .benefit-tile .text-sm { font-size: 0.78rem; }
+}
+
+/* "Why book with Skynova" -- icon badge + subtle lift on hover, distinct
+   from the photo-led benefit cards elsewhere on the homepage. */
+.why-book-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.why-book-card:hover { transform: translateY(-3px); box-shadow: var(--sky-shadow-md); }
+.why-book-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  background: var(--sky-coral-wash);
+  color: var(--sky-coral-deep);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.why-book-card:hover .why-book-icon { background: var(--sky-coral); color: var(--sky-coral-ink); }
+
+/* Flight route cards + hotel collection cards -- same card shell, both
+   link straight out to the vertical's affiliate CTA (no fake pricing or
+   per-hotel data to show, so the card itself is the pitch). */
+.route-card {
+  position: relative;
+  display: block;
+  border-radius: var(--sky-radius-md);
+  overflow: hidden;
+  border: 1px solid transparent;
+  background: linear-gradient(var(--sky-bg-raised), var(--sky-bg-raised)) padding-box, var(--sky-glass-edge) border-box;
+  box-shadow: var(--sky-shadow-sm);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.route-card:hover { box-shadow: var(--sky-shadow-md); transform: translateY(-2px); }
+.route-card-media { position: relative; aspect-ratio: 16 / 10; overflow: hidden; }
+.route-card-media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
+.route-card:hover .route-card-media img { transform: scale(1.06); }
+.route-card-copy { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 1rem 1.25rem; }
+.route-card-path {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--sky-ink);
+}
+.route-card-path-stack { display: block; text-transform: none; font-family: var(--font-display); font-size: 1rem; letter-spacing: normal; }
+.route-card-cta { flex-shrink: 0; display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.8rem; color: var(--sky-coral-deep); font-weight: 500; }
+.route-card-cta .arrow { transition: transform 0.2s ease; }
+.route-card:hover .route-card-cta .arrow { transform: translateX(4px); }
+.category-card { display: block; text-align: left; }
+
+/* Flight route cards: an animated flight path drawn over the destination
+   photo -- a dashed arc always drifting at whisper level, brightening and
+   speeding up on hover, with a plane icon flown along the same arc by
+   SMIL so it scales with the card at every breakpoint (the media box's
+   aspect ratio is fixed, so one viewBox reads correctly everywhere). */
+.flight-path-overlay { position: absolute; inset: 0; pointer-events: none; }
+.flight-path-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.flight-path-line {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 3 6;
+  opacity: 0.45;
+  animation: flight-path-march 5s linear infinite;
+  transition: opacity 0.3s ease, stroke 0.3s ease;
+}
+.flight-route-card:hover .flight-path-line {
+  stroke: var(--sky-coral);
+  opacity: 0.95;
+  animation-duration: 1.6s;
+}
+@keyframes flight-path-march { to { stroke-dashoffset: -18; } }
+.flight-path-dot { fill: #fff; opacity: 0.75; transition: opacity 0.3s ease, fill 0.3s ease; }
+.flight-route-card:hover .flight-path-dot { fill: var(--sky-coral); opacity: 1; }
+.flight-path-dot-dest { transform-box: fill-box; transform-origin: center; }
+.flight-route-card:hover .flight-path-dot-dest { animation: flight-path-pulse 1.6s ease-out infinite; }
+@keyframes flight-path-pulse {
+  0% { filter: drop-shadow(0 0 0 rgba(201, 162, 39, 0.6)); }
+  70% { filter: drop-shadow(0 0 6px rgba(201, 162, 39, 0)); }
+  100% { filter: drop-shadow(0 0 0 rgba(201, 162, 39, 0)); }
+}
+.flight-path-plane {
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
+.flight-route-card:hover .flight-path-plane { color: var(--sky-coral); opacity: 1; }
+.flight-path-code {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+  opacity: 0.85;
+  transition: color 0.3s ease;
+}
+.flight-route-card:hover .flight-path-code { color: var(--sky-coral); }
+.flight-path-code-origin { left: 12.5%; top: 91%; }
+.flight-path-code-dest { left: 87.5%; top: 15%; }
+@media (prefers-reduced-motion: reduce) {
+  .flight-path-line { animation: none; opacity: 0.6; }
+  .flight-route-card:hover .flight-path-line { animation: none; }
+  .flight-path-dot-dest, .flight-route-card:hover .flight-path-dot-dest { animation: none; }
+  /* CSS can't pause SMIL's animateMotion, so keep the plane itself hidden
+     rather than let a moving glyph slip past the motion preference. */
+  .flight-path-plane, .flight-route-card:hover .flight-path-plane { opacity: 0; }
+}
+
+/* Luxury newsletter band -- deep ink + gold accent, matching Skynova's
+   existing dark-ground tone (see .hero-stage-portal, .footer-cinematic)
+   rather than importing a separate navy blue just for this section. */
+.newsletter-section { background: var(--sky-ink); padding-block: clamp(3.5rem, 5vw, 4.5rem); }
+.newsletter-inner { max-width: 640px; margin-inline: auto; text-align: center; }
+.newsletter-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #e3c569;
+}
+.newsletter-heading {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  color: #f5f0e6;
+  margin-top: 0.75rem;
+  letter-spacing: -0.02em;
+}
+.newsletter-copy { color: #b9b0a0; margin-top: 1rem; font-size: 1rem; line-height: 1.6; }
+.newsletter-form { margin-top: 2rem; display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+.newsletter-input {
+  flex: 1 1 260px;
+  max-width: 320px;
+  padding: 0.85rem 1.25rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: #f5f0e6;
+  font-size: 0.95rem;
+}
+.newsletter-input::placeholder { color: #8a8172; }
+.newsletter-input:focus { outline: none; border-color: #e3c569; }
+.newsletter-submit {
+  flex-shrink: 0;
+  background: var(--sky-coral);
+  color: var(--sky-coral-ink);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.85rem 1.75rem;
+  border-radius: 999px;
+  transition: transform 0.15s ease;
+}
+.newsletter-submit:hover { transform: scale(1.02); }
+.newsletter-thanks { margin-top: 2rem; color: #e3c569; font-size: 1.05rem; font-weight: 500; }
+.newsletter-privacy { margin-top: 1.25rem; color: #8a8172; font-size: 0.78rem; }
+
+/* ---- Homepage overview sections (trust line, advantages, booking spec, benefits, stats, globe, closing) ---- */
+/* ---- Afterglow band (Trust line + Advantages) — gold glass, no white ---- */
+/* Frosted glass, not a solid panel -- a self-contained gold gradient with
+   its own blur, independent of whatever hero sits above it. */
+.hero-afterglow {
+  position: relative;
+  overflow: hidden;
+  --sky-coral-deep: var(--sky-coral-ink);
+  background:
+    radial-gradient(140% 180% at 12% -25%, rgba(255, 244, 214, 0.55), transparent 55%),
+    radial-gradient(120% 160% at 100% 130%, rgba(147, 113, 29, 0.25), transparent 60%),
+    linear-gradient(155deg, rgba(243, 215, 137, 0.58) 0%, rgba(233, 193, 95, 0.58) 32%, rgba(246, 231, 189, 0.62) 68%, rgba(248, 239, 216, 0.68) 100%);
+  /* Oversized canvas + scroll-driven position (--parallax, set by
+     use-parallax.ts, 0 by default) drifts the glow slowly against the
+     content scrolling past it, reinforcing the dissolve into this section
+     instead of the whole background moving in lockstep with the page. */
+  background-size: 100% 145%;
+  background-position: 0% calc(50% + var(--parallax, 0) * 16%);
+  background-repeat: no-repeat;
+  backdrop-filter: blur(36px) saturate(150%);
+  /* Dissolves in from nothing at the top and back out at the bottom
+     instead of presenting hard edges either side -- masks the
+     blur/gradient together with the sheen overlay below, so this section
+     fades into the hero above and the plain section below rather than
+     showing as a visible panel with a seam at either boundary. */
+  mask-image: linear-gradient(to bottom, transparent 0%, black 6%, black 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 6%, black 92%, transparent 100%);
+}
+.hero-afterglow::before {
+  content: "";
+  position: absolute;
+  inset: -20% -10%;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.55) 45%, rgba(255, 255, 255, 0.15) 52%, transparent 65%);
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+}
+
+.trust-strip { padding-block: 1.75rem; }
+.trust-strip-text { text-align: center; font-size: 0.95rem; color: var(--sky-ink-muted); }
+.trust-strip-text strong { color: var(--sky-ink); font-weight: 600; }
+
+.spec-sheet { border-top: 1px solid var(--sky-line); }
+.spec-row { display: flex; align-items: center; justify-content: space-between; padding-block: 0.85rem; border-bottom: 1px solid var(--sky-line); }
+
+.flow-diagram { position: relative; display: flex; flex-direction: column; }
+.flow-step { position: relative; display: flex; gap: 1rem; margin-bottom: 2rem; }
+.flow-step:last-child { margin-bottom: 0; }
+.flow-step-index {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--sky-coral);
+  color: var(--sky-coral-deep);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  background: var(--sky-bg-raised);
+  position: relative;
+  z-index: 1;
+}
+.flow-step-line { position: absolute; left: 1.24rem; top: 2.5rem; bottom: -2rem; width: 1px; background: var(--sky-line); }
+
+/* Cloud-photo section -- a still frame from the hero's own loop, dissolving
+   in from the section above and back out at the bottom via mask-image,
+   the same technique .hero-afterglow uses for its own gold panel (see
+   above). Applied to any section that should read as a continuation of
+   the hero's sky rather than a hard-edged photo block: currently "How a
+   booking works" and the region explorer. Photo + scrim live in one
+   ::before layer so they dissolve together with a single mask -- no
+   separate overlay to keep in sync. */
+.cloud-photo-section { position: relative; overflow: hidden; }
+.cloud-photo-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(rgba(10, 8, 6, 0.6), rgba(10, 8, 6, 0.6)),
+    url("/assets/hero/cloud-still.webp") center / cover no-repeat;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%);
+}
+.cloud-photo-section > .site-container { position: relative; z-index: 1; }
+.cloud-photo-section .site-eyebrow {
+  color: #f3e6b8;
+  border-left-color: #e3c569;
+  background: linear-gradient(rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.14)) padding-box;
+  box-shadow: none;
+}
+.cloud-photo-section h2 { color: #f5f0e6; }
+.cloud-photo-section .site-ink-muted { color: #d8cdb0; }
+.cloud-photo-section .spec-sheet { border-top-color: rgba(255, 255, 255, 0.16); }
+.cloud-photo-section .spec-row { border-bottom-color: rgba(255, 255, 255, 0.16); }
+.cloud-photo-section .spec-row span:last-child { color: #f5f0e6; }
+.cloud-photo-section .flow-step p.font-semibold { color: #f5f0e6; }
+.cloud-photo-section .flow-step-index { background: rgba(255, 255, 255, 0.1); border-color: #e3c569; color: #f3e6b8; }
+.cloud-photo-section .flow-step-line { background: rgba(255, 255, 255, 0.22); }
+.cloud-photo-section .region-explorer-preview {
+  background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)) padding-box, rgba(255, 255, 255, 0.22) border-box;
+}
+.cloud-photo-section .region-explorer-preview-tag { color: #f3e6b8; }
+.cloud-photo-section .region-explorer-preview-title { color: #f5f0e6; }
+.cloud-photo-section .region-explorer-preview-subtitle { color: #d8cdb0; }
+
+.benefit-tile-media { position: relative; aspect-ratio: 4 / 3; border-radius: var(--sky-radius-sm); overflow: hidden; border: 1px solid var(--sky-line); }
+.benefit-tile-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Placeholder art for cards with no real photo yet -- gold-on-ivory gradient
+   tile with a themed glyph, clearly a placeholder rather than a mismatched
+   stock photo of the wrong place. Swap for a real <img> per card when ready. */
+.card-media-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, var(--sky-bg-raised) 0%, var(--sky-coral-wash) 55%, var(--sky-bg-raised) 100%);
+}
+
+/* ---- Blog page: editorial featured+grid layout, adapted with Skynova's
+   own posts/destination photos and gold/cream brand instead of a reference
+   photography blog's black/white styling and stock videos. ---- */
+.blog-badge {
+  display: inline-block;
+  background: var(--sky-bg-raised);
+  color: var(--sky-ink-muted);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.75rem;
+  border-radius: 8px;
+}
+.blog-heading {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.25rem, 4vw, 3rem);
+  letter-spacing: -0.05em;
+  line-height: 1.05;
+  color: var(--sky-ink);
+  margin-top: 0.9rem;
+}
+.blog-header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+.blog-subtitle { max-width: 480px; color: var(--sky-ink-muted); font-size: 1.05rem; line-height: 1.6; }
+.btn-blog-pill {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--sky-ink);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
+  transition: transform 0.2s ease;
+}
+.btn-blog-pill:hover { transform: scale(1.02); }
+
+/* Shared media frame -- scale-on-hover, dark overlay, plus icon, corner
+   brackets -- used by both the featured card and the standard grid cards. */
+.blog-media {
+  position: relative;
+  overflow: hidden;
+  background: var(--sky-bg-raised);
+  height: 100%;
+}
+.blog-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.33, 1, 0.68, 1);
+}
+.blog-media:hover img { transform: scale(1.08); }
+.blog-media-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.4s ease;
+}
+.blog-media:hover .blog-media-overlay { opacity: 1; }
+.blog-media-plus {
+  width: 70px;
+  height: 70px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  font-weight: 300;
+  transform: scale(0.7);
+  transition: transform 0.3s ease;
+}
+.blog-media:hover .blog-media-plus { transform: scale(1); }
+.blog-corner { position: absolute; width: 12px; height: 12px; border-color: #fff; border-style: solid; opacity: 0.85; }
+.blog-corner-tl { top: 15px; left: 15px; border-width: 1.5px 0 0 1.5px; }
+.blog-corner-tr { top: 15px; right: 15px; border-width: 1.5px 1.5px 0 0; }
+.blog-corner-bl { bottom: 15px; left: 15px; border-width: 0 0 1.5px 1.5px; }
+.blog-corner-br { bottom: 15px; right: 15px; border-width: 0 1.5px 1.5px 0; }
+
+.blog-featured {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-radius: 20px;
+  border: 1px solid var(--sky-line);
+  min-height: 480px;
+  overflow: hidden;
+  margin-top: 2.5rem;
+}
+.blog-featured-content {
+  padding: 3.5rem;
+  display: flex;
+  flex-direction: column;
+  background: var(--sky-bg-raised);
+}
+.blog-featured-badge {
+  align-self: flex-start;
+  background: var(--sky-ink);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  margin-bottom: 1.5rem;
+}
+.blog-featured-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.6rem, 2.4vw, 2rem);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--sky-ink);
+}
+.blog-featured-excerpt { margin-top: 1rem; color: var(--sky-ink-muted); font-size: 1rem; line-height: 1.6; max-width: 44ch; }
+.blog-featured-footer {
+  margin-top: auto;
+  padding-top: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.blog-author { font-size: 0.85rem; color: var(--sky-ink-muted); }
+.blog-category-badge {
+  display: inline-flex;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: var(--sky-ink);
+}
+.blog-category-badge-shrink { flex-shrink: 0; }
+.blog-cat-a { background: #7d1a4a; }
+.blog-cat-b { background: #2c4c34; }
+.blog-cat-c { background: #1a2b6b; }
+.blog-cat-d { background: #a63e2d; }
+.blog-cat-e { background: #4a3b7d; }
+.blog-cat-f { background: #1a6b5a; }
+.blog-cat-g { background: #6b4a1a; }
+.blog-cat-h { background: #7a5c14; }
+.blog-cat-i { background: #1f5c47; }
+.blog-cat-j { background: #2d6b3f; }
+
+.blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6rem; margin-top: 1.6rem; }
+.blog-card-media { position: relative; aspect-ratio: 16 / 10; border-radius: 16px; overflow: hidden; }
+.blog-card-title-row { margin-top: 1rem; display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; }
+.blog-card-title { font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; line-height: 1.35; color: var(--sky-ink); }
+
+@media (max-width: 1024px) {
+  .blog-featured { grid-template-columns: 1fr; }
+  .blog-featured .blog-media { min-height: 280px; }
+  .blog-featured-content { padding: 2.5rem; }
+  .blog-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .blog-header-row { flex-direction: column; align-items: flex-start; }
+  .blog-grid { grid-template-columns: 1fr; }
+  .blog-featured-title { font-size: 1.6rem; }
+}
+
+/* ---- FAQ page: CTA + accordion, adapted from a money-transfer reference
+   page with Skynova's own gold palette and travel copy instead of its
+   rainbow gradient and unrelated transfer questions. Reuses the site's
+   existing <Footer /> rather than the reference's separate footer markup. */
+.faq-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2rem; align-items: stretch; }
+@media (max-width: 900px) {
+  .faq-grid { grid-template-columns: 1fr; gap: 3rem; }
+}
+
+@property --faq-x1 { syntax: '<percentage>'; inherits: false; initial-value: 10%; }
+@property --faq-y1 { syntax: '<percentage>'; inherits: false; initial-value: 10%; }
+@property --faq-x2 { syntax: '<percentage>'; inherits: false; initial-value: 90%; }
+@property --faq-y2 { syntax: '<percentage>'; inherits: false; initial-value: 10%; }
+@property --faq-x3 { syntax: '<percentage>'; inherits: false; initial-value: 10%; }
+@property --faq-y3 { syntax: '<percentage>'; inherits: false; initial-value: 90%; }
+@property --faq-x4 { syntax: '<percentage>'; inherits: false; initial-value: 90%; }
+@property --faq-y4 { syntax: '<percentage>'; inherits: false; initial-value: 90%; }
+@property --faq-x5 { syntax: '<percentage>'; inherits: false; initial-value: 50%; }
+@property --faq-y5 { syntax: '<percentage>'; inherits: false; initial-value: 50%; }
+@property --faq-s1 { syntax: '<percentage>'; inherits: false; initial-value: 55%; }
+@property --faq-s2 { syntax: '<percentage>'; inherits: false; initial-value: 55%; }
+@property --faq-s3 { syntax: '<percentage>'; inherits: false; initial-value: 55%; }
+@property --faq-s4 { syntax: '<percentage>'; inherits: false; initial-value: 55%; }
+@property --faq-s5 { syntax: '<percentage>'; inherits: false; initial-value: 65%; }
+
+.faq-cta {
+  border-radius: 24px;
+  padding: 4rem 2.5rem;
+  color: #2a1d05;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: var(--sky-shadow-md);
+  position: relative;
+  overflow: hidden;
+  background-color: #f6e6b8;
+  background-image:
+    radial-gradient(circle at var(--faq-x1) var(--faq-y1), #fff8e1 0px, transparent var(--faq-s1)),
+    radial-gradient(circle at var(--faq-x2) var(--faq-y2), #e3c569 0px, transparent var(--faq-s2)),
+    radial-gradient(circle at var(--faq-x3) var(--faq-y3), #c9a227 0px, transparent var(--faq-s3)),
+    radial-gradient(circle at var(--faq-x4) var(--faq-y4), #93711d 0px, transparent var(--faq-s4)),
+    radial-gradient(circle at var(--faq-x5) var(--faq-y5), #fbead0 0px, transparent var(--faq-s5));
+  animation:
+    faq-blob1 5s ease-in-out infinite,
+    faq-blob2 6s ease-in-out infinite,
+    faq-blob3 5.5s ease-in-out infinite,
+    faq-blob4 6.5s ease-in-out infinite,
+    faq-blob5 4s ease-in-out infinite,
+    faq-size1 3.5s ease-in-out infinite,
+    faq-size2 4.2s ease-in-out infinite,
+    faq-size3 3.8s ease-in-out infinite,
+    faq-size4 4.6s ease-in-out infinite,
+    faq-size5 3s ease-in-out infinite;
+}
+@keyframes faq-blob1 { 0%,100% { --faq-x1: 5%; --faq-y1: 5%; } 25% { --faq-x1: 45%; --faq-y1: 20%; } 50% { --faq-x1: 30%; --faq-y1: 55%; } 75% { --faq-x1: 0%; --faq-y1: 30%; } }
+@keyframes faq-blob2 { 0%,100% { --faq-x2: 95%; --faq-y2: 5%; } 33% { --faq-x2: 55%; --faq-y2: 35%; } 66% { --faq-x2: 80%; --faq-y2: 65%; } }
+@keyframes faq-blob3 { 0%,100% { --faq-x3: 5%; --faq-y3: 95%; } 40% { --faq-x3: 45%; --faq-y3: 65%; } 70% { --faq-x3: 25%; --faq-y3: 100%; } }
+@keyframes faq-blob4 { 0%,100% { --faq-x4: 95%; --faq-y4: 95%; } 30% { --faq-x4: 60%; --faq-y4: 70%; } 60% { --faq-x4: 100%; --faq-y4: 50%; } }
+@keyframes faq-blob5 { 0%,100% { --faq-x5: 50%; --faq-y5: 50%; } 25% { --faq-x5: 70%; --faq-y5: 30%; } 50% { --faq-x5: 40%; --faq-y5: 70%; } 75% { --faq-x5: 30%; --faq-y5: 40%; } }
+@keyframes faq-size1 { 0%,100% { --faq-s1: 45%; } 50% { --faq-s1: 80%; } }
+@keyframes faq-size2 { 0%,100% { --faq-s2: 45%; } 50% { --faq-s2: 85%; } }
+@keyframes faq-size3 { 0%,100% { --faq-s3: 45%; } 50% { --faq-s3: 78%; } }
+@keyframes faq-size4 { 0%,100% { --faq-s4: 45%; } 50% { --faq-s4: 82%; } }
+@keyframes faq-size5 { 0%,100% { --faq-s5: 50%; } 50% { --faq-s5: 85%; } }
+@media (prefers-reduced-motion: reduce) {
+  .faq-cta { animation: none; }
+}
+
+.faq-cta-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.9rem;
+}
+.faq-cta-sub { font-size: 0.95rem; opacity: 0.85; margin-bottom: 1.75rem; }
+.faq-cta-btn {
+  background: var(--sky-ink);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.9rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(28, 26, 20, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.faq-cta-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 26px rgba(28, 26, 20, 0.32); }
+
+.faq-list { display: flex; flex-direction: column; gap: 0.75rem; justify-content: center; }
+.faq-item {
+  background: var(--sky-bg-raised);
+  border: 1px solid var(--sky-line);
+  border-radius: 12px;
+  padding: 1.1rem 1.25rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.faq-item.is-open { border-color: var(--sky-coral); box-shadow: var(--sky-shadow-sm); }
+.faq-item-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; font-weight: 500; color: var(--sky-ink); }
+.faq-item-row svg { flex-shrink: 0; color: var(--sky-coral-deep); }
+.faq-answer { margin-top: 0.75rem; color: var(--sky-ink-muted); font-size: 0.92rem; line-height: 1.6; }
+
+.stats-bar { padding-block: 2.5rem; }
+.stats-bar-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+@media (min-width: 768px) { .stats-bar-grid { grid-template-columns: repeat(4, 1fr); } }
+.stats-bar-item { text-align: center; }
+.stats-bar-value { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--sky-coral-deep); }
+
+/* ---- Orbit stage: destinations circling the globe in true 3D ----
+   .orbit-stage sets the camera (perspective). .orbit-ring carries a static
+   tilt (rotateX) plus an animated revolution (rotateY) -- both baked into
+   ONE keyframe so no extra wrapper is needed. .globe sits at Z=0 inside the
+   same 3D space, so items swinging to translateZ > 0 render in FRONT of it
+   and items swinging to translateZ < 0 render BEHIND it -- real depth
+   sorting from the browser's 3D compositor, not a z-index trick. Each chip
+   then counter-rotates by the exact inverse (-angle - revolution, then
+   -tilt) so it always faces the camera regardless of where it sits in the
+   orbit -- see the derivation in the redesign notes: composing
+   rotateY(tilt-and-spin) * rotateY(angle) * rotateX(-tilt) * rotateY(-angle-spin)
+   cancels to identity at every frame. */
+.orbit-stage {
+  position: relative;
+  width: clamp(300px, 92vw, 680px);
+  height: clamp(300px, 92vw, 680px);
+  margin-inline: auto;
+  perspective: 900px;
+  transform-style: preserve-3d;
+}
+/* Real transparent-PNG cloud (genuine alpha, not a cropped photo) drifting
+   in front of the globe -- one copy near the top of the stage, one
+   (flipped + offset) near the bottom. No mask needed since the source
+   already fades to nothing at its own edges. No z-index needed either:
+   .globe comes first in DOM order within .orbit-stage, so these (and the
+   plane/ring after them) naturally paint over it. */
+/* WebGL canvas host (see components/site/Globe3D.tsx). Fills the stage and
+   sits at the back of it; the cloud images and the destination-chip ring
+   are later in the DOM, so they paint over it without needing z-index.
+   pointer-events:none so the chips underneath the cursor stay clickable --
+   the canvas covers the whole stage and would otherwise eat every click. */
+.orbit-globe-3d {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Destinations orbit again, just much slower than the original 46s lap
+   (now 100s) -- same X+Y tumble, same counter-rotation cancellation so
+   chips stay flat and readable through the turn. */
+.orbit-ring {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  animation: orbit-spin-3d 100s linear infinite;
+}
+.orbit-item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  transform: rotateY(var(--angle)) translateZ(var(--orbit-r, clamp(200px, 46vw, 390px)));
+}
+.orbit-item-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+  transform: translate(-50%, -50%) rotateY(calc(-1 * var(--angle))) rotateX(-30deg);
+  animation: orbit-counter-spin-3d 100s linear infinite;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  color: var(--sky-ink-muted);
+  border: 1px solid transparent;
+  background: linear-gradient(var(--sky-glass-bg-strong), var(--sky-glass-bg-strong)) padding-box, var(--sky-glass-edge) border-box;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.orbit-item-chip:hover { border-color: var(--sky-coral); color: var(--sky-ink); }
+@keyframes orbit-spin-3d {
+  0%    { transform: rotateX(30deg) rotateY(0deg); }
+  12.5% { transform: rotateX(40.6deg) rotateY(45deg); }
+  25%   { transform: rotateX(45deg) rotateY(90deg); }
+  37.5% { transform: rotateX(40.6deg) rotateY(135deg); }
+  50%   { transform: rotateX(30deg) rotateY(180deg); }
+  62.5% { transform: rotateX(19.4deg) rotateY(225deg); }
+  75%   { transform: rotateX(15deg) rotateY(270deg); }
+  87.5% { transform: rotateX(19.4deg) rotateY(315deg); }
+  100%  { transform: rotateX(30deg) rotateY(360deg); }
+}
+@keyframes orbit-counter-spin-3d {
+  0%    { transform: translate(-50%, -50%) rotateY(calc(-1 * var(--angle) - 0deg)) rotateX(-30deg); }
+  12.5% { transform: translate(-50%, -50%) rotateY(calc(-1 * var(--angle) - 45deg)) rotateX(-40.6deg); }
+  25%   { transform: translate(-50%, -50%) rotateY(calc(-1 * var(--angle) - 90deg)) rotateX(-45deg); }
+  37.5% { transform: translate(-50%, -50%) rotateY(calc(-1 * var(--angle) - 135deg)) rotateX(-40.6deg); }
+  50%   { transform: translate(-50%, -50%) rotateY(calc(-1 * var(--angle) - 180deg)) rotateX(-30deg); }
+  62.5% { transform: translate(-50%, -50%) rotateY(calc(-1 * var(--angle) - 225deg)) rotateX(-19.4deg); }
+  75%   { transform: translate(-50%, -50%) rotateY(calc(-1 * var(--angle) - 270deg)) rotateX(-15deg); }
+  87.5% { transform: translate(-50%, -50%) rotateY(calc(-1 * var(--angle) - 315deg)) rotateX(-19.4deg); }
+  100%  { transform: translate(-50%, -50%) rotateY(calc(-1 * var(--angle) - 360deg)) rotateX(-30deg); }
+}
+.orbit-stage:hover .orbit-ring,
+.orbit-stage:hover .orbit-item-chip {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .orbit-ring, .orbit-item-chip { animation: none; }
+}
+
+/* ---- Footer (cinematic video + liquid glass) ---- */
+.footer-cinematic {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.footer-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.footer-video-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(28, 26, 20, 0.72) 0%, rgba(28, 26, 20, 0.85) 55%, rgba(12, 11, 8, 0.94) 100%);
+}
+.footer-glass {
+  position: relative;
+  z-index: 2;
+  padding-block: 4rem 2rem;
+  color: #f3ede0;
+  /* Same reveal contract as .scroll-reveal elsewhere: default fully in
+     place so SSR/no-JS renders complete, then settle up on scroll-in. */
+  --reveal: 1;
+  transform: translateY(calc((1 - var(--reveal, 1)) * 40px));
+  opacity: 1;
+}
+.footer-glass .font-semibold { color: #f3ede0; }
+.footer-ink-muted { color: rgba(243, 237, 224, 0.62); }
+.footer-heading {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(243, 237, 224, 0.5);
+  margin-bottom: 0.9rem;
+}
+.footer-link {
+  color: rgba(243, 237, 224, 0.78);
+  transition: color 0.2s ease;
+}
+.footer-link:hover { color: var(--sky-coral); }
+.footer-bottom {
+  margin-top: 3rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid rgba(243, 237, 224, 0.14);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+}
+.footer-social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 999px;
+  color: rgba(243, 237, 224, 0.78);
+  border: 1px solid rgba(243, 237, 224, 0.18);
+  background: rgba(243, 237, 224, 0.06);
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+.footer-social-icon:hover {
+  color: var(--sky-ink);
+  background: var(--sky-coral);
+  border-color: var(--sky-coral);
+}
+@media (prefers-reduced-motion: reduce) {
+  .footer-glass { transform: none; }
+}
+
+/* Closing banner: a glass panel with a soft gold glow behind the figure,
+   instead of plain centered text sitting directly on the page background. */
+.closing-cta-figure {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(3rem, 6vw, 4.5rem);
+  color: var(--sky-coral-deep);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 40px var(--sky-coral-wash);
+}
+.closing-cta { position: relative; }
+.closing-cta .site-container {
+  position: relative;
+  z-index: 1;
+  padding: clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 4vw, 3rem);
+  border-radius: 32px;
+  border: 1px solid transparent;
+  background: linear-gradient(var(--sky-glass-bg), var(--sky-glass-bg)) padding-box, var(--sky-glass-edge) border-box;
+  backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
+  box-shadow: var(--sky-shadow-md);
+  overflow: hidden;
+}
+.closing-cta .site-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(55% 70% at 50% 0%, var(--sky-coral-wash), transparent 72%);
+  pointer-events: none;
+}
+
+/* Partner widget frame (see AffiliateWidget.tsx) -- min-height holds the
+   layout steady while the async script loads its own content in. */
+.affiliate-widget-frame {
+  border-radius: var(--sky-radius-md);
+  padding: 1.5rem;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+/* A small floor, not a fixed box -- widget content ranges from a ~180px
+   compact banner up to a ~1400px full results list, so a large fixed
+   min-height (220px) left dead empty space below the shorter ones,
+   making the actual widget content look like it was floating loose
+   inside an oversized card instead of filling it. */
+.affiliate-widget { min-height: 60px; max-width: 100%; overflow-x: auto; }
+/* The widget itself sets height="100%" on this iframe, which can't
+   resolve against an ancestor with no defined height -- it collapses to
+   a too-short intrinsic default, squeezing the widget's own headline,
+   button, and logo grid into not enough room and making them overlap
+   each other. A concrete pixel height (an author CSS rule beats the
+   HTML height="" presentational attribute) gives it enough room to lay
+   its own content out without collision. */
+.affiliate-widget iframe { max-width: 100%; height: 280px; }
+
+/* eSIM page -- floating SIM card (see esim.tsx). The cutout image is a
+   real transparent PNG (background keyed out), not a boxed photo, so it
+   just hovers over the page with a soft ambient shadow rather than
+   sitting in a card/panel like the rest of the site's imagery. */
+.sim-float-section .site-container {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  align-items: center;
+  grid-template-columns: 1.1fr 1fr;
+}
+.sim-float-stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 2.5rem) 0;
+}
+.sim-float-card {
+  width: min(280px, 70%);
+  animation: sim-float 6s ease-in-out infinite;
+  filter: drop-shadow(0 30px 40px rgba(20, 20, 40, 0.16));
+}
+.sim-float-stage::after {
+  content: "";
+  position: absolute;
+  bottom: 8%;
+  left: 50%;
+  width: 55%;
+  height: 24px;
+  background: radial-gradient(closest-side, rgba(20, 20, 40, 0.16), transparent 75%);
+  transform: translateX(-50%);
+  animation: sim-shadow 6s ease-in-out infinite;
+}
+@keyframes sim-float {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-22px) rotate(1.5deg); }
+}
+@keyframes sim-shadow {
+  0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.8; }
+  50% { transform: translateX(-50%) scale(0.82); opacity: 0.5; }
+}
+@media (max-width: 760px) {
+  .sim-float-section .site-container { grid-template-columns: 1fr; text-align: center; }
+  .sim-float-stage { order: -1; }
+  .sim-float-card { width: min(170px, 46%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sim-float-card, .sim-float-stage::after { animation: none; }
+}
+
+/* ---- Wishlist heart button (see WishlistButton.tsx) -- an overlay
+   variant on destination cards whose whole body is a <Link> (positioned
+   by the card's own position:relative), and an inline labeled variant on
+   the destination detail hero. ---- */
+.wishlist-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: none;
+  cursor: pointer;
+  color: var(--sky-ink-muted);
+  transition: color 0.2s ease, transform 0.15s ease, background 0.2s ease;
+}
+.wishlist-btn:active { transform: scale(0.92); }
+.wishlist-btn.is-saved { color: #d94f4f; }
+.wishlist-btn-overlay {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  z-index: 2;
+  width: 2rem;
+  height: 2rem;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(20, 18, 14, 0.35);
+  backdrop-filter: blur(6px);
+  color: #f5f0e6;
+}
+.wishlist-btn-overlay.is-saved { color: #ff8080; }
+.wishlist-btn-overlay:hover { background: rgba(20, 18, 14, 0.55); }
+.wishlist-btn-bare {
+  width: 2rem;
+  height: 2rem;
+  justify-content: center;
+  border-radius: 999px;
+  flex: none;
+  color: #f5f0e6;
+  background: transparent;
+}
+.wishlist-btn-bare.is-saved { color: #ff8080; }
+
+/* ---- Card actions pill (see CardActions.tsx) -- collapsed it shows only
+   the save heart; share + gift slide out beside it. The reveal is driven
+   purely by CSS so there's no hover state in React to get out of sync.
+
+   The two revealed items animate width (not transform) because the pill
+   itself has to shrink around them -- a transform would leave the glass
+   background at full width while the icons vanished. They're only three
+   2rem boxes, so the layout cost is trivial and contained. ---- */
+.card-actions {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.2rem;
+  border-radius: 999px;
+  background: rgba(20, 18, 14, 0.38);
+  backdrop-filter: blur(8px) saturate(140%);
+  box-shadow: 0 6px 16px -8px rgba(20, 18, 14, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transition: background 0.25s ease;
+}
+.card-actions-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: #f5f0e6;
+  cursor: pointer;
+  transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, background 0.2s ease;
+}
+.card-actions-item:hover { background: rgba(255, 255, 255, 0.16); }
+.card-actions-item:active { transform: scale(0.92); }
+
+/* Only collapse where a real pointer can expand it again. Touch devices
+   fall through to the expanded default -- a collapsed pill there would
+   hide share and gift behind a tap nobody is told about. */
+@media (hover: hover) and (pointer: fine) {
+  .card-actions .card-actions-item {
+    width: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .card-actions:hover .card-actions-item,
+  .card-actions:focus-within .card-actions-item {
+    width: 2rem;
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-actions-item { transition: opacity 0.2s ease, background 0.2s ease; }
+}
+
+.wishlist-btn-inline {
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  background: linear-gradient(var(--sky-glass-bg), var(--sky-glass-bg)) padding-box, var(--sky-glass-edge) border-box;
+  border: 1px solid transparent;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.hero-stage-portal .wishlist-btn-inline { color: #f5f0e6; }
+
+/* ---- Auth modal (see AuthModal.tsx) ----------------------------------
+   Laid out after a layered-panel reference: a slim rail floating clear of
+   the card, and the card itself split into a white working column and a
+   recessed cream column. Depth comes from stacking surfaces of slightly
+   different tone, not from heavier shadows -- which is why the rail sits
+   vertically inset from the card rather than flush with it. The reference
+   was near-white greys with one black pill; the greys are replaced by this
+   site's cream ground, and the single high-contrast moment is the gold
+   submit button, which the site already owns.
+
+   The site's own glass-panel tokens throughout, no platform component kit:
+   this is a `type: "website"` build with an independent brand. ---- */
+.auth-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 1.5rem;
+  background: rgba(20, 18, 14, 0.45);
+  backdrop-filter: blur(4px);
+  animation: auth-modal-fade-in 0.2s ease both;
+}
+@keyframes auth-modal-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Rail + card. They animate as one, so the settle lives here rather than on
+   the card, which would let the rail arrive on its own. */
+.auth-modal-stack {
+  position: relative;
+  margin: auto;
+  width: 100%;
+  max-width: 26rem;
+  display: flex;
+  align-items: stretch;
+  gap: 0.85rem;
+  animation: card-settle 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Padding sits on the columns, never the card, so the recessed column can
+   run its tone to the card's edge. */
+.auth-modal-panel {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  overflow: hidden;
+  border-radius: var(--sky-radius-lg);
+  background: linear-gradient(var(--sky-bg-raised), var(--sky-bg-raised)) padding-box, var(--sky-glass-edge) border-box;
+  border: 1px solid transparent;
+  box-shadow: var(--sky-shadow-md);
+}
+.auth-modal-side {
+  position: relative;
+  padding: 2rem 1.9rem 1.9rem;
+  background: var(--sky-bg);
+}
+
+/* Both side layers are desktop-only: on a phone the modal needs its whole
+   width for the form, and a 76px photo strip beside it would take a fifth
+   of the screen to say nothing. */
+.auth-modal-rail { display: none; }
+.auth-modal-perks { display: none; }
+
+@media (min-width: 880px) {
+  .auth-modal-stack { max-width: 48rem; }
+  .auth-modal-panel { grid-template-columns: 1fr 15.5rem; }
+  .auth-modal-rail {
+    position: relative;
+    display: block;
+    flex: 0 0 4.75rem;
+    margin: 1.75rem 0;
+    overflow: hidden;
+    border-radius: var(--sky-radius-lg);
+    background: var(--sky-ink);
+    box-shadow: var(--sky-shadow-md);
+  }
+  .auth-modal-perks { display: flex; }
+}
+
+.auth-modal-rail-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* Darkest at the ends, where the monogram and glyph sit. */
+.auth-modal-rail-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(28,26,20,0.66) 0%, rgba(28,26,20,0.22) 42%, rgba(28,26,20,0.72) 100%);
+}
+.auth-modal-rail-mark {
+  position: absolute;
+  top: 1.15rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1.6rem;
+  height: auto;
+}
+.auth-modal-rail-thread {
+  position: absolute;
+  left: 50%;
+  top: 4.25rem;
+  bottom: 4.25rem;
+  width: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0.45) 30%, rgba(255,255,255,0.45) 70%, rgba(255,255,255,0));
+}
+.auth-modal-rail-thread i {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 999px;
+  background: var(--sky-coral);
+  box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.24);
+}
+.auth-modal-rail-glyph {
+  position: absolute;
+  bottom: 1.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.82);
+}
+
+/* The recessed column: grouped rows on the cream ground, one lifted onto a
+   white pill the way the reference lifts its selected row. */
+.auth-modal-perks {
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem 1.05rem 1.9rem;
+  border-left: 1px solid var(--sky-line);
+}
+.auth-modal-perks-label {
+  padding: 0 0.65rem;
+  margin-bottom: 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sky-ink-muted);
+}
+.auth-modal-perk {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  line-height: 1.3;
+  color: var(--sky-ink);
+}
+.auth-modal-perk svg { flex: none; color: var(--sky-ink-muted); }
+.auth-modal-perk.is-featured {
+  background: var(--sky-bg);
+  box-shadow: var(--sky-shadow-sm);
+}
+.auth-modal-perk.is-featured svg { color: var(--sky-coral-deep); }
+.auth-modal-perk-dot {
+  margin-left: auto;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--sky-coral);
+}
+.auth-modal-perks-rule {
+  height: 1px;
+  margin: 1.15rem 0.65rem;
+  background: var(--sky-line);
+}
+
+/* Phone stand-in for the recessed column -- three words each, so the value
+   of an account still lands without the panel. */
+.auth-modal-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 1.35rem; }
+/* Authored after the rule above, not inside the breakpoint block further up:
+   both selectors have the same specificity, so whichever comes last wins --
+   hiding it up there left the chips showing on desktop beside the panel that
+   already says the same thing. */
+@media (min-width: 880px) {
+  .auth-modal-chips { display: none; }
+}
+.auth-modal-chip {
+  padding: 0.28rem 0.6rem;
+  border-radius: 999px;
+  background: var(--sky-coral-wash);
+  color: var(--sky-coral-deep);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.auth-modal-brand { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; }
+.auth-modal-brand svg { flex: none; color: var(--sky-coral); }
+.auth-modal-brand span {
+  font-family: var(--font-display);
+  font-weight: 650;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+}
+
+.auth-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 999px;
+  color: var(--sky-ink-muted);
+  background: var(--sky-bg);
+  border: 1px solid var(--sky-line);
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.auth-modal-close:hover { color: var(--sky-ink); background: var(--sky-bg-raised); }
+
+/* Segmented, not underlined: the raised white pill is the reference's own
+   way of marking the live row, and it reads at a glance. */
+.auth-modal-tabs {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  margin-bottom: 1.4rem;
+  border-radius: 999px;
+  background: var(--sky-bg-raised);
+  border: 1px solid var(--sky-line);
+}
+.auth-modal-tab {
+  padding: 0.42rem 0.95rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--sky-ink-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.auth-modal-tab.is-active {
+  color: var(--sky-ink);
+  background: var(--sky-bg);
+  box-shadow: var(--sky-shadow-sm);
+}
+.auth-modal-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-wrap: balance;
+  margin-bottom: 1.25rem;
+}
+.auth-modal-form { display: flex; flex-direction: column; gap: 1.1rem; }
+.auth-modal-field { display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.85rem; color: var(--sky-ink-muted); }
+.auth-modal-field input,
+.auth-modal-field textarea {
+  font: inherit;
+  color: var(--sky-ink);
+  background: var(--sky-bg);
+  border: 1px solid var(--sky-line);
+  border-radius: var(--sky-radius-sm);
+  padding: 0.65rem 0.85rem;
+  resize: vertical;
+}
+.auth-modal-field input:focus,
+.auth-modal-field textarea:focus { outline: 2px solid var(--sky-coral); outline-offset: 1px; }
+.auth-modal-error { color: #b3261e; font-size: 0.85rem; }
+.auth-modal-fineprint { font-size: 0.75rem; color: var(--sky-ink-muted); text-align: center; line-height: 1.5; }
+.auth-modal-fineprint a { color: var(--sky-ink); text-decoration: underline; text-underline-offset: 2px; }
+.auth-modal-forgot {
+  align-self: flex-end;
+  margin-top: -0.5rem;
+  font-size: 0.8rem;
+  color: var(--sky-ink-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+.auth-modal-forgot:hover { color: var(--sky-coral-deep); }
+.auth-modal-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--sky-ink-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+.auth-modal-back:hover { color: var(--sky-ink); }
+
+/* ---- Legal pages (privacy.tsx, terms.tsx) -- plain readable long-form
+   copy, not a designed section, so it gets its own light typographic
+   rules rather than reusing site-panel/card patterns meant for shorter
+   marketing copy. ---- */
+.prose-legal h2 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; margin-bottom: 0.75rem; }
+.prose-legal p { color: var(--sky-ink-muted); line-height: 1.7; }
+.prose-legal p + p { margin-top: 0.75rem; }
+.prose-legal ul { margin-top: 0.5rem; padding-left: 1.25rem; list-style: disc; color: var(--sky-ink-muted); line-height: 1.7; }
+.prose-legal li + li { margin-top: 0.4rem; }
+.prose-legal code { font-family: var(--font-mono); font-size: 0.85em; background: var(--sky-coral-wash); padding: 0.1em 0.4em; border-radius: 4px; }
+
+/* ---- Blog articles (routes/blog/$slug.tsx) -------------------------------
+   Long-form reading, so the rules here are typographic rather than the
+   card/panel patterns used elsewhere. Measure is capped near 68ch: the blog
+   index is a grid, but an article is read line by line and full-width text
+   at desktop widths is genuinely harder to follow.
+   ------------------------------------------------------------------------ */
+
+.article-hero {
+  position: relative;
+  min-height: 46vh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  background: var(--sky-bg-raised);
+}
+.article-hero-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.article-hero-fallback {
+  background: linear-gradient(140deg, var(--sky-bg-raised), var(--sky-coral-wash));
+}
+/* Dark enough at the foot for white type to clear WCAG AA over any photo,
+   clearing to nothing at the top so the image still reads as an image. */
+.article-hero-mask {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(28, 26, 20, 0.15) 0%,
+    rgba(28, 26, 20, 0.45) 55%,
+    rgba(28, 26, 20, 0.82) 100%
+  );
+}
+.article-hero-copy { position: relative; width: 100%; padding: 3rem 0 2.5rem; }
+
+.article-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color 0.18s ease;
+}
+.article-back:hover { color: #fff; }
+.article-back .arrow { transition: transform 0.18s ease; }
+.article-back:hover .arrow { transform: translateX(-3px); }
+
+.article-title {
+  margin-top: 0.9rem;
+  max-width: 20ch;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-wrap: balance;
+}
+.article-dek {
+  margin-top: 1rem;
+  max-width: 52ch;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+.article-meta {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.82rem;
+}
+
+.article-body {
+  max-width: 68ch;
+  margin: 0 auto;
+  padding: 3.5rem 0 1rem;
+}
+.article-h2 {
+  margin-top: 2.75rem;
+  margin-bottom: 0.9rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.3rem, 2.4vw, 1.6rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--sky-ink);
+  text-wrap: balance;
+}
+.article-para {
+  color: var(--sky-ink-muted);
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+.article-para + .article-para { margin-top: 1.15rem; }
+.article-para strong { color: var(--sky-ink); font-weight: 650; }
+
+.article-list {
+  margin-top: 1.15rem;
+  padding-left: 1.1rem;
+  list-style: none;
+  color: var(--sky-ink-muted);
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+.article-list li { position: relative; padding-left: 0.9rem; }
+.article-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.68em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--sky-coral);
+}
+.article-list li + li { margin-top: 0.65rem; }
+.article-list strong { color: var(--sky-ink); font-weight: 650; }
+
+/* Callouts carry the one piece of advice worth remembering from a section,
+   so they get the accent rail rather than a full tinted box -- a filled
+   block at this width competes with the body copy. */
+.article-callout {
+  margin: 1.9rem 0;
+  padding: 1.15rem 1.35rem;
+  border-left: 3px solid var(--sky-coral);
+  border-radius: 0 var(--sky-radius-sm) var(--sky-radius-sm) 0;
+  background: var(--sky-coral-wash);
+}
+.article-callout-title {
+  font-family: var(--font-display);
+  font-weight: 650;
+  font-size: 0.95rem;
+  color: var(--sky-ink);
+}
+.article-callout-body {
+  margin-top: 0.4rem;
+  color: var(--sky-ink-muted);
+  font-size: 0.97rem;
+  line-height: 1.65;
+}
+
+.article-cta {
+  margin: 2.4rem 0;
+  padding: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.1rem;
+  border: 1px solid var(--sky-line);
+  border-radius: var(--sky-radius-lg);
+  background: var(--sky-bg-raised);
+  box-shadow: var(--sky-shadow-sm);
+}
+.article-cta-text { flex: 1 1 16rem; }
+.article-cta-label {
+  font-family: var(--font-display);
+  font-weight: 650;
+  font-size: 1.02rem;
+  color: var(--sky-ink);
+}
+.article-cta-note { margin-top: 0.3rem; color: var(--sky-ink-muted); font-size: 0.88rem; line-height: 1.55; }
+.article-cta-btn { flex-shrink: 0; }
+
+.article-disclosure {
+  margin-top: 3rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--sky-line);
+  color: var(--sky-ink-muted);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+.article-dest-link { margin-top: 2rem; }
+
+.article-related {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 700px) {
+  .article-related { grid-template-columns: repeat(3, 1fr); }
+}
+.article-related-card { padding: 1.4rem; display: flex; flex-direction: column; align-items: flex-start; }
+.article-related-title {
+  margin-top: 0.75rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.02rem;
+  line-height: 1.35;
+  color: var(--sky-ink);
+}
+
+/* Card titles on the index become links only when an article exists, so the
+   affordance has to be visible without restyling the non-linked ones. */
+.blog-title-link { color: inherit; transition: color 0.18s ease; }
+.blog-title-link:hover { color: var(--sky-coral-deep); }
+.blog-media-link { display: block; }
+
+/* ---- Infinite marquee band (components/site/MarqueeBand.tsx) ------------
+   Seamless because the track holds exactly two identical groups and travels
+   -50%: at that point copy two sits where copy one began, so the reset is
+   invisible.
+
+   Two rules keep the seam exact, and both were learned by measuring it:
+     1. Animate the GROUP by -100% of its own width, never the track by -50%.
+        The track's max-content did not resolve to two full groups here.
+     2. All spacing lives in each item's padding-left. No gap on the track and
+        no trailing padding on the group, or the distance travelled stops
+        matching the distance between copies and the loop ticks.
+   NOTE the svc- prefix. The site ALREADY had .marquee / .marquee-track for
+   the partner-logo ticker in Sections2.tsx, and these rules -- appended
+   later in the file -- were silently overriding it. Do not drop the prefix.
+   ------------------------------------------------------------------------ */
+
+.svc-marquee {
+  position: relative;
+  overflow: hidden;
+  background: var(--sky-ink);
+  padding: 1.35rem 0;
+  /* Full-bleed: it breaks the cream sections either side, so it should run
+     edge to edge rather than sit inside the container's measure. */
+  width: 100%;
+}
+
+/* Soft edges so items enter and leave rather than being chopped by the
+   viewport. Masked, not a gradient overlay, so it works on any background. */
+.svc-marquee::before,
+.svc-marquee::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 5rem;
+  z-index: 1;
+  pointer-events: none;
+}
+.svc-marquee::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--sky-ink), transparent);
+}
+.svc-marquee::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--sky-ink), transparent);
+}
+
+.svc-marquee-track {
+  display: flex;
+  width: max-content;
+}
+
+.svc-marquee-group {
+  display: flex;
+  align-items: center;
+  /* MUST NOT SHRINK, or the copies stop being equal widths. */
+  flex: 0 0 auto;
+  /* THE SEAM. Each group animates itself by -100% of ITS OWN width, so the
+     distance travelled is exactly one group by definition -- when copy one
+     has moved fully off, copy two is precisely where it started.
+     
+     This deliberately does NOT animate the track by -50%: that depends on
+     the track resolving `max-content` to two full groups, and it does not
+     here (measured 1604px against a 1665px group), which left an 863px
+     mismatch and a visible jump every cycle. A percentage of the element
+     being moved cannot drift. */
+  animation: svc-marquee-scroll 38s linear infinite;
+  /* Promote once, so the browser composites the transform instead of
+     repainting the text every frame. */
+  will-change: transform;
+  /* NO trailing padding. Spacing comes solely from each item's own
+     padding-left, so a group's width is exactly the sum of its items and
+     -100% lands the next copy precisely where this one began. Adding a
+     trailing 3rem made the copies sit 1713.64px apart while the animation
+     moved only 1665.64px -- a 48px jump on every single loop. */
+  /* The UA stylesheet's list indent would otherwise sit inside the measured
+     width of only the first group. */
+  padding-inline-start: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.svc-marquee-item {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  padding-left: 3rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1rem, 1.9vw, 1.35rem);
+  letter-spacing: -0.01em;
+  line-height: 1;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.svc-marquee-sep {
+  color: var(--sky-coral);
+  font-size: 0.7em;
+  /* Optical: the glyph sits high in its em box. */
+  transform: translateY(-0.05em);
+}
+
+@keyframes svc-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Stop the motion, but keep the band readable rather than hiding it. */
+  .svc-marquee-group {
+    animation: none;
+    transform: none;
+  }
+}
+
+/* ---- Trip cycle cards (components/site/TripCycle.tsx) -------------------
+   Four small glass cards, lit from INSIDE rather than merely translucent --
+   that inner light is what makes a surface read as glass instead of a grey
+   box. Warm accent rather than the reference's pastel blue/lilac, which
+   fights this site's cream-and-gold ground.
+
+   NB: author `backdrop-filter` ONLY. Adding the -webkit- alias by hand makes
+   the minifier collapse the pair and keep just the prefixed form, which then
+   fails the standard lookup -- that silently disabled every glass surface on
+   this site until it was tracked down. The build adds prefixes itself.
+   ------------------------------------------------------------------------ */
+
+.cycle-section {
+  position: relative;
+  padding: 4.5rem 0;
+  overflow: hidden;
+  background: var(--sky-bg-raised);
+}
+
+/* The soft backdrop the cards float on. Two offset radials, so the light is
+   directional rather than a flat wash. */
+.cycle-glow {
+  position: absolute;
+  inset: -20% -10%;
+  background:
+    radial-gradient(46% 52% at 22% 30%, rgba(201, 162, 39, 0.2), transparent 70%),
+    radial-gradient(40% 46% at 78% 70%, rgba(233, 190, 150, 0.24), transparent 72%);
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.cycle-eyebrow { position: relative; text-align: center; color: var(--sky-coral-deep); }
+
+.cycle-grid {
+  position: relative;
+  margin-top: 2rem;
+  display: grid;
+  gap: 0.9rem;
+  /* Two up on a phone, four across once there is room. */
+  grid-template-columns: repeat(2, 1fr);
+}
+@media (min-width: 900px) {
+  .cycle-grid { grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+}
+
+.cycle-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border-radius: 20px;
+  padding: 1.5rem 1rem 1.6rem;
+  background: var(--sky-glass-bg-strong);
+  backdrop-filter: blur(var(--sky-glass-blur)) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  /* The inner light: a lit top rim, a warm bloom from within, and an outer
+     shadow that lifts the card off the ground. */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 16px 44px -18px rgba(255, 214, 140, 0.5),
+    inset 0 -24px 54px -34px rgba(201, 162, 39, 0.3),
+    0 16px 40px -22px rgba(28, 26, 20, 0.26);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .cycle-card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.95),
+      inset 0 16px 44px -16px rgba(255, 214, 140, 0.62),
+      inset 0 -24px 54px -32px rgba(201, 162, 39, 0.38),
+      0 22px 48px -22px rgba(28, 26, 20, 0.3);
+  }
+}
+
+/* Each icon sits on its own pool of light -- the detail that sells the
+   reference. The halo is a pseudo-element so it can blur without softening
+   the icon strokes drawn on top of it. */
+.cycle-icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+}
+.cycle-icon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  filter: blur(8px);
+  opacity: 0.9;
+}
+.cycle-icon svg {
+  position: relative;
+  width: 2rem;
+  height: 2rem;
+  fill: none;
+  stroke: var(--sky-ink);
+  stroke-width: 1.6;
+}
+
+.cycle-phase-depart .cycle-icon::before { background: radial-gradient(circle, rgba(255, 176, 70, 0.85), transparent 68%); }
+.cycle-phase-connect .cycle-icon::before { background: radial-gradient(circle, rgba(96, 168, 235, 0.75), transparent 68%); }
+.cycle-phase-explore .cycle-icon::before { background: radial-gradient(circle, rgba(224, 128, 196, 0.7), transparent 68%); }
+.cycle-phase-rest .cycle-icon::before { background: radial-gradient(circle, rgba(104, 196, 160, 0.72), transparent 68%); }
+
+.cycle-phase-depart .cycle-icon svg circle { fill: rgba(255, 176, 70, 0.32); }
+.cycle-phase-explore .cycle-icon svg ellipse { fill: rgba(224, 128, 196, 0.26); }
+.cycle-phase-rest .cycle-icon svg path { fill: rgba(104, 196, 160, 0.24); }
+.cycle-phase-connect .cycle-icon svg circle { fill: rgba(96, 168, 235, 0.4); }
+
+.cycle-label {
+  margin-top: 0.7rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--sky-ink);
+}
+.cycle-body {
+  margin-top: 0.4rem;
+  color: var(--sky-ink-muted);
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 899px) {
+  .cycle-section { padding: 3.25rem 0; }
+  .cycle-card { padding: 1.25rem 0.75rem 1.35rem; border-radius: 16px; }
+  .cycle-body { font-size: 0.8rem; }
+}
+
+/* ---- Travel collections (routes/collections/*) --------------------------
+   Themed groupings over the destination catalogue. Cards fall back to the
+   flag treatment where a destination has no photo yet -- the same rule the
+   destination pages use, so the two never disagree.
+   ------------------------------------------------------------------------ */
+
+.collection-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+}
+
+.collection-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.4rem 1.3rem;
+  border: 1px solid var(--sky-line);
+  border-radius: var(--sky-radius-lg);
+  background: var(--sky-bg-raised);
+  box-shadow: var(--sky-shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .collection-card:hover { transform: translateY(-3px); box-shadow: var(--sky-shadow-md); }
+  .collection-card:hover .arrow { transform: translateX(3px); }
+}
+.collection-card-icon { font-size: 1.6rem; line-height: 1; }
+.collection-card-title {
+  margin-top: 0.85rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--sky-ink);
+}
+.collection-card-tagline { margin-top: 0.3rem; color: var(--sky-ink-muted); font-size: 0.9rem; line-height: 1.5; }
+.collection-card-meta {
+  margin-top: auto;
+  padding-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sky-coral-deep);
+}
+.collection-card-meta .arrow { display: inline-block; transition: transform 0.2s ease; }
+
+/* Long-form intro: capped measure, same as the blog articles, because it is
+   read line by line rather than scanned. */
+.collection-intro { max-width: 66ch; margin-top: 1.5rem; }
+.collection-intro p { color: var(--sky-ink-muted); font-size: 1.02rem; line-height: 1.75; }
+.collection-intro p + p { margin-top: 1rem; }
+
+.collection-highlights {
+  margin-top: 1.75rem;
+  max-width: 60ch;
+  list-style: none;
+  display: grid;
+  gap: 0.6rem;
+}
+.collection-highlights li {
+  position: relative;
+  padding-left: 1.5rem;
+  color: var(--sky-ink);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.collection-highlights li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--sky-coral);
+}
+
+.collection-dest-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--sky-line);
+  border-radius: var(--sky-radius-md);
+  background: var(--sky-bg-raised);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .collection-dest-card:hover { transform: translateY(-3px); box-shadow: var(--sky-shadow-md); }
+}
+.collection-dest-media { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.collection-dest-flag {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  font-size: 2.4rem;
+  background: linear-gradient(140deg, var(--sky-bg-raised), var(--sky-coral-wash));
+}
+.collection-dest-body { display: block; padding: 0.85rem 0.9rem 1rem; }
+.collection-dest-name { display: block; font-weight: 600; font-size: 0.95rem; color: var(--sky-ink); }
+.collection-dest-hook {
+  display: block;
+  margin-top: 0.3rem;
+  color: var(--sky-ink-muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.collection-cta {
+  margin-top: 2.5rem;
+  padding: 1.6rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  border: 1px solid var(--sky-line);
+  border-radius: var(--sky-radius-lg);
+  background: var(--sky-bg-raised);
+}
+.collection-cta-title { font-family: var(--font-display); font-weight: 650; font-size: 1.05rem; color: var(--sky-ink); }
+.collection-cta-note { margin-top: 0.3rem; max-width: 46ch; color: var(--sky-ink-muted); font-size: 0.88rem; line-height: 1.55; }
+.collection-cta-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+.collection-disclosure {
+  margin-top: 1.5rem;
+  color: var(--sky-ink-muted);
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+.collection-more { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.collection-chip {
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--sky-line);
+  border-radius: 999px;
+  background: var(--sky-bg-raised);
+  font-size: 0.85rem;
+  color: var(--sky-ink);
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .collection-chip:hover { border-color: var(--sky-coral); color: var(--sky-coral-deep); }
+}
+
+/* ---- Contact page (routes/contact.tsx) ---------------------------------
+   Form on the left, context panels on the right. The panels exist to deflect
+   the most common message -- "where is my booking?" -- which Skynova cannot
+   answer, because the partner holds it.
+   ------------------------------------------------------------------------ */
+
+.contact-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+@media (min-width: 900px) {
+  .contact-grid { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 2rem; }
+}
+.contact-aside { display: grid; gap: 1rem; }
+
+.contact-error {
+  margin: -0.25rem 0 0;
+  color: #a3341f;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+/* The select needs to match the inputs in .auth-modal-field, which were
+   written for text fields only. */
+.auth-modal-field select,
+.auth-modal-field textarea {
+  width: 100%;
+  font: inherit;
+  color: var(--sky-ink);
+  background: var(--sky-bg);
+  border: 1px solid var(--sky-line);
+  border-radius: var(--sky-radius-sm);
+  padding: 0.7rem 0.85rem;
+}
+.auth-modal-field textarea { resize: vertical; min-height: 8rem; }
+.auth-modal-field select:focus-visible,
+.auth-modal-field textarea:focus-visible {
+  outline: 2px solid var(--sky-coral);
+  outline-offset: 1px;
+}
+
+/* ---- 404 (components/site/NotFound.tsx) --------------------------------
+   Centred over a full-bleed photograph, following the reference: one
+   oversized display numeral tinted into the image's palette, one line, one
+   button. The veil is LIGHT, not a dark scrim -- the reference's calm comes
+   from keeping the photograph bright, and a heavy mask loses it.
+
+   The numeral is aria-hidden; the <h1> carries the meaning.
+   ------------------------------------------------------------------------ */
+
+.nf-hero {
+  position: relative;
+  min-height: 72vh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--sky-bg-raised);
+}
+.nf-hero-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* Light wash: enough to hold text contrast, not enough to darken the photo. */
+.nf-hero-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(60% 55% at 50% 45%, rgba(255, 252, 245, 0.82), rgba(255, 252, 245, 0.42) 70%, rgba(255, 252, 245, 0.28) 100%);
+}
+.nf-hero-copy {
+  position: relative;
+  text-align: center;
+  padding: 4rem 1.5rem;
+  max-width: 42rem;
+}
+
+.nf-code {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(5rem, 20vw, 12rem);
+  line-height: 0.86;
+  letter-spacing: -0.04em;
+  color: var(--sky-coral-deep);
+  /* Sits inside the photograph rather than on top of it. */
+  mix-blend-mode: multiply;
+  opacity: 0.92;
+}
+.nf-title {
+  margin-top: 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3.6vw, 2.3rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--sky-ink);
+  text-wrap: balance;
+}
+.nf-sub {
+  margin: 0.85rem auto 0;
+  max-width: 42ch;
+  color: var(--sky-ink-muted);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+.nf-cta { margin-top: 1.9rem; display: inline-flex; }
+
+.nf-onward { text-align: center; }
+.nf-onward .collection-more { justify-content: center; }
+
+/* ---- About page stats (routes/about.tsx) ------------------------------- */
+.about-stats {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, 1fr);
+}
+@media (min-width: 760px) { .about-stats { grid-template-columns: repeat(4, 1fr); } }
+.about-stat {
+  padding: 1.5rem 1.25rem;
+  border: 1px solid var(--sky-line);
+  border-radius: var(--sky-radius-md);
+  background: var(--sky-bg-raised);
+  text-align: center;
+}
+.about-stat-num {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1;
+  color: var(--sky-coral-deep);
+  font-variant-numeric: tabular-nums;
+}
+.about-stat-label {
+  margin-top: 0.45rem;
+  color: var(--sky-ink-muted);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+/* ---- Trip cycle light ribbon -------------------------------------------
+   A gold ribbon threaded BEHIND the glass cards. The cards carry
+   backdrop-filter, so the length of ribbon passing under one is blurred by
+   the glass while the rest stays sharp -- that contrast is the effect.
+
+   It must sit above .cycle-glow and below .cycle-grid. Put it above the grid
+   and the light draws over the cards instead of through them, which loses
+   the whole illusion.
+   ------------------------------------------------------------------------ */
+
+.cycle-ribbon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  height: 78%;
+  z-index: 0;
+  pointer-events: none;
+}
+.cycle-ribbon path { fill: none; stroke-linecap: round; }
+.cycle-ribbon-glow {
+  stroke: url(#cycleRibbon);
+  stroke-width: 16;
+  filter: url(#cycleRibbonGlow);
+  opacity: 0.55;
+}
+.cycle-ribbon-core {
+  stroke: url(#cycleRibbon);
+  stroke-width: 3;
+  opacity: 0.95;
+}
+
+/* The grid must outrank the ribbon so the glass sits on top of it. */
+.cycle-grid { position: relative; z-index: 1; }
+.cycle-eyebrow { z-index: 1; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* A slow drift so the light feels alive without ever demanding attention. */
+  .cycle-ribbon { animation: cycle-ribbon-drift 22s ease-in-out infinite alternate; }
+  @keyframes cycle-ribbon-drift {
+    from { transform: translateY(-52%) scaleX(1); }
+    to   { transform: translateY(-48%) scaleX(1.04); }
+  }
+}
+
+/* ---- Glass toggle (components/site/GlassToggle.tsx) ---------------------
+   Frosted pill track, both labels always visible, glowing gold thumb sliding
+   between them.
+
+   The thumb is its own layer beneath the labels so its glow never washes out
+   the text. The real radio inputs are visually hidden but still focusable --
+   removing them with display:none would take the keyboard behaviour with it.
+   ------------------------------------------------------------------------ */
+
+.glass-toggle {
+  position: relative;
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--sky-glass-bg);
+  backdrop-filter: blur(var(--sky-glass-blur)) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 6px 18px -10px rgba(28, 26, 20, 0.35);
+}
+
+.glass-toggle-thumb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  border-radius: 999px;
+  background: linear-gradient(140deg, #f4cf72 0%, #e8b53f 55%, #c9a227 100%);
+  box-shadow:
+    0 0 18px rgba(232, 181, 63, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-toggle-option {
+  position: relative;
+  z-index: 1;
+  padding: 0.5rem 1.15rem;
+  border-radius: 999px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--sky-ink-muted);
+  text-align: center;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.24s ease;
+}
+.glass-toggle-option.is-active { color: var(--sky-coral-ink); }
+
+/* Visually hidden, still focusable and still a real radio. */
+.glass-toggle-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip-path: inset(50%);
+  overflow: hidden;
+}
+.glass-toggle-option:has(input:focus-visible) {
+  outline: 2px solid var(--sky-coral-deep);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-toggle-thumb { transition: none; }
+}
+
+/* Directory heading row: label left, view toggle right. */
+.directory-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ---- Account page (routes/account.tsx) --------------------------------- */
+.account-email {
+  margin-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--sky-ink-muted);
+}
+.account-grid { display: grid; gap: 1.25rem; grid-template-columns: 1fr; }
+@media (min-width: 860px) { .account-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.account-code {
+  margin-top: 0.9rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--sky-line);
+  border-radius: var(--sky-radius-sm);
+  background: var(--sky-bg);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--sky-ink);
+  overflow-wrap: anywhere;
+}
+.account-actions { margin-top: 0.9rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.85rem; }
+.account-stat { margin-top: 1rem; color: var(--sky-ink-muted); font-size: 0.88rem; }
+.account-stat strong { color: var(--sky-coral-deep); font-size: 1.05rem; }
+
+/* ---- Lenis smooth scroll (see SmoothScroll.tsx) ---------------------
+   These are the rules the library ships in dist/lenis.css. They are copied
+   in rather than imported so the destinations chunk doesn't pull a second
+   stylesheet, and so the classes are visible next to the rest of the site's
+   scroll behaviour. They only bite while a route has Lenis mounted -- the
+   `lenis` class is added to <html> by the instance and removed on destroy. */
+html.lenis,
+html.lenis body { height: auto; }
+.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+.lenis [data-lenis-prevent],
+.lenis [data-lenis-prevent-wheel],
+.lenis [data-lenis-prevent-touch],
+.lenis [data-lenis-prevent-vertical],
+.lenis [data-lenis-prevent-horizontal] { overscroll-behavior: contain; }
+/* Stops a cross-origin iframe swallowing the wheel events Lenis needs --
+   this site embeds Travelpayouts widgets in iframes on several routes. */
+.lenis.lenis-smooth iframe { pointer-events: none; }
+.lenis.lenis-autoToggle {
+  transition-property: overflow;
+  transition-duration: 1ms;
+  transition-behavior: allow-discrete;
+}
+
+/* ---- Scroll-driven flight path (components/site/ScrollPath.tsx) ---------
+   A tall section whose inner stage sticks for one viewport while the stroke
+   fills. The section height IS the animation's duration: 220vh gives 120vh
+   of travel, which is a comfortable two flicks of a trackpad. Shorten it and
+   the whole route draws in one flick.
+
+   Prefixed `scrollpath-` and checked against the stylesheet first: `route-`
+   was already taken by the route cards, and the marquee once shipped with
+   names that silently restyled another component. */
+.scrollpath-section {
+  position: relative;
+  height: 220vh;
+  background: var(--sky-bg-raised);
+}
+.scrollpath-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.scrollpath-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+/* The route ahead: present, so the drawing has somewhere to go, but quiet
+   enough that the filled part is clearly the subject. */
+.scrollpath-track {
+  fill: none;
+  stroke: var(--sky-coral);
+  stroke-width: 16;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.13;
+}
+.scrollpath-trail {
+  fill: none;
+  stroke: var(--sky-coral);
+  stroke-width: 16;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+}
+.scrollpath-plane { fill: var(--sky-coral-deep); }
+
+/* Copy sits over the stroke, the way the reference puts its type above the
+   scribble -- the ink stays the thing you read, the gold stays atmosphere. */
+.scrollpath-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 36rem;
+  padding-inline: 1.5rem;
+  text-align: center;
+}
+.scrollpath-eyebrow { margin-bottom: 0.9rem; }
+.scrollpath-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.1rem, 5.2vw, 3.4rem);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.scrollpath-sub {
+  margin-top: 1.1rem;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--sky-ink-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* No travel to animate, so the section stops being 220vh of scrolling. */
+  .scrollpath-section { height: auto; }
+  .scrollpath-stage { position: relative; height: 78vh; }
+  .scrollpath-trail { stroke-dashoffset: 0; }
+}

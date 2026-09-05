@@ -1,0 +1,73 @@
+{
+  // Production config for running Skynova Agency in YOUR OWN Cloudflare
+  // account, instead of Higgsfield's.
+  //
+  // The app is already a Cloudflare Worker, so nothing is being ported here --
+  // this file just supplies the real values that Higgsfield's deploy pipeline
+  // used to inject for you. The existing wrangler.jsonc in this folder is a
+  // BUILD-ONLY placeholder for Higgsfield's CI; it is not used by your deploy.
+  //
+  // Deploy with:  npx wrangler deploy --config wrangler.production.jsonc
+  // (See MIGRATION.md in the folder above for the full runbook.)
+
+  "name": "skynova-agency",
+
+  // Keeps skynova-agency.skynovaagency.workers.dev alive as a fallback for
+  // testing. Wrangler DISABLES workers.dev by default once this file exists
+  // and omits the key -- which silently 404'd the fallback URL on the first
+  // deploy after the custom domains were added.
+  "workers_dev": true,
+
+  // The TanStack Start SSR bundle emitted by `bun run build`.
+  "main": "dist/server/server.js",
+
+  "compatibility_date": "2025-05-01",
+  // Required: the app uses Node built-ins via the Workers nodejs_compat layer.
+  "compatibility_flags": ["nodejs_compat"],
+
+  "observability": { "enabled": true },
+
+  // Static files serve directly from dist/client; anything that isn't a file
+  // (including "/") falls through to the SSR Worker. Do NOT add
+  // run_worker_first -- that makes the Worker intercept /assets/* and 404 them,
+  // because the SSR handler has no asset route.
+  "assets": {
+    "directory": "./dist/client",
+    "binding": "ASSETS",
+    "not_found_handling": "none"
+  },
+
+  // ── D1 ────────────────────────────────────────────────────────────
+  // Bound as env.DB (see src/lib/bindings.server.ts). Backs sign-in,
+  // sessions, password reset, wishlist, gift requests and referrals.
+  //
+  // STEP 1 of the runbook prints a database_id -- paste it below, replacing
+  // the placeholder. Deploying with the placeholder still in place will fail
+  // at runtime on every account-related feature.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "skynova-agency-db",
+      "database_id": "f6a64a00-2de9-4c88-a7ed-ee9239f3c829"
+    }
+  ],
+
+  // ── Custom domains ────────────────────────────────────────────────
+  // Both hostnames are already attached (4 Sep 2026) and Cloudflare manages
+  // their DNS records and TLS certificate automatically. They are declared
+  // here so the config is the source of truth: if the binding is ever lost,
+  // `wrangler deploy` recreates it rather than leaving the domain dark.
+  // Re-declaring an existing custom domain is a no-op.
+  //
+  // custom_domain:true is NOT the same as a plain route -- it makes the
+  // Worker the origin for the whole hostname and provisions the certificate.
+  "routes": [
+    { "pattern": "skynovaagency.com", "custom_domain": true },
+    { "pattern": "www.skynovaagency.com", "custom_domain": true }
+  ],
+
+  // HF_ENV / APP_SLUG existed for Higgsfield's pipeline. The app only reads
+  // them defensively, so they are optional -- kept here so nothing that
+  // inspects them sees undefined.
+  "vars": { "HF_ENV": "production", "APP_SLUG": "skynova-agency" }
+}
