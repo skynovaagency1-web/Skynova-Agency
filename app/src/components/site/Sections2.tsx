@@ -132,7 +132,7 @@ export function ToursSection() {
 export function HowItWorksSection() {
   const steps = [
     { title: "Search once", detail: "One search bar, every vertical, live results from our partner networks." },
-    { title: "Compare honestly", detail: "Ranked by price and rating, no pay-to-rank placements." },
+    { title: "Compare honestly", detail: "Skynova adds no markup and sells no placement -- you see the partner's own results." },
     { title: "Book everything", detail: "Check out with each partner directly; your booking sits with them, not us." },
   ];
   return (

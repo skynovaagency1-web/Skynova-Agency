@@ -20,7 +20,7 @@ export const VERTICALS: Vertical[] = [
     label: "Flights",
     icon: Plane,
     href: "/flights",
-    title: "Real fares, ranked honestly.",
+    title: "Real fares, compared in one search.",
     subtitle: "Compare airlines on Aviasales-powered search and lock in a fare before prices move.",
   },
   {

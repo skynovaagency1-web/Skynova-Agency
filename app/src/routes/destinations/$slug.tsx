@@ -359,11 +359,11 @@ function DestinationPage() {
                 className="dest-mini-card"
               >
                 <p className="font-semibold">Hotels</p>
-                <p className="site-ink-muted mt-1 text-sm">Stays across {name}, ranked by price.</p>
+                <p className="site-ink-muted mt-1 text-sm">Stays across {name}, compared in one search.</p>
               </a>
               <a href={carRentalLink()} target="_blank" rel="noopener noreferrer" className="dest-mini-card">
                 <p className="font-semibold">Car rentals</p>
-                <p className="site-ink-muted mt-1 text-sm">Pick up on arrival, drop off anywhere.</p>
+                <p className="site-ink-muted mt-1 text-sm">Collect on arrival and drive {name} at your own pace.</p>
               </a>
               <a
                 href={toursLink(name)}
@@ -372,11 +372,11 @@ function DestinationPage() {
                 className="dest-mini-card"
               >
                 <p className="font-semibold">Tours & activities</p>
-                <p className="site-ink-muted mt-1 text-sm">Guided trips and things to do.</p>
+                <p className="site-ink-muted mt-1 text-sm">Guided trips and day tours across {name}.</p>
               </a>
               <a href={eventsLink()} target="_blank" rel="noopener noreferrer" className="dest-mini-card">
                 <p className="font-semibold">Events & tickets</p>
-                <p className="site-ink-muted mt-1 text-sm">Attractions and shows, booked ahead.</p>
+                <p className="site-ink-muted mt-1 text-sm">Attractions and shows in {name}, booked ahead.</p>
               </a>
               <a
                 href={esimLink(destination.slug)}
@@ -385,7 +385,7 @@ function DestinationPage() {
                 className="dest-mini-card"
               >
                 <p className="font-semibold">eSIM</p>
-                <p className="site-ink-muted mt-1 text-sm">Data on arrival, no roaming fees.</p>
+                <p className="site-ink-muted mt-1 text-sm">Data the moment you land in {name}, no roaming fees.</p>
               </a>
             </div>
             <Link to="/destinations" className="btn-underline mt-8">

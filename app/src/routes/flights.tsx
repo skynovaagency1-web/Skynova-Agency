@@ -18,15 +18,15 @@ export const Route = createFileRoute("/flights")({
   component: () => (
     <VerticalPage
       eyebrow="Flights"
-      title="Real fares, ranked honestly."
+      title="Real fares, compared in one search."
       description="Compare airlines on Aviasales-powered search and lock in a fare before prices move."
       heroVideo={{ videoSrc: "/assets/hero/flight-resort.mp4" }}
       heroAlt="Aerial view of an overwater resort with turquoise water"
       ctaHref={flightsLink()}
       ctaLabel="Compare flights"
       bullets={[
-        { title: "Every major airline", body: "One search compares scheduled and low-cost carriers side by side." },
-        { title: "Ranked by price, not placement", body: "Results sort by fare and rating -- no pay-to-rank listings." },
+        { title: "Scheduled and low-cost, together", body: "One search compares scheduled airlines and low-cost carriers side by side." },
+        { title: "No markup, no reordering", body: "Results come from Aviasales' own search. Skynova doesn't reorder them and adds nothing to the fare." },
         { title: "Book direct with the airline", body: "Checkout happens with the carrier; your ticket and confirmation come from them." },
       ]}
       destinationSlugs={["portugal", "italy", "vietnam", "new-zealand"]}

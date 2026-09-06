@@ -97,7 +97,7 @@ const SPECS = [
 
 const FLOW_STEPS = [
   { n: "01", title: "Search once", detail: "One search bar, every vertical, live results from our partner networks." },
-  { n: "02", title: "Compare honestly", detail: "Ranked by price and rating -- no pay-to-rank placements." },
+  { n: "02", title: "Compare honestly", detail: "Skynova adds no markup and sells no placement -- you see the partner's own results." },
   { n: "03", title: "Book with the partner", detail: "Checkout happens on the partner's own site, at their price." },
   { n: "04", title: "Fly, stay, go", detail: "Your booking sits with them; we're just the front door." },
 ];

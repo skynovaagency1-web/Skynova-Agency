@@ -25,7 +25,7 @@ export function FlightsSection() {
       <div className="site-container grid items-center gap-10 md:grid-cols-2">
         <div>
           <p className="site-eyebrow mb-3">Flights</p>
-          <h2 className="site-h2 text-3xl md:text-4xl">Real fares, ranked honestly.</h2>
+          <h2 className="site-h2 text-3xl md:text-4xl">Real fares, compared in one search.</h2>
           <p className="site-ink-muted mt-4 max-w-md text-base leading-relaxed">
             Compare airlines on Aviasales-powered search and lock in a fare before prices move.
           </p>
