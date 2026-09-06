@@ -3,7 +3,36 @@ import { createFileRoute } from "@tanstack/react-router";
 import { VerticalPage } from "@/components/site/VerticalPage";
 import { EsimCountriesSection } from "@/components/site/EsimCountries";
 import { TravelGuidesSection } from "@/components/site/TravelGuides";
+import { AffiliateWidget } from "@/components/site/AffiliateWidget";
 import { esimLink } from "@/lib/affiliate";
+
+/**
+ * Airalo eSIM search, as a Travelpayouts widget.
+ *
+ * The deep links elsewhere on the site hand the visitor to Airalo's own
+ * country page; this lets them pick a plan without leaving, which is the
+ * point of a widget over a link.
+ *
+ * Recoloured from the defaults the widget builder produced (#0b2033 navy
+ * panel, #f2685f salmon button) to the site's own tokens -- white panel,
+ * --sky-coral gold button, --sky-ink text -- the same treatment
+ * CAR_WIDGET_FORM_SRC already gets. Everything else is left exactly as
+ * generated: trs, shmarker, promo_id and campaign_id are the tracking
+ * identifiers and changing any of them breaks attribution.
+ *
+ * show_logo stays on. The visitor should be able to see it is Airalo before
+ * they commit, which is the same reason the destination cards now name their
+ * partners.
+ *
+ * tpscr.com is already allow-listed in script-src (lib/security-headers.server.ts).
+ * Remove it there and this widget silently renders nothing at all.
+ */
+const ESIM_WIDGET_SRC =
+  "https://tpscr.com/content?trs=519959&shmarker=720297&locale=en&powered_by=true" +
+  "&border_radius=12&plain=true&show_logo=true" +
+  "&color_background=%23ffffff&color_button=%23c9a227&color_text=%231c1a14" +
+  "&color_input_text=%231c1a14&color_button_text=%231c1400" +
+  "&promo_id=4362&campaign_id=143";
 
 const HOW_STEPS = [
   { n: "01", title: "Choose a plan", detail: "Pick your country or region and a data allowance that fits the trip." },
@@ -103,6 +132,17 @@ export const Route = createFileRoute("/esim")({
         </div>
       </section>
       <EsimCountriesSection />
+      <section className="site-section pt-0">
+        <div className="site-container">
+          <p className="site-eyebrow mb-3">Find your plan</p>
+          <h2 className="site-h2 max-w-md text-3xl md:text-4xl">Pick a country, pick a plan.</h2>
+          <p className="site-ink-muted mt-4 max-w-md text-base leading-relaxed">
+            Search Airalo&rsquo;s live plans below. You buy from Airalo directly &mdash; Skynova
+            doesn&rsquo;t handle the payment or set the price.
+          </p>
+          <AffiliateWidget src={ESIM_WIDGET_SRC} className="mt-8" />
+        </div>
+      </section>
       <section className="site-section pt-0">
         <div className="site-container">
           <p className="site-eyebrow mb-3">Compatible devices</p>

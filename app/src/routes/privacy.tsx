@@ -111,6 +111,14 @@ function PrivacyPage() {
                   </a>{" "}
                   for more on how that works.
                 </p>
+                <p>
+                  A few pages (car rentals, tours, eSIM) embed a search box hosted by the partner
+                  itself rather than a plain link. Those are the partner&rsquo;s own software running
+                  in the page, so they can set their own cookies and see that you loaded them, under
+                  the partner&rsquo;s privacy policy rather than ours. Everything we say above about
+                  not running advertising or analytics cookies is about cookies{" "}
+                  <em>we</em> set &mdash; it can&rsquo;t bind a partner.
+                </p>
               </div>
 
               <div>
