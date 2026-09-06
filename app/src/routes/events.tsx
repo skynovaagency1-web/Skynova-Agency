@@ -4,7 +4,33 @@ import { createFileRoute } from "@tanstack/react-router";
 import { VerticalPage } from "@/components/site/VerticalPage";
 import { CategoryGridSection } from "@/components/site/CategoryGrid";
 import { DestinationPicksSection } from "@/components/site/DestinationPicks";
+import { AffiliateWidget } from "@/components/site/AffiliateWidget";
 import { eventsLink } from "@/lib/affiliate";
+
+/**
+ * Tiqets attraction cards (campaign 89 / promo 3947), horizontal, four wide.
+ *
+ * This one is worth a note because it arrived labelled as a car-rental search
+ * form and is nothing of the kind -- reading the loader payload shows it
+ * pulling widgets.tiqets.com. Identify these by what they load, not by what
+ * the dashboard called them.
+ *
+ * It also needs three origins the CSP did not allow (widgets.tiqets.com,
+ * tpo.gg, tpemb.com); tpscr.com only serves a loader that fetches them. They
+ * are added in lib/security-headers.server.ts. Take them away and this
+ * renders nothing, silently.
+ *
+ * Unlike the eSIM and car-rental forms, this template exposes no colour
+ * parameters -- only color_raw -- so it keeps its own styling rather than the
+ * site's tokens. Left as generated for that reason, not by oversight.
+ *
+ * currency=USD is as supplied. Worth a second look: it is the only place on
+ * the site that pins a currency, and it quotes American dollars to a French
+ * operator's visitors.
+ */
+const EVENTS_WIDGET_SRC =
+  "https://tpscr.com/content?currency=USD&trs=519959&shmarker=720297&language=en" +
+  "&layout=horizontal&cards=4&powered_by=true&campaign_id=89&promo_id=3947";
 
 const TRENDING_EVENTS = [
   { name: "Festival season", slug: "event-festival", detail: "Headline stages and the crowd that comes for them." },
@@ -70,6 +96,17 @@ export const Route = createFileRoute("/events")({
           { icon: PartyPopper, title: "Seasonal events", detail: "Holiday markets, festivals, and the dates that only happen once a year." },
         ]}
       />
+      <section className="site-section pt-0">
+        <div className="site-container">
+          <p className="site-eyebrow mb-3">Book now</p>
+          <h2 className="site-h2 max-w-md text-3xl md:text-4xl">Tickets, live from Tiqets.</h2>
+          <p className="site-ink-muted mt-4 max-w-md text-base leading-relaxed">
+            Real availability and prices. You check out with Tiqets &mdash; Skynova doesn&rsquo;t
+            handle the payment or set the price.
+          </p>
+          <AffiliateWidget src={EVENTS_WIDGET_SRC} className="mt-8" />
+        </div>
+      </section>
       <DestinationPicksSection
         eyebrow="Trending events"
         heading="What's worth booking around right now."

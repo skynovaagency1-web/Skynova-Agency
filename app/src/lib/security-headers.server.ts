@@ -19,7 +19,12 @@ export function applySecurityHeaders(response: Response): Response {
       // lib/analytics.tsx). Without it the script is blocked silently and no
       // pageviews are ever recorded -- the dashboard just stays empty, which
       // looks like "no traffic" rather than a broken policy.
-      "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://tpscr.com https://tp.media https://static.localrent.com https://*.travelpayouts.com; " +
+      // widgets.tiqets.com / tpo.gg / tpemb.com are the Tiqets card widget:
+      // tpscr.com only serves a loader that pulls those three. Without them
+      // the widget renders NOTHING, with no error anyone would notice --
+      // the same silent failure that hid the missing fonts and the blank
+      // globe. Verified by reading the loader payload, not assumed.
+      "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://tpscr.com https://tp.media https://static.localrent.com https://widgets.tiqets.com https://tpo.gg https://tpemb.com https://*.travelpayouts.com; " +
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
       // `data:` is required, not optional. Vite inlines any asset under its
       // 4 KB threshold, and the three IBM Plex Mono subsets (--font-mono)
