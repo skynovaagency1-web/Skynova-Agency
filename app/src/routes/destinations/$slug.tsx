@@ -439,7 +439,7 @@ function DestinationPage() {
               Start planning your {name} trip.
             </h2>
             <p className="site-ink-muted mx-auto mt-3 max-w-sm text-base">
-              Flights, stays, cars, and things to do -- compared and booked without switching tabs.
+              Flights, stays, cars, and things to do &mdash; compared in one place, booked with trusted travel partners.
             </p>
             <div className="mt-7 flex flex-wrap items-center justify-center gap-5">
               <a href={flightsLink()} target="_blank" rel="noopener noreferrer" className="btn-final-banner">

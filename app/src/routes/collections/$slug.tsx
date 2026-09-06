@@ -8,6 +8,7 @@ import { Newsletter } from "@/components/site/Newsletter";
 import { CardActions } from "@/components/site/CardActions";
 import { PHOTO_SLUGS } from "@/data/destinations";
 import { COLLECTIONS, getCollectionBySlug, collectionDestinations } from "@/data/collections";
+import { DESTINATION_DETAILS } from "@/data/destination-details";
 import { hotelsLink, flightsLink } from "@/lib/affiliate";
 
 export const Route = createFileRoute("/collections/$slug")({
@@ -105,6 +106,47 @@ function CollectionPage() {
                   <CardActions slug={d.slug} name={d.name} />
                 </div>
               ))}
+            </div>
+
+            {/* Compare at a glance.
+                The card grid above is for browsing -- photograph, name, hook.
+                It cannot answer the question someone on a themed page is
+                actually asking, which is "which of these, and when?". Season
+                is the deciding factor for most of these collections and it was
+                only reachable by opening each destination in turn.
+
+                Every value here is real data already written per destination;
+                nothing is templated or inferred. Wrapped in its own scroll
+                container so a long season note never makes the page itself
+                scroll sideways. */}
+            <div className="compare-wrap mt-10">
+              <table className="compare-table">
+                <caption className="compare-caption">
+                  {collection.name}: when to go, at a glance
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Destination</th>
+                    <th scope="col">Region</th>
+                    <th scope="col">Best time to go</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {destinations.map((d) => (
+                    <tr key={d.slug}>
+                      <th scope="row" className="compare-dest">
+                        <Link to="/destinations/$slug" params={{ slug: d.slug }}>
+                          <span aria-hidden="true">{d.flag}</span> {d.name}
+                        </Link>
+                      </th>
+                      <td>{d.region}</td>
+                      <td className="compare-season">
+                        {DESTINATION_DETAILS[d.slug]?.bestTime ?? "\u2014"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
 
             <div className="collection-cta">

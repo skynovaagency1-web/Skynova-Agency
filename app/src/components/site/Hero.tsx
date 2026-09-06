@@ -397,7 +397,7 @@ export function Hero() {
               <p className="site-eyebrow mb-4">Skynova Agency</p>
               <h1 className="site-h2 max-w-2xl text-4xl md:text-6xl">Every trip. One place.</h1>
               <p className="site-ink-muted mt-4 max-w-lg text-base leading-relaxed">
-                Flights, stays, cars, connectivity, tickets and tours, compared and booked without switching tabs.
+                Flights, stays, cars, connectivity, tickets and tours &mdash; compared in one place, booked with trusted travel partners.
               </p>
               <div className="mt-7 flex flex-wrap items-center gap-5">
                 <Link to="/destinations" className="btn-hero-pill">
