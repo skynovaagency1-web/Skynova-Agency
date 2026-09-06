@@ -101,7 +101,7 @@ export function Footer() {
   }, []);
 
   return (
-    <div className="footer-cinematic" ref={containerRef}>
+    <div data-rail-dark="" className="footer-cinematic" ref={containerRef}>
       <video
         ref={videoRef}
         className="footer-video"

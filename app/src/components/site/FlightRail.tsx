@@ -50,12 +50,19 @@ const SVG_PATH = (() => {
   return `M ${pts[0]} L ${pts.slice(1).join(" L ")}`;
 })();
 
-/** What the aircraft lands in front of. */
-const HEADING_SELECTOR = "main h1, main h2";
+/** What the aircraft lands in front of: headlines AND sub-headlines. With
+ *  none in range it simply flies the route, which is the fallback below. */
+const HEADING_SELECTOR = "main h1, main h2, main h3";
 /** How near a heading has to be, in px, before the approach begins. */
 const LANDING_RANGE = 130;
 /** The last slice of the route, where it settles onto the closing surface. */
 const FLARE = 0.04;
+/**
+ * How far behind the aircraft the trail stays solid before dissolving, as a
+ * fraction of the rail's height. A contrail does not end -- it thins until
+ * the sky takes it -- so this is a fade length, not a cut-off.
+ */
+const CONTRAIL_FADE = 0.34;
 /** Only the homepage has this; elsewhere the route starts at the top. */
 const RAIL_START_SELECTOR = "#how-it-works";
 const START_LEAD = 0.5;
@@ -98,6 +105,10 @@ const LIVERY_ON_LIGHT: Livery = {
   metal: 0x6e6555,
   accent: 0xc9a227,
 };
+/** Contrail colour per backdrop, matching the aircraft's own two liveries. */
+const TRAIL_ON_LIGHT = "#c9a227";
+const TRAIL_ON_DARK = "#f3efe3";
+
 const LIVERY_ON_DARK: Livery = {
   shell: 0xf3efe3,
   panel: 0xd8d1bd,
@@ -119,6 +130,7 @@ function smoothstep(k: number) {
 export function FlightRail() {
   const railRef = useRef<HTMLDivElement | null>(null);
   const trailRef = useRef<SVGPathElement | null>(null);
+  const fadeRef = useRef<SVGLinearGradientElement | null>(null);
 
   useEffect(() => {
     const rail = railRef.current;
@@ -232,6 +244,13 @@ export function FlightRail() {
         liveryDark = dark;
         const livery = dark ? LIVERY_ON_DARK : LIVERY_ON_LIGHT;
         for (const m of paintable) m.color.setHex(livery[m.name]);
+        // The contrail follows the same rule. A real one is white, which
+        // would be invisible on this site's cream sections -- so it is warm
+        // gold over light ground and near-white over dark, which is also
+        // what an actual vapour trail looks like against a dark sky.
+        // Written straight onto the one element, never a :root property.
+        const trail = trailRef.current;
+        if (trail) trail.style.stroke = dark ? TRAIL_ON_DARK : TRAIL_ON_LIGHT;
       }
       applyLivery(false);
 
@@ -242,6 +261,16 @@ export function FlightRail() {
         const els = document.elementsFromPoint(routeX(0) * width, screenY);
         for (const el of els) {
           if (el === rail || rail!.contains(el)) continue;
+
+          // Sections marked dark win outright. Their darkness comes from
+          // video and background-images, which backgroundColor cannot see:
+          // over the cinematic footer every element in the chain reports a
+          // transparent background, so the colour walk below fell all the way
+          // through to <body> (white) and painted a dark aircraft onto dark
+          // footage. Tagging the container is the only reading that is
+          // actually true rather than inferred.
+          if (el.closest("[data-rail-dark]")) return true;
+
           const bg = getComputedStyle(el).backgroundColor;
           const m = /rgba?\(([^)]+)\)/.exec(bg);
           if (!m) continue;
@@ -315,8 +344,26 @@ export function FlightRail() {
         inner.quaternion.premultiply(flipQuat.setFromAxisAngle(flipAxis, flipEased * Math.PI));
         applyLivery(sampleBackdrop(planeY));
 
+        // The trail is drawn from where the AIRCRAFT actually is, not from raw
+        // scroll progress. Those differ whenever it is easing onto a heading,
+        // and using progress drew line the aircraft had not reached yet.
+        const flown = Math.min(
+          Math.max((planeY / height - ROUTE_TOP) / (ROUTE_BOTTOM - ROUTE_TOP), 0),
+          1,
+        );
         const trail = trailRef.current;
-        if (trail) trail.style.strokeDashoffset = ((1 - t) * 1000).toFixed(1);
+        if (trail) trail.style.strokeDashoffset = ((1 - flown) * 1000).toFixed(1);
+
+        // Dissolve: a gradient in viewBox units, opaque at the aircraft and
+        // clear CONTRAIL_FADE above it. spreadMethod pad means everything
+        // further back stays fully transparent and everything below stays
+        // opaque, so only this moving band has to be updated per frame.
+        const fade = fadeRef.current;
+        if (fade) {
+          const head = (planeY / height) * 1000;
+          fade.setAttribute("y1", (head - CONTRAIL_FADE * 1000).toFixed(1));
+          fade.setAttribute("y2", head.toFixed(1));
+        }
       }
 
       let raf = 0;
@@ -438,6 +485,28 @@ export function FlightRail() {
   return (
     <div ref={railRef} className="flight-rail" aria-hidden="true">
       <svg className="flight-rail-svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+        <defs>
+          {/* The dissolve. userSpaceOnUse so the stops are viewBox
+              coordinates the component can move directly, and the whole band
+              slides with the aircraft each frame. */}
+          <linearGradient
+            ref={fadeRef}
+            id="flight-rail-fade"
+            gradientUnits="userSpaceOnUse"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="1000"
+          >
+            <stop offset="0" stopColor="#fff" stopOpacity="0" />
+            <stop offset="1" stopColor="#fff" stopOpacity="1" />
+          </linearGradient>
+          {/* Masking rather than fading the stroke's own colour, so the
+              livery swap stays free to recolour it for dark sections. */}
+          <mask id="flight-rail-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="1000">
+            <rect x="0" y="0" width="1000" height="1000" fill="url(#flight-rail-fade)" />
+          </mask>
+        </defs>
         {/* The two surfaces the aircraft touches down on, at the extremes of
             the page rather than of any one section. */}
         <line
@@ -456,16 +525,16 @@ export function FlightRail() {
           y2={y1 + 26}
           vectorEffect="non-scaling-stroke"
         />
-        {/* Full route, then the travelled portion drawn over it. Both read
-            SVG_PATH, sampled from the same routeX/routeY the aircraft flies
-            -- one definition, so they cannot drift. */}
-        <path className="flight-rail-track" d={SVG_PATH} vectorEffect="non-scaling-stroke" />
+        {/* Only the flown portion. The dashed "route ahead" this replaces
+            contradicted the idea: a contrail is made by the aircraft, so
+            nothing exists in front of it. */}
         <path
           ref={trailRef}
           className="flight-rail-trail"
           d={SVG_PATH}
           pathLength={1000}
           vectorEffect="non-scaling-stroke"
+          mask="url(#flight-rail-mask)"
         />
       </svg>
     </div>

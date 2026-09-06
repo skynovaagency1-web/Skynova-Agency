@@ -16,7 +16,7 @@ export function VerticalExplorerSection() {
   const current = FEATURED.find((v) => v.key === active) ?? FEATURED[0];
 
   return (
-    <section className="site-section cloud-photo-section">
+    <section data-rail-dark="" className="site-section cloud-photo-section">
       <div className="site-container">
         <p className="site-eyebrow mb-3">Explore by vertical</p>
         <h2 className="site-h2 max-w-lg text-3xl md:text-4xl">Every trip, one search away.</h2>

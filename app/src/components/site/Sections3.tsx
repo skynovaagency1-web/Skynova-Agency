@@ -95,7 +95,7 @@ const FLOW_STEPS = [
 // playing video pinned behind the content.
 export function BookingSpecSection() {
   return (
-    <section id="how-it-works" className="site-section cloud-photo-section">
+    <section data-rail-dark="" id="how-it-works" className="site-section cloud-photo-section">
       <div className="site-container grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start">
         <div>
           <p className="site-eyebrow mb-3">How a booking works</p>

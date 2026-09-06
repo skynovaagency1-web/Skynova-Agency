@@ -25,7 +25,7 @@ export function Newsletter() {
   }
 
   return (
-    <section className="newsletter-section">
+    <section data-rail-dark="" className="newsletter-section">
       <div className="site-container newsletter-inner">
         <p className="newsletter-eyebrow">Skynova Travel Club</p>
         <h2 className="newsletter-heading">Join the Skynova Travel Club</h2>
