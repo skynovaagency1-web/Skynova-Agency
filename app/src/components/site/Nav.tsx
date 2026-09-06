@@ -295,7 +295,7 @@ export function Nav() {
               </>
             ) : (
               <>
-                <p className="site-eyebrow mb-2">Members save more</p>
+                <p className="site-eyebrow mb-2">Your Skynova account</p>
                 <p className="mobile-account-title">Log in to plan your next trip.</p>
                 <p className="mobile-account-subtitle">Save destinations and share trips with friends.</p>
                 <button
