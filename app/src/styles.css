@@ -2760,9 +2760,12 @@ html {
 .flight-rail {
   display: block;
   position: fixed;
-  left: 0;
+  /* Inset from the edge so the blurred smoke has somewhere to bloom. Flush
+     at 0 it was clipped by the screen on the left and by the rail's own box
+     on the right, which read as a flat-sided band rather than smoke. */
+  left: 10px;
   top: 0;
-  width: 34px;
+  width: 44px;
   height: 100vh;
   /* Above section backgrounds so the route reads as continuous across them,
      but inert to input so it never eats a tap -- and so the aircraft's
@@ -2774,8 +2777,8 @@ html {
   opacity: 0;
   transition: opacity 0.45s ease;
 }
-@media (min-width: 1024px) { .flight-rail { width: 52px; } }
-@media (min-width: 1440px) { .flight-rail { width: 64px; } }
+@media (min-width: 1024px) { .flight-rail { width: 60px; } }
+@media (min-width: 1440px) { .flight-rail { width: 72px; } }
 
 .flight-rail-svg,
 .flight-rail-canvas {
@@ -2784,6 +2787,10 @@ html {
   width: 100%;
   height: 100%;
 }
+/* The blur has to be allowed past the svg's own box, or it is cut off square
+   at exactly the point it should be softest. Harmless: the rail is
+   pointer-events:none, so spill never intercepts a click. */
+.flight-rail-svg { overflow: visible; }
 
 .flight-rail-track {
   fill: none;

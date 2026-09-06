@@ -70,6 +70,14 @@ const FLARE = 0.04;
  */
 const CONTRAIL_FADE = 0.16;
 const SMOKE_FADE = 0.58;
+
+/**
+ * How long the trail survives once the aircraft stops, in ms. The spatial
+ * fade alone only thins the trail with DISTANCE, so parking the scroll left
+ * it hanging in the air indefinitely -- smoke that never clears. This decays
+ * it with time as well, so it always clears shortly after motion stops.
+ */
+const SMOKE_LIFETIME = 2000;
 /** Only the homepage has this; elsewhere the route starts at the top. */
 const RAIL_START_SELECTOR = "#how-it-works";
 const START_LEAD = 0.5;
@@ -308,6 +316,9 @@ export function FlightRail() {
       }
 
       let planeY = routeY(0) * height;
+      /** When the aircraft last actually moved, for the time decay above. */
+      let lastMoveAt = 0;
+      let trailAlpha = 0;
       let levelEased = 0;
       let progress = 0;
       /** 0 = nose down the page, 1 = nose back up it. */
@@ -343,7 +354,12 @@ export function FlightRail() {
         if (arriving > 0) level = Math.max(level, smoothstep(arriving));
 
         targetY = Math.min(Math.max(targetY, ROUTE_TOP * height), ROUTE_BOTTOM * height);
+        const before = planeY;
         planeY += (targetY - planeY) * 0.12;
+        // Any real movement re-charges the trail; otherwise it decays.
+        const now = performance.now();
+        if (Math.abs(planeY - before) > 0.25) lastMoveAt = now;
+        trailAlpha = Math.max(0, 1 - (now - lastMoveAt) / SMOKE_LIFETIME);
         levelEased += (level - levelEased) * 0.12;
 
         flipEased += (flipTarget - flipEased) * 0.12;
@@ -362,10 +378,18 @@ export function FlightRail() {
           Math.max((planeY / height - ROUTE_TOP) / (ROUTE_BOTTOM - ROUTE_TOP), 0),
           1,
         );
+        const off = ((1 - flown) * 1000).toFixed(1);
+        const alpha = trailAlpha.toFixed(3);
         const trail = trailRef.current;
-        if (trail) trail.style.strokeDashoffset = ((1 - flown) * 1000).toFixed(1);
+        if (trail) {
+          trail.style.strokeDashoffset = off;
+          trail.style.opacity = alpha;
+        }
         const smoke = smokeRef.current;
-        if (smoke) smoke.style.strokeDashoffset = ((1 - flown) * 1000).toFixed(1);
+        if (smoke) {
+          smoke.style.strokeDashoffset = off;
+          smoke.style.opacity = alpha;
+        }
 
         // Dissolve: a gradient in viewBox units, opaque at the aircraft and
         // clear CONTRAIL_FADE above it. spreadMethod pad means everything
@@ -396,7 +420,8 @@ export function FlightRail() {
         const settling =
           Math.abs(planeY - lastY) > 0.05 ||
           Math.abs(levelEased - lastLevel) > 0.001 ||
-          Math.abs(flipEased - lastFlip) > 0.001;
+          Math.abs(flipEased - lastFlip) > 0.001 ||
+          trailAlpha > 0; // keep running until the smoke has actually gone
         lastY = planeY;
         lastLevel = levelEased;
         lastFlip = flipEased;
