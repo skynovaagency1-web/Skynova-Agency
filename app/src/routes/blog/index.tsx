@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Nav } from "@/components/site/Nav";
 import { useReveal } from "@/hooks/use-reveal";
 import { Footer } from "@/components/site/Footer";
+import { Newsletter } from "@/components/site/Newsletter";
 import { getDestinationBySlug } from "@/data/destinations";
 import { POSTS, PHOTO_SLUGS, TAG_CLASSES } from "@/data/blog-posts";
 import { hasArticle } from "@/data/blog-articles";
@@ -156,6 +157,7 @@ function BlogPage() {
           </div>
         </section>
       </main>
+      <Newsletter />
       <Footer />
     </>
   );

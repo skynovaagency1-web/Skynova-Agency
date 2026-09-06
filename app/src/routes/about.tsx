@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
+import { Newsletter } from "@/components/site/Newsletter";
 import { DESTINATIONS, REGION_ORDER } from "@/data/destinations";
 import { COLLECTIONS } from "@/data/collections";
 import { POSTS } from "@/data/blog-posts";
@@ -156,6 +157,7 @@ function AboutPage() {
           }}
         />
       </main>
+      <Newsletter />
       <Footer />
     </>
   );

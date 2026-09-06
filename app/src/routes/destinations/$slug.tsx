@@ -4,6 +4,7 @@ import { Nav } from "@/components/site/Nav";
 import { useReveal } from "@/hooks/use-reveal";
 import { SmoothScroll } from "@/components/site/SmoothScroll";
 import { Footer } from "@/components/site/Footer";
+import { Newsletter } from "@/components/site/Newsletter";
 import { WishlistButton } from "@/components/site/WishlistButton";
 import { getDestinationBySlug, REGION_ORDER, PHOTO_SLUGS } from "@/data/destinations";
 import { collectionsForDestination } from "@/data/collections";
@@ -373,6 +374,7 @@ function DestinationPage() {
           </section>
         )}
       </main>
+      <Newsletter />
       <Footer />
     </>
   );

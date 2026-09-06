@@ -5,6 +5,7 @@ import { Nav } from "@/components/site/Nav";
 import { useReveal } from "@/hooks/use-reveal";
 import { SmoothScroll } from "@/components/site/SmoothScroll";
 import { Footer } from "@/components/site/Footer";
+import { Newsletter } from "@/components/site/Newsletter";
 import { TiltCard } from "@/components/site/TiltCard";
 import { CardActions } from "@/components/site/CardActions";
 import { GlassToggle } from "@/components/site/GlassToggle";
@@ -211,6 +212,7 @@ function DestinationsIndex() {
           </div>
         </section>
       </main>
+      <Newsletter />
       <Footer />
     </>
   );

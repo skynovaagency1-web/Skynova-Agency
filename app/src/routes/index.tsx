@@ -18,6 +18,7 @@ import { VerticalExplorerSection } from "@/components/site/VerticalExplorer";
 import { MarqueeBand } from "@/components/site/MarqueeBand";
 import { TripCycle } from "@/components/site/TripCycle";
 import { Footer } from "@/components/site/Footer";
+import { Newsletter } from "@/components/site/Newsletter";
 import { useParallax } from "@/hooks/use-parallax";
 
 export const Route = createFileRoute("/")({
@@ -56,6 +57,7 @@ function Index() {
         <FlyAnywhereSection />
         <ClosingStatCtaSection />
       </main>
+      <Newsletter />
       <Footer />
     </>
   );
