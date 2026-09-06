@@ -3,6 +3,7 @@ import "./lib/error-capture";
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 import { applySecurityHeaders } from "./lib/security-headers.server";
+import { handleOutboundClick } from "./lib/outbound-clicks.server";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -60,6 +61,14 @@ export default {
     try {
       const redirect = redirectToCanonicalHost(request);
       if (redirect) return redirect;
+
+      // Affiliate click counter. Handled here, ahead of the SSR handler,
+      // because the browser sends these with navigator.sendBeacon -- a plain
+      // POST that must be answered as cheaply as possible and never routed
+      // through React. See lib/outbound-clicks.server.ts.
+      if (request.method === "POST" && new URL(request.url).pathname === "/api/click") {
+        return applySecurityHeaders(await handleOutboundClick(request));
+      }
 
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);

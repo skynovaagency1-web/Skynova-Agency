@@ -53,8 +53,33 @@ function PrivacyPage() {
                 <p>
                   We also set one functional cookie to keep you signed in (<code>skynova_session</code>).
                   It's <code>HttpOnly</code>, so no script on this page (ours or anyone else's) can
-                  read it, and it's the only cookie we set ourselves. We don't currently run
-                  advertising or analytics cookies of our own.
+                  read it, and it's the only cookie we set ourselves. We don't run advertising
+                  cookies, and we don't use any cookie for analytics.
+                </p>
+              </div>
+
+              <div>
+                <h2>Measuring which links get used</h2>
+                <p>
+                  When you click through to one of our booking partners, we record that the click
+                  happened. That record contains four things and nothing else:
+                </p>
+                <ul>
+                  <li>Which partner you were sent to (for example, Aviasales).</li>
+                  <li>Which category it was (flights, hotels, cars, and so on).</li>
+                  <li>Which page you clicked from.</li>
+                  <li>The date and time.</li>
+                </ul>
+                <p>
+                  It does <strong>not</strong> contain your IP address, your browser details, your
+                  account, or any identifier at all -- so it tells us that <em>someone</em> clicked,
+                  never who. The records can't be linked back to you, or to each other, and nothing
+                  is stored on your device to make this work. It's how we learn which guides are
+                  actually useful; there's no way to run a site like this well while guessing.
+                </p>
+                <p>
+                  We also use Cloudflare Web Analytics for page views. It sets no cookies and
+                  collects no personal data, which is why it's here rather than Google Analytics.
                 </p>
               </div>
 
