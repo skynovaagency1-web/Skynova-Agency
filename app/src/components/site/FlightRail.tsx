@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 
+import { setOrbiting, setRailPresent } from "@/lib/flight-handoff";
+
 /**
  * Page-level flight rail: a fixed route down the left edge with a real 3D
  * aircraft flying it, which levels off and touches down as it reaches each
@@ -78,6 +80,17 @@ const SMOKE_FADE = 0.58;
  * it with time as well, so it always clears shortly after motion stops.
  */
 const SMOKE_LIFETIME = 2000;
+/**
+ * The globe, which the aircraft breaks off the rail to circle.
+ *
+ * Only the homepage has one. When the aircraft comes level with this element
+ * it hands off to the globe's own canvas -- see lib/flight-handoff.ts for why
+ * it is a handoff and not a flight across the page.
+ */
+const GLOBE_SELECTOR = ".orbit-stage";
+/** How fast the rail aircraft fades at the handoff, per frame at 60Hz. */
+const HANDOFF_FADE = 0.14;
+
 /** Only the homepage has this; elsewhere the route starts at the top. */
 const RAIL_START_SELECTOR = "#how-it-works";
 const START_LEAD = 0.5;
@@ -247,7 +260,14 @@ export function FlightRail() {
           const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
           for (const m of mats) {
             const std = m as import("three").MeshStandardMaterial;
-            if (std && std.name in LIVERY_ON_LIGHT) paintable.push(std);
+            if (!std || !(std.name in LIVERY_ON_LIGHT)) continue;
+            // Transparency is opted into ONCE here, not toggled during the
+            // handoff fade: flipping `transparent` at runtime triggers a
+            // shader recompile, and a frame hitch at the exact moment the
+            // aircraft is meant to hand over is the one place it would show.
+            std.transparent = true;
+            std.opacity = 1;
+            paintable.push(std);
           }
         });
         inner.add(model);
@@ -302,8 +322,12 @@ export function FlightRail() {
 
       let headingYs: number[] = [];
       let headings: HTMLElement[] = [];
+      /** Null on every route but the homepage, which the handoff treats as
+       *  "never orbit" -- the rail simply flies its route as before. */
+      let globeEl: HTMLElement | null = null;
       function collectHeadings() {
         headings = Array.from(document.querySelectorAll<HTMLElement>(HEADING_SELECTOR));
+        globeEl = document.querySelector<HTMLElement>(GLOBE_SELECTOR);
       }
       function measureHeadings() {
         const out: number[] = [];
@@ -324,6 +348,9 @@ export function FlightRail() {
       /** 0 = nose down the page, 1 = nose back up it. */
       let flipTarget = 0;
       let flipEased = 0;
+      /** 1 = on the rail, 0 = handed off to the globe. */
+      let railOpacity = 1;
+      let handedOff = false;
 
       function place(t: number) {
         const rx = routeX(t) * width;
@@ -356,9 +383,27 @@ export function FlightRail() {
         targetY = Math.min(Math.max(targetY, ROUTE_TOP * height), ROUTE_BOTTOM * height);
         const before = planeY;
         planeY += (targetY - planeY) * 0.12;
-        // Any real movement re-charges the trail; otherwise it decays.
+
+        // Level with the globe? Then this aircraft is about to become the
+        // globe's aircraft. Measured every frame rather than cached because
+        // the rect moves with the scroll, which is the whole trigger.
+        if (globeEl) {
+          const r = globeEl.getBoundingClientRect();
+          handedOff = planeY >= r.top && planeY <= r.bottom;
+        } else {
+          handedOff = false;
+        }
+        setOrbiting(handedOff);
+        railOpacity += ((handedOff ? 0 : 1) - railOpacity) * HANDOFF_FADE;
+        plane.visible = railOpacity > 0.004;
+        for (const m of paintable) m.opacity = railOpacity;
+
+        // Any real movement re-charges the trail; otherwise it decays. Not
+        // while handed off, though: the aircraft is not on the rail to lay a
+        // contrail, so the existing one is left to dissolve on its own timer
+        // rather than being topped up by a plane that has gone.
         const now = performance.now();
-        if (Math.abs(planeY - before) > 0.25) lastMoveAt = now;
+        if (!handedOff && Math.abs(planeY - before) > 0.25) lastMoveAt = now;
         trailAlpha = Math.max(0, 1 - (now - lastMoveAt) / SMOKE_LIFETIME);
         levelEased += (level - levelEased) * 0.12;
 
@@ -421,6 +466,9 @@ export function FlightRail() {
           Math.abs(planeY - lastY) > 0.05 ||
           Math.abs(levelEased - lastLevel) > 0.001 ||
           Math.abs(flipEased - lastFlip) > 0.001 ||
+          // Without this the loop can stop mid-handoff and leave the aircraft
+          // frozen half-faded on the rail while the globe flies its lap.
+          Math.abs(railOpacity - (handedOff ? 0 : 1)) > 0.004 ||
           trailAlpha > 0; // keep running until the smoke has actually gone
         lastY = planeY;
         lastLevel = levelEased;
@@ -491,6 +539,13 @@ export function FlightRail() {
       place(reduceMotion ? 0.5 : progress);
       renderer.render(scene, camera);
 
+      // Claimed only once the rail is genuinely up and driving frames. Every
+      // path that gives up before here -- no WebGL, a failed dynamic import,
+      // an unmount mid-load -- leaves the flag false, and the handoff module
+      // reads that as "no rail", so the globe flies its own orbit instead of
+      // waiting forever for a signal that is never coming.
+      setRailPresent(true);
+
       teardown = () => {
         ro.disconnect();
         window.removeEventListener("scroll", onScroll);
@@ -515,6 +570,7 @@ export function FlightRail() {
     void start();
     return () => {
       disposed = true;
+      setRailPresent(false);
       teardown?.();
     };
   }, []);
