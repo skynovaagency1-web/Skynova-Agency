@@ -11,8 +11,8 @@ import { getReferralStats } from "@/lib/api/referral.functions";
 export const Route = createFileRoute("/share")({
   head: () => ({
     meta: [
-      { title: "Share & earn | Skynova Agency" },
-      { name: "description", content: "Share Skynova with friends and earn rewards when they book." },
+      { title: "Share Skynova | Skynova Agency" },
+      { name: "description", content: "Share your Skynova link and see how many friends have joined through it." },
     ],
   }),
   component: SharePage,
@@ -55,7 +55,7 @@ function SharePage() {
       <main>
         <section className="site-section">
           <div className="site-container">
-            <p className="site-eyebrow mb-3">Share Trips, Earn Rewards</p>
+            <p className="site-eyebrow mb-3">Share Skynova</p>
             <h1 className="site-h2 max-w-2xl text-4xl md:text-6xl">Send Skynova to a friend.</h1>
             <p className="site-ink-muted mt-4 max-w-lg text-base leading-relaxed">
               Share your link -- when someone signs up through it, it counts here.

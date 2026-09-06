@@ -197,7 +197,7 @@ export function AuthModal() {
                   </button>
                 </div>
                 <h2 className="auth-modal-title">
-                  {mode === "sign-in" ? "Welcome back." : "Save trips, get rewards."}
+                  {mode === "sign-in" ? "Welcome back." : "Save trips and destinations."}
                 </h2>
                 {mode === "sign-up" ? (
                   <div className="auth-modal-chips">

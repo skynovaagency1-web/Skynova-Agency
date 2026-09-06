@@ -297,7 +297,7 @@ export function Nav() {
               <>
                 <p className="site-eyebrow mb-2">Members save more</p>
                 <p className="mobile-account-title">Log in to plan your next trip.</p>
-                <p className="mobile-account-subtitle">Save destinations, share trips, and earn rewards.</p>
+                <p className="mobile-account-subtitle">Save destinations and share trips with friends.</p>
                 <button
                   type="button"
                   className="btn-hero-pill mt-4 w-full justify-center"
@@ -332,7 +332,7 @@ export function Nav() {
               onClick={() => setOpen(false)}
             >
               <Share2 size={20} />
-              <span>Share Trips, Earn Rewards</span>
+              <span>Share Skynova with friends</span>
               <ChevronRight size={16} className="mobile-menu-row-chevron" />
             </Link>
           </div>
