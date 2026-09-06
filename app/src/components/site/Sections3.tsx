@@ -2,18 +2,31 @@ import { useEffect, useState, type CSSProperties } from "react";
 import { Link } from "@tanstack/react-router";
 
 import { getDestinationBySlug, type Destination, DESTINATIONS } from "@/data/destinations";
+import { VERTICALS } from "@/data/verticals";
 import { Globe3D } from "@/components/site/Globe3D";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
 // Back to a curated 8 -- 25 chips around the globe read as cluttered.
 const ORBIT_SLUGS = ["portugal", "italy", "vietnam", "new-zealand", "switzerland", "peru", "kenya", "jordan"];
 
+/**
+ * Counted from the data, never typed by hand.
+ *
+ * These four figures were hardcoded as "25" and had gone stale: there are 42
+ * destinations. about.tsx already derives its counts and carries a comment
+ * warning about precisely this drift -- the homepage was simply missed. A
+ * number whose job is to establish the site is real is worse than useless once
+ * it disagrees with the page it links to.
+ */
+const DESTINATION_COUNT = DESTINATIONS.length;
+const VERTICAL_COUNT = VERTICALS.length;
+
 export function TrustLineSection() {
   return (
     <section className="trust-strip">
       <div className="site-container">
         <p className="trust-strip-text">
-          <strong>8</strong> travel verticals · <strong>25</strong> destinations · booked through one
+          <strong>{VERTICAL_COUNT}</strong> travel verticals · <strong>{DESTINATION_COUNT}</strong> destinations · booked through one
           trusted partner network
         </p>
       </div>
@@ -76,8 +89,8 @@ export function AdvantagesSection() {
 }
 
 const SPECS = [
-  { label: "Verticals in one flow", value: "8" },
-  { label: "Destinations routed", value: "25" },
+  { label: "Verticals in one flow", value: String(VERTICAL_COUNT) },
+  { label: "Destinations routed", value: String(DESTINATION_COUNT) },
   { label: "Markup added by Skynova", value: "$0" },
   { label: "Support response window", value: "< 24h" },
 ];
@@ -200,11 +213,11 @@ export function LiveStatsBarSection() {
     <section className="stats-bar site-hairline border-y">
       <div className="site-container stats-bar-grid">
         <div className="stats-bar-item">
-          <p className="stats-bar-value">25</p>
+          <p className="stats-bar-value">{DESTINATION_COUNT}</p>
           <p className="site-ink-muted text-xs uppercase tracking-wide">Countries served</p>
         </div>
         <div className="stats-bar-item">
-          <p className="stats-bar-value">8</p>
+          <p className="stats-bar-value">{VERTICAL_COUNT}</p>
           <p className="site-ink-muted text-xs uppercase tracking-wide">Travel verticals</p>
         </div>
         <div className="stats-bar-item">
@@ -261,7 +274,7 @@ export function ClosingStatCtaSection() {
   return (
     <section className="site-section site-hairline border-t closing-cta">
       <div className="site-container text-center">
-        <p className="closing-cta-figure">25+</p>
+        <p className="closing-cta-figure">{DESTINATION_COUNT}</p>
         <h2 className="site-h2 mx-auto max-w-lg text-3xl md:text-4xl">
           Destinations routed through one search, not six tabs.
         </h2>

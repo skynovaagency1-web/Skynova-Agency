@@ -61,8 +61,18 @@ const HANDOFF_FADE = 3.2;
  */
 const ORBIT_TILT_X = 0.46;
 const ORBIT_TILT_Z = 0.2;
-/** Aircraft length in world units, against a 2.2-radius globe. */
-const PLANE_LENGTH = 0.62;
+/**
+ * Aircraft length in world units, against a 2.2-radius globe.
+ *
+ * 1.15, not the 0.62 this started at: at 0.62 it rendered about 67px long
+ * against a 476px globe and simply could not be read as an aircraft. Going
+ * bigger is close to free here -- the nose sticks out TANGENTIALLY along the
+ * direction of travel and the wings perpendicular to the orbital plane, so
+ * neither adds much to the distance from the globe's centre. Doubling the
+ * length moves the widest point of the whole assembly from 310px to 320px,
+ * against a 340px canvas edge.
+ */
+const PLANE_LENGTH = 1.15;
 
 /**
  * The orbit is now DRAWN, not only travelled.
