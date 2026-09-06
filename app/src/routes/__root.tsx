@@ -71,23 +71,32 @@ function buildHead(meta: AppMeta) {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap",
       },
-      // ?v=2 busts the cache: these were Higgsfield's logo until the brand
-      // monogram replaced them, and browsers hold favicons across hard
-      // refreshes. Bump the number if the icon ever changes again.
-      { rel: "icon", href: "/assets/brand/favicon.ico?v=2", sizes: "any" },
+      // ?v=3 busts the cache: these were Higgsfield's logo, then the brand
+      // monogram, and now a small-size mark. Browsers hold favicons across
+      // hard refreshes. Bump the number if the icon ever changes again.
+      //
+      // v3 is a legibility fix, not a restyle. The monogram was a hairline
+      // didone in cream and gold on near-black, occupying ~40% of the canvas
+      // -- so at 16px the glyph was about 6px of thin strokes, and its dark
+      // ground merged into a dark tab bar. It is now the brand gold with the
+      // monogram in ink at 80% of the canvas, which reads on a light and a
+      // dark tab strip alike. Baskerville Bold rather than Didot for the same
+      // reason a type family ships an optical size: didone hairlines do not
+      // survive 16 pixels.
+      { rel: "icon", href: "/assets/brand/favicon.ico?v=3", sizes: "any" },
       {
         rel: "icon",
         type: "image/png",
         sizes: "32x32",
-        href: "/assets/brand/favicon-32.png?v=2",
+        href: "/assets/brand/favicon-32.png?v=3",
       },
       {
         rel: "icon",
         type: "image/png",
         sizes: "16x16",
-        href: "/assets/brand/favicon-16.png?v=2",
+        href: "/assets/brand/favicon-16.png?v=3",
       },
-      { rel: "apple-touch-icon", href: "/assets/brand/apple-touch-icon.png?v=2" },
+      { rel: "apple-touch-icon", href: "/assets/brand/apple-touch-icon.png?v=3" },
       { rel: "manifest", href: "/site.webmanifest" },
     ],
   };
