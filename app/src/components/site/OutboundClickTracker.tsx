@@ -30,6 +30,8 @@ const PARTNER_HOSTS: Record<string, string> = {
   "hotellook.com": "hotels",
   "www.rentalcars.com": "cars",
   "rentalcars.com": "cars",
+  "www.discovercars.com": "cars",
+  "discovercars.com": "cars",
   "gettransfer.com": "transfers",
   "www.tiqets.com": "events",
   "tiqets.com": "events",

@@ -21,8 +21,10 @@ import {
   flightsLink,
   hotelsLink,
   carRentalLink,
+  discoverCarsLink,
   toursLink,
   eventsLink,
+  attractionsLink,
   esimLink,
 } from "@/lib/affiliate";
 
@@ -62,6 +64,60 @@ function DestinationPage() {
   const regionIcon = REGION_ORDER.find((r) => r.region === destination.region)?.icon ?? "";
   const name = destination.name;
   const related = relatedDestinations(destination.slug);
+
+  // One list rather than six hand-written cards. Each entry names the partner
+  // it sends you to -- previously the card said "Hotels" and you found out on
+  // arrival. Naming them is the same transparency the About and Terms pages
+  // already commit to, and it is what makes a second partner per vertical
+  // legible instead of confusing.
+  //
+  // A vertical carries two partners where a second programme exists AND is
+  // configured. discoverCarsLink() returns null until its affiliate id is
+  // set, so the extra link simply does not render rather than shipping an
+  // unattributed one.
+  const discoverCars = discoverCarsLink(destination.slug);
+  const booking: {
+    title: string;
+    copy: string;
+    partners: { label: string; href: string }[];
+  }[] = [
+    {
+      title: "Flights",
+      copy: `Compare fares into ${name}.`,
+      partners: [{ label: "Aviasales", href: flightsLink() }],
+    },
+    {
+      title: "Hotels",
+      copy: `Stays across ${name}, compared in one search.`,
+      partners: [{ label: "Hotellook", href: hotelsLink(name) }],
+    },
+    {
+      title: "Car rentals",
+      copy: `Collect on arrival and drive ${name} at your own pace.`,
+      partners: [
+        { label: "Rentalcars", href: carRentalLink() },
+        ...(discoverCars ? [{ label: "Discover Cars", href: discoverCars }] : []),
+      ],
+    },
+    {
+      title: "Tours & activities",
+      copy: `Guided trips and day tours across ${name}.`,
+      partners: [{ label: "GetYourGuide", href: toursLink(name) }],
+    },
+    {
+      title: "Events & tickets",
+      copy: `Attractions and shows in ${name}, booked ahead.`,
+      partners: [
+        { label: "Tiqets", href: eventsLink() },
+        { label: "GetYourGuide", href: attractionsLink(name) },
+      ],
+    },
+    {
+      title: "eSIM",
+      copy: `Data the moment you land in ${name}, no roaming fees.`,
+      partners: [{ label: "Airalo", href: esimLink(destination.slug) }],
+    },
+  ];
   const path = `/destinations/${destination.slug}`;
   const trail = [
     { name: "Home", path: "/" },
@@ -348,45 +404,25 @@ function DestinationPage() {
           <div className="site-container">
             <p className="site-eyebrow mb-5">Book {name}</p>
             <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
-              <a href={flightsLink()} target="_blank" rel="noopener noreferrer" className="dest-mini-card">
-                <p className="font-semibold">Flights</p>
-                <p className="site-ink-muted mt-1 text-sm">Compare fares into {name}.</p>
-              </a>
-              <a
-                href={hotelsLink(name)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="dest-mini-card"
-              >
-                <p className="font-semibold">Hotels</p>
-                <p className="site-ink-muted mt-1 text-sm">Stays across {name}, compared in one search.</p>
-              </a>
-              <a href={carRentalLink()} target="_blank" rel="noopener noreferrer" className="dest-mini-card">
-                <p className="font-semibold">Car rentals</p>
-                <p className="site-ink-muted mt-1 text-sm">Collect on arrival and drive {name} at your own pace.</p>
-              </a>
-              <a
-                href={toursLink(name)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="dest-mini-card"
-              >
-                <p className="font-semibold">Tours & activities</p>
-                <p className="site-ink-muted mt-1 text-sm">Guided trips and day tours across {name}.</p>
-              </a>
-              <a href={eventsLink()} target="_blank" rel="noopener noreferrer" className="dest-mini-card">
-                <p className="font-semibold">Events & tickets</p>
-                <p className="site-ink-muted mt-1 text-sm">Attractions and shows in {name}, booked ahead.</p>
-              </a>
-              <a
-                href={esimLink(destination.slug)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="dest-mini-card"
-              >
-                <p className="font-semibold">eSIM</p>
-                <p className="site-ink-muted mt-1 text-sm">Data the moment you land in {name}, no roaming fees.</p>
-              </a>
+              {booking.map((b) => (
+                <div key={b.title} className="dest-mini-card">
+                  <p className="font-semibold">{b.title}</p>
+                  <p className="site-ink-muted mt-1 text-sm">{b.copy}</p>
+                  <span className="dest-mini-partners">
+                    {b.partners.map((partner) => (
+                      <a
+                        key={partner.label}
+                        href={partner.href}
+                        target="_blank"
+                        rel="noopener noreferrer sponsored"
+                        className="dest-mini-partner"
+                      >
+                        {partner.label} <span aria-hidden="true">&rarr;</span>
+                      </a>
+                    ))}
+                  </span>
+                </div>
+              ))}
             </div>
             <Link to="/destinations" className="btn-underline mt-8">
               Back to all destinations <span className="arrow" aria-hidden="true">&rarr;</span>

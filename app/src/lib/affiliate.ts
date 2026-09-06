@@ -92,3 +92,61 @@ export function bikeRentalLink(destinationName?: string): string {
   params.set("q", destinationName ? `bike rental ${destinationName}` : "bike rental");
   return `https://www.getyourguide.com/s/?${params.toString()}`;
 }
+
+/* ---------------------------------------------------------------------------
+ * Second partner per vertical.
+ *
+ * Not to put more buttons on the page, but so no vertical depends on a single
+ * programme: if one partner suspends the account, changes terms or simply
+ * converts badly in a given market, the vertical still earns. It also gives
+ * the visitor a real choice, which the single-partner version never did.
+ * ------------------------------------------------------------------------- */
+
+// Attractions & tickets, second to Tiqets. Uses the SAME GetYourGuide search
+// already proven by toursLink() -- free-text, real results, and unlike Tiqets
+// it can be pre-filled with the destination, so this link lands on results
+// for the country rather than on a homepage.
+export function attractionsLink(destinationName?: string): string {
+  const params = new URLSearchParams({ partner_id: TP_MARKER });
+  params.set("q", destinationName ? `${destinationName} attractions and tickets` : "attractions");
+  return `https://www.getyourguide.com/s/?${params.toString()}`;
+}
+
+/**
+ * Discover Cars affiliate id.
+ *
+ * EMPTY ON PURPOSE, and the UI renders no Discover Cars link until it is set.
+ * Their parameter is `a_aid`, which is their own affiliate id -- NOT the
+ * Travelpayouts marker above. Shipping this with TP_MARKER in it would look
+ * like it worked while sending Discover Cars free traffic with no attribution,
+ * which is strictly worse than not having the link at all.
+ *
+ * To switch it on: Travelpayouts -> Programs -> Discover Cars -> join, then
+ * take the id out of the deep link their tool generates and paste it here.
+ * Same pattern as CF_BEACON_TOKEN in lib/analytics.tsx: unset renders nothing,
+ * so it is safe to ship half-configured.
+ */
+const DISCOVER_CARS_AID = "";
+
+/** Slugs with no country page on discovercars.com -- verified by request, all
+ *  404. Everything else in DESTINATIONS resolves (italy 301s to
+ *  /italy-mainland, which is fine). These fall back to the site root. */
+const DISCOVER_CARS_NO_COUNTRY_PAGE = new Set([
+  "vietnam",
+  "united-states",
+  "cuba",
+  "bahamas",
+  "french-polynesia",
+  "samoa",
+]);
+
+/** Null until DISCOVER_CARS_AID is set, so callers can simply omit the link. */
+export function discoverCarsLink(destinationSlug?: string): string | null {
+  if (!DISCOVER_CARS_AID) return null;
+  const params = new URLSearchParams({ a_aid: DISCOVER_CARS_AID });
+  const path =
+    destinationSlug && !DISCOVER_CARS_NO_COUNTRY_PAGE.has(destinationSlug)
+      ? `/${destinationSlug}`
+      : "";
+  return `https://www.discovercars.com${path}?${params.toString()}`;
+}

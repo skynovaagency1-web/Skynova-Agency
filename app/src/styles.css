@@ -3728,3 +3728,30 @@ html.lenis body { height: auto; }
 }
 .compare-dest a:hover { border-bottom-color: var(--sky-coral); }
 .compare-season { color: var(--sky-ink-muted); line-height: 1.5; min-width: 22rem; }
+
+/* ---- Booking partner chips on destination cards ----
+   The card used to be one big anchor and said only "Hotels"; you found out
+   which partner you were being sent to on arrival. Naming them is the same
+   transparency About and Terms already commit to, and it is what lets a
+   vertical carry two partners without the card becoming ambiguous. */
+.dest-mini-partners {
+  display: flex; flex-wrap: wrap; gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+.dest-mini-partner {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--sky-line);
+  border-radius: 999px;
+  background: var(--sky-bg-raised);
+  font-size: 0.75rem; font-weight: 500;
+  color: var(--sky-ink); text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.dest-mini-partner:hover {
+  border-color: var(--sky-coral);
+  background: var(--sky-coral-wash);
+}
+/* The card is no longer a link, so its hover lift must not imply it is one. */
+.dest-mini-card:hover { transform: none; }
+.dest-mini-card:focus-within { border-color: var(--sky-coral); }
