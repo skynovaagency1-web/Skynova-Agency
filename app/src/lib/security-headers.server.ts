@@ -19,12 +19,18 @@ export function applySecurityHeaders(response: Response): Response {
       // lib/analytics.tsx). Without it the script is blocked silently and no
       // pageviews are ever recorded -- the dashboard just stays empty, which
       // looks like "no traffic" rather than a broken policy.
+      // cdn.klook.com is the TOURS widget on /tours -- which had never once
+      // rendered in production. tpscr.com served its loader, the loader asked
+      // for Klook, CSP refused, and the page showed a 60px empty box that
+      // looked like a widget with no inventory. Found by reading the console,
+      // not the page.
+      //
       // widgets.tiqets.com / tpo.gg / tpemb.com are the Tiqets card widget:
       // tpscr.com only serves a loader that pulls those three. Without them
       // the widget renders NOTHING, with no error anyone would notice --
       // the same silent failure that hid the missing fonts and the blank
       // globe. Verified by reading the loader payload, not assumed.
-      "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://tpscr.com https://tp.media https://static.localrent.com https://widgets.tiqets.com https://tpo.gg https://tpemb.com https://*.travelpayouts.com; " +
+      "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://tpscr.com https://tp.media https://static.localrent.com https://widgets.tiqets.com https://tpo.gg https://tpemb.com https://cdn.klook.com https://*.travelpayouts.com; " +
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
       // `data:` is required, not optional. Vite inlines any asset under its
       // 4 KB threshold, and the three IBM Plex Mono subsets (--font-mono)
@@ -44,7 +50,12 @@ export function applySecurityHeaders(response: Response): Response {
       "connect-src 'self' blob: https:; " +
       // auth.higgsfield.app was removed here: the site left Higgsfield's
       // platform on 4 Sep 2026 and no longer frames their login.
-      "frame-src 'self' https://localrent.com https://*.localrent.com https://*.travelpayouts.com; " +
+      // Tiqets renders its cards into an IFRAME on www.tiqets.com, so allowing
+      // its script was only half of it -- script-src got the loader running and
+      // frame-src then blocked what it drew, leaving an empty container that
+      // looked exactly like a widget with no inventory. Caught in the console,
+      // not by reading the page.
+      "frame-src 'self' https://localrent.com https://*.localrent.com https://www.tiqets.com https://*.tiqets.com https://*.klook.com https://*.travelpayouts.com; " +
       "base-uri 'self'; form-action 'self'",
   );
   headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
