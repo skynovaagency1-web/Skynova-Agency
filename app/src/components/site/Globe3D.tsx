@@ -29,6 +29,23 @@ import { useEffect, useRef } from "react";
 const MODEL_RADIUS = 1;
 const TARGET_RADIUS = 2.2;
 
+/** Orbit radius: far enough off the surface to clear the cloud shell. */
+const ORBIT_RADIUS = 2.72;
+/** Seconds for one full circuit. Slow enough to read as cruising, not spinning. */
+const ORBIT_PERIOD = 26;
+/**
+ * The orbit is TILTED, not a level ring. A flat circle reads as clip-art:
+ * it never crosses the globe's centre line, so nothing about it says three
+ * dimensions. Tilting sends the aircraft above the equator on one pass and
+ * below it on the other, and the depth buffer hides it behind the globe for
+ * half of every circuit -- which is what actually sells the orbit. Two axes
+ * rather than one so the ellipse is not symmetric about the screen.
+ */
+const ORBIT_TILT_X = 0.46;
+const ORBIT_TILT_Z = 0.2;
+/** Aircraft length in world units, against a 2.2-radius globe. */
+const PLANE_LENGTH = 0.62;
+
 export function Globe3D({ className }: { className?: string }) {
   const mountRef = useRef<HTMLDivElement | null>(null);
 
@@ -165,32 +182,79 @@ export function Globe3D({ className }: { className?: string }) {
       keyLight.position.set(-3.5, 2, 4.5);
       scene.add(keyLight);
 
-      // The plane sits centred IN FRONT of the globe (z beyond the sphere's
-      // 2.2 radius, so it's never occluded) and only drifts -- it doesn't
-      // circle. A looping orbit read as a fake carousel; a slow hover with
-      // the world turning behind it reads like actual cruising flight.
-      // depthWrite:false keeps its transparent edges from punching a hole
-      // in the globe behind it.
-      const loader = new THREE.TextureLoader();
-      const planeMap = loader.load("/assets/landing/plane-cutout.webp");
-      planeMap.colorSpace = THREE.SRGBColorSpace;
-      const planeSprite = new THREE.Sprite(
-        new THREE.SpriteMaterial({ map: planeMap, transparent: true, depthWrite: false }),
-      );
-      planeSprite.scale.set(2.8, 1.307, 1); // source is 900x420, so 2.143:1
-      scene.add(planeSprite);
+      // A real aircraft on a real orbit, replacing the flat cutout sprite that
+      // used to hover in front. The old comment called a loop "a fake
+      // carousel", and it was right ABOUT A SPRITE: a 2D cutout cannot bank
+      // or turn away from you, so it slides across like a sticker. A model
+      // can, and the globe already writes depth -- so it is genuinely hidden
+      // behind the planet for half of every circuit, with no z-index tricks.
+      // Two nested groups, not one with three Euler angles. With a single
+      // group the default XYZ order applies the tilt to the aircraft's
+      // starting POSITION before the spin, which traces a small circle -- a
+      // latitude ring sitting in the upper hemisphere -- instead of an orbit
+      // through the planet's centre. Separating them makes the spin innermost
+      // and the tilt outermost, so the path is a great circle whatever the
+      // tilt is set to.
+      const orbit = new THREE.Group(); // fixed tilt of the orbital plane
+      orbit.rotation.x = ORBIT_TILT_X;
+      orbit.rotation.z = ORBIT_TILT_Z;
+      scene.add(orbit);
+      const spinner = new THREE.Group(); // travel around that plane
+      orbit.add(spinner);
+
+      const planeGltf = await new GLTFLoader()
+        .loadAsync("/assets/models/airliner.glb")
+        .catch(() => null);
+      if (disposed) return;
+
+      if (planeGltf) {
+        const craft = planeGltf.scene;
+        const pb = new THREE.Box3().setFromObject(craft);
+        const psize = new THREE.Vector3();
+        const pcentre = new THREE.Vector3();
+        pb.getSize(psize);
+        pb.getCenter(pcentre);
+        craft.position.sub(pcentre);
+        craft.scale.setScalar(PLANE_LENGTH / (Math.max(psize.x, psize.y, psize.z) || 1));
+
+        // Silver rather than the model's near-black default: it has to read
+        // both against the cream page AND against the dark half of the globe
+        // it crosses, and a dark aircraft disappears over the ocean.
+        const LIVERY: Record<string, number> = {
+          shell: 0xf2eee4,
+          panel: 0xd7d0c1,
+          glass: 0x2b2721,
+          metal: 0xb8b2a3,
+          accent: 0xc9a227,
+        };
+        craft.traverse((child) => {
+          const mesh = child as import("three").Mesh;
+          if (!mesh.isMesh) return;
+          const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+          for (const m of mats) {
+            const std = m as import("three").MeshStandardMaterial;
+            if (std && std.name in LIVERY) std.color.setHex(LIVERY[std.name]);
+          }
+        });
+
+        // Sitting at +X and spun about the group's Y, the direction of travel
+        // is -Z -- which is exactly where this model's nose already points, so
+        // no correction is needed for heading. The roll is: turning -90deg
+        // about the nose puts the dorsal (+Y) outward at +X, so the belly
+        // faces the planet the way an aircraft in flight actually sits.
+        const holder = new THREE.Group();
+        holder.position.set(ORBIT_RADIUS, 0, 0);
+        holder.rotation.z = -Math.PI / 2;
+        holder.add(craft);
+        spinner.add(holder);
+      }
 
       let elapsed = 0;
       const clock = new THREE.Clock();
 
-      // Two sine waves on different periods so the drift never visibly
-      // repeats on a beat -- it wanders instead of ticking.
       function place() {
-        planeSprite.position.set(
-          Math.sin(elapsed * 0.31) * 0.14,
-          Math.sin(elapsed * 0.53) * 0.13,
-          3.4,
-        );
+        // One circuit per ORBIT_PERIOD seconds.
+        spinner.rotation.y = (elapsed / ORBIT_PERIOD) * Math.PI * 2;
       }
 
       let raf = 0;
@@ -256,8 +320,6 @@ export function Globe3D({ className }: { className?: string }) {
             mat.dispose();
           }
         });
-        planeSprite.material.dispose();
-        planeMap.dispose();
         renderer.dispose();
         canvas.remove();
       };
