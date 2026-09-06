@@ -2804,6 +2804,22 @@ html {
   stroke-linecap: round;
 }
 
+/* The aged half of the contrail: wider, softened, sitting under the core.
+   The blur is a CSS filter rather than an SVG one on purpose -- this svg is
+   preserveAspectRatio="none" over a ~52px-wide, full-height box, so its user
+   units are squashed about 16x horizontally. An feGaussianBlur there would
+   smear along the trail instead of across it; a CSS filter works in screen
+   pixels and stays round. */
+.flight-rail-smoke {
+  fill: none;
+  stroke: var(--sky-coral);
+  stroke-width: 9;
+  stroke-linecap: round;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  filter: blur(4px);
+}
+
 /* The strips the aircraft touches down on at the top and bottom of the page. */
 .flight-rail-surface {
   stroke: var(--sky-line);
@@ -2812,7 +2828,8 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .flight-rail-trail { stroke-dashoffset: 0; }
+  .flight-rail-trail,
+  .flight-rail-smoke { stroke-dashoffset: 0; }
 }
 
 /* ---- Infinite marquee band (components/site/MarqueeBand.tsx) ------------

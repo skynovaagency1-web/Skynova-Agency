@@ -58,11 +58,18 @@ const LANDING_RANGE = 130;
 /** The last slice of the route, where it settles onto the closing surface. */
 const FLARE = 0.04;
 /**
- * How far behind the aircraft the trail stays solid before dissolving, as a
- * fraction of the rail's height. A contrail does not end -- it thins until
- * the sky takes it -- so this is a fade length, not a cut-off.
+ * The trail is two layers, because a real contrail is not one line fading.
+ * Fresh vapour is a tight bright core; as it ages it spreads, softens and
+ * goes. So:
+ *   CORE  -- thin and crisp, opaque at the aircraft, gone quickly behind it.
+ *   SMOKE -- wide and blurred, ABSENT at the aircraft, blooming a little way
+ *            back and dissolving over a long tail.
+ * The smoke being absent at the nose is what sells the spread: the trail
+ * looks like it widens with age rather than being drawn wide from the start.
+ * Both are fractions of the rail's height.
  */
-const CONTRAIL_FADE = 0.34;
+const CONTRAIL_FADE = 0.16;
+const SMOKE_FADE = 0.58;
 /** Only the homepage has this; elsewhere the route starts at the top. */
 const RAIL_START_SELECTOR = "#how-it-works";
 const START_LEAD = 0.5;
@@ -131,6 +138,8 @@ export function FlightRail() {
   const railRef = useRef<HTMLDivElement | null>(null);
   const trailRef = useRef<SVGPathElement | null>(null);
   const fadeRef = useRef<SVGLinearGradientElement | null>(null);
+  const smokeFadeRef = useRef<SVGLinearGradientElement | null>(null);
+  const smokeRef = useRef<SVGPathElement | null>(null);
 
   useEffect(() => {
     const rail = railRef.current;
@@ -251,6 +260,8 @@ export function FlightRail() {
         // Written straight onto the one element, never a :root property.
         const trail = trailRef.current;
         if (trail) trail.style.stroke = dark ? TRAIL_ON_DARK : TRAIL_ON_LIGHT;
+        const smoke = smokeRef.current;
+        if (smoke) smoke.style.stroke = dark ? TRAIL_ON_DARK : TRAIL_ON_LIGHT;
       }
       applyLivery(false);
 
@@ -353,16 +364,23 @@ export function FlightRail() {
         );
         const trail = trailRef.current;
         if (trail) trail.style.strokeDashoffset = ((1 - flown) * 1000).toFixed(1);
+        const smoke = smokeRef.current;
+        if (smoke) smoke.style.strokeDashoffset = ((1 - flown) * 1000).toFixed(1);
 
         // Dissolve: a gradient in viewBox units, opaque at the aircraft and
         // clear CONTRAIL_FADE above it. spreadMethod pad means everything
         // further back stays fully transparent and everything below stays
         // opaque, so only this moving band has to be updated per frame.
+        const head = (planeY / height) * 1000;
         const fade = fadeRef.current;
         if (fade) {
-          const head = (planeY / height) * 1000;
           fade.setAttribute("y1", (head - CONTRAIL_FADE * 1000).toFixed(1));
           fade.setAttribute("y2", head.toFixed(1));
+        }
+        const smokeFade = smokeFadeRef.current;
+        if (smokeFade) {
+          smokeFade.setAttribute("y1", (head - SMOKE_FADE * 1000).toFixed(1));
+          smokeFade.setAttribute("y2", head.toFixed(1));
         }
       }
 
@@ -506,6 +524,28 @@ export function FlightRail() {
           <mask id="flight-rail-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="1000">
             <rect x="0" y="0" width="1000" height="1000" fill="url(#flight-rail-fade)" />
           </mask>
+
+          {/* The smoke's own ramp. Three stops rather than two: nothing at
+              the aircraft (offset 1), thickest a little way back, gone at the
+              tail (offset 0). That bell is what makes the trail read as
+              spreading with age instead of being drawn wide. */}
+          <linearGradient
+            ref={smokeFadeRef}
+            id="flight-rail-smoke-fade"
+            gradientUnits="userSpaceOnUse"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="1000"
+          >
+            <stop offset="0" stopColor="#fff" stopOpacity="0" />
+            <stop offset="0.45" stopColor="#fff" stopOpacity="0.62" />
+            <stop offset="0.82" stopColor="#fff" stopOpacity="0.35" />
+            <stop offset="1" stopColor="#fff" stopOpacity="0" />
+          </linearGradient>
+          <mask id="flight-rail-smoke-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="1000">
+            <rect x="0" y="0" width="1000" height="1000" fill="url(#flight-rail-smoke-fade)" />
+          </mask>
         </defs>
         {/* The two surfaces the aircraft touches down on, at the extremes of
             the page rather than of any one section. */}
@@ -528,6 +568,15 @@ export function FlightRail() {
         {/* Only the flown portion. The dashed "route ahead" this replaces
             contradicted the idea: a contrail is made by the aircraft, so
             nothing exists in front of it. */}
+        {/* Smoke first, so the crisp core sits on top of it. */}
+        <path
+          ref={smokeRef}
+          className="flight-rail-smoke"
+          d={SVG_PATH}
+          pathLength={1000}
+          vectorEffect="non-scaling-stroke"
+          mask="url(#flight-rail-smoke-mask)"
+        />
         <path
           ref={trailRef}
           className="flight-rail-trail"
