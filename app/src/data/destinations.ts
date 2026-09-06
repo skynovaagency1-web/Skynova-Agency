@@ -145,3 +145,48 @@ export function getDestinationsByRegion(region: Region): Destination[] {
 export function getDestinationBySlug(slug: string): Destination | undefined {
   return DESTINATIONS.find((d) => d.slug === slug);
 }
+
+/**
+ * Destinations to suggest alongside `slug`.
+ *
+ * Same region first, because that is the genuinely useful neighbour -- someone
+ * reading about Portugal is far more likely to also consider Spain than Japan,
+ * and a link nobody follows is worth nothing for rankings or for readers.
+ * Small regions are then topped up from the rest of the list so every page
+ * gets a full row rather than one lonely card.
+ *
+ * Deterministic: no randomness anywhere. These links are rendered during SSR,
+ * and a set that reshuffles per request gives crawlers a different link graph
+ * every visit, which is the opposite of what internal linking is for. It also
+ * makes the pages uncacheable in any meaningful sense.
+ *
+ * Rotation is by position rather than always taking the first few: starting at
+ * the entry after this one and wrapping means link equity spreads around the
+ * list instead of pooling on whichever destinations happen to sort first.
+ */
+export function relatedDestinations(slug: string, limit = 4): Destination[] {
+  const current = getDestinationBySlug(slug);
+  if (!current) return [];
+
+  const pick = (pool: Destination[]) => {
+    const others = pool.filter((d) => d.slug !== slug);
+    if (others.length === 0) return [];
+    // Start just past this destination's own position in the pool and wrap.
+    const start = Math.max(0, pool.findIndex((d) => d.slug === slug));
+    const rotated = [...pool.slice(start), ...pool.slice(0, start)].filter((d) => d.slug !== slug);
+    return rotated;
+  };
+
+  const sameRegion = pick(getDestinationsByRegion(current.region));
+  const out = sameRegion.slice(0, limit);
+  if (out.length < limit) {
+    const taken = new Set(out.map((d) => d.slug));
+    for (const d of pick(DESTINATIONS)) {
+      if (out.length >= limit) break;
+      if (taken.has(d.slug)) continue;
+      out.push(d);
+      taken.add(d.slug);
+    }
+  }
+  return out;
+}

@@ -3633,3 +3633,61 @@ html.lenis body { height: auto; }
   .scrollpath-stage { position: relative; height: 78vh; }
   .scrollpath-trail { stroke-dashoffset: 0; }
 }
+
+/* ---- Breadcrumbs ----
+   Sits in the destination hero over a dark photo mask, so the colours are
+   pinned to the hero's own light-on-dark treatment rather than the page
+   tokens. Kept small and quiet: it is a wayfinding aid and a crawl path, not
+   a design element competing with the H1 under it. */
+.crumbs { font-size: 0.78rem; letter-spacing: 0.04em; }
+.crumbs-list {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem;
+  margin: 0; padding: 0; list-style: none;
+}
+.crumbs-item { display: inline-flex; align-items: center; gap: 0.4rem; }
+.crumbs-link {
+  color: inherit; opacity: 0.72; text-decoration: none;
+  border-bottom: 1px solid transparent; transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+.crumbs-link:hover { opacity: 1; border-bottom-color: currentColor; }
+.crumbs-sep { opacity: 0.4; }
+.crumbs-current { opacity: 1; font-weight: 600; }
+
+/* ---- Related destinations ----
+   A row of link cards closing each guide. Deliberately plainer than
+   .dest-slider-card: this is a text link surface whose job is to be clicked
+   and crawled, so the flag carries the colour and everything else stays calm. */
+.related-dest-grid {
+  display: grid; gap: 0.75rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) { .related-dest-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .related-dest-grid { grid-template-columns: repeat(4, 1fr); } }
+.related-dest-card {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--sky-line);
+  border-radius: var(--sky-radius-sm);
+  background: var(--sky-bg-raised);
+  color: var(--sky-ink);
+  text-decoration: none;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.related-dest-card:hover {
+  border-color: var(--sky-coral);
+  transform: translateY(-2px);
+  box-shadow: var(--sky-shadow-sm);
+}
+.related-dest-flag { font-size: 1.5rem; line-height: 1; flex: none; }
+.related-dest-body { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
+.related-dest-name { font-weight: 600; font-size: 0.95rem; }
+.related-dest-hook {
+  color: var(--sky-ink-muted); font-size: 0.8rem; line-height: 1.45;
+  /* Two lines, so a long hook cannot make one card taller than the row. */
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.related-dest-arrow {
+  margin-left: auto; flex: none; color: var(--sky-coral);
+  transition: transform 0.2s ease;
+}
+.related-dest-card:hover .related-dest-arrow { transform: translateX(3px); }

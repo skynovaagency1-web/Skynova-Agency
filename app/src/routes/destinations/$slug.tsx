@@ -6,7 +6,14 @@ import { SmoothScroll } from "@/components/site/SmoothScroll";
 import { Footer } from "@/components/site/Footer";
 import { Newsletter } from "@/components/site/Newsletter";
 import { WishlistButton } from "@/components/site/WishlistButton";
-import { getDestinationBySlug, REGION_ORDER, PHOTO_SLUGS } from "@/data/destinations";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
+import { absUrl, jsonLd } from "@/lib/seo";
+import {
+  getDestinationBySlug,
+  relatedDestinations,
+  REGION_ORDER,
+  PHOTO_SLUGS,
+} from "@/data/destinations";
 import { collectionsForDestination } from "@/data/collections";
 import { DESTINATION_DETAILS } from "@/data/destination-details";
 import { ATTRACTION_IMAGES, FOOD_IMAGES } from "@/data/place-images";
@@ -54,11 +61,67 @@ function DestinationPage() {
   const hasPhoto = PHOTO_SLUGS.has(destination.slug);
   const regionIcon = REGION_ORDER.find((r) => r.region === destination.region)?.icon ?? "";
   const name = destination.name;
+  const related = relatedDestinations(destination.slug);
+  const path = `/destinations/${destination.slug}`;
+  const trail = [
+    { name: "Home", path: "/" },
+    { name: "Destinations", path: "/destinations" },
+    { name },
+  ];
+
+  // One @graph rather than several <script> blocks: the nodes cross-reference
+  // each other by @id, and a single graph is what lets the FAQ and the stay
+  // list be understood as belonging to THIS destination rather than floating
+  // free on the page.
+  const graph = jsonLd({
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        // TouristDestination, not "TravelDestination" -- the latter is not a
+        // schema.org type and would be ignored outright.
+        "@type": "TouristDestination",
+        "@id": absUrl(path) + "#destination",
+        name,
+        description: detail.whyChoose,
+        url: absUrl(path),
+        ...(hasPhoto ? { image: absUrl(`/assets/destinations/${destination.slug}.webp`) } : {}),
+        includesAttraction: detail.attractions.map((a) => ({
+          "@type": "TouristAttraction",
+          name: a.name,
+          description: a.description,
+        })),
+      },
+      {
+        "@type": "FAQPage",
+        "@id": absUrl(path) + "#faq",
+        mainEntity: detail.faqs.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      },
+      {
+        // An ItemList of Hotels, NOT standalone Hotel nodes. We do not operate
+        // these properties and carry no address, price or rating for them --
+        // publishing them as business listings would be claiming something
+        // untrue. As a named recommendation list it says exactly what it is.
+        "@type": "ItemList",
+        "@id": absUrl(path) + "#stays",
+        name: `Where to stay in ${name}`,
+        itemListElement: detail.hotels.map((h, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          item: { "@type": "Hotel", name: h.name, description: h.description },
+        })),
+      },
+    ],
+  });
 
   return (
     <>
       <SmoothScroll />
       <Nav />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: graph }} />
       <main>
         {/* 1. Hero banner */}
         <section className="dest-detail-hero">
@@ -77,11 +140,9 @@ function DestinationPage() {
           <div className="dest-detail-mask" />
           <div className="dest-detail-copy">
             <div className="site-container">
-              <p className="site-eyebrow mb-3">
-                <Link to="/destinations" className="site-nav-link">
-                  Destinations
-                </Link>{" "}
-                / {regionIcon} {destination.region}
+              <Breadcrumbs trail={trail} />
+              <p className="site-eyebrow mb-3 mt-3">
+                {regionIcon} {destination.region}
               </p>
               <h1 className="site-h2 max-w-2xl text-4xl md:text-6xl">
                 {destination.flag} {name}
@@ -332,6 +393,44 @@ function DestinationPage() {
             </Link>
           </div>
         </section>
+
+        {/* Related destinations. The missing half of the internal link graph:
+            every guide already linked UP to /destinations and ACROSS to its
+            collections, but no destination linked to another destination, so
+            crawlers reached each guide through the index and nothing else.
+            Same region first -- see relatedDestinations() for why the order is
+            deterministic. */}
+        {related.length > 0 && (
+          <section className="site-section site-hairline border-t">
+            <div className="site-container">
+              <p className="site-eyebrow mb-3">Where to next</p>
+              <h2 className="site-h2 max-w-lg text-3xl md:text-4xl">
+                Travellers to {name} also look at these.
+              </h2>
+              <div className="related-dest-grid mt-8">
+                {related.map((d) => (
+                  <Link
+                    key={d.slug}
+                    to="/destinations/$slug"
+                    params={{ slug: d.slug }}
+                    className="related-dest-card"
+                  >
+                    <span className="related-dest-flag" aria-hidden="true">
+                      {d.flag}
+                    </span>
+                    <span className="related-dest-body">
+                      <span className="related-dest-name">{d.name}</span>
+                      <span className="related-dest-hook">{d.hook}</span>
+                    </span>
+                    <span className="related-dest-arrow" aria-hidden="true">
+                      &rarr;
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Closing CTA banner */}
         <section className="site-section site-hairline border-t closing-cta">

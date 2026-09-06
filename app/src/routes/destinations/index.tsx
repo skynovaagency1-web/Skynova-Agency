@@ -9,7 +9,25 @@ import { Newsletter } from "@/components/site/Newsletter";
 import { TiltCard } from "@/components/site/TiltCard";
 import { CardActions } from "@/components/site/CardActions";
 import { GlassToggle } from "@/components/site/GlassToggle";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
+import { absUrl, jsonLd } from "@/lib/seo";
 import { REGION_ORDER, getDestinationsByRegion, DESTINATIONS, type Region } from "@/data/destinations";
+
+// An ItemList of every destination, so the index is understood as a
+// collection page rather than 25 unrelated links. Built once at module
+// scope -- the list is static, so rebuilding it per render is waste.
+const INDEX_JSON_LD = jsonLd({
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Skynova destinations",
+  numberOfItems: DESTINATIONS.length,
+  itemListElement: DESTINATIONS.map((d, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: d.name,
+    url: absUrl(`/destinations/${d.slug}`),
+  })),
+});
 
 interface DestinationsSearch {
   region?: Region;
@@ -66,10 +84,12 @@ function DestinationsIndex() {
     <>
       <SmoothScroll />
       <Nav />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: INDEX_JSON_LD }} />
       <main>
         <section className="site-section">
           <div className="site-container">
-            <p className="site-eyebrow mb-3">Destinations</p>
+            <Breadcrumbs trail={[{ name: "Home", path: "/" }, { name: "Destinations" }]} />
+            <p className="site-eyebrow mb-3 mt-3">Destinations</p>
             <h1 className="site-h2 max-w-2xl text-3xl md:text-5xl">
               {DESTINATIONS.length} places, {REGION_ORDER.length} regions, one booking flow.
             </h1>

@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 
 import { Nav } from "@/components/site/Nav";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { useReveal } from "@/hooks/use-reveal";
 import { Footer } from "@/components/site/Footer";
 import { Newsletter } from "@/components/site/Newsletter";
@@ -43,7 +44,14 @@ function CollectionPage() {
       <main>
         <section className="site-section pb-0">
           <div className="site-container">
-            <Link to="/collections" className="btn-underline mb-6 inline-flex">
+            <Breadcrumbs
+              trail={[
+                { name: "Home", path: "/" },
+                { name: "Collections", path: "/collections" },
+                { name: collection.name },
+              ]}
+            />
+            <Link to="/collections" className="btn-underline mb-6 mt-4 inline-flex">
               <span className="arrow">&larr;</span> All collections
             </Link>
             <p className="site-eyebrow mb-3">
