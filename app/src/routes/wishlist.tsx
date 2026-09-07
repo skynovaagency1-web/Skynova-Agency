@@ -13,6 +13,9 @@ export const Route = createFileRoute("/wishlist")({
     meta: [
       { title: "Wishlist | Skynova Agency" },
       { name: "description", content: "Destinations you've saved for your next trip." },
+      // Personalised, and empty for anyone not signed in -- indexing it adds a
+      // thin page and leaks nothing useful into results. Same call as /account.
+      { name: "robots", content: "noindex, nofollow" },
     ],
   }),
   component: WishlistPage,

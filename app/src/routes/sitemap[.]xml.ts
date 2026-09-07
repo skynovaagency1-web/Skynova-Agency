@@ -22,6 +22,13 @@ const STATIC_PAGES: { path: string; priority: string; changefreq: string }[] = [
   { path: "/about", priority: "0.5", changefreq: "monthly" },
   { path: "/reviews", priority: "0.5", changefreq: "monthly" },
   { path: "/contact", priority: "0.5", changefreq: "monthly" },
+  // Real, indexable, public pages that were serving 200 with no noindex but
+  // were never listed here -- so Google could only find them by crawling a
+  // link, never from the sitemap. /faq in particular answers actual search
+  // queries and carries FAQ markup.
+  { path: "/faq", priority: "0.5", changefreq: "monthly" },
+  { path: "/privacy", priority: "0.3", changefreq: "yearly" },
+  { path: "/terms", priority: "0.3", changefreq: "yearly" },
 ];
 
 export const Route = createFileRoute("/sitemap.xml")({
