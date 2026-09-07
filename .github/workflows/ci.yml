@@ -1,0 +1,68 @@
+name: CI
+
+# Replaces the template workflow, which targeted `arc-runners-frontend` -- a
+# Higgsfield self-hosted runner label. No runner on this repo carries it, so
+# that job would have queued forever. This one runs on GitHub's own runners.
+#
+# Mirrors the exact chain run locally before every deploy:
+#   check:ui -> tsr generate -> tsc --noEmit -> vite build
+# so a green run here means the same thing a clean local build means.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# A second push while the first is still building makes the first irrelevant.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # bun, not npm, and not optional: four dependencies use `workspace:*`,
+      # which npm cannot parse at all, and the @types/react override makes
+      # `npm install` fail with EOVERRIDE. bun.lock is the only lockfile.
+      - uses: oven-sh/setup-bun@v2
+
+      # --frozen-lockfile so CI can never silently resolve a different tree
+      # than the one that was committed. It also sidesteps bunfig.toml's
+      # minimumReleaseAge guard, which would otherwise refuse any dependency
+      # published in the last 24h.
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: UI contract
+        run: bun run check:ui
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Test
+        run: bun test tests/
+
+      - name: Build
+        run: bun run build
+
+      # Not blocking, deliberately. `eslint .` currently reports 5 pre-existing
+      # errors -- four react-hooks/set-state-in-effect (AuthModal, carousel,
+      # use-mobile, destinations/index) and one use-before-declare in
+      # DestinationSlider. None came from recent work; lint has simply never
+      # run anywhere, because this repo had no remote until now.
+      #
+      # Failing every build on day one would train everyone to ignore the red
+      # cross. Fix those five, then delete this line and let lint block.
+      - name: Lint
+        continue-on-error: true
+        run: bun run lint
