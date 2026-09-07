@@ -1,4 +1,7 @@
 import { bindings } from "./bindings.server";
+import { DESTINATIONS } from "@/data/destinations";
+import { COLLECTION_SLUGS } from "@/data/collections";
+import { getPostBySlug } from "@/data/blog-posts";
 
 /**
  * Counts a pageview.
@@ -37,15 +40,30 @@ const EXACT_PATHS = new Set([
   "/wishlist",
 ]);
 
-/** The three parameterised routes. The slug shape is bounded so a long or
- *  exotic segment cannot be used to write junk under a valid prefix. */
-const SLUG_ROUTES = ["/destinations/", "/collections/", "/blog/"];
-const SLUG = /^[a-z0-9-]{1,64}$/;
+/**
+ * The three parameterised routes, checked against the REAL slugs.
+ *
+ * Matching the slug's shape was not enough: "/blog/spam-page-9999" is
+ * perfectly well-shaped and is not a page, so anything that found this
+ * endpoint could have written unlimited invented rows under a valid prefix.
+ * Verified by doing exactly that against production, which is the only way to
+ * find out whether a guard holds. These are static data files already bundled
+ * into the Worker, so the check costs a Set lookup.
+ */
+const DESTINATION_SLUGS: ReadonlySet<string> = new Set(DESTINATIONS.map((d) => d.slug));
+const COLLECTION_SLUG_SET: ReadonlySet<string> = new Set(COLLECTION_SLUGS);
 
 function isRealPath(path: string): boolean {
   if (EXACT_PATHS.has(path)) return true;
-  for (const prefix of SLUG_ROUTES) {
-    if (path.startsWith(prefix)) return SLUG.test(path.slice(prefix.length));
+  if (path.startsWith("/destinations/")) {
+    return DESTINATION_SLUGS.has(path.slice("/destinations/".length));
+  }
+  if (path.startsWith("/collections/")) {
+    return COLLECTION_SLUG_SET.has(path.slice("/collections/".length));
+  }
+  if (path.startsWith("/blog/")) {
+    // Posts live in their own module with a lookup rather than a slug list.
+    return Boolean(getPostBySlug(path.slice("/blog/".length)));
   }
   return false;
 }
