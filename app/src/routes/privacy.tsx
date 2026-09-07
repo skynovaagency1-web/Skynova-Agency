@@ -78,6 +78,20 @@ function PrivacyPage() {
                   actually useful; there's no way to run a site like this well while guessing.
                 </p>
                 <p>
+                  We count page views the same way. Each view adds one to a running total for that
+                  page on that day &mdash; a number, not a record of a visit. If a page was read
+                  forty times yesterday, all we hold is the number forty. There is no row that
+                  represents you, so there is nothing to link together, and we genuinely can't tell
+                  one person reading forty pages from forty people reading one. We accept that
+                  limit on purpose: telling those apart would need an identifier stored on your
+                  device, and we'd rather have the coarser number.
+                </p>
+                <p>
+                  If you arrived from another website, we count that site's name (for example
+                  &ldquo;google.com&rdquo;) and never the full address you came from, since that
+                  address can itself be private.
+                </p>
+                <p>
                   We also use Cloudflare Web Analytics for page views. It sets no cookies and
                   collects no personal data, which is why it's here rather than Google Analytics.
                 </p>

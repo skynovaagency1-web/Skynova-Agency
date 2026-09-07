@@ -18,6 +18,7 @@ import { Analytics } from "@/lib/analytics";
 import { AuthModal } from "@/components/site/AuthModal";
 import { FlightRail } from "@/components/site/FlightRail";
 import { OutboundClickTracker } from "@/components/site/OutboundClickTracker";
+import { PageViewTracker } from "@/components/site/PageViewTracker";
 import { NotFound } from "@/components/site/NotFound";
 
 const DEFAULT_TITLE = "Skynova Agency — Premium Travel Booking";
@@ -186,6 +187,7 @@ function RootComponent() {
             where that exists and otherwise starts at the top of the page. */}
         <FlightRail />
         <OutboundClickTracker />
+        <PageViewTracker />
         <Outlet />
         <AuthModal />
       </AuthProvider>

@@ -4,6 +4,7 @@ import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 import { applySecurityHeaders } from "./lib/security-headers.server";
 import { handleOutboundClick } from "./lib/outbound-clicks.server";
+import { handlePageView } from "./lib/page-views.server";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -66,8 +67,16 @@ export default {
       // because the browser sends these with navigator.sendBeacon -- a plain
       // POST that must be answered as cheaply as possible and never routed
       // through React. See lib/outbound-clicks.server.ts.
-      if (request.method === "POST" && new URL(request.url).pathname === "/api/click") {
-        return applySecurityHeaders(await handleOutboundClick(request));
+      if (request.method === "POST") {
+        const path = new URL(request.url).pathname;
+        if (path === "/api/click") {
+          return applySecurityHeaders(await handleOutboundClick(request));
+        }
+        // Pageview counter -- same reasoning as above, and the same shape:
+        // a cheap beacon answered before React is involved.
+        if (path === "/api/view") {
+          return applySecurityHeaders(await handlePageView(request));
+        }
       }
 
       const handler = await getServerEntry();
