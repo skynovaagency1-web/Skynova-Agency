@@ -149,13 +149,13 @@ export function AuthModal() {
                 <h2 className="auth-modal-title">Reset your password.</h2>
                 {resetSent ? (
                   <p className="text-sm leading-relaxed">
-                    If that email has a Skynova account, we've got your request -- we'll be in touch to help you
-                    back in.
+                    If that email has a Skynova account, a link to choose a new password is on its way. It
+                    works once and expires in an hour.
                   </p>
                 ) : (
                   <form className="auth-modal-form" onSubmit={handleSubmit}>
                     <p className="site-ink-muted text-sm leading-relaxed">
-                      Enter the email on your account and we'll follow up to help you reset your password.
+                      Enter the email on your account and we'll send you a link to choose a new password.
                     </p>
                     <label className="auth-modal-field">
                       <span>Email</span>

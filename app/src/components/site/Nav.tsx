@@ -17,6 +17,7 @@ const LINKS = [
 
 const COMPANY_LINKS = [
   { to: "/about", label: "About us" },
+  { to: "/reviews", label: "Reviews" },
   { to: "/contact", label: "Contact" },
 ] as const;
 
@@ -247,9 +248,9 @@ export function Nav() {
           )}
         </div>
         <div className="flex shrink-0 items-center gap-3">
-          <a href="/#hero" className="btn-nav-pill site-nav-cta">
+          <Link to="/destinations" className="btn-nav-pill site-nav-cta">
             <span>Start your trip</span>
-          </a>
+          </Link>
           <button
             type="button"
             className={`site-menu-btn${open ? " is-open" : ""}`}
@@ -385,9 +386,9 @@ export function Nav() {
           </div>
 
           <div className="site-mobile-menu-footer" style={{ "--i": rowIndex++ } as CSSProperties}>
-            <a href="/#hero" className="btn-nav-pill justify-center w-full" onClick={() => setOpen(false)}>
+            <Link to="/destinations" className="btn-nav-pill justify-center w-full" onClick={() => setOpen(false)}>
               <span>Start your trip</span>
-            </a>
+            </Link>
           </div>
         </div>
       </div>

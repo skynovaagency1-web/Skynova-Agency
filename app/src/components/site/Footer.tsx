@@ -60,6 +60,7 @@ const VERTICALS = [
 
 const COMPANY_LINKS = [
   { to: "/about", label: "About us" },
+  { to: "/reviews", label: "Reviews" },
   { to: "/contact", label: "Contact us" },
   { to: "/blog", label: "Blog" },
 ];

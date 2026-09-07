@@ -15,6 +15,8 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ShareRouteImport } from './routes/share'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
+import { Route as ReviewsRouteImport } from './routes/reviews'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as HotelsRouteImport } from './routes/hotels'
 import { Route as GiftRouteImport } from './routes/gift'
@@ -65,6 +67,16 @@ const ShareRoute = ShareRouteImport.update({
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   id: '/robots.txt',
   path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReviewsRoute = ReviewsRouteImport.update({
+  id: '/reviews',
+  path: '/reviews',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -189,6 +201,8 @@ export interface FileRoutesByFullPath {
   '/gift': typeof GiftRoute
   '/hotels': typeof HotelsRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/reviews': typeof ReviewsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/share': typeof ShareRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -218,6 +232,8 @@ export interface FileRoutesByTo {
   '/gift': typeof GiftRoute
   '/hotels': typeof HotelsRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/reviews': typeof ReviewsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/share': typeof ShareRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -248,6 +264,8 @@ export interface FileRoutesById {
   '/gift': typeof GiftRoute
   '/hotels': typeof HotelsRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/reviews': typeof ReviewsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/share': typeof ShareRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -279,6 +297,8 @@ export interface FileRouteTypes {
     | '/gift'
     | '/hotels'
     | '/privacy'
+    | '/reset-password'
+    | '/reviews'
     | '/robots.txt'
     | '/share'
     | '/sitemap.xml'
@@ -308,6 +328,8 @@ export interface FileRouteTypes {
     | '/gift'
     | '/hotels'
     | '/privacy'
+    | '/reset-password'
+    | '/reviews'
     | '/robots.txt'
     | '/share'
     | '/sitemap.xml'
@@ -337,6 +359,8 @@ export interface FileRouteTypes {
     | '/gift'
     | '/hotels'
     | '/privacy'
+    | '/reset-password'
+    | '/reviews'
     | '/robots.txt'
     | '/share'
     | '/sitemap.xml'
@@ -367,6 +391,8 @@ export interface RootRouteChildren {
   GiftRoute: typeof GiftRoute
   HotelsRoute: typeof HotelsRoute
   PrivacyRoute: typeof PrivacyRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  ReviewsRoute: typeof ReviewsRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   ShareRoute: typeof ShareRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -423,6 +449,20 @@ declare module '@tanstack/react-router' {
       path: '/robots.txt'
       fullPath: '/robots.txt'
       preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reviews': {
+      id: '/reviews'
+      path: '/reviews'
+      fullPath: '/reviews'
+      preLoaderRoute: typeof ReviewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -591,6 +631,8 @@ const rootRouteChildren: RootRouteChildren = {
   GiftRoute: GiftRoute,
   HotelsRoute: HotelsRoute,
   PrivacyRoute: PrivacyRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  ReviewsRoute: ReviewsRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   ShareRoute: ShareRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,

@@ -20,6 +20,7 @@ import { FlightRail } from "@/components/site/FlightRail";
 import { OutboundClickTracker } from "@/components/site/OutboundClickTracker";
 import { PageViewTracker } from "@/components/site/PageViewTracker";
 import { NotFound } from "@/components/site/NotFound";
+import { absUrl } from "@/lib/seo";
 
 const DEFAULT_TITLE = "Skynova Agency — Premium Travel Booking";
 const DEFAULT_DESCRIPTION =
@@ -39,7 +40,12 @@ const appMeta = appMetaJson as AppMeta;
 function buildHead(meta: AppMeta) {
   const title = meta.og_title ?? DEFAULT_TITLE;
   const description = meta.og_description ?? DEFAULT_DESCRIPTION;
-  const ogImage = meta.og_image_url ?? "/assets/cover/og.webp";
+  const ogImageRaw = meta.og_image_url ?? "/assets/cover/og.webp";
+  // Absolute, always. Facebook, LinkedIn, WhatsApp and X do not resolve a
+  // relative og:image against the page URL -- they drop the image entirely,
+  // so every share of this site rendered as a bare text link. The value has
+  // to be a full URL for the crawler to fetch anything at all.
+  const ogImage = /^https?:\/\//.test(ogImageRaw) ? ogImageRaw : absUrl(ogImageRaw);
 
   return {
     meta: [

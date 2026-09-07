@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "@tanstack/react-router";
+
+import { HeroCards } from "@/components/site/HeroCards";
 
 // Beats sourced from video are shipped as frame sequences and scrubbed by
 // scroll rather than played. A looping <video> runs on its own clock, so it
@@ -61,6 +62,10 @@ export function Hero() {
   // never to :root -- see the comment on writeVar in the effect below.
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const copyRef = useRef<HTMLDivElement | null>(null);
+  // The floating hero cards fade out on the inverse of the copy's curve, and
+  // custom properties do not travel between siblings, so --hero-grow is
+  // written to this node directly like the other consumers.
+  const cardsRef = useRef<HTMLDivElement | null>(null);
   const hintRef = useRef<HTMLParagraphElement | null>(null);
   // The fixed video backdrop is only meant to show behind the hero and the
   // glass section right after it -- once that section has scrolled past,
@@ -233,6 +238,7 @@ export function Hero() {
         const progress = total > 0 ? Math.min(Math.max(-rect.top / total, 0), 1) : 0;
         const eased = easeInOutCubic(progress);
         writeVar(hintRef.current, "--hero-progress", eased.toFixed(4));
+        writeVar(cardsRef.current, "--hero-progress", eased.toFixed(4));
 
         // Camera push: while still on the seat shot, dolly toward the window
         // so arriving at the window beat reads as continuous movement rather
@@ -250,6 +256,7 @@ export function Hero() {
         // and the hero copy that pulls back as it does.
         writeVar(canvasRefs.current.window, "--hero-grow", grow);
         writeVar(copyRef.current, "--hero-grow", grow);
+        writeVar(cardsRef.current, "--hero-grow", grow);
 
         // Crossfade the boarding sequence. Opacities are computed here rather
         // than as CSS calc() chains so the timings above stay readable and
@@ -397,19 +404,20 @@ export function Hero() {
               <p className="site-eyebrow mb-4">Skynova Agency</p>
               <h1 className="site-h2 max-w-2xl text-4xl md:text-6xl">Every trip. One place.</h1>
               <p className="site-ink-muted mt-4 max-w-lg text-base leading-relaxed">
-                Flights, stays, cars, connectivity, tickets and tours &mdash; compared in one place, booked with trusted travel partners.
+                Flights, stays, cars, connectivity, tickets and tours &mdash; compared in one place, booked with trusted travel partners at no extra cost.
               </p>
               <div className="mt-7 flex flex-wrap items-center gap-5">
-                <Link to="/destinations" className="btn-hero-pill">
+                <a href="/#trip-search" className="btn-hero-pill">
                   <span className="spark" />
                   <span>Start your trip</span>
-                </Link>
+                </a>
                 <a href="/#how-it-works" className="btn-ghost-link">
                   See how it works <span className="arrow">&rarr;</span>
                 </a>
               </div>
             </div>
           </div>
+          <HeroCards ref={cardsRef} />
           <p ref={hintRef} className="hero-scroll-hint">
             Scroll
           </p>

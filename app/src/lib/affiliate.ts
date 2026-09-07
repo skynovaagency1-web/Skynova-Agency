@@ -26,16 +26,20 @@ export function flightsLink(): string {
 // check-in/check-out dates and resolves them itself -- so this goes
 // straight to results when a destination is given (defaulting to a
 // 3-night stay starting 30 days out).
-export function hotelsLink(destinationName?: string): string {
+export function hotelsLink(destinationName?: string, dates?: { checkIn?: string; checkOut?: string }): string {
   const params = new URLSearchParams({ marker: TP_MARKER });
   if (destinationName) {
     params.set("destination", destinationName);
-    const checkIn = new Date();
-    checkIn.setDate(checkIn.getDate() + 30);
-    const checkOut = new Date();
-    checkOut.setDate(checkOut.getDate() + 33);
-    params.set("checkIn", checkIn.toISOString().slice(0, 10));
-    params.set("checkOut", checkOut.toISOString().slice(0, 10));
+    // Real dates when the visitor gave them (the homepage search does), and
+    // the +30/+33 placeholder otherwise. Hotellook needs SOME date range to
+    // return prices at all -- with none it lands on an empty search form,
+    // which is the one outcome worth avoiding.
+    const fallbackIn = new Date();
+    fallbackIn.setDate(fallbackIn.getDate() + 30);
+    const fallbackOut = new Date();
+    fallbackOut.setDate(fallbackOut.getDate() + 33);
+    params.set("checkIn", dates?.checkIn || fallbackIn.toISOString().slice(0, 10));
+    params.set("checkOut", dates?.checkOut || fallbackOut.toISOString().slice(0, 10));
     params.set("adults", "2");
   }
   return `https://search.hotellook.com/?${params.toString()}`;

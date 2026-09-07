@@ -130,6 +130,7 @@
   border: 1px solid var(--hf-color-transparent-light-05);
   border-radius: var(--hf-radius-300, 12px);
   background: var(--hf-color-glass-dark);
+  -webkit-backdrop-filter: blur(40px);
   backdrop-filter: blur(40px);
   box-shadow: 0 6px 6px rgb(0 0 0 / 0.25);
   color: var(--hf-color-text-primary);
@@ -140,11 +141,13 @@
 [data-sonner-toast][data-type="success"] {
   border-color: var(--hf-color-transparent-light-15);
   background: #68b922; /* toast/success — raw value in Figma, no hf token */
+  -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
 [data-sonner-toast].toast-new {
   border-color: var(--hf-color-transparent-light-15);
   background: #7a58ff; /* toast/new — raw value in Figma, no hf token */
+  -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
 [data-sonner-toast] [data-close-button] {
@@ -203,16 +206,20 @@
   --sky-coral-wash: rgba(201, 162, 39, 0.12);
   --sky-shadow-sm: 0 1px 2px rgba(28, 26, 20, 0.04), 0 8px 20px -6px rgba(28, 26, 20, 0.08);
   --sky-shadow-md: 0 2px 4px rgba(28, 26, 20, 0.05), 0 16px 32px -12px rgba(28, 26, 20, 0.12);
-  --sky-glass-bg: rgba(255, 255, 255, 0.52);
+  --sky-shadow-float:
+    0 1px 2px rgba(28, 26, 20, 0.05),
+    0 18px 40px -16px rgba(28, 26, 20, 0.18),
+    0 44px 84px -44px rgba(28, 26, 20, 0.16);
+  --sky-glass-bg: rgba(255, 255, 255, 0.46);
   --sky-glass-bg-strong: rgba(255, 255, 255, 0.74);
-  --sky-glass-blur: 22px;
+  --sky-glass-blur: 30px;
   /* Liquid-glass rim: a soft gradient "edge-lit" border instead of a flat
      line, via the two-layer background-clip trick (fill on padding-box,
      gradient on border-box) -- respects border-radius, no pseudo-element. */
   --sky-glass-edge: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.85) 0%,
-    rgba(255, 255, 255, 0.22) 22%,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.3) 22%,
     rgba(255, 255, 255, 0) 42%,
     rgba(255, 255, 255, 0) 58%,
     rgba(255, 255, 255, 0.22) 78%,
@@ -313,6 +320,7 @@ html {
   border-radius: 0 8px 8px 0;
   padding: 0.4rem 0.75rem;
   background: linear-gradient(var(--sky-glass-bg), var(--sky-glass-bg)) padding-box;
+  -webkit-backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
   backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
   box-shadow: var(--sky-shadow-sm);
 }
@@ -321,9 +329,10 @@ html {
 .site-panel {
   border-radius: var(--sky-radius-md);
   background: linear-gradient(var(--sky-glass-bg), var(--sky-glass-bg)) padding-box, var(--sky-glass-edge) border-box;
+  -webkit-backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
   backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
   border: 1px solid transparent;
-  box-shadow: var(--sky-shadow-sm);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), var(--sky-shadow-float);
   animation: card-settle 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 .site-panel:nth-child(4n+1) { animation-delay: 0ms; }
@@ -333,7 +342,7 @@ html {
 .site-ink-muted { color: var(--sky-ink-muted); }
 
 /* ---- Nav (glass) ---- */
-.site-nav { border-bottom: 1px solid transparent; background: linear-gradient(var(--sky-glass-bg-strong), var(--sky-glass-bg-strong)) padding-box, var(--sky-glass-edge) border-box; backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%); -webkit-backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%); box-shadow: 0 8px 24px -16px rgba(28, 26, 20, 0.12); }
+.site-nav { border-bottom: 1px solid transparent; background: linear-gradient(var(--sky-glass-bg-strong), var(--sky-glass-bg-strong)) padding-box, var(--sky-glass-edge) border-box; -webkit-backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%); backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%); box-shadow: 0 8px 24px -16px rgba(28, 26, 20, 0.12); }
 .site-nav-mark { height: 24px; width: auto; display: block; }
 .site-nav-link { color: var(--sky-ink-muted); transition: color 0.2s ease; }
 .site-nav-link:hover { color: var(--sky-ink); }
@@ -368,6 +377,7 @@ html {
   position: absolute; top: calc(100% + 0.9rem); right: 0; min-width: 10.5rem;
   border-radius: var(--sky-radius-sm); padding: 0.4rem; z-index: 50;
   background: linear-gradient(var(--sky-glass-bg-strong), var(--sky-glass-bg-strong)) padding-box, var(--sky-glass-edge) border-box;
+  -webkit-backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
   backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
   border: 1px solid transparent;
   box-shadow: var(--sky-shadow-md);
@@ -389,6 +399,7 @@ html {
   border-radius: var(--sky-radius-md);
   overflow: hidden;
   background: linear-gradient(var(--sky-glass-bg-strong), var(--sky-glass-bg-strong)) padding-box, var(--sky-glass-edge) border-box;
+  -webkit-backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
   backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
   border: 1px solid transparent;
   box-shadow: var(--sky-shadow-md);
@@ -797,6 +808,7 @@ html {
   display: inline-flex; align-items: center; gap: 0.5rem; color: var(--sky-ink);
   border-radius: 999px; padding: 0.5rem 1rem; font-family: var(--font-mono); font-size: 0.8rem;
   background: linear-gradient(var(--sky-glass-bg), var(--sky-glass-bg)) padding-box, var(--sky-glass-edge) border-box;
+  -webkit-backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
   backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
   border: 1px solid transparent;
 }
@@ -810,6 +822,7 @@ html {
   display: inline-flex; align-items: center; justify-content: center; width: 3.25rem; height: 3.25rem;
   border-radius: 999px; color: var(--sky-ink); transition: transform 0.3s ease, border-color 0.2s ease;
   background: linear-gradient(var(--sky-glass-bg), var(--sky-glass-bg)) padding-box, var(--sky-glass-edge) border-box;
+  -webkit-backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
   backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
   border: 1px solid transparent;
 }
@@ -918,6 +931,7 @@ html {
   border-radius: var(--sky-radius-md);
   padding: clamp(1.5rem, 3vw, 2.25rem);
   background: linear-gradient(var(--sky-glass-bg), var(--sky-glass-bg)) padding-box, var(--sky-glass-edge) border-box;
+  -webkit-backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
   backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
   display: flex;
   align-items: center;
@@ -972,6 +986,7 @@ html {
 .dest-mini-card {
   display: block; border-radius: var(--sky-radius-sm); padding: 1.1rem;
   background: linear-gradient(var(--sky-glass-bg), var(--sky-glass-bg)) padding-box, var(--sky-glass-edge) border-box;
+  -webkit-backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
   backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
   border: 1px solid transparent;
   box-shadow: var(--sky-shadow-sm);
@@ -995,6 +1010,7 @@ html {
   border-radius: 0;
   padding: 0;
   background: none;
+  -webkit-backdrop-filter: none;
   backdrop-filter: none;
   box-shadow: none;
 }
@@ -1449,6 +1465,7 @@ html {
   background-size: 100% 145%;
   background-position: 0% calc(50% + var(--parallax, 0) * 16%);
   background-repeat: no-repeat;
+  -webkit-backdrop-filter: blur(36px) saturate(150%);
   backdrop-filter: blur(36px) saturate(150%);
   /* Dissolves in from nothing at the top and back out at the bottom
      instead of presenting hard edges either side -- masks the
@@ -2040,6 +2057,7 @@ html {
   border-radius: 32px;
   border: 1px solid transparent;
   background: linear-gradient(var(--sky-glass-bg), var(--sky-glass-bg)) padding-box, var(--sky-glass-edge) border-box;
+  -webkit-backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
   backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
   box-shadow: var(--sky-shadow-md);
   overflow: hidden;
@@ -2150,6 +2168,7 @@ html {
   justify-content: center;
   border-radius: 999px;
   background: rgba(20, 18, 14, 0.35);
+  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   color: #f5f0e6;
 }
@@ -2185,6 +2204,7 @@ html {
   padding: 0.2rem;
   border-radius: 999px;
   background: rgba(20, 18, 14, 0.38);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
   backdrop-filter: blur(8px) saturate(140%);
   box-shadow: 0 6px 16px -8px rgba(20, 18, 14, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.18);
   transition: background 0.25s ease;
@@ -2258,6 +2278,7 @@ html {
   overflow-y: auto;
   padding: 1.5rem;
   background: rgba(20, 18, 14, 0.45);
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
   animation: auth-modal-fade-in 0.2s ease both;
 }
@@ -3013,6 +3034,7 @@ html {
   border-radius: 20px;
   padding: 1.5rem 1rem 1.6rem;
   background: var(--sky-glass-bg-strong);
+  -webkit-backdrop-filter: blur(var(--sky-glass-blur)) saturate(150%);
   backdrop-filter: blur(var(--sky-glass-blur)) saturate(150%);
   border: 1px solid rgba(255, 255, 255, 0.7);
   /* The inner light: a lit top rim, a warm bloom from within, and an outer
@@ -3438,6 +3460,7 @@ html {
   padding: 4px;
   border-radius: 999px;
   background: var(--sky-glass-bg);
+  -webkit-backdrop-filter: blur(var(--sky-glass-blur)) saturate(150%);
   backdrop-filter: blur(var(--sky-glass-blur)) saturate(150%);
   border: 1px solid rgba(255, 255, 255, 0.7);
   box-shadow:
@@ -3755,3 +3778,617 @@ html.lenis body { height: auto; }
 /* The card is no longer a link, so its hover lift must not imply it is one. */
 .dest-mini-card:hover { transform: none; }
 .dest-mini-card:focus-within { border-color: var(--sky-coral); }
+
+/* ---- Homepage trip search ----
+   Lifted into the gap under the hero so it reads as part of the opening
+   rather than as the first row of the page body. The negative margin is
+   clamped, not fixed: on a phone the hero ends much closer to the fold and
+   a large pull would slide the panel over the hero copy. */
+.trip-search-section {
+  position: relative;
+  z-index: 3;
+  margin-top: clamp(-3.5rem, -4vw, -1rem);
+  margin-bottom: 3rem;
+}
+.trip-search {
+  padding: 1.5rem;
+  background: linear-gradient(var(--sky-glass-bg-strong), var(--sky-glass-bg-strong)) padding-box,
+    var(--sky-glass-edge) border-box;
+  box-shadow: var(--sky-shadow-md);
+}
+@media (min-width: 768px) {
+  .trip-search { padding: 2rem; }
+}
+.trip-search-head { display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; }
+.trip-search-title { font-size: 1.6rem; }
+@media (min-width: 768px) {
+  .trip-search-title { font-size: 2rem; }
+}
+.trip-search-modes {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+.trip-search-chip {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  padding: 0.5rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid var(--sky-line);
+  background: var(--sky-bg-raised);
+  color: var(--sky-ink-muted);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+.trip-search-chip:hover { border-color: var(--sky-coral); color: var(--sky-ink); }
+.trip-search-chip.is-active {
+  border-color: var(--sky-coral);
+  background: var(--sky-coral-wash);
+  color: var(--sky-coral-deep);
+  font-weight: 600;
+}
+.trip-search-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.85rem;
+  margin-top: 1.25rem;
+}
+.trip-search-field { display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; flex: 1 1 9rem; }
+.trip-search-field-grow { flex: 3 1 14rem; }
+.trip-search-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sky-ink-muted);
+}
+.trip-search-input {
+  width: 100%;
+  /* 16px minimum: iOS Safari zooms the whole page in on focus for anything
+     smaller, which on a phone throws the rest of the form off-screen. */
+  font-size: 1rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: var(--sky-radius-sm);
+  border: 1px solid var(--sky-line);
+  background: var(--sky-bg);
+  color: var(--sky-ink);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.trip-search-input:focus {
+  outline: none;
+  border-color: var(--sky-coral);
+  box-shadow: 0 0 0 3px var(--sky-coral-wash);
+}
+.trip-search-go { flex: 1 1 auto; justify-content: center; text-decoration: none; }
+@media (min-width: 768px) {
+  .trip-search-go { flex: 0 0 auto; }
+}
+.trip-search-note {
+  margin-top: 0.9rem;
+  font-size: 0.83rem;
+  line-height: 1.5;
+  color: var(--sky-ink-muted);
+}
+.trip-search-guide-link { color: var(--sky-coral-deep); text-decoration: none; font-weight: 500; }
+.trip-search-guide-link:hover { text-decoration: underline; }
+
+/* ---- Reviews page ----
+   Layout, spacing and type scale ported 1:1 from the Claude Design mockup.
+   Only the palette changed: the mockup shipped navy (#131a3a) on red
+   (#ff5a5f), the site is ink (#1c1a14) on gold (#c9a227), so every colour
+   below resolves to an existing token rather than a literal from the export. */
+.reviews-hero { padding: clamp(44px, 7vw, 88px) 0 clamp(24px, 3vw, 36px); }
+.reviews-title {
+  font-size: clamp(36px, 5.4vw, 66px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.04;
+  margin: 14px 0 0;
+  max-width: 24ch;
+}
+.reviews-lede {
+  color: var(--sky-ink-muted);
+  margin: 20px 0 0;
+  max-width: 54ch;
+  font-size: 16.5px;
+  line-height: 1.65;
+}
+
+.reviews-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(16px, 2vw, 24px);
+  padding-bottom: clamp(28px, 4vw, 44px);
+  align-items: stretch;
+}
+.reviews-score {
+  flex: 1 1 260px;
+  min-width: 0;
+  border-radius: 26px;
+  padding: clamp(20px, 2.6vw, 32px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: linear-gradient(165deg, var(--sky-bg-raised), var(--sky-bg)) padding-box,
+    var(--sky-glass-edge) border-box;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), var(--sky-shadow-float);
+}
+.reviews-score-figure { display: flex; align-items: flex-end; gap: 12px; }
+.reviews-score-number {
+  font-size: clamp(52px, 7vw, 80px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+  color: var(--sky-ink);
+}
+.reviews-score-empty { color: var(--sky-ink-muted); }
+.reviews-score-of { font-size: 16px; color: var(--sky-ink-muted); padding-bottom: 10px; }
+.reviews-stars { color: var(--sky-coral); font-size: 20px; letter-spacing: 0.16em; margin: 16px 0 0; }
+.reviews-stars-empty { color: var(--sky-line); }
+.reviews-score-note { font-size: 14.5px; color: var(--sky-ink-muted); margin: 14px 0 0; line-height: 1.6; }
+.reviews-score-note strong { color: var(--sky-ink); font-weight: 600; }
+
+.reviews-breakdown {
+  flex: 2 1 380px;
+  min-width: 0;
+  border-radius: 26px;
+  padding: clamp(20px, 2.6vw, 32px);
+}
+.reviews-breakdown-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sky-ink-muted);
+  margin: 0 0 20px;
+}
+.reviews-breakdown-rows { display: flex; flex-direction: column; gap: 11px; }
+.reviews-breakdown-row { display: flex; align-items: center; gap: 14px; }
+.reviews-breakdown-star {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--sky-ink-muted);
+  width: 24px;
+  flex: none;
+}
+.reviews-breakdown-track {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--sky-bg-raised);
+  border: 1px solid var(--sky-line);
+  overflow: hidden;
+  display: block;
+}
+/* One colour at varying opacity, so five stars reads strongest without
+   introducing four more colours the palette does not have. */
+.reviews-breakdown-fill { display: block; height: 100%; border-radius: 999px; background: var(--sky-coral); }
+.reviews-breakdown-pct {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--sky-ink-muted);
+  width: 44px;
+  text-align: right;
+  flex: none;
+}
+.reviews-breakdown-note { font-size: 13px; color: var(--sky-ink-muted); margin: 20px 0 0; line-height: 1.6; }
+
+.reviews-filters {
+  padding-bottom: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  position: sticky;
+  top: 68px;
+  z-index: 20;
+  background: linear-gradient(var(--sky-bg) 62%, rgba(255, 255, 255, 0));
+  padding-top: 14px;
+  margin-top: -14px;
+}
+.reviews-filter-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.reviews-chip {
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 8px 15px;
+  font-size: 13.5px;
+  background: var(--sky-bg-raised);
+  color: var(--sky-ink-muted);
+  border: 1px solid var(--sky-line);
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.reviews-chip:hover { border-color: var(--sky-coral); color: var(--sky-ink); }
+.reviews-chip.is-active {
+  background: var(--sky-coral-wash);
+  border-color: var(--sky-coral);
+  color: var(--sky-coral-deep);
+  font-weight: 600;
+}
+.reviews-result-count {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sky-ink-muted);
+  margin-left: auto;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: clamp(16px, 2vw, 22px);
+  padding-bottom: clamp(28px, 4vw, 40px);
+  align-items: start;
+}
+.reviews-card {
+  min-width: 0;
+  border-radius: 22px;
+  padding: 24px;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .reviews-card:hover { transform: translateY(-3px); box-shadow: var(--sky-shadow-md); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reviews-card { transition: none; }
+  .reviews-card:hover { transform: none; }
+}
+.reviews-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.reviews-card-stars { color: var(--sky-coral); font-size: 14.5px; letter-spacing: 0.14em; }
+.reviews-card-date {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sky-ink-muted);
+}
+.reviews-card-title {
+  font-size: 16.5px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin: 16px 0 0;
+  line-height: 1.35;
+  color: var(--sky-ink);
+}
+.reviews-card-body { font-size: 14px; line-height: 1.68; color: var(--sky-ink-muted); margin: 10px 0 0; }
+.reviews-card-foot {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--sky-line);
+}
+.reviews-card-avatar {
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: 999px;
+  background: var(--sky-coral-wash);
+  border: 1px solid var(--sky-coral);
+  color: var(--sky-coral-deep);
+  display: grid;
+  place-items: center;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.reviews-card-who { min-width: 0; flex: 1; }
+.reviews-card-name { display: block; font-size: 13.5px; font-weight: 600; color: var(--sky-ink); }
+.reviews-card-meta { display: block; font-size: 12px; color: var(--sky-ink-muted); margin-top: 1px; }
+/* Green stays green: "verified" is a status, not a brand colour, and reading
+   it in the site's gold would make it look like decoration. */
+.reviews-card-verified {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #eef4ec;
+  border: 1px solid rgba(61, 107, 75, 0.24);
+  color: #3d6b4b;
+}
+
+.reviews-empty {
+  border-radius: 22px;
+  padding: clamp(28px, 4vw, 44px);
+  margin-bottom: clamp(28px, 4vw, 40px);
+}
+.reviews-empty-title { font-size: 20px; font-weight: 600; letter-spacing: -0.015em; margin: 0; color: var(--sky-ink); }
+.reviews-empty-body {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--sky-ink-muted);
+  margin: 12px 0 0;
+  max-width: 62ch;
+}
+
+.reviews-more {
+  padding-bottom: clamp(48px, 7vw, 96px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+}
+.reviews-more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--sky-bg);
+  color: var(--sky-ink);
+  border: 1px solid var(--sky-line);
+  border-radius: 999px;
+  padding: 13px 26px;
+  font-size: 14.5px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.reviews-more-btn:hover { border-color: var(--sky-coral); background: var(--sky-coral-wash); }
+.reviews-more-arrow { font-family: var(--font-mono); }
+.reviews-policy { font-size: 13px; color: var(--sky-ink-muted); margin: 0; max-width: 46ch; line-height: 1.6; }
+
+/* ---- Arch-topped glass cards (homepage slider) ----
+   After the XR reference: the photo sits INSIDE a frosted frame rather than
+   running edge to edge, and the silhouette is a doorway arch rather than a
+   rounded rectangle. Scoped to the slider deliberately -- the reference uses
+   two arches as showcase pieces; the 42-card index grid keeps its rectangles,
+   because forty-two arches reads as repetition, not as design. */
+.dest-slider-card.glass-bezel {
+  --bezel: 8px;
+  border-radius: 999px 999px var(--sky-radius-lg) var(--sky-radius-lg);
+  background: linear-gradient(var(--sky-glass-bg-strong), var(--sky-glass-bg)) padding-box,
+    var(--sky-glass-edge) border-box;
+  -webkit-backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
+  backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), var(--sky-shadow-float);
+}
+/* The photo and its scrim pull in by the frame thickness. Inner radius is the
+   outer minus the bezel, so the two curves stay concentric instead of the
+   image showing square corners inside a curved frame. */
+.dest-slider-card.glass-bezel .dest-slider-card-link,
+.dest-slider-card.glass-bezel .dest-slider-card-scrim {
+  inset: var(--bezel);
+  border-radius: 999px 999px calc(var(--sky-radius-lg) - var(--bezel))
+    calc(var(--sky-radius-lg) - var(--bezel));
+  overflow: hidden;
+}
+/* Copy tucks inside the frame too, or it would sit on the glass. */
+.dest-slider-card.glass-bezel .dest-slider-card-copy {
+  left: var(--bezel);
+  right: var(--bezel);
+  bottom: var(--bezel);
+}
+@media (hover: hover) and (pointer: fine) {
+  .dest-slider-card.glass-bezel:hover {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), var(--sky-shadow-md), var(--sky-shadow-float);
+  }
+}
+
+/* ---- Floating hero cards ----
+   After the "next hero section" reference: dark translucent panels resting on
+   the hero photograph, with tag pills, a thumbnail, a stat and two outbound
+   links. Dark glass rather than the site's usual light glass because these
+   sit on a dark photo -- .hero-stage-portal already flips the copy to #f5f0e6
+   for the same reason.
+
+   Positioned as a sibling of .hero-copy, never inside it: that element is
+   opacity-gated until --hero-grow > 0.85, and a child cannot out-render its
+   parent's opacity. These fade on the INVERSE curve so they clear the stage
+   before the bottom-anchored headline arrives. */
+.hero-cards {
+  position: absolute;
+  /* NOT inset:0. .hero-stage is height:100dvh but starts BELOW the sticky
+     nav (measured y=65 at scroll 0), so its bottom edge sits ~65px past the
+     fold until the sticky kicks in -- anything anchored to it is off-screen
+     exactly when these cards need to be seen. Ending the box a nav-height
+     early keeps the bottom row in the first viewport on landing. Once the
+     stage does stick, the box is short by that much at the bottom, which
+     costs nothing: the cards have faded out by then. */
+  inset: 0 0 auto 0;
+  height: calc(100dvh - 4.25rem);
+  z-index: 2;
+  pointer-events: none;
+  opacity: clamp(0, calc(1 - var(--hero-progress, 0) * 3.4), 1);
+  transition: opacity 0.12s linear;
+}
+.hero-card,
+.hero-card-stat {
+  pointer-events: auto;
+  border-radius: 20px;
+  background: rgba(24, 20, 14, 0.42);
+  -webkit-backdrop-filter: blur(26px) saturate(140%);
+  backdrop-filter: blur(26px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 24px 60px -30px rgba(0, 0, 0, 0.7);
+  color: #f5f0e6;
+}
+.hero-card-info {
+  position: absolute;
+  top: clamp(5.5rem, 12vh, 8rem);
+  right: clamp(1rem, 3vw, 2.5rem);
+  width: min(360px, 40vw);
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+}
+.hero-card-info-body { min-width: 0; flex: 1; }
+.hero-card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.hero-card-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
+}
+.hero-card-title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin: 0; line-height: 1.3; }
+.hero-card-subtitle { font-size: 13.5px; font-weight: 600; margin: 0 0 6px; }
+.hero-card-text { font-size: 12.5px; line-height: 1.55; margin: 8px 0 0; color: rgba(245, 240, 230, 0.82); }
+.hero-card-note .hero-card-text { margin-top: 0; }
+.hero-card-thumb {
+  width: 74px;
+  height: 96px;
+  flex: none;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.hero-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #f5f0e6;
+  text-decoration: none;
+  border-bottom: 1px solid var(--sky-coral);
+  padding-bottom: 2px;
+}
+.hero-card-link:hover { color: var(--sky-coral); }
+
+.hero-cards-bottom {
+  position: absolute;
+  left: clamp(1rem, 3vw, 2.5rem);
+  right: clamp(1rem, 3vw, 2.5rem);
+  bottom: clamp(1.5rem, 5vh, 3rem);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(12px, 2vw, 28px);
+}
+.hero-card-note { width: min(260px, 26vw); padding: 16px; }
+.hero-card-stat {
+  padding: 14px 22px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 999px;
+}
+.hero-card-stat-figure { font-size: 30px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+.hero-card-stat-label { font-size: 11px; line-height: 1.35; color: rgba(245, 240, 230, 0.8); }
+
+/* The reference is a desktop composition. Below 900px the four panels crowd
+   the photograph and each other, so only the stat survives -- it is the one
+   piece that still says something on its own. */
+@media (max-width: 900px) {
+  .hero-cards {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 0 1rem 1.25rem;
+  }
+  .hero-card-info {
+    position: static;
+    width: auto;
+    top: auto;
+    right: auto;
+  }
+  .hero-cards-bottom {
+    position: static;
+    justify-content: center;
+    left: auto;
+    right: auto;
+    bottom: auto;
+  }
+  /* Four stacked panels would cover the photograph completely on a phone;
+     the info card and the stat carry the idea on their own. */
+  .hero-card-note { display: none; }
+  .hero-card-thumb { width: 64px; height: 84px; }
+}
+/* Only genuinely tiny viewports and landscape phones, where there is no room
+   for the photograph and the panels both. 560px was high enough to catch a
+   small phone still held upright. */
+@media (max-height: 460px) {
+  .hero-cards { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-cards { transition: none; }
+}
+
+/* ---- Destination hero, after the "destination page design" reference ----
+   The signature there is the place name set enormous and semi-transparent
+   across the photograph, with the subject reading through it. */
+.dest-detail-hero { height: 76vh; min-height: 520px; }
+.dest-hero-wordmark {
+  position: absolute;
+  left: 50%;
+  top: 34%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.045em;
+  line-height: 0.82;
+  /* Inversely proportional to the name length, so every destination fills a
+     similar share of the frame instead of long ones running off it.
+     ~0.55em average glyph width for this weight => 178vw / chars. */
+  font-size: clamp(2.25rem, min(15.5vw, calc(178vw / var(--wm-len, 8))), 12.5rem);
+  color: rgba(255, 255, 255, 0.26);
+  /* Sits BEFORE .dest-detail-mask in the DOM and takes no z-index, so the
+     mask's upward white fade paints over its lower half. That veiling is what
+     stands in for the reference's photo subject occluding the letters -- the
+     effect without needing a cut-out of every destination photo. */
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+}
+.dest-hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.5rem, 4vw, 3.25rem);
+  margin: 1.75rem 0 0;
+}
+.dest-hero-stat { display: flex; flex-direction: column; gap: 0.15rem; }
+.dest-hero-stat-figure {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--sky-ink);
+}
+.dest-hero-stat-label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sky-ink-muted);
+}
+.dest-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.75rem;
+}
+.dest-hero-cta { text-decoration: none; }
+.dest-hero-cta-arrow { font-family: var(--font-mono); }
+@media (max-width: 640px) {
+  .dest-detail-hero { height: 68vh; }
+  .dest-hero-wordmark { top: 30%; }
+  .dest-hero-stats { gap: 1.25rem; }
+}
+
+/* ---- Reset password page ---- */
+.reset-page { max-width: 34rem; }
+.reset-page-body { margin-top: 1rem; font-size: 0.95rem; line-height: 1.7; color: var(--sky-ink-muted); }
+.reset-page-form {
+  margin-top: 1.75rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.reset-page-cta { margin-top: 0.25rem; justify-content: center; text-decoration: none; border: 0; cursor: pointer; }
+.reset-page-cta:disabled { opacity: 0.6; cursor: default; }
+.reset-page-error { font-size: 0.85rem; color: #a33; margin: 0; }
+.reset-page-note { font-size: 0.78rem; color: var(--sky-ink-muted); margin: 0; }

@@ -39,3 +39,26 @@ export function breadcrumbJsonLd(trail: Crumb[]) {
     })),
   };
 }
+
+/**
+ * The year stamped on guide titles.
+ *
+ * A literal, not `new Date().getFullYear()`. A title that silently rolls to
+ * "2027" on 1 January claims the guide was reviewed when it was not -- the
+ * number is a freshness signal to a searcher, so it should only move when
+ * someone has actually gone through the guides. One line to bump, once a year.
+ */
+export const GUIDE_YEAR = 2026;
+
+/**
+ * Destination guide title, kept inside Google's ~60-character display limit.
+ *
+ * The full suffix runs to 64 characters on the longest destination name
+ * ("United Arab Emirates"), which truncates mid-phrase in results. Rather
+ * than shorten the suffix for all 42, this drops the weakest term only on
+ * the names that need it, so short names keep the richer title.
+ */
+export function destinationTitle(name: string) {
+  const full = `${name} Travel Guide ${GUIDE_YEAR} | Flights, Hotels & Tours`;
+  return full.length <= 60 ? full : `${name} Travel Guide ${GUIDE_YEAR} | Flights & Hotels`;
+}

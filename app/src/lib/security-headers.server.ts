@@ -63,6 +63,22 @@ export function applySecurityHeaders(response: Response): Response {
   headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
   headers.set("X-XSS-Protection", "0");
+
+  // SSR documents went out with NO cache directives at all -- no Cache-Control,
+  // no ETag, no Last-Modified. With none of the three a browser may apply its
+  // own heuristic freshness and keep serving a stale document for as long as
+  // it likes, which pins that device to an old content-hashed stylesheet and
+  // makes every subsequent deploy invisible on it. Reported as "I still can't
+  // see it on my phone" while the same URL was correct everywhere else.
+  //
+  // `no-cache` still stores the document; it just forces revalidation, so the
+  // common case is a 304 and nothing is slower. Only the HTML needs this --
+  // /assets/* is content-hashed and immutable, and must keep its long TTL.
+  const contentType = headers.get("Content-Type") ?? "";
+  if (contentType.includes("text/html")) {
+    headers.set("Cache-Control", "no-cache");
+  }
+
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,

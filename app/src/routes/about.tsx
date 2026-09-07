@@ -143,6 +143,7 @@ function AboutPage() {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
+              "@id": "https://skynovaagency.com/#organization",
               name: "Skynova Agency",
               url: "https://skynovaagency.com",
               logo: "https://skynovaagency.com/assets/brand/icon-512.png",

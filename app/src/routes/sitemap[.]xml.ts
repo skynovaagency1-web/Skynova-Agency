@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import { SITE_URL } from "@/lib/seo";
+
 import { DESTINATIONS } from "@/data/destinations";
 import { ARTICLE_SLUGS } from "@/data/blog-articles";
 import { COLLECTION_SLUGS } from "@/data/collections";
@@ -18,6 +20,7 @@ const STATIC_PAGES: { path: string; priority: string; changefreq: string }[] = [
   { path: "/collections", priority: "0.8", changefreq: "weekly" },
   { path: "/blog", priority: "0.6", changefreq: "weekly" },
   { path: "/about", priority: "0.5", changefreq: "monthly" },
+  { path: "/reviews", priority: "0.5", changefreq: "monthly" },
   { path: "/contact", priority: "0.5", changefreq: "monthly" },
 ];
 
@@ -25,7 +28,10 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        const origin = new URL(request.url).origin;
+        // Canonical origin, never the request's. Served from workers.dev this
+        // used to emit a full sitemap of workers.dev URLs -- a second, crawlable
+        // copy of all 88 pages. A sitemap lists canonical URLs by definition.
+        const origin = SITE_URL;
         const today = new Date().toISOString().split("T")[0];
 
         const urls = [

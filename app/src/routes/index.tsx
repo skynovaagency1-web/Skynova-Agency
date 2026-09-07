@@ -3,6 +3,7 @@ import { useEffect } from "react";
 
 import { Nav } from "@/components/site/Nav";
 import { Hero } from "@/components/site/Hero";
+import { TripSearch } from "@/components/site/TripSearch";
 import { TrustSection } from "@/components/site/Sections2";
 import {
   TrustLineSection,
@@ -20,9 +21,42 @@ import { TripCycle } from "@/components/site/TripCycle";
 import { Footer } from "@/components/site/Footer";
 import { Newsletter } from "@/components/site/Newsletter";
 import { useParallax } from "@/hooks/use-parallax";
+import { jsonLd } from "@/lib/seo";
+import { StructuredData } from "@/components/StructuredData";
 
 export const Route = createFileRoute("/")({
   component: Index,
+});
+
+/**
+ * The homepage was the only page on the site emitting no JSON-LD -- every
+ * other route already carries something. Organization here shares the @id
+ * used on /about so Google resolves one entity, not two; WebSite is what
+ * carries the brand name into a knowledge panel.
+ *
+ * Deliberately no SearchAction/sitelinks-searchbox: Google retired that
+ * result feature in November 2024, so it would be markup for nothing.
+ */
+const HOME_SCHEMA = jsonLd({
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://skynovaagency.com/#organization",
+      name: "Skynova Agency",
+      url: "https://skynovaagency.com",
+      logo: "https://skynovaagency.com/assets/brand/icon-512.png",
+      description:
+        "A booking layer over established travel partners -- flights, stays, cars, connectivity, tickets and tours in one place.",
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://skynovaagency.com/#website",
+      url: "https://skynovaagency.com",
+      name: "Skynova Agency",
+      publisher: { "@id": "https://skynovaagency.com/#organization" },
+    },
+  ],
 });
 
 function Index() {
@@ -39,9 +73,11 @@ function Index() {
 
   return (
     <>
+      <StructuredData json={HOME_SCHEMA} />
       <Nav />
       <main>
         <Hero />
+        <TripSearch />
         <div ref={afterglowRef} className="hero-afterglow">
           <TrustLineSection />
           <AdvantagesSection />

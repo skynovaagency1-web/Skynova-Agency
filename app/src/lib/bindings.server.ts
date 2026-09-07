@@ -29,6 +29,12 @@ type AppEnv = {
    *  Absent is a supported state -- signups still persist to D1, they just
    *  are not pushed to the provider until a key exists. */
   SYSTEME_API_KEY?: string;
+  /** Resend API key for transactional mail (password resets, and the contact
+   *  and gift follow-ups that were previously promised but never sent). Set:
+   *    wrangler secret put RESEND_API_KEY --config wrangler.production.jsonc
+   *  Absent is a supported state -- a reset token is still issued and stored,
+   *  only the delivery is skipped, and sendEmail() reports why. */
+  RESEND_API_KEY?: string;
 };
 
 export function bindings(): AppEnv {

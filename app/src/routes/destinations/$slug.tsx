@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 
 import { Nav } from "@/components/site/Nav";
@@ -7,7 +8,7 @@ import { Footer } from "@/components/site/Footer";
 import { Newsletter } from "@/components/site/Newsletter";
 import { WishlistButton } from "@/components/site/WishlistButton";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
-import { absUrl, jsonLd } from "@/lib/seo";
+import { absUrl, jsonLd, destinationTitle } from "@/lib/seo";
 import {
   getDestinationBySlug,
   relatedDestinations,
@@ -45,7 +46,7 @@ export const Route = createFileRoute("/destinations/$slug")({
     loaderData
       ? {
           meta: [
-            { title: `${loaderData.destination.name} Travel Guide | Skynova Agency` },
+            { title: destinationTitle(loaderData.destination.name) },
             { name: "description", content: loaderData.detail.whyChoose },
           ],
         }
@@ -193,6 +194,15 @@ function DestinationPage() {
               <span className="dest-detail-flag-xl">{destination.flag}</span>
             </div>
           )}
+          <span
+            className="dest-hero-wordmark"
+            aria-hidden="true"
+            /* Character count drives the size. A fixed vw size fits "EGYPT"
+               and blows "United Arab Emirates" 900px past the frame. */
+            style={{ "--wm-len": name.length } as CSSProperties}
+          >
+            {name}
+          </span>
           <div className="dest-detail-mask" />
           <div className="dest-detail-copy">
             <div className="site-container">
@@ -206,7 +216,26 @@ function DestinationPage() {
               <p className="site-ink-muted mt-4 max-w-lg text-base leading-relaxed">
                 {destination.hook}
               </p>
-              <div className="mt-5">
+              <dl className="dest-hero-stats">
+                <div className="dest-hero-stat">
+                  <dt className="dest-hero-stat-figure">{detail.attractions.length}</dt>
+                  <dd className="dest-hero-stat-label">things to see</dd>
+                </div>
+                <div className="dest-hero-stat">
+                  <dt className="dest-hero-stat-figure">{detail.itinerary.length}</dt>
+                  <dd className="dest-hero-stat-label">day route</dd>
+                </div>
+                <div className="dest-hero-stat">
+                  <dt className="dest-hero-stat-figure">{booking.length}</dt>
+                  <dd className="dest-hero-stat-label">ways to book</dd>
+                </div>
+              </dl>
+              <div className="dest-hero-actions">
+                <a href="#book" className="btn-hero-pill dest-hero-cta">
+                  <span className="spark" />
+                  <span>Book {name}</span>
+                  <span className="dest-hero-cta-arrow" aria-hidden="true">→</span>
+                </a>
                 <WishlistButton itemType="destination" itemSlug={destination.slug} variant="inline" label={`Save ${name}`} />
               </div>
             </div>
@@ -400,7 +429,7 @@ function DestinationPage() {
         </section>
 
         {/* 11. CTA -- booking links customized for this destination */}
-        <section className="site-section site-hairline border-t">
+        <section id="book" className="site-section site-hairline border-t">
           <div className="site-container">
             <p className="site-eyebrow mb-5">Book {name}</p>
             <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
