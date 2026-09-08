@@ -182,6 +182,24 @@ export const POSTS: Post[] = [
     readTime: "4 min read",
     destinationSlug: "vietnam",
   },
+  {
+    slug: "japan-rail-pass-worth-it",
+    tag: "Trip planning",
+    title: "Is the Japan Rail Pass still worth it? Price your route first",
+    excerpt:
+      "Since the 2023 price rise it loses money on a lot of ordinary itineraries. Here is how to check yours before you buy.",
+    readTime: "6 min read",
+    destinationSlug: "japan",
+  },
+  {
+    slug: "thailand-which-coast-which-month",
+    tag: "Trip planning",
+    title: "Thailand's two coasts: which islands, and which month",
+    excerpt:
+      "The Andaman and the Gulf have opposite wet seasons, which is why blanket advice about the best time to visit Thailand is useless.",
+    readTime: "6 min read",
+    destinationSlug: "thailand",
+  },
 ];
 
 // Re-exported so blog components keep a single import, but the canonical

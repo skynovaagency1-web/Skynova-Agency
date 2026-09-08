@@ -37,6 +37,79 @@ export type Article = {
 
 export const ARTICLES: Record<string, Article> = {
   // ────────────────────────────────────────────────────────────────
+  "japan-rail-pass-worth-it": {
+    dek: "Since the 2023 price rise the pass loses money on a lot of ordinary itineraries -- price yours before you buy.",
+    published: "2026-09-08",
+    blocks: [
+      { kind: "para", text: "For years the advice was automatic: going to Japan, buy the rail pass. That stopped being true in October 2023, when the price rose by roughly two thirds in one step. The pass did not become bad value overnight, but it did stop being the default, and plenty of itineraries that used to break even comfortably now do not." },
+      { kind: "para", text: "The good news is that this is one of the few travel questions with an actual arithmetic answer. It takes about ten minutes to settle." },
+
+      { kind: "h2", text: "How to price it in ten minutes" },
+      { kind: "list", items: [
+        "**Write down your real route**, in order, with the long train legs only. Tokyo to Kyoto counts. A subway ride across Tokyo does not.",
+        "**Price each leg individually** on a fare site or the operator's own booking page, one way, reserved seat.",
+        "**Add them up** and compare to the pass price for the duration you would need.",
+        "**Ignore the day trips** you have not committed to. Counting hypothetical journeys is how people talk themselves into a pass they will not use.",
+      ]},
+      { kind: "para", text: "If the total is comfortably above the pass, buy it. If it is close, do not -- a marginal win is not worth locking your route to a single operator's network." },
+
+      { kind: "h2", text: "Where the pass still wins" },
+      { kind: "para", text: "Long, multi-city routes covered end to end. A trip that runs Tokyo, Kyoto, Hiroshima and back inside a week is the shape the pass was built for, because the return leg alone is a substantial fare and you are riding the spine of the network the whole way." },
+      { kind: "para", text: "It also wins when your plans are genuinely unsettled. The freedom to change your mind at the station has a real value that does not show up in a spreadsheet, even if it is smaller than people assume." },
+
+      { kind: "h2", text: "Where it now loses" },
+      { kind: "para", text: "Two cities and a couple of day trips. Tokyo and Kyoto with an excursion to Nara and another to Hakone is a wonderful two weeks and it is not enough long-distance travel to clear the price. Buy individual tickets and spend the difference on dinner." },
+      { kind: "callout", title: "The pass does not cover every fast train", text: "The fastest Nozomi and Mizuho services on the Tokaido and Sanyo lines have historically sat outside the standard pass, with pass holders directed to the slightly slower Hikari and Sakura. Supplement options have changed more than once, so check the current terms for your route rather than assuming -- the difference is typically minutes, but it matters if you are timing a connection." },
+      { kind: "para", text: "It also loses on any trip that leans on internal flights, which are often cheaper than the equivalent rail fare for the longest hops, and on trips that stay mostly inside one region on private railways the pass does not cover." },
+
+      { kind: "h2", text: "The regional passes almost nobody prices" },
+      { kind: "para", text: "There is a whole tier below the nationwide pass: regional passes covering Kansai, the west, the north, and other areas, at a fraction of the price. If your trip is really Kyoto, Osaka, Nara and Hiroshima, a regional pass is frequently the right answer and gets skipped because the national one dominates the conversation." },
+      { kind: "para", text: "Price the regional option against your route as well. It is the single most common way to end up ahead." },
+
+      { kind: "cta", link: "flights", label: "Compare flights to Japan", note: "Fares into Tokyo and Osaka from our booking partners." },
+
+      { kind: "h2", text: "What to do about seats" },
+      { kind: "para", text: "Reserve them, pass or no pass. Shinkansen services run to the minute and unreserved carriages fill on popular routes, particularly in blossom season and around national holidays. A reservation costs little or nothing depending on your ticket and removes the one genuinely stressful part of Japanese rail travel." },
+      { kind: "para", text: "The other habit worth forming: your luggage. Oversized bags need a reserved space on some services, and travelling light through stations designed around escalators and short platform stops is its own reward." },
+    ],
+    related: ["switzerland-by-train", "packing-carry-on-only", "best-time-to-book-a-flight"],
+  },
+
+  "thailand-which-coast-which-month": {
+    dek: "The Andaman and the Gulf run opposite wet seasons, so the question is never simply when to go.",
+    published: "2026-09-08",
+    blocks: [
+      { kind: "para", text: "Most advice about the best time to visit Thailand is written as though the country has one climate. It has two that matter, on opposite sides of a narrow peninsula, and they are frequently out of step. This is why a friend can tell you October was perfect and another can tell you October was a washout, and both are telling the truth." },
+      { kind: "para", text: "Pick the coast first. The month follows from it." },
+
+      { kind: "h2", text: "The two coasts" },
+      { kind: "list", items: [
+        "**The Andaman coast, west.** Phuket, Krabi, Railay, Ko Lanta, Ko Phi Phi. The limestone scenery most people picture when they picture Thailand.",
+        "**The Gulf coast, east.** Ko Samui, Ko Pha Ngan, Ko Tao. Gentler landscapes, and the diving centre of the country at Ko Tao.",
+      ]},
+      { kind: "para", text: "They are a few hours apart by road and boat, and their weather is not interchangeable. Broadly, the Andaman side is at its best from roughly November through March and wettest around May to October. The Gulf side runs later, holding up well through much of that Andaman wet season and taking its own heaviest rain around November and December." },
+      { kind: "para", text: "The practical consequence: there is almost no month with no good island option, but there are plenty of months with a wrong one." },
+
+      { kind: "h2", text: "Reading it as a decision, not a forecast" },
+      { kind: "list", items: [
+        "**Travelling December to March?** Either coast works; the Andaman is at its peak and priced accordingly.",
+        "**Travelling June to September?** Lean Gulf. This is when Ko Tao and Ko Pha Ngan earn their reputation while the west is squally.",
+        "**Travelling October or November?** This is the genuinely awkward window, with the Andaman still drying out and the Gulf heading into its wettest stretch. Shorten the island leg and give the time to Bangkok and the north.",
+      ]},
+      { kind: "callout", title: "Rain here is not the rain you are imagining", text: "Wet season in Thailand mostly means a heavy downpour for an hour or two, often late afternoon, and sun either side. It is boat crossings and visibility for diving that get disrupted, not the whole day. A wet-season island trip that stays put on one island is far less affected than one built around hopping." },
+
+      { kind: "h2", text: "The north runs on a different clock again" },
+      { kind: "para", text: "Chiang Mai and the hills are coolest and clearest from November to February, which is also the most comfortable stretch for the temples and the markets. March and April bring both real heat and, in some years, agricultural burning that can settle over the valley for weeks. If the north is the point of your trip, that is the window to avoid." },
+
+      { kind: "cta", link: "tours", destination: "Thailand", label: "Compare Thailand tours", note: "Island trips, cooking classes and day tours from our booking partners." },
+
+      { kind: "h2", text: "Getting between them" },
+      { kind: "para", text: "Domestic flights are cheap and quick, and they are what makes a two-coast trip realistic in two weeks. Bangkok to Krabi or Phuket, or Bangkok to Surat Thani for the Gulf boats, is an hour and change and often costs less than the overnight bus once you value the night." },
+      { kind: "para", text: "One thing worth planning around: the last boat. Island transfers stop earlier than you expect, and a flight that lands in the evening frequently means a night on the mainland whether you budgeted for one or not." },
+    ],
+    related: ["vietnam-esim-vs-sim", "sri-lanka-two-weeks", "packing-carry-on-only"],
+  },
+
   "kenya-safari-basics": {
     dek: "Park fees, timing and transfers decide most of your budget -- and most first-timers find out about them too late.",
     published: "2026-09-04",
