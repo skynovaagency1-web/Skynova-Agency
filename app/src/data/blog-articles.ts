@@ -110,6 +110,104 @@ export const ARTICLES: Record<string, Article> = {
     related: ["vietnam-esim-vs-sim", "sri-lanka-two-weeks", "packing-carry-on-only"],
   },
 
+  "marrakech-sahara-how-long": {
+    dek: "It is sold as an easy add-on, and it is two long driving days each way.",
+    published: "2026-09-08",
+    blocks: [
+      { kind: "para", text: "Every agency window in Marrakech advertises the desert, and the way it is sold makes it sound like a day out. It is not. Erg Chebbi, the dune field most people mean when they say the Sahara, is the better part of two days' driving from Marrakech, and the same again coming back." },
+      { kind: "para", text: "That is not a reason to skip it. A night in the dunes is one of the genuinely unforgettable things you can do in Morocco. It is a reason to know what you are spending, because a badly planned desert trip eats most of a week and leaves you with photographs of the inside of a minibus." },
+
+      { kind: "h2", text: "What the drive actually is" },
+      { kind: "para", text: "The route crosses the High Atlas by the Tizi n'Tichka pass, which is spectacular, slow, and full of switchbacks. Then it runs down through the Draa or Dades valleys and out to the sand. Distances that look modest on a map take much longer than the numbers suggest, and that is before the stops." },
+      { kind: "list", items: [
+        "**Two days out**, with a night in the Dades or Todra gorges, arriving at the dunes on the second afternoon.",
+        "**One night in the desert**, which is the whole point -- camel trek at sunset, dinner, stars.",
+        "**Two days back**, usually by the same road, unless you fly out of Errachidia or push north to Fes instead.",
+      ]},
+      { kind: "para", text: "So the honest minimum is three days and two nights, and that version is rushed. Four days is the comfortable shape." },
+
+      { kind: "h2", text: "The mistake worth avoiding" },
+      { kind: "para", text: "Booking the round trip back to Marrakech when your onward plans are north. If Fes is on your itinerary, do the desert as a one-way and finish there -- it turns four days of driving into three and you never repeat a road." },
+      { kind: "callout", title: "One-way beats a loop here", text: "Marrakech, desert, then north to Fes is the standard route for a reason: nothing is driven twice. Booking a return to Marrakech and then travelling to Fes separately adds a full day and a second long journey, for no gain. Decide your exit city before you book the desert leg, not after." },
+
+      { kind: "h2", text: "Two nights in the dunes is usually one too many" },
+      { kind: "para", text: "Camps sell two-night stays and they are lovely, but the desert reveals most of itself on the first evening and the following dawn. Unless you are there specifically to walk or to photograph, the second night is often better spent in the gorges on the way back, which are underrated and much less visited." },
+
+      { kind: "cta", link: "tours", destination: "Morocco", label: "Compare Morocco desert tours", note: "Multi-day Sahara trips and Atlas crossings from our booking partners." },
+
+      { kind: "h2", text: "Driver or self-drive" },
+      { kind: "para", text: "Hire a driver. This is one of the few places where the recommendation is close to unanimous, and it is not about the difficulty of the roads so much as the length of the days. Someone else driving the Tichka pass while you look out of the window is the difference between a scenic day and an exhausting one." },
+      { kind: "para", text: "It is also markedly cheaper than the equivalent would be in Europe, and a driver who knows the route will stop in the right places rather than the ones with the biggest car parks." },
+
+      { kind: "h2", text: "When not to go" },
+      { kind: "para", text: "High summer. Marrakech and the desert regularly pass 40C, and a camel trek across open sand in that heat is an endurance exercise rather than a pleasure. March to May and September to November are the windows, and the desert nights in those months are cool enough to want the blanket the camp gives you." },
+    ],
+    related: ["kenya-safari-basics", "packing-carry-on-only", "sri-lanka-two-weeks"],
+  },
+
+  "yucatan-in-a-week": {
+    dek: "Two bases beat three. The driving you save is a whole day of your trip.",
+    published: "2026-09-08",
+    blocks: [
+      { kind: "para", text: "The Yucatan is flat, well-roaded and deceptively spread out. It tempts people into an itinerary that moves every two nights -- Cancun, then Tulum, then Valladolid, then Merida -- and the result is a week where a surprising amount of the time is spent packing, checking out and sitting in a hire car." },
+      { kind: "para", text: "Two bases is almost always the better week. You see more, because you spend the saved hours actually seeing things." },
+
+      { kind: "h2", text: "The two-base week" },
+      { kind: "list", items: [
+        "**Nights 1-4, the coast.** Tulum or Akumal. Beach, the clifftop ruins, and the cenotes strung along the road inland.",
+        "**Nights 5-7, inland.** Valladolid or Merida. Colonial streets, the quieter cenotes, and Chichen Itza or Uxmal within easy reach.",
+      ]},
+      { kind: "para", text: "One move, mid-week, in a direction you were travelling anyway. Everything else is a day trip from somewhere you have already unpacked." },
+
+      { kind: "h2", text: "Chichen Itza is a timing problem, not a distance one" },
+      { kind: "para", text: "It is close to almost everywhere on this route. The difficulty is that it receives an enormous number of coach parties from the coast, all arriving mid-morning, and by eleven the site is both crowded and extremely hot." },
+      { kind: "callout", title: "Stay inland the night before", text: "The single best thing you can do for Chichen Itza is sleep in Valladolid, forty minutes away, and arrive at opening. You will have the Kukulkan pyramid in reasonable quiet for an hour before the first coaches from Cancun and Tulum reach the gate. Doing it as a day trip from the coast means arriving exactly when everyone else does." },
+      { kind: "para", text: "If early is impossible, late afternoon is the second-best option for the same reason, and the light is better." },
+
+      { kind: "h2", text: "Cenotes: pick by type, not by list" },
+      { kind: "para", text: "There are thousands, and they are not interchangeable. Open ones are essentially swimming holes with sunlight and are good for a hot afternoon. Cavern and cave cenotes are dark, cooler, and considerably more atmospheric. Most people visit three of the same kind without realising there was a choice." },
+      { kind: "para", text: "Go early here too. The popular ones near the main road fill by midday, and the smaller ones signposted off it are frequently empty at nine in the morning." },
+
+      { kind: "cta", link: "cars", label: "Compare car hire in Mexico", note: "Pick-up in Cancun or Merida from our booking partners." },
+
+      { kind: "h2", text: "Do you need the car?" },
+      { kind: "para", text: "For this week, yes. Colectivos and ADO buses cover the main road between the coastal towns perfectly well, but the cenotes and the smaller ruins sit off it, and that is where the difference between a good Yucatan trip and a coach-party one lies." },
+      { kind: "para", text: "Two practical notes: keep cash for the cenote entry fees, which are frequently cash-only and set by whoever owns the land, and read the insurance terms before you collect the car rather than at the desk with a queue behind you." },
+    ],
+    related: ["rental-car-damage-waiver", "one-way-rental-fees", "driving-on-the-other-side"],
+  },
+
+  "cappadocia-balloon-odds": {
+    dek: "Flights are grounded for wind far more often than people expect -- plan the trip so that is survivable.",
+    published: "2026-09-08",
+    blocks: [
+      { kind: "para", text: "The balloon flight is why a lot of people go to Cappadocia, and it is genuinely worth the early alarm. What the photographs do not convey is how often it does not happen. Flights are cancelled for wind regularly, decisions are made at dawn, and no amount of paying more changes the weather." },
+      { kind: "para", text: "This is entirely manageable, but only if you plan for it before you arrive rather than discovering it on your one available morning." },
+
+      { kind: "h2", text: "What actually grounds a flight" },
+      { kind: "para", text: "Wind, almost always -- both at ground level and aloft, since the pilots steer by finding different wind directions at different altitudes. Rain and poor visibility matter too, but wind is the usual culprit, and it is why a bright, still-looking morning can still end with a cancellation." },
+      { kind: "para", text: "The call is made very early, typically at or before dawn, by the civil aviation authority rather than the individual operator. That is worth knowing because it means every company is grounded at once. Shopping around after a cancellation achieves nothing." },
+
+      { kind: "h2", text: "The fix is scheduling, not spending" },
+      { kind: "list", items: [
+        "**Give yourself three mornings, not one.** Two nights in Cappadocia is the most common mistake; three gives you two genuine attempts.",
+        "**Book the first morning, not the last.** If it flies, you have spare days for the valleys. If it does not, you still have chances left.",
+        "**Expect a refund, not a rebooking.** Cancelled flights are normally refunded; whether you can fly the next day depends on availability, which is tight in season.",
+      ]},
+      { kind: "callout", title: "Winter is not the write-off people assume", text: "Cappadocia under snow is startlingly beautiful and prices drop, but balloons are grounded more often in winter. If the flight is the whole reason for the trip, that trade goes the wrong way. If you would enjoy the valleys and the cave hotels regardless, winter is a genuinely good time to go." },
+
+      { kind: "h2", text: "If you do not fly" },
+      { kind: "para", text: "Watch instead. The balloons launch en masse around sunrise and the view from the ground, particularly from a hotel terrace or one of the ridges above Goreme, is remarkable in its own right -- arguably a better photograph than the one you would take from inside a basket." },
+      { kind: "para", text: "The valleys are the other answer. The Rose and Red valleys are walkable in a morning, and the underground cities at Derinkuyu and Kaymakli are entirely weather-proof." },
+
+      { kind: "cta", link: "tours", destination: "Cappadocia", label: "Compare Cappadocia tours", note: "Balloon flights, valley walks and underground cities from our booking partners." },
+
+      { kind: "h2", text: "Getting there" },
+      { kind: "para", text: "Fly. Kayseri and Nevsehir both serve the region, domestic flights within Turkiye are cheap and quick, and the drive from Istanbul is a very long day for no reward. Most hotels arrange the airport transfer, and in a region where the interesting places are scattered across valleys, that is usually easier than hiring a car for a short stay." },
+    ],
+    related: ["qatar-layover", "best-time-to-book-a-flight", "hotel-room-upgrade-tips"],
+  },
+
   "kenya-safari-basics": {
     dek: "Park fees, timing and transfers decide most of your budget -- and most first-timers find out about them too late.",
     published: "2026-09-04",

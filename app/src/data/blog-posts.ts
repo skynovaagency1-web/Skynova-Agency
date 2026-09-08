@@ -200,6 +200,33 @@ export const POSTS: Post[] = [
     readTime: "6 min read",
     destinationSlug: "thailand",
   },
+  {
+    slug: "marrakech-sahara-how-long",
+    tag: "Trip planning",
+    title: "Marrakech to the Sahara: how long the desert trip really takes",
+    excerpt:
+      "It is sold as an easy add-on and it is two long driving days each way. Here is how to fit it in without wasting the rest of the week.",
+    readTime: "6 min read",
+    destinationSlug: "morocco",
+  },
+  {
+    slug: "yucatan-in-a-week",
+    tag: "Trip planning",
+    title: "The Yucatan in a week: ruins, cenotes and one base too many",
+    excerpt:
+      "Most first Yucatan trips move three times and see less for it. A two-base week covers more with far less driving.",
+    readTime: "6 min read",
+    destinationSlug: "mexico",
+  },
+  {
+    slug: "cappadocia-balloon-odds",
+    tag: "Tours & activities",
+    title: "Cappadocia balloons: what actually decides whether you fly",
+    excerpt:
+      "Flights are cancelled for wind far more often than people expect. Build the trip so a grounded morning is not a ruined one.",
+    readTime: "5 min read",
+    destinationSlug: "turkey",
+  },
 ];
 
 // Re-exported so blog components keep a single import, but the canonical
