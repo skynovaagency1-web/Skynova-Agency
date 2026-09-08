@@ -208,6 +208,163 @@ export const ARTICLES: Record<string, Article> = {
     related: ["qatar-layover", "best-time-to-book-a-flight", "hotel-room-upgrade-tips"],
   },
 
+  "jordan-pass-explained": {
+    dek: "It bundles the visa waiver with entry to Petra and dozens of other sites -- and only if you buy it before you land.",
+    published: "2026-09-08",
+    blocks: [
+      { kind: "para", text: "Jordan does something unusual and genuinely generous: it sells a single pass that waives the tourist visa fee and covers entry to Petra and a long list of other sites. For almost anyone spending more than a couple of days in the country, it costs less than buying those things separately." },
+      { kind: "para", text: "There is one condition, and it is the whole article: you have to buy it before you arrive. Bought after you land, the visa waiver is gone, and you have paid for the visa twice over." },
+
+      { kind: "h2", text: "What it actually covers" },
+      { kind: "list", items: [
+        "**The tourist visa fee**, waived -- provided you meet the minimum-nights condition attached to the pass.",
+        "**Entry to Petra**, for one, two or three consecutive days depending on which version you buy.",
+        "**Dozens of other sites**, including Jerash, the Amman Citadel, Wadi Rum's protected area and the desert castles.",
+      ]},
+      { kind: "para", text: "Petra entry alone is the single largest site fee in the country, which is why the arithmetic works out so consistently in the pass's favour." },
+
+      { kind: "h2", text: "Choosing the Petra duration" },
+      { kind: "para", text: "The pass comes in variants covering one, two or three days at Petra. Two is the right answer for most people and it is not close." },
+      { kind: "para", text: "One day gets you the Siq, the Treasury and probably the Monastery if you march. Two lets you do the Monastery properly on the second morning when it is cool and quiet, and leaves room for the back trails -- which is where Petra stops being a photograph you have already seen and becomes a place." },
+      { kind: "callout", title: "The days must be consecutive", text: "The Petra days on the pass run back to back, so an itinerary that visits Petra, drives to Wadi Rum for a night and returns will not work with a two-day pass. Plan Petra as one continuous block, then move on -- which is how the standard Amman, Petra, Wadi Rum, Dead Sea route is sequenced anyway." },
+
+      { kind: "h2", text: "The condition people miss" },
+      { kind: "para", text: "The visa waiver is conditional on staying a minimum number of consecutive nights in Jordan -- three, at time of writing. A short stopover trip does not qualify, and the pass then only saves you the site entries rather than the visa." },
+      { kind: "para", text: "That rule has been stable for years but it is exactly the sort of detail that changes, so read the current terms on the official pass site when you buy rather than trusting a blog post, this one included." },
+
+      { kind: "cta", link: "tours", destination: "Jordan", label: "Compare Jordan tours", note: "Petra, Wadi Rum and Dead Sea trips from our booking partners." },
+
+      { kind: "h2", text: "Where it does not help" },
+      { kind: "para", text: "Wadi Rum is the notable gap. The pass covers entry to the protected area, but the jeep tour and the camp are separate and are the bulk of what you will actually spend there. The Dead Sea is similar -- the resorts and beach clubs charge their own admission regardless." },
+      { kind: "para", text: "Budget those separately, and treat the pass as covering the archaeology rather than the whole trip." },
+    ],
+    related: ["cappadocia-balloon-odds", "kenya-safari-basics", "packing-carry-on-only"],
+  },
+
+  "alhambra-tickets-ahead": {
+    dek: "Entry is capped and timed, and the Nasrid Palaces slot is the one that sells out first.",
+    published: "2026-09-08",
+    blocks: [
+      { kind: "para", text: "Most of Andalusia rewards spontaneity. The Alhambra does the opposite. Daily entry is capped, tickets are timed, and in high season they sell out weeks and sometimes months in advance. People arrive in Granada having booked everything else and find the one thing they came for is unavailable for the length of their stay." },
+      { kind: "para", text: "The fix is simple and slightly backwards: book the Alhambra first, then build Granada around the slot you got." },
+
+      { kind: "h2", text: "The bit that actually sells out" },
+      { kind: "para", text: "The Alhambra is not one ticket. The grounds, the Generalife gardens and the Alcazaba have reasonable capacity. The Nasrid Palaces -- the carved, tiled, honeycombed interiors that are the reason the place is famous -- are entered in timed half-hour blocks with a hard cap." },
+      { kind: "para", text: "Your ticket names a Nasrid Palaces time. Miss it and you do not get in, regardless of how long you queued. Everything else about your visit is flexible; that one slot is not." },
+      { kind: "callout", title: "Bring the passport you booked with", text: "Alhambra tickets are personal and name-matched, and identification is checked at entry. Book with the exact name on the passport you will be carrying, and bring it -- a mismatch between booking name and document is a refusal at the gate, and it is not a rule anyone bends." },
+
+      { kind: "h2", text: "Which slot to take" },
+      { kind: "list", items: [
+        "**First thing** is coolest and quietest, and in summer that matters more than it sounds -- there is very little shade in the Generalife.",
+        "**Late afternoon** gives the best light in the palaces and lets you spend the hot middle of the day in the city.",
+        "**Avoid the middle of the day in July and August** unless you have no choice; Granada regularly sits in the high thirties.",
+      ]},
+      { kind: "para", text: "Give yourself three hours for the whole site even if the palace slot is thirty minutes. The walk between sections is longer than the map suggests and it is uphill." },
+
+      { kind: "cta", link: "events", label: "Compare Granada tickets and tours", note: "Alhambra guided visits and Granada experiences from our booking partners." },
+
+      { kind: "h2", text: "If it is genuinely sold out" },
+      { kind: "para", text: "Guided tours hold their own allocations, so a tour can get you in when direct tickets have gone. It costs more and you move at the group's pace, but it is a real option rather than a consolation prize, and a good guide adds a lot to a site this dense with history." },
+      { kind: "para", text: "Failing that, the grounds-only ticket still includes the Generalife and the Alcazaba, and the view of the palace complex from the Mirador de San Nicolas in the Albaicin costs nothing at all. It is not a substitute, but it is a fine evening." },
+
+      { kind: "h2", text: "One night is not enough" },
+      { kind: "para", text: "Granada tends to get a single night in a Barcelona-Madrid-Seville week, and a timed Alhambra slot makes that fragile: an inconvenient time and you have seen little else. Two nights turns it from a logistics exercise into a stop, and the Albaicin in the evening is worth the extra one." },
+    ],
+    related: ["48-hours-in-lisbon", "hotel-room-upgrade-tips", "free-cancellation-fine-print"],
+  },
+
+  "croatia-ferries-vs-driving": {
+    dek: "Fast catamarans do not take cars. That single fact decides the shape of most Dalmatian trips.",
+    published: "2026-09-08",
+    blocks: [
+      { kind: "para", text: "The Dalmatian coast looks like a driving holiday and behaves like a ferry one. The coastal road is genuinely lovely, the islands are the reason people come, and the connection between the two is where itineraries fall apart -- because the fast boats and the car boats are not the same service." },
+
+      { kind: "h2", text: "Two different fleets" },
+      { kind: "list", items: [
+        "**Catamarans** are fast, passenger-only, and the way most people reach Hvar or Vis from Split in about an hour. **No cars.**",
+        "**Car ferries** are slower and less frequent, and they are the only way to bring a vehicle to an island.",
+      ]},
+      { kind: "para", text: "The practical consequence: if you hire a car for the coast and then want the islands, you are choosing between a slow car ferry with limited sailings, or leaving the car parked on the mainland and paying for it to sit there." },
+
+      { kind: "h2", text: "The shape that usually works" },
+      { kind: "para", text: "Split and the islands on foot and by catamaran, then a car only for the parts a car actually helps with -- Plitvice, Krka, the drive down towards Dubrovnik." },
+      { kind: "para", text: "Hvar town, Vis and Korcula's old town are all compact and walkable, and having a car on them is closer to a liability than a convenience. Parking in the old towns ranges from expensive to genuinely impossible in August." },
+      { kind: "callout", title: "Book island car ferries early in summer", text: "Vehicle space on the car ferries is finite and sells out on popular July and August sailings, particularly to Hvar. Foot passengers can nearly always squeeze on; a car cannot. If a leg of your trip depends on getting a vehicle onto an island on a specific day, that is the booking to make first." },
+
+      { kind: "h2", text: "Dubrovnik is its own problem" },
+      { kind: "para", text: "The old town is entirely pedestrian, parking outside it is limited and priced accordingly, and the approach road is slow in season. If Dubrovnik is your finish, dropping the car before you arrive rather than after is usually the cheaper and calmer choice -- one-way drop fees are common in Croatia, so price that in when you book." },
+
+      { kind: "cta", link: "cars", label: "Compare car hire in Croatia", note: "Pick-up in Split, Zadar or Dubrovnik from our booking partners." },
+
+      { kind: "h2", text: "Timing the season" },
+      { kind: "para", text: "May, June and September are the sweet spot -- warm water, full ferry timetables, and a fraction of the August pressure on both boats and parking. Outside the season, catamaran frequencies drop sharply and some island routes reduce to a service a day or less, which is enough to strip an itinerary of its flexibility." },
+      { kind: "para", text: "Check the sailing frequency for your specific route and month before you commit to the order of your stops. It is the one variable that quietly determines everything else." },
+    ],
+    related: ["one-way-rental-fees", "rental-car-damage-waiver", "yucatan-in-a-week"],
+  },
+
+  "egypt-nile-cruise-or-not": {
+    dek: "The cruise is the classic way to see Luxor and Aswan. It is not automatically the better one.",
+    published: "2026-09-08",
+    blocks: [
+      { kind: "para", text: "Almost every Egypt itinerary puts a Nile cruise between Luxor and Aswan, and it is a genuinely good way to travel: the temples are strung along the river, the boat moves while you sleep, and you unpack once. But it is presented as the only option when it is really a trade, and for some trips the land-based version is better." },
+
+      { kind: "h2", text: "What the cruise does well" },
+      { kind: "list", items: [
+        "**No repacking.** Four days, one room, and the temples come to you.",
+        "**Kom Ombo and Edfu** sit between the two cities and are awkward to reach any other way; cruises stop at both as a matter of course.",
+        "**Arriving by water** at Aswan is a genuinely different experience from arriving by road.",
+      ]},
+
+      { kind: "h2", text: "What it costs you" },
+      { kind: "para", text: "Timing control, mostly. Cruise schedules are fixed and they cluster: boats arrive at the same sites within the same hours, which is why the Valley of the Kings and Karnak can feel like a scrum in the middle of the morning and be almost calm at opening." },
+      { kind: "para", text: "Staying in Luxor lets you be at the Valley of the Kings when it opens and back at the hotel before the worst heat, which in a place where summer temperatures are punishing is not a small thing. You also eat where you like rather than on the boat's schedule." },
+      { kind: "callout", title: "Luxor's sites are on two banks, and it matters", text: "Karnak and Luxor Temple are on the east bank; the Valley of the Kings, Hatshepsut's temple and the Colossi are on the west. Grouping them by bank rather than bouncing across the river saves real time either way, and it is easier to arrange staying on land than from a boat's fixed programme." },
+
+      { kind: "h2", text: "Who should take the cruise" },
+      { kind: "para", text: "First visits with limited time, anyone who would rather not organise transfers and guides site by site, and anyone travelling in the hot months who values a pool and air conditioning between temples. It is the low-friction option and there is nothing wrong with wanting that." },
+
+      { kind: "h2", text: "Who should stay put" },
+      { kind: "para", text: "Repeat visitors, photographers, and anyone whose priority is being at the big sites at opening. Luxor has enough within reach for three or four days on its own, and a domestic flight or the train covers the Aswan leg cheaply if you still want Abu Simbel and Philae." },
+
+      { kind: "cta", link: "tours", destination: "Egypt", label: "Compare Egypt tours and cruises", note: "Nile cruises, Luxor day trips and guided sites from our booking partners." },
+
+      { kind: "h2", text: "When to go, non-negotiably" },
+      { kind: "para", text: "October to April. Upper Egypt in summer is severe -- the Valley of the Kings is an unshaded limestone bowl, and midday there in July is not a sightseeing proposition. Within the good window, earlier and later in the day beats the middle regardless of which option you pick." },
+    ],
+    related: ["marrakech-sahara-how-long", "kenya-safari-basics", "long-haul-flight-survival"],
+  },
+
+  "bali-without-a-scooter": {
+    dek: "Scooter crashes are the most common way a Bali trip goes wrong, and the alternatives are cheap.",
+    published: "2026-09-08",
+    blocks: [
+      { kind: "para", text: "Renting a scooter is the default advice for Bali and it is worth pushing back on. Traffic is dense and fast, road surfaces are inconsistent, and a great many visitors ride with no licence for it, no helmet worth the name, and travel insurance that will not pay out for exactly that reason." },
+      { kind: "para", text: "The road-rash injuries have their own nickname among expats, which tells you how routine they are. The alternatives are genuinely cheap and mostly more pleasant." },
+
+      { kind: "h2", text: "The insurance point, since it is the expensive one" },
+      { kind: "para", text: "Most travel policies exclude motorbike injuries unless you hold a valid licence for that category, and many require a local or international permit as well. A hospital stay in Denpasar or a medical evacuation is not a bill you want to discover is yours." },
+      { kind: "para", text: "Read your policy wording before you rent, not after. It is a two-minute check and it is the difference between an inconvenience and a financial catastrophe." },
+
+      { kind: "h2", text: "What to do instead" },
+      { kind: "list", items: [
+        "**A car with a driver for the day.** The standard Bali solution, priced per day rather than per journey, and it costs far less than the equivalent anywhere in Europe. The driver waits while you visit things.",
+        "**Ride-hailing apps** work well in the south and around Ubud, though some areas have local restrictions on where app drivers may pick up.",
+        "**Staying put.** Bali's distances are short on paper and slow in practice; picking two bases rather than day-tripping across the island removes most of the transport question."
+      ]},
+      { kind: "callout", title: "A driver is cheaper than you think, per person", text: "A full day with a car and driver is typically comparable to a couple of restaurant meals, and it is a flat rate rather than per head. Split between two or more people it is frequently cheaper than hiring two scooters, before you count the risk." },
+
+      { kind: "h2", text: "The traffic is the real argument" },
+      { kind: "para", text: "The stretch between the southern beaches and Ubud is slow at almost any hour, and getting slower year on year. A journey that looks like forty minutes routinely takes ninety. That is tiring on a scooter in the heat and trivial in an air-conditioned car where someone else is dealing with it." },
+
+      { kind: "cta", link: "cars", label: "Compare car hire in Indonesia", note: "Cars and drivers across Bali and beyond from our booking partners." },
+
+      { kind: "h2", text: "If you ride anyway" },
+      { kind: "para", text: "Bring or buy a proper helmet rather than accepting the rental one, get the international permit before you travel because you cannot obtain it once you have left home, and do not ride at night on unlit roads outside the towns. Stay off the scooter entirely after a drink -- that combination is behind a large share of the serious incidents." },
+    ],
+    related: ["vietnam-esim-vs-sim", "thailand-which-coast-which-month", "driving-on-the-other-side"],
+  },
+
   "kenya-safari-basics": {
     dek: "Park fees, timing and transfers decide most of your budget -- and most first-timers find out about them too late.",
     published: "2026-09-04",

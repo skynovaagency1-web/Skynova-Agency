@@ -227,6 +227,51 @@ export const POSTS: Post[] = [
     readTime: "5 min read",
     destinationSlug: "turkey",
   },
+  {
+    slug: "jordan-pass-explained",
+    tag: "Trip planning",
+    title: "The Jordan Pass: buy it before you fly, or pay twice",
+    excerpt:
+      "It bundles the visa waiver with Petra entry, and it only works if you buy it before you land. Most people find out afterwards.",
+    readTime: "5 min read",
+    destinationSlug: "jordan",
+  },
+  {
+    slug: "alhambra-tickets-ahead",
+    tag: "Tours & activities",
+    title: "Alhambra tickets sell out months ahead — plan Granada around them",
+    excerpt:
+      "Entry is capped and timed, and the Nasrid Palaces slot is the one that goes first. Book before you book the hotel.",
+    readTime: "5 min read",
+    destinationSlug: "spain",
+  },
+  {
+    slug: "croatia-ferries-vs-driving",
+    tag: "Trip planning",
+    title: "Croatia's islands: ferries, catamarans and when the car becomes a problem",
+    excerpt:
+      "Fast catamarans do not take cars, and that single fact decides the shape of most Dalmatian coast trips.",
+    readTime: "6 min read",
+    destinationSlug: "croatia",
+  },
+  {
+    slug: "egypt-nile-cruise-or-not",
+    tag: "Trip planning",
+    title: "Nile cruise or stay in Luxor? An honest comparison",
+    excerpt:
+      "The cruise is the classic way to see Luxor and Aswan. It is not automatically the better one, and it depends on what you want from the temples.",
+    readTime: "6 min read",
+    destinationSlug: "egypt",
+  },
+  {
+    slug: "bali-without-a-scooter",
+    tag: "Trip planning",
+    title: "Getting around Bali without a scooter",
+    excerpt:
+      "Scooter crashes are the most common way a Bali trip goes wrong. The alternatives are cheap, and mostly better.",
+    readTime: "5 min read",
+    destinationSlug: "indonesia",
+  },
 ];
 
 // Re-exported so blog components keep a single import, but the canonical
