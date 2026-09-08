@@ -38,6 +38,13 @@ import {
 // usage in Sections3.tsx for the pattern to follow).
 const ATTRACTION_ICONS = ["\u{1F3DB}\u{FE0F}", "\u{1F3D4}\u{FE0F}", "\u{1F30A}", "\u{1F54C}", "\u{1F3F0}", "\u{1F305}"];
 const FOOD_ICONS = ["\u{1F37D}\u{FE0F}", "\u{1F958}", "\u{1F35C}", "\u{1F377}"];
+/** Know-before-you-go rows, in fixed order so the numbering is stable. */
+const TIP_ROWS = [
+  { key: "currency", label: "Currency", icon: "\u{1F4B1}" },
+  { key: "transport", label: "Getting around", icon: "\u{1F686}" },
+  { key: "safety", label: "Safety", icon: "\u{1F6E1}\u{FE0F}" },
+  { key: "language", label: "Language", icon: "\u{1F4AC}" },
+] as const;
 
 export const Route = createFileRoute("/destinations/$slug")({
   loader: ({ params }) => {
@@ -476,23 +483,27 @@ function DestinationPage() {
         <section className="site-section site-hairline border-t">
           <div className="site-container">
             <p className="site-eyebrow mb-5">Know Before You Go</p>
-            <div className="spec-sheet">
-              <div className="spec-row">
-                <span className="site-ink-muted text-sm">Currency</span>
-                <span className="max-w-md text-right text-sm font-semibold">{detail.tips.currency}</span>
-              </div>
-              <div className="spec-row">
-                <span className="site-ink-muted text-sm">Getting around</span>
-                <span className="max-w-md text-right text-sm font-semibold">{detail.tips.transport}</span>
-              </div>
-              <div className="spec-row">
-                <span className="site-ink-muted text-sm">Safety</span>
-                <span className="max-w-md text-right text-sm font-semibold">{detail.tips.safety}</span>
-              </div>
-              <div className="spec-row">
-                <span className="site-ink-muted text-sm">Language</span>
-                <span className="max-w-md text-right text-sm font-semibold">{detail.tips.language}</span>
-              </div>
+            {/* Numbered banner rows, after the reference. Its rows are five
+                unrelated hues; these are four steps of the destination's own
+                accent instead, because a rainbow here would fight the
+                per-destination colour the rest of the page now carries. */}
+            <div className="kbyg-rows">
+              {TIP_ROWS.map((row, i) => (
+                <div
+                  key={row.key}
+                  className="kbyg-row"
+                  style={{ "--kbyg-step": String(i) } as CSSProperties}
+                >
+                  <span className="kbyg-index">{String(i + 1).padStart(2, "0")}</span>
+                  <div className="kbyg-band">
+                    <p className="kbyg-label">{row.label}</p>
+                    <p className="kbyg-text">{detail.tips[row.key]}</p>
+                    <span className="kbyg-icon" aria-hidden="true">
+                      {row.icon}
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>

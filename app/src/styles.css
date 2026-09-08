@@ -4647,3 +4647,77 @@ html.lenis body { height: auto; }
 }
 /* The atlas section sets its own dark ground and must not inherit the wash. */
 .dest-detail-page .dest-atlas { background-color: #14120e; }
+
+/* ---- Know before you go: numbered banner rows ----
+   Structure after the reference: a white pill holding a large number, a
+   coloured band running right with label and copy, and an icon at the far end.
+   The reference cycles five unrelated hues; --kbyg-step walks four steps of
+   the destination's own accent instead, so this section belongs to the same
+   colour as the rest of the page. */
+.kbyg-rows { display: flex; flex-direction: column; gap: 12px; }
+.kbyg-row {
+  /* Graduates toward INK, not toward the page. Lightening the bands was the
+     obvious reading of the reference and it fails WCAG both ways: dark text
+     on a 78% band bottoms out at 2.84:1, and white text only clears AA down
+     to a 95% tint, which would make all four rows the same colour. Darkening
+     keeps white text safe at every step -- worst case 4.90:1 across all 42
+     accents -- and still reads as a progression. */
+  --kbyg-tint: calc(100% - (var(--kbyg-step) * 12%));
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+.kbyg-index {
+  flex: none;
+  width: clamp(58px, 12vw, 84px);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 4vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: color-mix(in srgb, var(--sky-coral) 70%, var(--sky-ink));
+  background: var(--sky-bg);
+  border: 1px solid var(--sky-line);
+  border-right: 0;
+  border-radius: 999px 0 0 999px;
+}
+.kbyg-band {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  padding: 1rem 3.25rem 1rem 1.25rem;
+  border-radius: 0 18px 18px 0;
+  background: color-mix(in srgb, var(--sky-coral) var(--kbyg-tint), var(--sky-ink));
+  color: var(--sky-bg);
+  /* The reference's bands end in a folded corner; this is that notch, cut
+     rather than drawn so it survives any band height. */
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%);
+}
+.kbyg-label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--sky-bg) 78%, transparent);
+}
+.kbyg-text {
+  margin: 0.35rem 0 0;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--sky-bg);
+}
+.kbyg-icon {
+  position: absolute;
+  top: 50%;
+  right: 1.4rem;
+  transform: translateY(-50%);
+  font-size: 1.1rem;
+  opacity: 0.75;
+}
+@media (max-width: 640px) {
+  .kbyg-band { padding: 0.85rem 2.5rem 0.85rem 1rem; }
+  .kbyg-icon { right: 0.9rem; font-size: 1rem; }
+  .kbyg-text { font-size: 0.8rem; }
+}
