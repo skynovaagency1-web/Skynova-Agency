@@ -4399,3 +4399,52 @@ html.lenis body { height: auto; }
    read as clutter. */
 .dest-mini-vertical { color: var(--sky-ink); text-decoration: none; }
 .dest-mini-vertical:hover { color: var(--sky-coral-deep); text-decoration: underline; }
+
+/* ---- "Guides for {destination}" on a destination page ----
+   Closes the destination -> blog edge, which was zero. */
+.dest-guides-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: clamp(12px, 2vw, 20px);
+}
+.dest-guide-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1.25rem;
+  border-radius: var(--sky-radius-md);
+  border: 1px solid var(--sky-line);
+  background: var(--sky-bg-raised);
+  text-decoration: none;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .dest-guide-card:hover { border-color: var(--sky-coral); transform: translateY(-2px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dest-guide-card { transition: none; }
+  .dest-guide-card:hover { transform: none; }
+}
+.dest-guide-tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sky-coral-deep);
+}
+.dest-guide-title { font-weight: 600; line-height: 1.35; color: var(--sky-ink); }
+.dest-guide-excerpt {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--sky-ink-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.dest-guide-meta {
+  margin-top: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--sky-ink-muted);
+}

@@ -17,6 +17,8 @@ import {
 } from "@/data/destinations";
 import { collectionsForDestination } from "@/data/collections";
 import { DESTINATION_DETAILS } from "@/data/destination-details";
+import { POSTS } from "@/data/blog-posts";
+import { ARTICLE_SLUGS } from "@/data/blog-articles";
 import { ATTRACTION_IMAGES, FOOD_IMAGES } from "@/data/place-images";
 import {
   flightsLink,
@@ -67,6 +69,19 @@ function DestinationPage() {
   const regionIcon = REGION_ORDER.find((r) => r.region === destination.region)?.icon ?? "";
   const name = destination.name;
   const related = relatedDestinations(destination.slug);
+  // The other half of the topic cluster. Blog articles already linked TO
+  // destination guides, but no guide linked back to a single article -- the
+  // dest->blog edge was zero across all 42 guides, so a cluster only ever
+  // pointed one way. destinationSlug already exists on every post, so this
+  // needs no hand-maintained mapping.
+  //
+  // Filtered against ARTICLE_SLUGS deliberately: POSTS is the card index and
+  // may list a post whose body has not been written yet. Linking to one of
+  // those would send a reader to an empty page, which is the exact thing
+  // blog-posts.ts already refuses to do on the blog index.
+  const guides = POSTS.filter(
+    (post) => post.destinationSlug === destination.slug && ARTICLE_SLUGS.includes(post.slug),
+  );
 
   // One list rather than six hand-written cards. Each entry names the partner
   // it sends you to -- previously the card said "Hotels" and you found out on
@@ -489,6 +504,37 @@ function DestinationPage() {
             </Link>
           </div>
         </section>
+
+        {/* Guides for this destination -- closes the cluster loop. Renders
+            nothing for the 31 destinations with no written article yet,
+            rather than showing an empty shell. */}
+        {guides.length > 0 && (
+          <section className="site-section site-hairline border-t">
+            <div className="site-container">
+              <p className="site-eyebrow mb-3">Read first</p>
+              <h2 className="site-h2 max-w-lg text-3xl md:text-4xl">
+                {guides.length === 1 ? "A guide" : `${guides.length} guides`} for {name}.
+              </h2>
+              <div className="dest-guides-grid mt-8">
+                {guides.map((post) => (
+                  <Link
+                    key={post.slug}
+                    to="/blog/$slug"
+                    params={{ slug: post.slug }}
+                    className="dest-guide-card"
+                  >
+                    <span className="dest-guide-tag">{post.tag}</span>
+                    <span className="dest-guide-title">{post.title}</span>
+                    <span className="dest-guide-excerpt">{post.excerpt}</span>
+                    <span className="dest-guide-meta">
+                      {post.readTime} <span aria-hidden="true">&rarr;</span>
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Related destinations. The missing half of the internal link graph:
             every guide already linked UP to /destinations and ACROSS to its
