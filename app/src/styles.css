@@ -712,7 +712,10 @@ html {
   font-size: 0.95rem;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 44%, rgba(255, 255, 255, 0) 62%),
-    linear-gradient(180deg, #f4cf72 0%, #e8b53f 52%, #c9a227 100%);
+    /* Fill is a variable so a page can retint the button without touching the
+       sheen above it. The fallback IS the original gold, so every page that
+       does not set --btn-pill-fill renders exactly as before. */
+    var(--btn-pill-fill, linear-gradient(180deg, #f4cf72 0%, #e8b53f 52%, #c9a227 100%));
   color: var(--sky-coral-ink);
   border-radius: 999px;
   padding: 0.9rem 1.85rem;

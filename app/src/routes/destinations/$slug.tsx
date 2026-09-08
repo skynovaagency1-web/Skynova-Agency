@@ -221,7 +221,24 @@ function DestinationPage() {
       <SmoothScroll />
       <Nav />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: graph }} />
-      <main>
+      <main
+        className="dest-detail-page"
+        /* One override, whole page. --sky-coral-ink stays white because every
+           accent is verified to clear AA under white text; --sky-coral-deep
+           and -wash are derived so a new destination only ever needs one hex. */
+        style={
+          {
+            "--sky-coral": destination.accent,
+            "--sky-coral-deep": `color-mix(in srgb, ${destination.accent} 78%, var(--sky-ink))`,
+            "--sky-coral-wash": `color-mix(in srgb, ${destination.accent} 13%, transparent)`,
+            // White, via the token rather than a literal -- text that sits ON the accent.
+            "--sky-coral-ink": "var(--sky-bg)",
+            // The pill button's fill is hardcoded gold by default; give it an
+            // accent-derived gradient of the same shape so it retints too.
+            "--btn-pill-fill": `linear-gradient(180deg, color-mix(in srgb, ${destination.accent} 72%, var(--sky-bg)) 0%, color-mix(in srgb, ${destination.accent} 90%, var(--sky-bg)) 52%, ${destination.accent} 100%)`,
+          } as CSSProperties
+        }
+      >
         {/* 1. Hero banner */}
         <section className="dest-detail-hero">
           {hasPhoto ? (
