@@ -4451,3 +4451,123 @@ html.lenis body { height: auto; }
   font-size: 0.7rem;
   color: var(--sky-ink-muted);
 }
+
+/* ---- Destination "atlas" attractions section ----
+   After the reference: glass cards on a dark ground, each with an inset
+   photograph and a marker. The ground is tinted by --sky-coral, which the
+   destination page overrides per destination, so Croatia reads Adriatic blue
+   and Morocco terracotta from the same rules. */
+.dest-atlas {
+  position: relative;
+  padding-block: clamp(3.5rem, 8vw, 6.5rem);
+  background:
+    radial-gradient(120% 90% at 12% 0%, color-mix(in srgb, var(--sky-coral) 34%, transparent), transparent 62%),
+    radial-gradient(90% 70% at 92% 8%, color-mix(in srgb, var(--sky-coral) 20%, transparent), transparent 58%),
+    #14120e;
+  color: #f5f0e6;
+}
+.dest-atlas-eyebrow {
+  color: color-mix(in srgb, var(--sky-coral) 55%, #f5f0e6);
+  border-left-color: var(--sky-coral);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: none;
+}
+.dest-atlas-title { color: #f5f0e6; }
+
+.dest-atlas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: clamp(14px, 2vw, 22px);
+}
+.dest-atlas-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+  backdrop-filter: blur(18px) saturate(130%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 26px 60px -34px rgba(0, 0, 0, 0.85);
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .dest-atlas-card:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--sky-coral) 55%, transparent);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dest-atlas-card { transition: none; }
+  .dest-atlas-card:hover { transform: none; }
+}
+/* Stands in for the reference's map pin. Numbered rather than located,
+   because the data has no coordinates. */
+.dest-atlas-marker {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  z-index: 2;
+  min-width: 30px;
+  height: 30px;
+  padding-inline: 8px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: #f5f0e6;
+  background: color-mix(in srgb, var(--sky-coral) 72%, rgba(0, 0, 0, 0.5));
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  box-shadow: 0 6px 18px -8px color-mix(in srgb, var(--sky-coral) 80%, transparent);
+}
+.dest-atlas-media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+}
+.dest-atlas-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* 17 of 42 destinations have no attraction photography at all (145 of 252
+   items are covered). The old flat-grey tile was tolerable behind the
+   previous small cards; at this size it reads as a broken image, so the
+   fallback is treated as a designed tile in the destination's own accent
+   rather than an absence. */
+.dest-atlas-placeholder {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+  background:
+    radial-gradient(120% 100% at 30% 0%, color-mix(in srgb, var(--sky-coral) 42%, transparent), transparent 68%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.02));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+.dest-atlas-name {
+  margin: 16px 0 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  color: #f5f0e6;
+}
+.dest-atlas-copy {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: rgba(245, 240, 230, 0.72);
+}
+@media (max-width: 640px) {
+  /* Two across, as the section had before this treatment -- auto-fill at
+     this width collapses to a single column and halves the density. */
+  .dest-atlas-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .dest-atlas-card { padding: 10px; border-radius: 18px; }
+  .dest-atlas-marker { top: 16px; right: 16px; min-width: 26px; height: 26px; font-size: 10px; }
+  .dest-atlas-name { font-size: 0.82rem; margin-top: 12px; }
+  .dest-atlas-copy { font-size: 0.78rem; }
+}

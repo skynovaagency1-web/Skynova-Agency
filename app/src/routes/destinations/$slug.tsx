@@ -325,28 +325,38 @@ function DestinationPage() {
           </div>
         </section>
 
-        {/* 4. Top 6 attractions */}
-        <section className="site-section site-hairline border-t">
+        {/* 4. Top 6 attractions -- dark "atlas" treatment, after the reference:
+               glass cards on a ground tinted by this destination's accent, each
+               with an inset photo and a numbered marker. The reference pairs
+               these with a pinned map; there are no coordinates in the data for
+               ~250 attractions, and inventing them would put confident pins in
+               wrong places, so the number stands in for the pin. */}
+        <section className="dest-atlas">
           <div className="site-container">
-            <p className="site-eyebrow mb-3">See & Do</p>
-            <h2 className="site-h2 max-w-lg text-3xl md:text-4xl">Top attractions in {name}.</h2>
-            <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
+            <p className="site-eyebrow dest-atlas-eyebrow mb-3">See &amp; Do</p>
+            <h2 className="site-h2 dest-atlas-title max-w-lg text-3xl md:text-4xl">
+              Top attractions in {name}.
+            </h2>
+            <div className="dest-atlas-grid mt-10">
               {detail.attractions.map((a, i) => {
                 const photo = ATTRACTION_IMAGES[`${destination.slug}|${a.name}`];
                 return (
-                  <div key={a.name} className="benefit-tile">
-                    <div className="benefit-tile-media">
+                  <article key={a.name} className="dest-atlas-card">
+                    <span className="dest-atlas-marker" aria-hidden="true">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <div className="dest-atlas-media">
                       {photo ? (
-                        <img src={photo} alt={a.name} loading="lazy" />
+                        <img src={photo} alt={a.name} loading="lazy" decoding="async" />
                       ) : (
-                        <div className="card-media-placeholder" aria-hidden="true">
+                        <div className="dest-atlas-placeholder" aria-hidden="true">
                           <span>{ATTRACTION_ICONS[i % ATTRACTION_ICONS.length]}</span>
                         </div>
                       )}
                     </div>
-                    <p className="mt-4 font-semibold">{a.name}</p>
-                    <p className="site-ink-muted mt-2 text-sm leading-relaxed">{a.description}</p>
-                  </div>
+                    <h3 className="dest-atlas-name">{a.name}</h3>
+                    <p className="dest-atlas-copy">{a.description}</p>
+                  </article>
                 );
               })}
             </div>
