@@ -4721,3 +4721,71 @@ html.lenis body { height: auto; }
   .kbyg-icon { right: 0.9rem; font-size: 1rem; }
   .kbyg-text { font-size: 0.8rem; }
 }
+
+/* ---- Itinerary: alternating numbered lobes ----
+   Structure from the reference: a pale lobe carrying a large number paired
+   with a coloured lobe carrying the copy, the pair flipping side to side down
+   the list. The reference's linked-teardrop outline is not reproduced -- at
+   this width it collapses, and it would force the copy into a shape that
+   truncates. Heavy asymmetric rounding keeps the same rhythm and survives a
+   375px screen.
+
+   Like the banner rows above, steps darken rather than lighten: white copy
+   holds its contrast at every step that way. */
+.route-steps-flow { display: flex; flex-direction: column; gap: 14px; }
+.route-step {
+  --route-tint: calc(100% - (var(--route-step) * 11%));
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+.route-step.is-flipped { flex-direction: row-reverse; }
+
+.route-step-index {
+  flex: none;
+  width: clamp(72px, 18vw, 116px);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: color-mix(in srgb, var(--sky-coral) 72%, var(--sky-ink));
+  background: var(--sky-bg);
+  border: 1px solid var(--sky-line);
+  border-radius: 999px 26px 26px 999px;
+}
+.route-step.is-flipped .route-step-index { border-radius: 26px 999px 999px 26px; }
+
+.route-step-body {
+  flex: 1;
+  min-width: 0;
+  padding: 1.15rem 1.35rem;
+  color: var(--sky-bg);
+  background: color-mix(in srgb, var(--sky-coral) var(--route-tint), var(--sky-ink));
+  border-radius: 26px 999px 999px 26px;
+}
+.route-step.is-flipped .route-step-body { border-radius: 999px 26px 26px 999px; }
+
+.route-step-title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+.route-step-copy {
+  margin: 0.4rem 0 0;
+  font-size: 0.84rem;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--sky-bg) 82%, transparent);
+}
+@media (max-width: 640px) {
+  /* Alternation is dropped on a phone: at this width the flipped rows read as
+     a mistake rather than a rhythm, and the number column has to stay put for
+     the list to scan. */
+  .route-step, .route-step.is-flipped { flex-direction: row; }
+  .route-step-index { width: 56px; font-size: 1.3rem; border-radius: 999px 18px 18px 999px; }
+  .route-step-body { padding: 0.9rem 1rem; border-radius: 18px 999px 999px 18px; }
+  .route-step-title { font-size: 0.87rem; }
+  .route-step-copy { font-size: 0.78rem; }
+}

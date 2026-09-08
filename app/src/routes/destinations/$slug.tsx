@@ -46,6 +46,22 @@ const TIP_ROWS = [
   { key: "language", label: "Language", icon: "\u{1F4AC}" },
 ] as const;
 
+/**
+ * How many days the itinerary actually covers.
+ *
+ * The heading used detail.itinerary.length, which is the number of STEPS, not
+ * days -- so Japan's "Day 1-4 / Day 5-8 / Day 9-11 / Day 12-14" rendered as
+ * "A 4-day Japan itinerary" when it is a fourteen-day trip. Portugal read
+ * 4-day for a seven-day route, Jordan 4 for five. Wrong on all 42 pages.
+ *
+ * The titles carry the real span, so read it from them and fall back to the
+ * step count only if a title ever stops naming days.
+ */
+function itineraryDays(steps: { title: string }[]): number {
+  const days = steps.flatMap((s) => (s.title.match(/\d+/g) ?? []).map(Number));
+  return days.length ? Math.max(...days) : steps.length;
+}
+
 export const Route = createFileRoute("/destinations/$slug")({
   loader: ({ params }) => {
     const destination = getDestinationBySlug(params.slug);
@@ -446,23 +462,26 @@ function DestinationPage() {
             <div>
               <p className="site-eyebrow mb-3">Sample Route</p>
               <h2 className="site-h2 max-w-md text-3xl md:text-4xl">
-                A {detail.itinerary.length}-day {name} itinerary.
+                A {itineraryDays(detail.itinerary)}-day {name} itinerary.
               </h2>
               <p className="site-ink-muted mt-4 max-w-md text-base leading-relaxed">
                 A realistic pace for a first visit -- stretch it or compress it to fit your trip.
               </p>
             </div>
-            <div>
+            <div className="route-steps-flow">
               {detail.itinerary.map((step, i) => (
-                <div key={step.title} className="flow-step">
-                  <span className="flow-step-index">{String(i + 1).padStart(2, "0")}</span>
-                  <div>
-                    <p className="font-semibold">{step.title}</p>
-                    <p className="site-ink-muted mt-1 text-sm leading-relaxed">{step.description}</p>
+                <div
+                  key={step.title}
+                  className={`route-step${i % 2 === 1 ? " is-flipped" : ""}`}
+                  style={{ "--route-step": String(i) } as CSSProperties}
+                >
+                  <span className="route-step-index" aria-hidden="true">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div className="route-step-body">
+                    <p className="route-step-title">{step.title}</p>
+                    <p className="route-step-copy">{step.description}</p>
                   </div>
-                  {i < detail.itinerary.length - 1 ? (
-                    <span className="flow-step-line" aria-hidden="true" />
-                  ) : null}
                 </div>
               ))}
             </div>
