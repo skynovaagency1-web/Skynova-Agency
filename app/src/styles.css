@@ -230,6 +230,9 @@
   --sky-radius-lg: 24px;
   --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  /* Trajan-style uppercase serif, used only for place names on the atlas
+     cards. Real fallbacks: this must degrade to a serif, never to the sans. */
+  --font-serif: "Cinzel", "Trajan Pro", Georgia, "Times New Roman", serif;
 }
 
 html {
@@ -4484,7 +4487,8 @@ html.lenis body { height: auto; }
   display: flex;
   flex-direction: column;
   padding: 14px;
-  border-radius: 22px;
+  border-radius: 26px;
+  container-type: inline-size;
   background: rgba(255, 255, 255, 0.055);
   border: 1px solid rgba(255, 255, 255, 0.12);
   -webkit-backdrop-filter: blur(18px) saturate(130%);
@@ -4502,27 +4506,41 @@ html.lenis body { height: auto; }
   .dest-atlas-card { transition: none; }
   .dest-atlas-card:hover { transform: none; }
 }
-/* Stands in for the reference's map pin. Numbered rather than located,
-   because the data has no coordinates. */
-.dest-atlas-marker {
-  position: absolute;
-  top: 22px;
-  right: 22px;
-  z-index: 2;
-  min-width: 30px;
-  height: 30px;
-  padding-inline: 8px;
+/* Ornament centred on the top edge, as on every card in the reference --
+   a thin ring around a small gold star. Replaces the numbered badge I had
+   sitting top-right, which was not in the reference at all. */
+.dest-atlas-crest {
+  align-self: center;
+  width: 34px;
+  height: 34px;
+  margin-top: 2px;
   display: grid;
   place-items: center;
   border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  color: #f5f0e6;
-  background: color-mix(in srgb, var(--sky-coral) 72%, rgba(0, 0, 0, 0.5));
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  box-shadow: 0 6px 18px -8px color-mix(in srgb, var(--sky-coral) 80%, transparent);
+  border: 1px solid color-mix(in srgb, var(--sky-coral) 60%, rgba(255, 255, 255, 0.3));
+  color: color-mix(in srgb, var(--sky-coral) 45%, #f5f0e6);
+  background: rgba(255, 255, 255, 0.05);
 }
+.dest-atlas-crest svg { width: 13px; height: 13px; display: block; }
+
+/* The name sits ABOVE the photograph and is set in the display serif. Both
+   are what make the reference read the way it does; the previous version had
+   it below, in the site's sans. */
+.dest-atlas-name {
+  margin: 12px 0 0;
+  text-align: center;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  /* Attraction names here are far longer than the reference's city names
+     ("Belem Tower & Jeronimos Monastery" against "CAIRO"), so this is fluid
+     and allowed to wrap rather than sized for one line. */
+  font-size: clamp(0.95rem, 2.6cqi, 1.3rem);
+  letter-spacing: 0.07em;
+  line-height: 1.25;
+  text-transform: uppercase;
+  color: #f6f1e7;
+}
+
 .dest-atlas-media {
   position: relative;
   aspect-ratio: 4 / 3;
@@ -4556,18 +4574,76 @@ html.lenis body { height: auto; }
   line-height: 1.3;
   color: #f5f0e6;
 }
-.dest-atlas-copy {
-  margin: 8px 0 0;
-  font-size: 0.85rem;
-  line-height: 1.6;
-  color: rgba(245, 240, 230, 0.72);
+/* Icon-and-text row under the photograph, as in the reference. One row, not
+   the reference's two or three: there is exactly one description per
+   attraction in the data, and padding it out would mean inventing copy. */
+.dest-atlas-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-top: 12px;
+}
+.dest-atlas-row-icon {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  font-size: 0.8rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sky-coral) 26%, rgba(255, 255, 255, 0.06));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+.dest-atlas-row-text {
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: rgba(245, 240, 230, 0.74);
 }
 @media (max-width: 640px) {
   /* Two across, as the section had before this treatment -- auto-fill at
      this width collapses to a single column and halves the density. */
   .dest-atlas-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .dest-atlas-card { padding: 10px; border-radius: 18px; }
-  .dest-atlas-marker { top: 16px; right: 16px; min-width: 26px; height: 26px; font-size: 10px; }
-  .dest-atlas-name { font-size: 0.82rem; margin-top: 12px; }
-  .dest-atlas-copy { font-size: 0.78rem; }
+  .dest-atlas-crest { width: 28px; height: 28px; }
+  .dest-atlas-row-icon { width: 22px; height: 22px; font-size: 0.7rem; }
+  .dest-atlas-row-text { font-size: 0.74rem; }
 }
+
+/* ---- Destination page ground ----
+   The colour reference is not an accent swap: the whole page sits in a wash
+   of the place's colour, with the glass panels tinted by it. Recolouring only
+   buttons and eyebrow rules left the page reading white-and-gold, because the
+   site's own wash lives on .site-body with the gold baked in as rgba, and
+   body sits ABOVE this page's --sky-coral override in the tree.
+
+   So the wash is repeated here, on the element that does carry the accent.
+   Alphas stay low (13%/10%/7%) for the same reason the original does: near-
+   black body text has to keep its contrast against it. */
+.dest-detail-page {
+  position: relative;
+  background:
+    radial-gradient(1100px 620px at 12% -8%, color-mix(in srgb, var(--sky-coral) 13%, transparent), transparent 60%),
+    radial-gradient(900px 520px at 102% 6%, color-mix(in srgb, var(--sky-coral) 10%, transparent), transparent 55%),
+    radial-gradient(70% 45% at 50% 100%, color-mix(in srgb, var(--sky-coral) 7%, transparent), transparent 60%),
+    /* Opaque base, not transparent. .site-body sits behind this with the gold
+       wash baked in as rgba and background-attachment: fixed -- left
+       see-through, that gold reads straight through a 13% tint and the page
+       comes out cream where it should be the destination's colour. */
+    var(--sky-bg);
+}
+/* Glass on this page picks the colour up too, or the panels read as neutral
+   white rectangles sitting on a tinted ground -- the exact mismatch the
+   reference does not have. Kept faint: these hold body copy. */
+.dest-detail-page .site-panel,
+.dest-detail-page .dest-mini-card,
+.dest-detail-page .dest-card {
+  background:
+    linear-gradient(
+        color-mix(in srgb, var(--sky-coral) 5%, var(--sky-glass-bg)),
+        color-mix(in srgb, var(--sky-coral) 5%, var(--sky-glass-bg))
+      )
+      padding-box,
+    var(--sky-glass-edge) border-box;
+}
+/* The atlas section sets its own dark ground and must not inherit the wash. */
+.dest-detail-page .dest-atlas { background-color: #14120e; }

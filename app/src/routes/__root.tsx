@@ -76,7 +76,7 @@ function buildHead(meta: AppMeta) {
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Cinzel:wght@400;600&display=swap",
       },
       // ?v=3 busts the cache: these were Higgsfield's logo, then the brand
       // monogram, and now a small-size mark. Browsers hold favicons across

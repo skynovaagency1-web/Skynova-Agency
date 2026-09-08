@@ -231,6 +231,13 @@ function DestinationPage() {
             "--sky-coral": destination.accent,
             "--sky-coral-deep": `color-mix(in srgb, ${destination.accent} 78%, var(--sky-ink))`,
             "--sky-coral-wash": `color-mix(in srgb, ${destination.accent} 13%, transparent)`,
+            // Hairlines and panel borders too. The page wash itself is capped
+            // at 13% -- past that, muted body text drops under WCAG AA against
+            // the darker accents (Qatar's plum hits 4.28:1 at 16%). Borders
+            // carry no text, so they can take far more colour and are what
+            // actually makes the page read as the destination's rather than a
+            // white page with tinted buttons.
+            "--sky-line": `color-mix(in srgb, ${destination.accent} 34%, var(--sky-bg-raised))`,
             // White, via the token rather than a literal -- text that sits ON the accent.
             "--sky-coral-ink": "var(--sky-bg)",
             // The pill button's fill is hardcoded gold by default; give it an
@@ -342,9 +349,14 @@ function DestinationPage() {
                 const photo = ATTRACTION_IMAGES[`${destination.slug}|${a.name}`];
                 return (
                   <article key={a.name} className="dest-atlas-card">
-                    <span className="dest-atlas-marker" aria-hidden="true">
-                      {String(i + 1).padStart(2, "0")}
+                    {/* Card order follows the reference exactly: crest, then the
+                        name in serif, then the photograph, then icon rows. */}
+                    <span className="dest-atlas-crest" aria-hidden="true">
+                      <svg viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8 0c.5 4 3.5 7 8 8-4.5 1-7.5 4-8 8-.5-4-3.5-7-8-8 4.5-1 7.5-4 8-8Z" />
+                      </svg>
                     </span>
+                    <h3 className="dest-atlas-name">{a.name}</h3>
                     <div className="dest-atlas-media">
                       {photo ? (
                         <img src={photo} alt={a.name} loading="lazy" decoding="async" />
@@ -354,8 +366,12 @@ function DestinationPage() {
                         </div>
                       )}
                     </div>
-                    <h3 className="dest-atlas-name">{a.name}</h3>
-                    <p className="dest-atlas-copy">{a.description}</p>
+                    <div className="dest-atlas-row">
+                      <span className="dest-atlas-row-icon" aria-hidden="true">
+                        {ATTRACTION_ICONS[i % ATTRACTION_ICONS.length]}
+                      </span>
+                      <span className="dest-atlas-row-text">{a.description}</span>
+                    </div>
                   </article>
                 );
               })}
