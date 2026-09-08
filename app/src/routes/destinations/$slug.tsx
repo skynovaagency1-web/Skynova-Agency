@@ -27,6 +27,8 @@ import {
   eventsLink,
   attractionsLink,
   esimLink,
+  airportServicesLink,
+  bikeRentalLink,
 } from "@/lib/affiliate";
 
 // Placeholder art for attraction/food cards until real per-destination
@@ -77,23 +79,33 @@ function DestinationPage() {
   // set, so the extra link simply does not render rather than shipping an
   // unattributed one.
   const discoverCars = discoverCarsLink(destination.slug);
+  // `vertical` is the site's OWN page for this category, not the partner.
+  // Before this, /flights, /hotels and the rest had 0-1 in-content inbound
+  // links across the whole site -- reachable only from nav and footer, while
+  // 42 destination guides discussed those exact topics and linked to none of
+  // them. /airport-services and /bike-rentals had literally zero and were not
+  // in this list at all.
   const booking: {
     title: string;
     copy: string;
+    vertical: "/flights" | "/hotels" | "/car-rentals" | "/airport-services" | "/tours" | "/events" | "/esim" | "/bike-rentals";
     partners: { label: string; href: string }[];
   }[] = [
     {
       title: "Flights",
+      vertical: "/flights",
       copy: `Compare fares into ${name}.`,
       partners: [{ label: "Aviasales", href: flightsLink() }],
     },
     {
       title: "Hotels",
+      vertical: "/hotels",
       copy: `Stays across ${name}, compared in one search.`,
       partners: [{ label: "Hotellook", href: hotelsLink(name) }],
     },
     {
       title: "Car rentals",
+      vertical: "/car-rentals",
       copy: `Collect on arrival and drive ${name} at your own pace.`,
       partners: [
         { label: "Rentalcars", href: carRentalLink() },
@@ -102,11 +114,13 @@ function DestinationPage() {
     },
     {
       title: "Tours & activities",
+      vertical: "/tours",
       copy: `Guided trips and day tours across ${name}.`,
       partners: [{ label: "GetYourGuide", href: toursLink(name) }],
     },
     {
       title: "Events & tickets",
+      vertical: "/events",
       copy: `Attractions and shows in ${name}, booked ahead.`,
       partners: [
         { label: "Tiqets", href: eventsLink() },
@@ -114,7 +128,20 @@ function DestinationPage() {
       ],
     },
     {
+      title: "Airport transfers",
+      vertical: "/airport-services",
+      copy: `Meet-and-greet and private transfers on arrival in ${name}.`,
+      partners: [{ label: "GetTransfer", href: airportServicesLink() }],
+    },
+    {
+      title: "Bike rentals",
+      vertical: "/bike-rentals",
+      copy: `Rent a bike and cover ${name} at street level.`,
+      partners: [{ label: "GetYourGuide", href: bikeRentalLink(name) }],
+    },
+    {
       title: "eSIM",
+      vertical: "/esim",
       copy: `Data the moment you land in ${name}, no roaming fees.`,
       partners: [{ label: "Airalo", href: esimLink(destination.slug) }],
     },
@@ -435,7 +462,11 @@ function DestinationPage() {
             <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
               {booking.map((b) => (
                 <div key={b.title} className="dest-mini-card">
-                  <p className="font-semibold">{b.title}</p>
+                  <p className="font-semibold">
+                    <Link to={b.vertical} className="dest-mini-vertical">
+                      {b.title} <span aria-hidden="true">&rarr;</span>
+                    </Link>
+                  </p>
                   <p className="site-ink-muted mt-1 text-sm">{b.copy}</p>
                   <span className="dest-mini-partners">
                     {b.partners.map((partner) => (

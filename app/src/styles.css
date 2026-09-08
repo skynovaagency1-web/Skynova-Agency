@@ -4392,3 +4392,10 @@ html.lenis body { height: auto; }
 .reset-page-cta:disabled { opacity: 0.6; cursor: default; }
 .reset-page-error { font-size: 0.85rem; color: #a33; margin: 0; }
 .reset-page-note { font-size: 0.78rem; color: var(--sky-ink-muted); margin: 0; }
+
+/* Internal link on a booking card title. The category name is the anchor
+   text, which is the phrase the vertical page should rank for. Underline on
+   hover only -- these sit in a grid of eight and eight permanent underlines
+   read as clutter. */
+.dest-mini-vertical { color: var(--sky-ink); text-decoration: none; }
+.dest-mini-vertical:hover { color: var(--sky-coral-deep); text-decoration: underline; }
