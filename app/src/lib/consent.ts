@@ -32,11 +32,23 @@ export function getConsent(): ConsentValue | null {
   return raw === "granted" || raw === "denied" ? raw : null;
 }
 
-/** Server snapshot for useSyncExternalStore. Always null -- there is no
- * stored choice to read during SSR, so the first paint is identical on
- * both sides and hydration has nothing to mismatch on. */
-export function getServerConsent(): ConsentValue | null {
-  return null;
+/**
+ * Snapshot used for SSR and for the hydration render that has to match it.
+ *
+ * Deliberately "denied" rather than null. null means "undecided", which is
+ * precisely the state that makes the banner appear -- so a null server
+ * snapshot renders the banner into the HTML of every page, and every
+ * returning visitor who already chose gets it flashed at them until
+ * hydration reads their stored answer and takes it away again.
+ *
+ * "denied" renders nothing and keeps GA off, so the pre-hydration paint is
+ * quiet and fails closed. The real answer arrives on the commit straight
+ * after hydration, which is the first moment localStorage can be read at
+ * all -- a first-time visitor sees the banner a few hundred ms in, which is
+ * the right way round for the two costs to fall.
+ */
+export function getServerConsent(): ConsentValue {
+  return "denied";
 }
 
 /**

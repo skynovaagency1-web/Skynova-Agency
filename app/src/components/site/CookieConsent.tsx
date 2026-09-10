@@ -10,11 +10,12 @@ import { getConsent, getServerConsent, setConsent, subscribeConsent } from "@/li
  *
  * useSyncExternalStore rather than useState + useEffect: the stored choice
  * is exactly an external store, and this is the primitive React provides
- * for reading one without a hydration mismatch. getServerConsent() returns
- * null, so server and first client paint agree on "hidden," and the real
- * value arrives on the commit straight after hydration. Re-reads on
- * CONSENT_EVENT too, which is what lets the privacy page's "change your
- * cookie choice" button bring the banner back with no reload.
+ * for reading one without a hydration mismatch. getServerConsent() reports
+ * "denied", so server and first client paint agree on hidden -- see the
+ * note there for why that, and not null. The real value arrives on the
+ * commit straight after hydration. Re-reads on CONSENT_EVENT too, which is
+ * what lets the privacy page's "change your cookie choice" button bring
+ * the banner back with no reload.
  */
 export function CookieConsent() {
   const consent = useSyncExternalStore(subscribeConsent, getConsent, getServerConsent);
