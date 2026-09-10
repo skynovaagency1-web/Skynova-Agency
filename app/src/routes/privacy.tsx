@@ -1,7 +1,31 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
+import { resetConsent } from "@/lib/consent";
+
+/** Clears the stored cookie choice, which brings the CookieConsent banner
+ * (mounted site-wide in __root.tsx) straight back -- no reload needed,
+ * since resetConsent() dispatches the same event the banner listens for. */
+function CookiePreferencesLink() {
+  const [justReset, setJustReset] = useState(false);
+  if (justReset) {
+    return <span className="site-ink-muted">Done -- the banner's back at the bottom of the page.</span>;
+  }
+  return (
+    <button
+      type="button"
+      className="btn-underline"
+      onClick={() => {
+        resetConsent();
+        setJustReset(true);
+      }}
+    >
+      change your cookie choice
+    </button>
+  );
+}
 
 export const Route = createFileRoute("/privacy")({
   head: () => ({
@@ -51,10 +75,13 @@ function PrivacyPage() {
                   <li>Recipient details you submit through the Gift form.</li>
                 </ul>
                 <p>
-                  We also set one functional cookie to keep you signed in (<code>skynova_session</code>).
+                  We set one functional cookie to keep you signed in (<code>skynova_session</code>).
                   It's <code>HttpOnly</code>, so no script on this page (ours or anyone else's) can
-                  read it, and it's the only cookie we set ourselves. We don't run advertising
-                  cookies, and we don't use any cookie for analytics.
+                  read it. We don't run advertising cookies. With your consent -- see the banner
+                  on your first visit, or "Cookie choices" below -- we also use one analytics
+                  cookie, Google Analytics's own, to see which pages are actually useful. Nothing
+                  in that cookie identifies you by name; it's the standard Google Analytics
+                  identifier, sent to Google, IP address truncated before it's stored.
                 </p>
               </div>
 
@@ -93,7 +120,24 @@ function PrivacyPage() {
                 </p>
                 <p>
                   We also use Cloudflare Web Analytics for page views. It sets no cookies and
-                  collects no personal data, which is why it's here rather than Google Analytics.
+                  collects no personal data, which is why it runs for every visitor with no
+                  banner or choice involved.
+                </p>
+              </div>
+
+              <div>
+                <h2>Cookie choices</h2>
+                <p>
+                  On your first visit you're asked whether we may also use Google Analytics --
+                  it's the only thing that choice covers, since Cloudflare Web Analytics above
+                  doesn't need one and our sign-in cookie isn't optional if you want to stay
+                  signed in. Decline and nothing from Google loads on this site at all. Accept
+                  and it starts measuring which pages and destinations get used, with your IP
+                  address truncated before Google stores anything.
+                </p>
+                <p>
+                  Changed your mind either way?{" "}
+                  <CookiePreferencesLink />.
                 </p>
               </div>
 
@@ -130,7 +174,7 @@ function PrivacyPage() {
                   itself rather than a plain link. Those are the partner&rsquo;s own software running
                   in the page, so they can set their own cookies and see that you loaded them, under
                   the partner&rsquo;s privacy policy rather than ours. Everything we say above about
-                  not running advertising or analytics cookies is about cookies{" "}
+                  which cookies we do and don&rsquo;t run is about cookies{" "}
                   <em>we</em> set &mdash; it can&rsquo;t bind a partner.
                 </p>
               </div>

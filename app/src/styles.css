@@ -2043,6 +2043,62 @@ html {
   .footer-glass { transform: none; }
 }
 
+/* Cookie consent banner (components/site/CookieConsent.tsx). Fixed to the
+   bottom rather than a modal overlay -- it's a choice about a background
+   script, not something that should block reading the page underneath it. */
+.cookie-consent {
+  position: fixed;
+  z-index: 60;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 1.1rem 1.4rem;
+  border-radius: var(--sky-radius-lg);
+  background: var(--sky-bg-raised);
+  border: 1px solid var(--sky-line);
+  box-shadow: var(--sky-shadow-float);
+}
+.cookie-consent-copy {
+  flex: 1 1 22rem;
+  color: var(--sky-ink-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.cookie-consent-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+.cookie-consent-actions .btn-framed,
+.cookie-consent-actions .btn-solid-pill {
+  padding: 0.55rem 1.1rem;
+  font-size: 0.875rem;
+}
+@media (max-width: 640px) {
+  .cookie-consent {
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    padding: 1rem;
+  }
+  .cookie-consent-actions {
+    width: 100%;
+  }
+  .cookie-consent-actions .btn-framed,
+  .cookie-consent-actions .btn-solid-pill {
+    flex: 1 1 0;
+    justify-content: center;
+  }
+}
+
 /* Closing banner: a glass panel with a soft gold glow behind the figure,
    instead of plain centered text sitting directly on the page background. */
 .closing-cta-figure {

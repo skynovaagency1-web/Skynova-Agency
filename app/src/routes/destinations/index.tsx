@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { Nav } from "@/components/site/Nav";
@@ -68,16 +68,23 @@ function DestinationsIndex() {
   const featured = findAll(FEATURED_SLUGS);
   const trendingRef = useReveal<HTMLDivElement>();
   const featuredRef = useReveal<HTMLDivElement>();
-  const [activeRegion, setActiveRegion] = useState<Region | "all">(region ?? "all");
+  const navigate = Route.useNavigate();
+  // The URL is the single source of truth for this filter. Clicking a tab
+  // writes ?region=, so every region view is its own shareable, bookmarkable
+  // link, and one arriving from the footer or the homepage lands already
+  // filtered. That also retires the useState/useEffect pair this replaced,
+  // whose whole job was keeping a local copy in step with the search param.
+  const activeRegion: Region | "all" = region ?? "all";
+  function selectRegion(next: Region | "all") {
+    // replace, not push: clicking through six region tabs shouldn't cost six
+    // presses of Back to get off the page. The address bar still updates,
+    // which is the part that makes the view shareable.
+    void navigate({ search: next === "all" ? {} : { region: next }, replace: true });
+  }
   // With 42 destinations the grouped view is good for browsing and poor for
   // finding a specific country, so the directory offers both.
   const [view, setView] = useState<"region" | "az">("region");
   const alphabetical = [...DESTINATIONS].sort((a, b) => a.name.localeCompare(b.name));
-  // Re-sync if the region search param changes on an already-mounted page
-  // (e.g. clicking a different homepage region tab without a full reload).
-  useEffect(() => {
-    setActiveRegion(region ?? "all");
-  }, [region]);
   const visibleRegions = activeRegion === "all" ? REGION_ORDER : REGION_ORDER.filter((r) => r.region === activeRegion);
 
   return (
@@ -177,7 +184,7 @@ function DestinationsIndex() {
               <button
                 type="button"
                 className={`region-filter-btn${activeRegion === "all" ? " is-active" : ""}`}
-                onClick={() => setActiveRegion("all")}
+                onClick={() => selectRegion("all")}
               >
                 All
               </button>
@@ -186,7 +193,7 @@ function DestinationsIndex() {
                   key={region}
                   type="button"
                   className={`region-filter-btn${activeRegion === region ? " is-active" : ""}`}
-                  onClick={() => setActiveRegion(region)}
+                  onClick={() => selectRegion(region)}
                 >
                   {region}
                 </button>

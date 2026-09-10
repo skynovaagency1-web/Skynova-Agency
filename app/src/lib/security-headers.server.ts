@@ -30,7 +30,13 @@ export function applySecurityHeaders(response: Response): Response {
       // the widget renders NOTHING, with no error anyone would notice --
       // the same silent failure that hid the missing fonts and the blank
       // globe. Verified by reading the loader payload, not assumed.
-      "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://tpscr.com https://tp.media https://static.localrent.com https://widgets.tiqets.com https://tpo.gg https://tpemb.com https://cdn.klook.com https://*.travelpayouts.com; " +
+      //
+      // www.googletagmanager.com serves the GA4 loader (lib/analytics.tsx,
+      // GoogleAnalytics -- only requested once a visitor accepts the cookie
+      // banner). Its own beacon call to google-analytics.com is covered by
+      // the wildcard https: already open on connect-src below, so this is
+      // the only host GA actually needs added here.
+      "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://www.googletagmanager.com https://tpscr.com https://tp.media https://static.localrent.com https://widgets.tiqets.com https://tpo.gg https://tpemb.com https://cdn.klook.com https://*.travelpayouts.com; " +
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
       // `data:` is required, not optional. Vite inlines any asset under its
       // 4 KB threshold, and the three IBM Plex Mono subsets (--font-mono)

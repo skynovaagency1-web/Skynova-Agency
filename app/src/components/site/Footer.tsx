@@ -153,7 +153,10 @@ export function Footer() {
               <ul className="space-y-2 text-xs">
                 {REGION_ORDER.map(({ region }) => (
                   <li key={region}>
-                    <Link to="/destinations" className="footer-link">{region}</Link>
+                    {/* search carries the region into the page's own filter
+                        (see routes/destinations/index.tsx) instead of
+                        landing on the unfiltered "all" view every time. */}
+                    <Link to="/destinations" search={{ region }} className="footer-link">{region}</Link>
                   </li>
                 ))}
                 <li>

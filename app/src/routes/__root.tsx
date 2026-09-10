@@ -14,8 +14,9 @@ import appCss from "../styles.css?url";
 import appMetaJson from "../app-meta.json";
 import { THEME_COLOR } from "@/lib/theme";
 import { AuthProvider } from "@/lib/auth-context";
-import { Analytics } from "@/lib/analytics";
+import { Analytics, GoogleAnalytics } from "@/lib/analytics";
 import { AuthModal } from "@/components/site/AuthModal";
+import { CookieConsent } from "@/components/site/CookieConsent";
 import { FlightRail } from "@/components/site/FlightRail";
 import { OutboundClickTracker } from "@/components/site/OutboundClickTracker";
 import { PageViewTracker } from "@/components/site/PageViewTracker";
@@ -159,6 +160,8 @@ function RootShell({ children }: { children: ReactNode }) {
       <body className="site-body">
         {children}
         <Analytics />
+        <GoogleAnalytics />
+        <CookieConsent />
         <Scripts />
       </body>
     </html>
