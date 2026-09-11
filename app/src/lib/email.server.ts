@@ -21,6 +21,11 @@ const RESEND_URL = "https://api.resend.com/emails";
 /** Verified sending identity. Must match the domain verified in Resend. */
 export const MAIL_FROM = "Skynova Agency <no-reply@skynovaagency.com>";
 
+/** Where form notifications land. The site publishes no contact address of
+ *  its own, so this is the operator's own inbox -- change it here and both
+ *  the contact and gift notifications follow. */
+export const MAIL_TO_OWNER = "skynovaagency1@gmail.com";
+
 export type SendResult = { ok: true } | { ok: false; reason: string };
 
 export async function sendEmail(opts: {
@@ -28,6 +33,9 @@ export async function sendEmail(opts: {
   subject: string;
   html: string;
   text: string;
+  /** Set on operator notifications so hitting reply in the inbox answers the
+   *  person who wrote in, rather than the no-reply sending identity. */
+  replyTo?: string;
 }): Promise<SendResult> {
   const { RESEND_API_KEY } = bindings();
 
@@ -55,6 +63,7 @@ export async function sendEmail(opts: {
         subject: opts.subject,
         html: opts.html,
         text: opts.text,
+        ...(opts.replyTo ? { reply_to: opts.replyTo } : {}),
       }),
     });
   } catch (err) {
@@ -100,4 +109,99 @@ export function resetEmail(resetUrl: string): { subject: string; html: string; t
   </div>
 </body></html>`;
   return { subject, html, text };
+}
+
+/** Everything below interpolates visitor-supplied text into an HTML email.
+ *  Escaped first: a message body containing a tag would otherwise render as
+ *  markup in the operator's mail client, and the whole point of these is to
+ *  show what was actually typed. */
+function esc(v: string): string {
+  return v
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+/** Wraps a notification body in the same plain shell resetEmail() uses. */
+function ownerShell(heading: string, rows: [string, string][], body?: string): string {
+  const rowHtml = rows
+    .map(
+      ([k, v]) =>
+        `<tr><td style="padding:4px 12px 4px 0;font-size:13px;color:#6e6555;white-space:nowrap">${esc(k)}</td>` +
+        `<td style="padding:4px 0;font-size:14px;color:#1c1a14">${esc(v)}</td></tr>`,
+    )
+    .join("");
+  const bodyHtml = body
+    ? `<p style="margin:20px 0 0;font-size:15px;line-height:1.6;color:#1c1a14;white-space:pre-wrap">${esc(body)}</p>`
+    : "";
+  return `<!doctype html><html><body style="margin:0;padding:24px;background:#faf7f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#1c1a14">
+  <div style="max-width:520px;margin:0 auto;background:#ffffff;border:1px solid #e7e0cd;border-radius:16px;padding:32px">
+    <h1 style="margin:0 0 16px;font-size:20px;font-weight:700">${esc(heading)}</h1>
+    <table style="border-collapse:collapse">${rowHtml}</table>${bodyHtml}
+  </div>
+</body></html>`;
+}
+
+/**
+ * Contact form landed. Goes to the operator, never to the person who wrote
+ * in -- they already saw the on-page confirmation, and an auto-reply from a
+ * no-reply address helps nobody.
+ */
+export function contactNotification(m: {
+  name: string;
+  email: string;
+  topic: string;
+  message: string;
+}): { subject: string; html: string; text: string; replyTo: string } {
+  return {
+    subject: `Contact form: ${m.topic} -- ${m.name}`,
+    text: [
+      `New contact message (${m.topic})`,
+      "",
+      `From:  ${m.name}`,
+      `Email: ${m.email}`,
+      "",
+      m.message,
+      "",
+      "Reply straight to this email to answer them.",
+    ].join("\n"),
+    html: ownerShell(
+      "New contact message",
+      [
+        ["From", m.name],
+        ["Email", m.email],
+        ["Topic", m.topic],
+      ],
+      m.message,
+    ),
+    // Reply goes to the sender, not to no-reply@.
+    replyTo: m.email,
+  };
+}
+
+/**
+ * Gift request landed. Also operator-only, and deliberately so: the
+ * recipient address is whatever the submitter typed, so mailing it directly
+ * would let anyone use this form to send mail from a verified skynova
+ * domain to a stranger. The operator decides what, if anything, goes out.
+ */
+export function giftNotification(g: { recipientEmail: string; message?: string | null }): {
+  subject: string;
+  html: string;
+  text: string;
+} {
+  return {
+    subject: `Gift request for ${g.recipientEmail}`,
+    text: [
+      "New gift request",
+      "",
+      `Recipient: ${g.recipientEmail}`,
+      "",
+      g.message ?? "(no message)",
+      "",
+      "Nothing has been sent to the recipient -- this is a notification only.",
+    ].join("\n"),
+    html: ownerShell("New gift request", [["Recipient", g.recipientEmail]], g.message ?? "(no message)"),
+  };
 }

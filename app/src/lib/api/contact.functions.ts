@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { bindings } from "../bindings.server";
 import { getSessionUserId } from "../auth.server";
+import { MAIL_TO_OWNER, contactNotification, sendEmail } from "../email.server";
 
 /** Topics the form offers. Kept as an enum so a crafted request cannot write
  * arbitrary strings into the column. */
@@ -16,12 +17,15 @@ const ContactSchema = z.object({
 });
 
 /**
- * Records a contact message.
+ * Records a contact message, then tells the operator it arrived.
  *
- * No email is sent, because no email provider is wired up -- and the domain
- * had no MX records at all, which is why the mailto: links this replaces
- * bounced. The confirmation copy therefore promises a reply, never claims a
- * message was emailed.
+ * The row was always written; nothing ever read it, so a form that promised
+ * a reply within a working day sat silently in a table for six days at a
+ * time. The notification is what makes that promise keepable.
+ *
+ * Delivery is best-effort and deliberately after the insert: the message is
+ * already safely recorded by that point, and a provider outage must not turn
+ * a message that WAS received into an error telling the visitor it wasn't.
  */
 export const submitContactMessage = createServerFn({ method: "POST" })
   .validator((data: unknown) => ContactSchema.parse(data))
@@ -34,5 +38,9 @@ export const submitContactMessage = createServerFn({ method: "POST" })
     )
       .bind(crypto.randomUUID(), userId, data.name, data.email, data.topic, data.message)
       .run();
+
+    const sent = await sendEmail({ to: MAIL_TO_OWNER, ...contactNotification(data) });
+    if (!sent.ok) console.error("contact notification failed:", sent.reason);
+
     return { ok: true };
   });
