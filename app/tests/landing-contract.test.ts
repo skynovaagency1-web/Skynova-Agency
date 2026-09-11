@@ -24,9 +24,14 @@ describe("scroll-scrub website landing contract", () => {
     const landingRoute = readFileSync(new URL("../src/routes/index.tsx", import.meta.url), "utf8");
     const appRoute = readFileSync(new URL("../src/routes/app.tsx", import.meta.url), "utf8");
 
-    // scroll-scrub's home IS the site: "/" renders the journey instead of the
-    // stock LandingPage. Everything else about the split is unchanged.
-    expect(landingRoute).toContain("ScrollScrub");
+    // "/" is the Skynova travel homepage -- the scroll-scrubbed Hero
+    // (components/site/Hero.tsx) that replaced the template's ScrollScrub
+    // journey -- and must never pull in the app workspace. The template's
+    // check named a component the rebuilt homepage no longer has, so it
+    // guarded nothing; these guard the split the test is actually about.
+    expect(landingRoute).toContain("<Hero />");
+    expect(landingRoute).not.toContain("PromptBox");
+    expect(landingRoute).not.toContain("UserGenerations");
     expect(appRoute).toContain('createFileRoute("/app")');
     expect(appRoute).toContain("previewMode");
   });
