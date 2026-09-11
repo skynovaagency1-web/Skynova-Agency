@@ -99,6 +99,24 @@ export const POSTS: Post[] = [
     destinationSlug: "fiji",
   },
   {
+    slug: "iguazu-brazil-or-argentina-side",
+    tag: "Trip planning",
+    title: "Iguazu Falls: the Brazilian side, the Argentine side, or both?",
+    excerpt:
+      "Two countries, two national parks, two very different experiences of the same falls. One gives you the view; the other puts you in it.",
+    readTime: "6 min read",
+    destinationSlug: "brazil",
+  },
+  {
+    slug: "patagonia-calafate-chalten",
+    tag: "Trip planning",
+    title: "Patagonia in a week: El Calafate, El Chaltén, and the order that saves the trip",
+    excerpt:
+      "The glacier and the mountains are three hours apart, and the weather decides which day suits which. Plan around that and Patagonia gets much easier.",
+    readTime: "6 min read",
+    destinationSlug: "argentina",
+  },
+  {
     slug: "48-hours-in-lisbon",
     tag: "City guide",
     title: "48 hours in Lisbon: a fast, affordable first trip to Portugal",

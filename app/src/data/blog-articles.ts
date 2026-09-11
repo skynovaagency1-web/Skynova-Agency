@@ -555,6 +555,89 @@ export const ARTICLES: Record<string, Article> = {
     ],
     related: ["boutique-vs-resort", "free-cancellation-fine-print", "croatia-ferries-vs-driving"],
   },
+  "iguazu-brazil-or-argentina-side": {
+    dek: "The falls sit on the border, and each country has its own national park, entrance and walkways. With two days, you can have both.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "Iguazu Falls is not one waterfall but a curve of hundreds of them, strung along the edge of a river where Brazil meets Argentina. Each country protects its side as a national park, with its own gates, trails and town. **The Brazilian side gives you the view; the Argentine side puts you in it.** With two days, which is what our Brazil route allows, do both -- one side each day." },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**Half a day and the big picture:** the Brazilian side. One trail, panoramic views, done by lunchtime.",
+        "**A full day up close:** the Argentine side. More of the falls, more walkways, more to see.",
+        "**Two days:** both. Start in Brazil to take in the whole system, then cross to Argentina to get close.",
+        "**Getting soaked on purpose:** a boat trip into the spray, sold on both sides.",
+      ]},
+
+      { kind: "h2", text: "The Brazilian side: the panorama" },
+      { kind: "para", text: "Most of the falls are on the Argentine bank, which is exactly why the view from Brazil is so good -- you see them head-on. A single paved trail runs along the canyon with viewpoints at every turn, ending on a walkway that pushes out towards the base of the Devil's Throat, the biggest and loudest part of the system. It takes a few hours and is easy going." },
+      { kind: "para", text: "Across from the park entrance is a large bird park, full of toucans and macaws, which fills the rest of the day nicely." },
+
+      { kind: "h2", text: "The Argentine side: up close" },
+      { kind: "para", text: "The Argentine park is bigger and deserves a full day. An upper circuit runs along the top of the falls, a lower circuit brings you out beneath them, and a small train carries you to the start of a long walkway across the river to the lip of the Devil's Throat itself. Standing there, with the water dropping away at your feet, is the moment most people remember." },
+      { kind: "callout", title: "Protect your phone", text: "On both sides, some viewpoints are drenched in spray. A waterproof pouch or a zip-lock bag costs very little and saves a lot." },
+      { kind: "cta", link: "tours", destination: "Iguazu Falls", label: "Compare Iguazu tours", note: "Guided visits and boat trips from our booking partners." },
+
+      { kind: "h2", text: "Crossing the border" },
+      { kind: "para", text: "The two towns, Foz do Iguaçu in Brazil and Puerto Iguazú in Argentina, are joined by a bridge, and day trips across are routine. You pass through immigration on both sides, so carry your passport and allow time for queues, especially in the morning. Visa rules differ between the two countries and depend on your passport -- Brazil, for one, requires an e-visa from some nationalities -- so check both before you go." },
+      { kind: "para", text: "Many hotels and taxi drivers arrange the crossing as part of a day trip, which takes most of the paperwork off your hands." },
+
+      { kind: "h2", text: "Where to stay" },
+      { kind: "para", text: "Foz do Iguaçu is the bigger town, with more hotels, restaurants and flights. Puerto Iguazú is smaller and easier to walk. Each park also has one hotel inside it, whose guests get the walkways to themselves before the gates open and after they close -- expensive, but the only way to see the falls without a crowd." },
+      { kind: "cta", link: "hotels", destination: "Foz do Iguacu, Brazil", label: "Compare hotels in Foz do Iguaçu", note: "Live rates from our hotel partner -- or search Puerto Iguazú the same way." },
+
+      { kind: "h2", text: "When to go" },
+      { kind: "para", text: "The falls run all year, and their volume rises and falls with the rain upriver. After very heavy rain the Devil's Throat walkways can close for safety; after a long dry spell some of the smaller falls thin out. The main falls are impressive either way, so fit Iguazu to the rest of your trip rather than the other way round." },
+      { kind: "cta", link: "flights", label: "Compare flights to Foz do Iguaçu", note: "Fares into Foz do Iguaçu, usually via Rio or São Paulo, from our booking partners." },
+    ],
+    related: ["patagonia-calafate-chalten", "long-haul-flight-survival", "free-cancellation-fine-print"],
+  },
+
+  "patagonia-calafate-chalten": {
+    dek: "The glacier and the mountains are three hours apart, and the weather decides which day suits which. Plan around that and Patagonia gets much easier.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "Most Argentina trips reach Patagonia through one small airport: El Calafate, about three hours' flight from Buenos Aires. From there the two big sights point in different directions. The Perito Moreno Glacier is a little over an hour to the west; El Chaltén, the trekking village beneath Mount Fitz Roy, is about three hours north." },
+      { kind: "para", text: "**Stay in both, give yourself a spare day, and let the forecast choose which comes first.**" },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**Perito Moreno Glacier:** a day trip from El Calafate -- walkways, a boat, or a guided walk on the ice.",
+        "**El Chaltén:** at least two nights. The best trails start from the edge of the village.",
+        "**Between the two:** a bus or a hire car, about three hours on a paved road.",
+        "**In total:** three days is the tight version. Five lets the weather do its worst.",
+      ]},
+
+      { kind: "h2", text: "The glacier: good in any weather" },
+      { kind: "para", text: "Perito Moreno is one of the few places where a glacier comes to you. Walkways on the peninsula facing it let you watch the ice front from close range, and every so often a slab breaks away and crashes into the lake. Boat trips run along the face, and guided walks take you onto the glacier itself in crampons." },
+      { kind: "para", text: "Crucially, it is spectacular in cloud, drizzle or sun. That makes it the right thing to do on the day the forecast is poor." },
+      { kind: "callout", title: "Ice walks have age limits", text: "The guided walks on the glacier set minimum and maximum ages, and the longer ones have fitness requirements too. Check the rules before you book -- especially if you are travelling as a family." },
+      { kind: "cta", link: "tours", destination: "Perito Moreno Glacier", label: "Compare Perito Moreno tours", note: "Walkway visits, boat trips and ice walks from our booking partners." },
+
+      { kind: "h2", text: "El Chaltén: good only when the mountains show" },
+      { kind: "para", text: "El Chaltén exists for walking. Trails leave from the village itself towards the lakes beneath Fitz Roy and Cerro Torre. The classic, to Laguna de los Tres at the foot of Fitz Roy, is a long full day with a very steep final climb." },
+      { kind: "para", text: "The catch is the weather. Patagonian wind is famous for good reason, and the peaks can stay wrapped in cloud for days. A hike to the viewpoint of a mountain you cannot see is still a good walk, but it is not the one you came for. **So give El Chaltén two nights at the very least, three if you can, and hike on the clearest day.**" },
+
+      { kind: "h2", text: "Which order" },
+      { kind: "para", text: "If the forecast for El Chaltén looks good when you land, go there first and save the glacier for later -- it will be magnificent whatever the sky does. If it looks poor, do the glacier first and head north as the weather clears. Book rooms with flexible cancellation if you want to keep that choice open." },
+      { kind: "cta", link: "hotels", destination: "El Chalten, Argentina", label: "Compare hotels in El Chaltén", note: "Live rates from our hotel partner -- or search El Calafate the same way." },
+
+      { kind: "h2", text: "Getting around" },
+      { kind: "list", items: [
+        "**Buses** run between El Calafate and El Chaltén several times a day in summer. Book a day or two ahead in peak season.",
+        "**A hire car** frees up your timings, and the road is paved. Fill up in El Calafate.",
+        "**Glacier tours** leave El Calafate every morning. The national park charges an entry fee, so check whether your tour includes it.",
+        "**Wind and cold** come at any time of year. Pack layers and a proper windproof jacket, even in January.",
+      ]},
+      { kind: "cta", link: "cars", label: "Compare car hire in El Calafate", note: "Pick-up at El Calafate airport or in town from our booking partners." },
+
+      { kind: "h2", text: "When to go, and paying for it" },
+      { kind: "para", text: "November to March is Patagonia's summer, with long days and the most services open. Outside it, many businesses in El Chaltén close for the winter and the high trails can be snowbound. In high summer, book flights and beds early -- this is a small place with a lot of visitors." },
+      { kind: "para", text: "Argentina's exchange rules have changed repeatedly in recent years, and the best way to pay -- card, or US dollars in cash -- has shifted with them. Check the current advice just before you travel, and carry some cash for the smaller places in El Chaltén." },
+      { kind: "cta", link: "flights", label: "Compare flights to Buenos Aires", note: "Fares into Buenos Aires from our booking partners, with onward flights to El Calafate." },
+    ],
+    related: ["iguazu-brazil-or-argentina-side", "new-zealand-south-island", "free-cancellation-fine-print"],
+  },
 
 
   "japan-rail-pass-worth-it": {
