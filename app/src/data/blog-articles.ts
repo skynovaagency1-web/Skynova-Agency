@@ -289,6 +289,97 @@ export const ARTICLES: Record<string, Article> = {
     ],
     related: ["japan-rail-pass-worth-it", "esim-vs-roaming-cost", "driving-on-the-other-side"],
   },
+  "oman-4x4-or-not": {
+    dek: "Most of the country is paved, fast and easy in an ordinary hire car. The mountain road and the dunes are the two exceptions.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "Oman is one of the easiest countries in the region to drive. The highways out of Muscat are wide and well kept, road signs are in English as well as Arabic, and the traffic thins out quickly once you leave the capital. For most of the classic loop -- Muscat, Nizwa, the coast road and Wadi Shab -- an ordinary saloon car does the job." },
+      { kind: "para", text: "Two places change the answer. **Jebel Akhdar needs a four-wheel drive by rule, and the dunes of Wahiba Sands need one in practice.** Everywhere else it is a question of comfort, not access." },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**Muscat, Nizwa and the coast road:** any hire car. The roads are paved and good.",
+        "**Wadi Shab:** any hire car. You park near the mouth of the wadi and walk in -- the car never leaves the tarmac.",
+        "**Jebel Akhdar:** a 4x4, no exceptions. A police checkpoint at the foot of the mountain road turns other cars back.",
+        "**Wahiba Sands:** a 4x4 if you want to drive the dunes yourself -- or leave the car at the edge and let your camp drive you in.",
+      ]},
+
+      { kind: "h2", text: "Jebel Akhdar: the checkpoint" },
+      { kind: "para", text: "The road up to Jebel Akhdar is paved, but it is long, steep and relentless, and the brakes take a beating on the way down. That is why a police checkpoint sits at the bottom and lets through four-wheel drives only. Arrive in a saloon and you will be turned around, however good the tarmac looks." },
+      { kind: "para", text: "If the mountain is on your list -- and on our five-day route it is the overnight stop after Nizwa -- that decides the car for the whole trip. Swapping vehicles halfway round a loop is rarely practical, so most people simply hire a 4x4 from the start. The alternative is to ask your mountain hotel whether it arranges a transfer up from the foot of the road; some do." },
+
+      { kind: "h2", text: "Wahiba Sands: drive in, or be driven" },
+      { kind: "para", text: "Driving on sand is a skill, not a setting. It means letting the tyres down to a much lower pressure, keeping momentum on the climbs, and knowing what to do when -- not if -- you get stuck. Hire companies know this too, which is why many rental agreements exclude off-road driving from the cover, even on a 4x4." },
+      { kind: "para", text: "The easy answer is that many desert camps meet their guests at the edge of the sands, by the villages on the main road, and drive them the last stretch in their own vehicles. You park, they take over, and the dune driving comes with someone who does it every day." },
+      { kind: "callout", title: "Read the off-road clause", text: "Before you take a hire car onto sand or gravel tracks, look for the words off-road in the rental terms. If it is excluded, any damage out there -- underside and tyres included -- is yours to pay for, whatever cover you bought at the desk." },
+
+      { kind: "h2", text: "What to know on the road" },
+      { kind: "list", items: [
+        "**Traffic drives on the right,** and the roads out of Muscat are fast, multi-lane highways.",
+        "**Speed cameras are everywhere,** and fines follow the car -- which means the hire company, which means you.",
+        "**Camels and goats wander onto the road,** especially in the interior. It is the best reason not to drive rural roads after dark.",
+        "**Fill up before the desert and the mountains.** Fuel stations are plentiful on the highways and sparse away from them.",
+        "**Check your licence.** Some are accepted on their own for a short visit; others need an International Driving Permit. Confirm with the hire company before you fly.",
+      ]},
+
+      { kind: "h2", text: "Never cross a flowing wadi" },
+      { kind: "para", text: "Wadis are dry riverbeds for most of the year, and roads often run straight through them. After rain in the mountains -- even rain that never reached you -- water can arrive fast and deep. If there is water moving across a wadi crossing, wait. It usually passes within hours, and no car, 4x4 included, is heavy enough to argue with it." },
+
+      { kind: "h2", text: "Picking the car" },
+      { kind: "para", text: "If Jebel Akhdar or self-driven dunes are in the plan, hire a 4x4 and be done with it. If not, take the saloon, keep the difference, and let a desert camp handle the sand. Either way, collect it at Muscat airport rather than in town -- the choice is wider, and you skip the city traffic on the first morning." },
+      { kind: "cta", link: "cars", label: "Compare car hire in Muscat", note: "4x4s and saloons, pick-up at Muscat airport, from our booking partners." },
+      { kind: "cta", link: "hotels", destination: "Nizwa, Oman", label: "Compare hotels in Nizwa", note: "Live rates from our hotel partner, for the night before the mountain." },
+      { kind: "cta", link: "flights", label: "Compare flights to Muscat", note: "Fares into Muscat from our booking partners." },
+    ],
+    related: ["rental-car-damage-waiver", "marrakech-sahara-how-long", "southwest-road-trip"],
+  },
+
+  "kruger-self-drive-or-private-reserve": {
+    dek: "Kruger is one of the few great safari parks you can drive yourself, in an ordinary hire car. Whether you should depends on what you want from the week.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "Most safaris come as a package: a lodge, a guide, a vehicle, and one price for the lot. Kruger is different. The national park has paved roads, fenced rest camps and clear rules, and you are allowed to drive yourself around it in whatever car you hired at the airport." },
+      { kind: "para", text: "Along its western edge sit private reserves -- Sabi Sand, Timbavati, Klaserie and others -- with no fence between them and the park. Same bush, same animals, and a very different experience at a very different price. **For most first visits the honest answer is both: a couple of nights driving yourself, then a couple being driven.**" },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**Self-drive Kruger** if you are watching the budget, love the freedom to stop where you like, and can live with the rules: stay in the car, stay on the road, be back in camp before the gates shut.",
+        "**A private reserve** if you want an expert finding the animals for you, open vehicles, off-road tracking and drives after dark.",
+        "**Both,** if the trip allows. Two nights of each makes a very good week.",
+      ]},
+
+      { kind: "h2", text: "Driving yourself through the park" },
+      { kind: "para", text: "Kruger's main roads are tarred and its gravel roads are generally well kept, so an ordinary hire car copes fine -- you do not need a 4x4. Speed limits are low, 50 km/h on tar and 40 on gravel, and in practice you will drive slower still, because the whole point is looking." },
+      { kind: "para", text: "You sleep in the park's rest camps: fenced compounds with huts, cottages and campsites, a shop and usually a restaurant. The best camps book up long in advance, especially around South African school holidays, so reserve them before anything else." },
+      { kind: "callout", title: "The gate times are not a suggestion", text: "Camp and park gates open and close at fixed times that shift through the year, roughly with sunrise and sunset. You must be inside a camp before its gate closes, and arriving late can mean a fine. Plan each day's drive backwards from closing time." },
+      { kind: "para", text: "The limits are real. Self-drivers must stay inside the vehicle except at marked spots, and must stay on the roads -- no following a leopard into the bush. Driving after dark is not allowed at all. The camps do sell guided sunset and night drives, which is the cheapest way to see what comes out at night." },
+
+      { kind: "h2", text: "What a private reserve adds" },
+      { kind: "para", text: "At a private reserve lodge you do not drive. Twice a day, at dawn and late afternoon, a ranger and usually a tracker take you out in an open vehicle. They share sightings with the other vehicles on the reserve by radio, and in many reserves they can leave the track to get close to an animal -- which is how most of the great leopard photographs are taken." },
+      { kind: "para", text: "The afternoon drive carries on after dark with a spotlight, and many lodges offer guided bush walks as well. Rates are usually all-inclusive -- meals, drives and often drinks -- which is why they look so high next to a rest camp hut. You are paying for a guide's skill, far fewer vehicles at each sighting, and access the park's own rules do not allow." },
+
+      { kind: "h2", text: "What each one costs" },
+      { kind: "para", text: "The national park charges a conservation fee per person, per day, with a higher rate for international visitors, on top of your camp accommodation. Private reserves charge their own fees, normally folded into the lodge rate. Either way, as with any safari, fewer and longer stays beat moving on every night." },
+
+      { kind: "h2", text: "Getting there" },
+      { kind: "list", items: [
+        "**By air:** Kruger Mpumalanga International, near Mbombela, serves the south of the park; Skukuza has its own airport inside it; Hoedspruit is the gateway for Timbavati and Klaserie.",
+        "**By road:** the southern gates are five hours or more from Johannesburg, on good roads. South Africa drives on the left.",
+        "**From Cape Town:** fly. It is a very long way by road, and the short flight is exactly why Cape Town and Kruger pair so well.",
+      ]},
+      { kind: "cta", link: "cars", label: "Compare car hire for Kruger", note: "Pick-up at Kruger Mpumalanga or Johannesburg from our booking partners." },
+
+      { kind: "h2", text: "Before you go" },
+      { kind: "list", items: [
+        "**Malaria:** Kruger is in a malaria area. Talk to a travel clinic well before you leave about whether you need tablets.",
+        "**Pack for the cold:** in the dry winter months -- the best for game viewing -- dawn drives in an open vehicle are properly cold. Bring a warm layer and a hat.",
+        "**Binoculars:** a pair each. Passing one pair around at a sighting means someone always misses it.",
+      ]},
+      { kind: "cta", link: "hotels", destination: "Hazyview, South Africa", label: "Compare stays near Kruger's southern gates", note: "Live rates from our hotel partner around Hazyview, a short drive from the park." },
+      { kind: "cta", link: "flights", label: "Compare flights to Johannesburg", note: "Fares into Johannesburg from our booking partners." },
+    ],
+    related: ["kenya-safari-basics", "driving-on-the-other-side", "rental-car-damage-waiver"],
+  },
 
 
   "japan-rail-pass-worth-it": {

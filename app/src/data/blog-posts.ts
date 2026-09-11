@@ -45,6 +45,24 @@ export const POSTS: Post[] = [
     destinationSlug: "south-korea",
   },
   {
+    slug: "oman-4x4-or-not",
+    tag: "Trip planning",
+    title: "Oman by car: where you need a 4x4, and where you really don't",
+    excerpt:
+      "Oman's main roads are some of the easiest in the region. Two places change that -- and one has a police checkpoint that turns ordinary cars around.",
+    readTime: "6 min read",
+    destinationSlug: "oman",
+  },
+  {
+    slug: "kruger-self-drive-or-private-reserve",
+    tag: "Trip planning",
+    title: "Kruger: drive yourself through the national park, or pay for a private reserve?",
+    excerpt:
+      "Same animals, same unfenced bush -- two very different trips. What the price difference actually buys, and why most first visits should do both.",
+    readTime: "7 min read",
+    destinationSlug: "south-africa",
+  },
+  {
     slug: "48-hours-in-lisbon",
     tag: "City guide",
     title: "48 hours in Lisbon: a fast, affordable first trip to Portugal",
