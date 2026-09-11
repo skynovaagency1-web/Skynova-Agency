@@ -4,10 +4,16 @@
  */
 export function applySecurityHeaders(response: Response): Response {
   const headers = new Headers(response.headers);
-  // The deployment platform owns `frame-ancestors`; setting it here would add
-  // a second, intersecting policy that can block the host preview.
+  // frame-ancestors: who may put this site inside a frame. Higgsfield's
+  // hosting used to set it, which is why this file left it alone -- but the
+  // site moved to its own Cloudflare on 4 Sep 2026 and nothing set it after,
+  // so any page anywhere could frame skynovaagency.com and lay it under a
+  // decoy (clickjacking, aimed at the sign-in form). 'self' still allows the
+  // site's own same-origin previews. X-Frame-Options below says the same to
+  // browsers that predate frame-ancestors; current ones follow the CSP.
   headers.set(
     "Content-Security-Policy",
+    "frame-ancestors 'self'; " +
     "default-src 'self'; " +
       // Travelpayouts affiliate widgets (AffiliateWidget.tsx, used on the
       // tours and car-rentals pages) load their real content from these --
@@ -64,6 +70,7 @@ export function applySecurityHeaders(response: Response): Response {
       "frame-src 'self' https://localrent.com https://*.localrent.com https://www.tiqets.com https://*.tiqets.com https://*.klook.com https://*.travelpayouts.com; " +
       "base-uri 'self'; form-action 'self'",
   );
+  headers.set("X-Frame-Options", "SAMEORIGIN");
   headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
   headers.set("X-Content-Type-Options", "nosniff");
   headers.set("Referrer-Policy", "strict-origin-when-cross-origin");

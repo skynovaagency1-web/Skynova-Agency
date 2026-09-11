@@ -34,4 +34,9 @@ test("keeps partner booking widgets framable and preserves the response", async 
 
   // Retired with the Higgsfield hosting: nothing here embeds their auth pages.
   expect(frameSrc).not.toContain("higgsfield");
+
+  // Clickjacking: only this site may frame itself (added 11 Sep 2026, after
+  // the move off Higgsfield left nothing setting it).
+  expect(csp).toContain("frame-ancestors 'self'");
+  expect(response.headers.get("x-frame-options")).toBe("SAMEORIGIN");
 });
