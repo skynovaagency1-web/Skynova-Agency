@@ -44,7 +44,18 @@ const ZOOM_END = 0.85;
 /** The glow is gone by here, so the lobby shows through the keyhole early. */
 const GLOW_END = 0.18;
 
-export function KeyholeHero({ videoSrc, children }: { videoSrc: string; children: ReactNode }) {
+export function KeyholeHero({
+  videoSrc,
+  posterSrc,
+  children,
+}: {
+  videoSrc: string;
+  /** Shown before the video can play -- and instead of it on an iPhone in
+   *  Low Power Mode, which blocks autoplay. Without one, the keyhole would
+   *  open onto a blank video there rather than the lobby. */
+  posterSrc?: string;
+  children: ReactNode;
+}) {
   const trackRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const wallRef = useRef<SVGSVGElement>(null);
@@ -61,7 +72,16 @@ export function KeyholeHero({ videoSrc, children }: { videoSrc: string; children
     // Reduced motion is handled entirely in CSS: no track, no wall, copy shown.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    let stickTop = parseFloat(getComputedStyle(stage).top) || 0;
+    // Stick exactly under the nav at whatever height it renders. The CSS
+    // fallback (--kh-top: 65px, measured on 11 Sep 2026) covers the first
+    // paint, before this runs; a fixed 4.25rem left a 3px strip under it.
+    const nav = document.querySelector<HTMLElement>(".site-nav");
+    let stickTop = 0;
+    const measure = () => {
+      if (nav) stage.style.setProperty("--kh-top", `${nav.getBoundingClientRect().height}px`);
+      stickTop = parseFloat(getComputedStyle(stage).top) || 0;
+    };
+    measure();
     let frame = 0;
     const update = () => {
       frame = 0;
@@ -90,7 +110,7 @@ export function KeyholeHero({ videoSrc, children }: { videoSrc: string; children
       if (!frame) frame = requestAnimationFrame(update);
     };
     const onResize = () => {
-      stickTop = parseFloat(getComputedStyle(stage).top) || 0;
+      measure();
       onScroll();
     };
     update();
@@ -106,7 +126,16 @@ export function KeyholeHero({ videoSrc, children }: { videoSrc: string; children
   return (
     <section ref={trackRef} className="keyhole-hero">
       <div ref={stageRef} className="keyhole-stage">
-        <video className="keyhole-video" src={videoSrc} autoPlay muted loop playsInline aria-hidden="true" />
+        <video
+          className="keyhole-video"
+          src={videoSrc}
+          poster={posterSrc}
+          autoPlay
+          muted
+          loop
+          playsInline
+          aria-hidden="true"
+        />
         <div className="dest-detail-mask-dark" />
         <svg
           ref={wallRef}

@@ -5160,8 +5160,10 @@ html.lenis body { height: auto; }
 }
 .keyhole-stage {
   position: sticky;
-  top: 4.25rem; /* under the sticky nav, like the homepage stage */
-  height: calc(100dvh - 4.25rem);
+  /* Exactly under the sticky nav: its measured height, written by the
+     component. 65px is that height as measured, for the first paint. */
+  top: var(--kh-top, 65px);
+  height: calc(100dvh - var(--kh-top, 65px));
   min-height: 480px;
   overflow: hidden;
   background: var(--keyhole-wall);

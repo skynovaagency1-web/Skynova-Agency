@@ -12,7 +12,9 @@ import { useReveal } from "@/hooks/use-reveal";
 
 type Bullet = { title: string; body: string };
 type Faq = { q: string; a: string };
-type HeroVideo = { videoSrc: string; overlaySrc?: string };
+/** posterSrc: a still shown before the video plays, and in its place when
+ *  autoplay is blocked (an iPhone in Low Power Mode). */
+type HeroVideo = { videoSrc: string; overlaySrc?: string; posterSrc?: string };
 
 export function VerticalPage({
   eyebrow,
@@ -88,7 +90,9 @@ export function VerticalPage({
       <Nav />
       <main>
         {heroVideo && heroReveal === "keyhole" ? (
-          <KeyholeHero videoSrc={heroVideo.videoSrc}>{heroCopy}</KeyholeHero>
+          <KeyholeHero videoSrc={heroVideo.videoSrc} posterSrc={heroVideo.posterSrc}>
+            {heroCopy}
+          </KeyholeHero>
         ) : (
           <section className="dest-detail-hero">
             {heroVideo ? (
@@ -96,6 +100,7 @@ export function VerticalPage({
                 <video
                   className="dest-detail-media"
                   src={heroVideo.videoSrc}
+                poster={heroVideo.posterSrc}
                   autoPlay
                   muted
                   loop
