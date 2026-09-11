@@ -27,6 +27,24 @@ export const POSTS: Post[] = [
     destinationSlug: "morocco",
   },
   {
+    slug: "base-outside-amsterdam",
+    tag: "Hotel tips",
+    title: "Base yourself outside Amsterdam: a Dutch trip that costs less and sees more",
+    excerpt:
+      "Haarlem, Utrecht and Rotterdam are a short train ride from Amsterdam -- close enough to make the capital a day trip rather than the whole holiday.",
+    readTime: "6 min read",
+    destinationSlug: "netherlands",
+  },
+  {
+    slug: "korea-without-a-car",
+    tag: "Trip planning",
+    title: "Korea without a rental car: high-speed rail, express buses and one card for everything",
+    excerpt:
+      "Between the KTX and a dense bus network, a car is more often a burden than a help in Korea -- with one real exception.",
+    readTime: "6 min read",
+    destinationSlug: "south-korea",
+  },
+  {
     slug: "48-hours-in-lisbon",
     tag: "City guide",
     title: "48 hours in Lisbon: a fast, affordable first trip to Portugal",

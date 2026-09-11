@@ -195,6 +195,101 @@ export const ARTICLES: Record<string, Article> = {
     ],
     related: ["marrakech-sahara-how-long", "where-to-stay-in-dubai", "boutique-vs-resort"],
   },
+  "base-outside-amsterdam": {
+    dek: "The Dutch rail network is dense enough that where you sleep and where you spend the day no longer have to be the same city.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "Amsterdam is small, beautiful and, for much of the year, very full. Rooms in the canal ring are among the priciest in Europe, and the city's tourist tax -- one of the highest anywhere on the continent -- goes on top of the room. Meanwhile the rest of the country is compact, and the trains between its cities run all day, several an hour." },
+      { kind: "para", text: "Put those together and the obvious plan turns around. **Sleep somewhere quieter and cheaper, and treat Amsterdam as the day trip.**" },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**Haarlem** -- about fifteen minutes by train. Canals, a grand market square and none of the crowds. The easiest swap.",
+        "**Utrecht** -- under half an hour, and the middle of the whole rail network, so everywhere else is close too.",
+        "**Rotterdam** -- around forty minutes on the fastest trains. A different kind of city, with Delft and The Hague on the doorstep.",
+        "**Leiden** -- the base for tulip season, a short bus ride from Keukenhof.",
+        "**Stay in Amsterdam itself** if it is a two-night first visit, or if the evenings are the point of the trip.",
+      ]},
+
+      { kind: "h2", text: "Why it works: the trains" },
+      { kind: "para", text: "On the main lines between the big cities, trains come often enough that you rarely check a timetable -- you walk to the platform. Paying is simple too: tap a contactless bank card or phone on the reader at the station, and tap again when you leave. No ticket to buy, and the fare is worked out for you." },
+      { kind: "para", text: "Late nights are covered better than most visitors expect. Around the dense western part of the country, a reduced night service keeps the main cities connected into the small hours, so dinner in Amsterdam does not mean a hotel there." },
+      { kind: "callout", title: "Tap in, and tap out", text: "The reader at the start of the journey and the reader at the end both matter. Forget to tap out and you can be charged a maximum fare rather than the price of the trip you actually took -- use the same card or phone both times." },
+
+      { kind: "h2", text: "Haarlem: Amsterdam's quieter twin" },
+      { kind: "para", text: "Haarlem is what a lot of people hope Amsterdam will be: canals, gabled houses, a huge church on a lively market square, good restaurants, and the space to walk without queueing. It is close enough that you can be in Amsterdam before your coffee goes cold, and the beach at Zandvoort is a few minutes the other way." },
+
+      { kind: "h2", text: "Utrecht: the middle of the map" },
+      { kind: "para", text: "Utrecht has a medieval centre and a canal with a difference: the old wharves sit at water level, below the street, and are now lined with cafes and terraces. More usefully, it is the hub of the rail network. From here Amsterdam, Rotterdam, The Hague and the east of the country are all an easy hop, which makes it the best base if you want to see more than one city." },
+
+      { kind: "h2", text: "Rotterdam: a different city altogether" },
+      { kind: "para", text: "Rotterdam was largely rebuilt after the Second World War, and it leans into that: bold modern architecture, a huge covered market hall, and a harbour that still feels like a working port. It feels nothing like Amsterdam, which is exactly why it pairs well with a day there. Delft, with its canals and blue-and-white pottery, is minutes away, and The Hague barely further." },
+
+      { kind: "h2", text: "Leiden: for tulip season" },
+      { kind: "para", text: "Leiden is an old university town of canals and bookshops, and in spring it is perfectly placed. Keukenhof, the famous bulb gardens, opens for only about eight weeks, roughly mid-March to mid-May, and buses run there from Leiden during the season. Tickets are sold for timed entry, so book before you go rather than at the gate." },
+
+      { kind: "cta", link: "hotels", destination: "Haarlem, Netherlands", label: "Compare hotels in Haarlem", note: "Live rates from our hotel partner -- or search Utrecht, Rotterdam or Leiden the same way." },
+
+      { kind: "h2", text: "What you give up" },
+      { kind: "para", text: "Amsterdam after dark. The canal ring lit up at night is a real part of the city, and a late train home is not the same as a stroll back to the hotel. If that matters to you, split it: stay outside for most of the trip, and spend the last night or two in Amsterdam itself." },
+      { kind: "para", text: "Whichever you choose, book the big museums ahead. The Rijksmuseum and the Van Gogh Museum sell timed tickets, and the Anne Frank House sells its tickets online only, released weeks in advance -- turning up at the door is not an option." },
+
+      { kind: "h2", text: "Getting in" },
+      { kind: "list", items: [
+        "**From Schiphol:** the airport has its own station under the terminal, with direct trains toward Leiden, The Hague, Rotterdam and Utrecht, as well as Amsterdam.",
+        "**Around town:** every city here is walkable, and every one of them is better on a bike.",
+        "**Luggage:** if you check out before an afternoon train, the bigger stations have lockers.",
+      ]},
+      { kind: "cta", link: "bikes", destination: "Utrecht", label: "Compare bike rentals in Utrecht", note: "City bikes and e-bikes from our booking partners." },
+      { kind: "cta", link: "flights", label: "Compare flights to Amsterdam", note: "Fares into Schiphol from our booking partners." },
+    ],
+    related: ["cycling-city-rules-abroad", "switzerland-by-train", "free-cancellation-fine-print"],
+  },
+
+  "korea-without-a-car": {
+    dek: "Seoul to Busan is well under three hours on the fastest trains, and most of what the rail line misses, an express bus reaches.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "In a lot of countries a rental car is how you see anything outside the capital. Korea is not one of them. A high-speed rail line runs the length of the country, an express bus network fills the gaps, and one rechargeable card pays for almost all of it. A car mostly adds traffic, parking and paperwork." },
+      { kind: "para", text: "**Plan the trip around trains and buses, and rent a car only for Jeju.**" },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**Seoul:** the subway, paid with a T-money card.",
+        "**Seoul to Busan, Gyeongju and the south:** the KTX high-speed train.",
+        "**Smaller towns and national parks:** express and intercity buses.",
+        "**The DMZ:** an organised tour -- it is not somewhere you can visit on your own.",
+        "**Jeju:** rent a car. This is the exception.",
+      ]},
+
+      { kind: "h2", text: "The KTX: the country's spine" },
+      { kind: "para", text: "The fastest trains get from Seoul to Busan in well under three hours, city centre to city centre, with no airport security or transfers at either end. Two operators run high-speed services: KTX trains leave from Seoul Station, and SRT trains from Suseo, in the south-east of the city -- check which station your ticket is for before you set off." },
+      { kind: "para", text: "Reserve seats on popular routes, especially on weekends and around holidays, when trains sell out. There is also a rail pass sold to foreign visitors; as with any rail pass, price your actual journeys first -- two or three long trips rarely justify it." },
+
+      { kind: "h2", text: "Express buses reach what the rail doesn't" },
+      { kind: "para", text: "For towns off the rail line, mountain parks and the east coast, the bus is the answer, and it is a good one. Express buses leave frequently from big terminals, run on motorways, and the premium versions have three wide seats to a row -- more comfortable than most flights. They are also usually cheaper than the train." },
+
+      { kind: "h2", text: "One card for all of it" },
+      { kind: "para", text: "A T-money card is a rechargeable transit card that works on the subway and buses across the country's cities, on many taxis, and in convenience stores. You tap in, and on buses and the subway you tap out too, which is how transfers get discounted." },
+      { kind: "callout", title: "Buy it at a convenience store", text: "T-money cards are sold and topped up at convenience stores and station machines, usually with cash. Buy one on your first day, put a sensible amount on it, and top up as you go." },
+
+      { kind: "h2", text: "Why not drive" },
+      { kind: "para", text: "Seoul's traffic is heavy, parking in the busy districts is scarce and expensive, and the subway will beat a car across town at almost any hour. To drive at all, most visitors need an International Driving Permit alongside their licence -- arrange it before you leave home, because you cannot get one once you are there." },
+      { kind: "callout", title: "Google Maps won't get you there", text: "Google Maps gives only limited directions in Korea. Locals use Naver Map or KakaoMap for walking, transit and driving routes -- download one before you arrive, and search places by their Korean name if the English one comes up short." },
+
+      { kind: "h2", text: "The exception: Jeju" },
+      { kind: "para", text: "Jeju is an island of coastal roads, volcanic peaks and scattered beaches and villages, and while buses do cover it, they cover it slowly. A car turns a day of connections into a day of places. Hire desks cluster around the airport, so collect it when you land and drop it off before you fly back." },
+      { kind: "cta", link: "cars", label: "Compare car hire on Jeju", note: "Pick-up at Jeju International Airport from our booking partners." },
+
+      { kind: "h2", text: "Getting data sorted" },
+      { kind: "para", text: "Between map apps, rail bookings and ride-hailing, you will be on your phone constantly. An eSIM set up before you fly means you land connected." },
+      { kind: "cta", link: "esim", destination: "south-korea", label: "Get a South Korea eSIM", note: "Data plans you can activate before you fly." },
+      { kind: "cta", link: "tours", destination: "DMZ tour Seoul", label: "Compare DMZ tours", note: "Organised day trips from Seoul from our booking partners." },
+      { kind: "cta", link: "flights", label: "Compare flights to Seoul", note: "Fares into Incheon from our booking partners." },
+    ],
+    related: ["japan-rail-pass-worth-it", "esim-vs-roaming-cost", "driving-on-the-other-side"],
+  },
+
 
   "japan-rail-pass-worth-it": {
     dek: "Since the 2023 price rise the pass loses money on a lot of ordinary itineraries -- price yours before you buy.",
