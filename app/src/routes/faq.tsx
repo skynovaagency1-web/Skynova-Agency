@@ -4,6 +4,8 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
+import { StructuredData } from "@/components/StructuredData";
+import { breadcrumbJsonLd, faqJsonLd, jsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/faq")({
   head: () => ({
@@ -41,11 +43,17 @@ const FAQS = [
   },
 ];
 
+// Built from FAQS itself, so the markup can never say something the page
+// doesn't. The sitemap's comment claimed this page "carries FAQ markup"; until
+// now it carried none at all.
+const FAQ_LD = jsonLd([faqJsonLd(FAQS), breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "FAQ" }])]);
+
 function FaqPage() {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
 
   return (
     <>
+      <StructuredData json={FAQ_LD} />
       <Nav />
       <main>
         <section className="site-section">

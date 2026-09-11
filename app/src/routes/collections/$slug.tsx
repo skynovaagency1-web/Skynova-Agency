@@ -4,6 +4,8 @@ import { Nav } from "@/components/site/Nav";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { Footer } from "@/components/site/Footer";
 import { Newsletter } from "@/components/site/Newsletter";
+import { StructuredData } from "@/components/StructuredData";
+import { itemListJsonLd, jsonLd } from "@/lib/seo";
 import { StackedCarousel } from "@/components/site/StackedCarousel";
 import { COLLECTIONS, getCollectionBySlug, collectionDestinations } from "@/data/collections";
 import { DESTINATION_DETAILS } from "@/data/destination-details";
@@ -35,9 +37,18 @@ export const Route = createFileRoute("/collections/$slug")({
 function CollectionPage() {
   const { collection, destinations } = Route.useLoaderData();
   const others = COLLECTIONS.filter((c) => c.slug !== collection.slug);
+  // Breadcrumbs already emit their own BreadcrumbList; this adds what the
+  // page is a list OF -- the same destinations the carousel shows.
+  const listLd = jsonLd(
+    itemListJsonLd(
+      `${collection.name} destinations`,
+      destinations.map((d) => ({ name: d.name, path: `/destinations/${d.slug}` })),
+    ),
+  );
 
   return (
     <>
+      <StructuredData json={listLd} />
       <Nav />
       <main>
         <section className="site-section pb-0">

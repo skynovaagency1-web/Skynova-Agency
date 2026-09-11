@@ -62,3 +62,45 @@ export function destinationTitle(name: string) {
   const full = `${name} Travel Guide ${GUIDE_YEAR} | Flights, Hotels & Tours`;
   return full.length <= 60 ? full : `${name} Travel Guide ${GUIDE_YEAR} | Flights & Hotels`;
 }
+
+export type FaqItem = { q: string; a: string };
+
+/**
+ * FAQPage for questions shown on the page. The text must match what a reader
+ * sees word for word -- markup for content that isn't on the page is what
+ * gets structured data ignored, or penalised. Every caller builds it from the
+ * same array it renders.
+ *
+ * Google limited FAQ rich results to a handful of authoritative sites in
+ * 2023, so this is not for a SERP snippet. It is for the answer engines and
+ * Bing, which still read it to understand what a page answers.
+ */
+export function faqJsonLd(faqs: FaqItem[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+}
+
+/** ItemList of internal pages -- a collection's destinations, the blog's
+ *  articles -- so a listing page is read as a collection of those pages. */
+export function itemListJsonLd(name: string, items: { name: string; path: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name,
+    numberOfItems: items.length,
+    itemListElement: items.map((it, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: it.name,
+      url: absUrl(it.path),
+    })),
+  };
+}
+

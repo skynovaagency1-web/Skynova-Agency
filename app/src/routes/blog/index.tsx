@@ -7,6 +7,18 @@ import { Newsletter } from "@/components/site/Newsletter";
 import { getDestinationBySlug } from "@/data/destinations";
 import { POSTS, PHOTO_SLUGS, TAG_CLASSES } from "@/data/blog-posts";
 import { hasArticle } from "@/data/blog-articles";
+import { StructuredData } from "@/components/StructuredData";
+import { breadcrumbJsonLd, itemListJsonLd, jsonLd } from "@/lib/seo";
+
+// The written guides only -- a post card with no article body is not a
+// page, so it is not in the list (same rule as the sitemap).
+const BLOG_LD = jsonLd([
+  itemListJsonLd(
+    "Skynova travel guides",
+    POSTS.filter((p) => hasArticle(p.slug)).map((p) => ({ name: p.title, path: `/blog/${p.slug}` })),
+  ),
+  breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "Blog" }]),
+]);
 
 export const Route = createFileRoute("/blog/")({
   head: () => ({
@@ -52,6 +64,7 @@ function BlogPage() {
 
   return (
     <>
+      <StructuredData json={BLOG_LD} />
       <Nav />
       <main>
         <section className="site-section pb-0">

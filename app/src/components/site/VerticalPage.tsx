@@ -9,6 +9,8 @@ import { CardActions } from "./CardActions";
 import { KeyholeHero } from "./KeyholeHero";
 import { DESTINATIONS } from "@/data/destinations";
 import { useReveal } from "@/hooks/use-reveal";
+import { StructuredData } from "@/components/StructuredData";
+import { breadcrumbJsonLd, faqJsonLd, jsonLd } from "@/lib/seo";
 
 type Bullet = { title: string; body: string };
 type Faq = { q: string; a: string };
@@ -74,6 +76,15 @@ export function VerticalPage({
     .map((slug) => DESTINATIONS.find((d) => d.slug === slug))
     .filter((d): d is NonNullable<typeof d> => Boolean(d));
 
+  // Every booking page: where it sits, and -- when it has an FAQ section --
+  // the questions it answers, from the same array FaqSection renders. Done
+  // here rather than in FaqSection, because destination pages emit their own
+  // FAQPage and would otherwise carry two.
+  const structuredData = jsonLd([
+    breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: eyebrow }]),
+    ...(faqs && faqs.length > 0 ? [faqJsonLd(faqs)] : []),
+  ]);
+
   // Shared by both hero variants below.
   const heroCopy = (
     <div className={`dest-detail-copy ${heroVideo ? "dest-detail-copy-light" : ""}`}>
@@ -91,6 +102,7 @@ export function VerticalPage({
 
   return (
     <>
+      <StructuredData json={structuredData} />
       <Nav />
       <main>
         {heroVideo && heroReveal === "keyhole" ? (

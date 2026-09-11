@@ -6,6 +6,7 @@ import { Newsletter } from "@/components/site/Newsletter";
 import { getPostBySlug, POSTS, PHOTO_SLUGS, TAG_CLASSES } from "@/data/blog-posts";
 import { getArticle, hasArticle, type Block } from "@/data/blog-articles";
 import { getDestinationBySlug } from "@/data/destinations";
+import { absUrl, breadcrumbJsonLd, jsonLd } from "@/lib/seo";
 import {
   flightsLink,
   hotelsLink,
@@ -147,17 +148,31 @@ function ArticlePage() {
     year: "numeric",
   });
 
-  const jsonLd = {
+  // Where it lives, what it shows, and where it sits in the site. The image
+  // is the same destination photo the article's header uses, and only when
+  // there is one -- markup must not point at an image the page doesn't show.
+  const articleUrl = absUrl(`/blog/${post.slug}`);
+  const articleLd = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: post.title,
     description: article.dek,
     datePublished: article.published,
     dateModified: article.updated ?? article.published,
+    url: articleUrl,
+    mainEntityOfPage: { "@type": "WebPage", "@id": articleUrl },
+    inLanguage: "en",
+    ...(hasPhoto ? { image: absUrl(`/assets/destinations/${post.destinationSlug}.webp`) } : {}),
     author: { "@type": "Organization", name: "Skynova Agency" },
-    publisher: { "@type": "Organization", name: "Skynova Agency" },
+    publisher: { "@type": "Organization", name: "Skynova Agency", logo: { "@type": "ImageObject", url: absUrl("/assets/brand/apple-touch-icon.png") } },
     articleSection: post.tag,
   };
+  // Through the shared helper rather than JSON.stringify: it escapes "<", so
+  // no article text can ever close the <script> tag early.
+  const structuredData = jsonLd([
+    articleLd,
+    breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "Blog", path: "/blog" }, { name: post.title }]),
+  ]);
 
   return (
     <>
@@ -254,7 +269,7 @@ function ArticlePage() {
           )}
         </article>
 
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData }} />
       </main>
       <Newsletter />
       <Footer />

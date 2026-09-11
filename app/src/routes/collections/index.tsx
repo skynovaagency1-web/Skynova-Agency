@@ -5,6 +5,8 @@ import { Nav } from "@/components/site/Nav";
 import { useReveal } from "@/hooks/use-reveal";
 import { Footer } from "@/components/site/Footer";
 import { Newsletter } from "@/components/site/Newsletter";
+import { StructuredData } from "@/components/StructuredData";
+import { breadcrumbJsonLd, itemListJsonLd, jsonLd } from "@/lib/seo";
 import { COLLECTIONS, collectionDestinations } from "@/data/collections";
 import { PHOTO_SLUGS } from "@/data/destinations";
 
@@ -28,6 +30,14 @@ const capitalise = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
 const DESTINATION_COUNT = new Set(COLLECTIONS.flatMap((c) => c.destinationSlugs)).size;
 const HEADLINE = `${capitalise(numberWords(COLLECTIONS.length))} ways into ${numberWords(DESTINATION_COUNT)} destinations.`;
 const COLLECTIONS_DESCRIPTION = `${capitalise(numberWords(COLLECTIONS.length))} themed ways into our ${DESTINATION_COUNT} destinations -- from ${COLLECTIONS[0].name.toLowerCase()} and ${COLLECTIONS[1].name.toLowerCase()} to ${COLLECTIONS[COLLECTIONS.length - 1].name.toLowerCase()}, each with seasons and booking links.`;
+
+const COLLECTIONS_LD = jsonLd([
+  itemListJsonLd(
+    "Skynova travel collections",
+    COLLECTIONS.map((c) => ({ name: c.name, path: `/collections/${c.slug}` })),
+  ),
+  breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "Collections" }]),
+]);
 
 export const Route = createFileRoute("/collections/")({
   head: () => ({
@@ -62,6 +72,7 @@ function CollectionsIndex() {
   const last = COLLECTIONS.length - 1;
   return (
     <>
+      <StructuredData json={COLLECTIONS_LD} />
       <Nav />
       <main>
         <section className="site-section">

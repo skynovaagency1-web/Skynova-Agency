@@ -18,6 +18,7 @@ import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as ReviewsRouteImport } from './routes/reviews'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as HotelsRouteImport } from './routes/hotels'
 import { Route as GiftRouteImport } from './routes/gift'
 import { Route as FlightsRouteImport } from './routes/flights'
@@ -82,6 +83,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LlmsDottxtRoute = LlmsDottxtRouteImport.update({
+  id: '/llms.txt',
+  path: '/llms.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HotelsRoute = HotelsRouteImport.update({
@@ -200,6 +206,7 @@ export interface FileRoutesByFullPath {
   '/flights': typeof FlightsRoute
   '/gift': typeof GiftRoute
   '/hotels': typeof HotelsRoute
+  '/llms.txt': typeof LlmsDottxtRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/reviews': typeof ReviewsRoute
@@ -231,6 +238,7 @@ export interface FileRoutesByTo {
   '/flights': typeof FlightsRoute
   '/gift': typeof GiftRoute
   '/hotels': typeof HotelsRoute
+  '/llms.txt': typeof LlmsDottxtRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/reviews': typeof ReviewsRoute
@@ -263,6 +271,7 @@ export interface FileRoutesById {
   '/flights': typeof FlightsRoute
   '/gift': typeof GiftRoute
   '/hotels': typeof HotelsRoute
+  '/llms.txt': typeof LlmsDottxtRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/reviews': typeof ReviewsRoute
@@ -296,6 +305,7 @@ export interface FileRouteTypes {
     | '/flights'
     | '/gift'
     | '/hotels'
+    | '/llms.txt'
     | '/privacy'
     | '/reset-password'
     | '/reviews'
@@ -327,6 +337,7 @@ export interface FileRouteTypes {
     | '/flights'
     | '/gift'
     | '/hotels'
+    | '/llms.txt'
     | '/privacy'
     | '/reset-password'
     | '/reviews'
@@ -358,6 +369,7 @@ export interface FileRouteTypes {
     | '/flights'
     | '/gift'
     | '/hotels'
+    | '/llms.txt'
     | '/privacy'
     | '/reset-password'
     | '/reviews'
@@ -390,6 +402,7 @@ export interface RootRouteChildren {
   FlightsRoute: typeof FlightsRoute
   GiftRoute: typeof GiftRoute
   HotelsRoute: typeof HotelsRoute
+  LlmsDottxtRoute: typeof LlmsDottxtRoute
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   ReviewsRoute: typeof ReviewsRoute
@@ -470,6 +483,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/llms.txt': {
+      id: '/llms.txt'
+      path: '/llms.txt'
+      fullPath: '/llms.txt'
+      preLoaderRoute: typeof LlmsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hotels': {
@@ -630,6 +650,7 @@ const rootRouteChildren: RootRouteChildren = {
   FlightsRoute: FlightsRoute,
   GiftRoute: GiftRoute,
   HotelsRoute: HotelsRoute,
+  LlmsDottxtRoute: LlmsDottxtRoute,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   ReviewsRoute: ReviewsRoute,
