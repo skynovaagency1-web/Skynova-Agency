@@ -81,6 +81,24 @@ export const POSTS: Post[] = [
     destinationSlug: "australia",
   },
   {
+    slug: "banff-car-or-shuttle",
+    tag: "Trip planning",
+    title: "Banff without a car: shuttles, buses, and the one drive still worth doing",
+    excerpt:
+      "Moraine Lake is closed to private cars and Lake Louise's car park fills before breakfast. In the Rockies, the shuttle now beats the hire car -- mostly.",
+    readTime: "6 min read",
+    destinationSlug: "canada",
+  },
+  {
+    slug: "fiji-mamanuca-or-yasawa",
+    tag: "Trip planning",
+    title: "Mamanucas or Yasawas: choosing Fiji's islands, and how the boats actually work",
+    excerpt:
+      "Fiji's resort islands fan out from one harbour near Nadi. How far along that line you go decides the kind of trip you get.",
+    readTime: "6 min read",
+    destinationSlug: "fiji",
+  },
+  {
     slug: "48-hours-in-lisbon",
     tag: "City guide",
     title: "48 hours in Lisbon: a fast, affordable first trip to Portugal",

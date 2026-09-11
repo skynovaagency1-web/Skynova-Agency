@@ -472,6 +472,89 @@ export const ARTICLES: Record<string, Article> = {
     ],
     related: ["driving-on-the-other-side", "best-time-to-book-a-flight", "one-way-rental-fees"],
   },
+  "banff-car-or-shuttle": {
+    dek: "The two most famous lakes in the Canadian Rockies have changed the rules. For the classic sights a shuttle is now the better option, and a car is a choice rather than a necessity.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "For years the advice on the Canadian Rockies was simple: fly into Calgary, pick up a car, drive. It is still how most people see the Icefields Parkway. But the park's two most photographed lakes have changed the picture. **Moraine Lake no longer admits private cars at all, and the Lake Louise car park is often full early on summer mornings.**" },
+      { kind: "para", text: "None of that makes a car useless. It just means the car is for the open road, not for the famous viewpoints -- and plenty of visitors now do the whole trip without one." },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**Calgary airport to Banff:** a shuttle bus, or a hire car if you want one for the rest of the trip. The drive is around an hour and a half.",
+        "**Moraine Lake:** shuttle, bus or tour. Private cars are not allowed on the road.",
+        "**Lake Louise:** shuttle by preference. There is parking, but it is paid and fills early.",
+        "**Banff town and the sights around it:** the local buses and your own feet.",
+        "**The Icefields Parkway to Jasper:** a car, or a coach tour. This is the drive worth doing.",
+      ]},
+
+      { kind: "h2", text: "Moraine Lake: no cars, by design" },
+      { kind: "para", text: "The road to Moraine Lake closed to personal vehicles in 2023, after years of its car park filling before dawn and traffic backing up along the road. You can now get there on the Parks Canada shuttle, on a commercial bus or tour, or by bicycle. Turning up in a hire car simply means turning round." },
+      { kind: "para", text: "The Parks Canada shuttles leave from a park-and-ride at the Lake Louise ski area and connect both lakes. Seats are reserved online and go quickly for summer weekends; a share is held back and released a couple of days beforehand, so check again if your date looks full." },
+      { kind: "callout", title: "Book the shuttle before the hotel feels finished", text: "For a summer trip, reserve the lake shuttle as soon as your dates are fixed. It is the one part of a Banff itinerary that can genuinely sell out." },
+
+      { kind: "h2", text: "Banff town: park it and leave it" },
+      { kind: "para", text: "Banff itself is compact and easy to walk, and the local Roam buses run to the gondola, the hot springs and on to Lake Louise. If you do have a car, you will often find it simpler to leave it at the hotel -- parking in the centre is paid and busy all summer." },
+
+      { kind: "h2", text: "The Icefields Parkway: where a car earns its keep" },
+      { kind: "para", text: "The road north from Lake Louise to Jasper is one of the great drives anywhere: around 230 km of glaciers, waterfalls and viewpoints, most of which reward stopping. There is no regular public bus along it, so the choice is a coach tour or your own wheels." },
+      { kind: "para", text: "Plan it as a full day, not a transfer. Fuel is limited along the way and mobile signal is missing for long stretches, so fill up before you set off and download your maps for offline use." },
+      { kind: "cta", link: "cars", label: "Compare car hire in Calgary", note: "Pick-up at Calgary airport from our booking partners." },
+
+      { kind: "h2", text: "What the park asks of everyone" },
+      { kind: "list", items: [
+        "**A park pass.** Anyone stopping in Banff or Jasper needs a Parks Canada pass, daily or annual. Buy it online or at the park gates.",
+        "**Wildlife stays wild.** Elk, sheep and bears are often seen from the road. Do not stop on the highway to look, and never approach or feed them.",
+        "**Bear spray on the trails.** Carry it, know how to use it, and make noise on quiet paths.",
+        "**Mountain seasons.** Snow lingers on the high trails into July, and in winter some mountain roads require winter tyres.",
+      ]},
+
+      { kind: "h2", text: "Fitting it into a longer Canada trip" },
+      { kind: "para", text: "Our Canada route starts in Toronto and Montreal and finishes in the Rockies. Between the two is a four-hour flight -- the country really is that big -- so treat the mountains as their own leg: fly into Calgary, and give them at least three days on the ground." },
+      { kind: "cta", link: "hotels", destination: "Banff, Canada", label: "Compare hotels in Banff", note: "Live rates from our hotel partner, walkable to the town's bus stops." },
+      { kind: "cta", link: "flights", label: "Compare flights to Calgary", note: "Fares into Calgary from our booking partners." },
+    ],
+    related: ["switzerland-by-train", "new-zealand-south-island", "one-way-rental-fees"],
+  },
+
+  "fiji-mamanuca-or-yasawa": {
+    dek: "Fiji's resort islands fan out from one harbour near Nadi. How far along that line you go decides the kind of trip you get.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "Most visitors to Fiji barely see the main island. They land at Nadi, drive twenty minutes or so to the harbour at Port Denarau, and board a boat. From there two island chains stretch away to the north-west: the Mamanucas close in, the Yasawas further out." },
+      { kind: "para", text: "**The Mamanucas are the easy, sociable, short-transfer option; the Yasawas are quieter, simpler and a longer ride away.** Our seven-day route does both, and for a first visit that is hard to beat." },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**Short trip, young children or prone to seasickness:** the Mamanucas. Most resorts are well under two hours by boat.",
+        "**Quiet, remote, village life and clear water:** the Yasawas -- if a longer boat ride and simpler facilities suit you.",
+        "**A week or more:** both. Start close in, finish further out.",
+        "**Awkward flight times:** a night at Denarau, near the airport, on that end of the trip.",
+      ]},
+
+      { kind: "h2", text: "How the boats work" },
+      { kind: "para", text: "A high-speed catamaran leaves Port Denarau each morning and works its way up through the Mamanucas and along the Yasawas, calling at resorts on the way. Many islands have no jetty: the catamaran stops offshore, and a small boat from your resort comes out to collect you and your bags. Expect wet feet." },
+      { kind: "para", text: "The same operator sells hop-on, hop-off passes for a set number of days, which is the simplest way to island-hop -- you choose your stops and the boat does the rest. Seaplanes and helicopters reach many resorts in minutes rather than hours, at a price, and with tight weight limits on luggage." },
+      { kind: "callout", title: "The first boat decides the first night", text: "Boats leave in the morning and come back in the afternoon. If your international flight lands late, or leaves before mid-afternoon, plan a night near Nadi on that end of the trip rather than trying to connect on the same day." },
+
+      { kind: "h2", text: "The Mamanucas: close, easy and lively" },
+      { kind: "para", text: "The Mamanuca resorts sit in calm, sheltered water within easy reach of the mainland, which makes them ideal for a short stay or a first taste. The choice is wide -- family resorts with kids' clubs, adults-only hideaways, backpacker islands -- and day trips to sandbars and the floating Cloud 9 platform are easy to arrange. The trade-off is that you will rarely feel alone." },
+
+      { kind: "h2", text: "The Yasawas: further, quieter, simpler" },
+      { kind: "para", text: "The Yasawas are a longer chain of higher, drier islands, and the boat to the far end takes several hours. Resorts are smaller and more spread out, the water is famously clear, and villages are close by. Many resorts are the only place to eat on their island, so meal plans are often compulsory -- check what is included before you compare prices." },
+      { kind: "para", text: "Bring cash. Card machines, Wi-Fi and phone signal can all be patchy further up the chain." },
+
+      { kind: "h2", text: "Visiting a village" },
+      { kind: "para", text: "Many island resorts arrange visits to a nearby village, and they are often the part of the trip people remember most. Custom asks visitors to bring a small gift of kava root for the chief, to cover shoulders and knees, and to take off hats. Your hosts will guide you through the rest, including the kava ceremony itself." },
+
+      { kind: "h2", text: "When to go" },
+      { kind: "para", text: "May to October is the dry season: lower humidity, more sunshine and calmer crossings. November to April is warmer and wetter, and it is cyclone season -- most trips go ahead as planned, but take travel insurance and book rates you can change." },
+      { kind: "cta", link: "hotels", destination: "Denarau Island, Fiji", label: "Compare hotels on Denarau", note: "Live rates from our hotel partner, for arrival and departure nights near Nadi." },
+      { kind: "cta", link: "airport", label: "Book an airport transfer in Nadi", note: "Pick-ups from Nadi airport to Denarau and the harbour, booked before you land." },
+      { kind: "cta", link: "flights", label: "Compare flights to Nadi", note: "Fares into Nadi from our booking partners." },
+    ],
+    related: ["boutique-vs-resort", "free-cancellation-fine-print", "croatia-ferries-vs-driving"],
+  },
 
 
   "japan-rail-pass-worth-it": {
