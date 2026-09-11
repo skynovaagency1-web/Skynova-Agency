@@ -5195,23 +5195,33 @@ html.lenis body { height: auto; }
 .keyhole-hero:not(.is-open) .dest-detail-copy { pointer-events: none; }
 /* ...but a keyboard user who tabs to it has to be able to see it. */
 .keyhole-stage .dest-detail-copy:focus-within { opacity: 1; transform: none; pointer-events: auto; }
+/* Intro overlay (the page's glass cards): on screen at the start, then
+   fading and drifting toward the viewer as the camera pushes in -- it sits
+   outside the scene, so it never zooms with it. */
+.keyhole-intro {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  opacity: clamp(0, calc(1 - var(--kh-p, 0) * 7), 1);
+  transform: scale(calc(1 + var(--kh-p, 0) * 0.8));
+}
+.keyhole-hero.is-past-intro .keyhole-intro { pointer-events: none; visibility: hidden; }
+.kh-hint-top { display: none; }
+@media (max-width: 900px) {
+  .kh-hint-top { display: inline; }
+  .kh-hint-floor { display: none; }
+}
 
-.kh-mask-open { fill: white; }
-.kh-mask-hole { fill: black; }
 .kh-wall { fill: var(--keyhole-wall); }
 .kh-floor { fill: var(--keyhole-floor); }
-.kh-halo-shape { fill: var(--keyhole-light-warm); }
 .kh-stop-core { stop-color: var(--keyhole-light-core); }
 .kh-stop-warm { stop-color: var(--keyhole-light-warm); }
 .kh-stop-spill { stop-color: var(--keyhole-spill); stop-opacity: 0.5; }
 .kh-stop-spill-fade { stop-color: var(--keyhole-spill); stop-opacity: 0; }
 .kh-stop-aura { stop-color: var(--keyhole-spill); stop-opacity: 0.12; }
 .kh-stop-aura-fade { stop-color: var(--keyhole-spill); stop-opacity: 0; }
-.kh-halo { animation: kh-breathe 3.6s ease-in-out infinite; }
-@keyframes kh-breathe {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 0.85; }
-}
+.kh-stop-halo { stop-color: var(--keyhole-light-warm); stop-opacity: 0.55; }
+.kh-stop-halo-fade { stop-color: var(--keyhole-light-warm); stop-opacity: 0; }
 .kh-hint {
   fill: var(--keyhole-hint);
   font-family: var(--font-mono);
@@ -5223,9 +5233,9 @@ html.lenis body { height: auto; }
   .keyhole-hero { height: auto; }
   .keyhole-stage { position: relative; top: 0; height: 76vh; min-height: 520px; }
   .keyhole-wall { display: none; }
+  .keyhole-intro { display: none; }
   .keyhole-video { transform: none; }
   .keyhole-stage .dest-detail-copy { opacity: 1; transform: none; }
   .keyhole-hero .dest-detail-copy { pointer-events: auto; }
-  .kh-halo { animation: none; }
 }
 

@@ -1,5 +1,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 
+import { SmoothScroll } from "./SmoothScroll";
+
 /**
  * The hotel page's hero, after the "For hotel hero section" reference: a dark
  * wall, one keyhole of warm light, and that light spilling across the floor.
@@ -8,16 +10,22 @@ import { useEffect, useRef, type ReactNode } from "react";
  * that's left. Then the headline arrives, the same late reveal the homepage
  * hero uses.
  *
- * One transform drives the whole scene. Wall, floor, light and keyhole sit in
+ * One transform drives the whole scene. Wall, floor, light and keyhole share
  * a single SVG group scaled around the keyhole's centre, so it reads as the
- * camera moving in rather than a keyhole growing on a flat wall -- and the
- * cut-out mask lives in that group's user space, so it scales with it for
- * free. It is vector and re-rendered each frame, so the keyhole's edge stays
- * crisp at 30x where a scaled bitmap would smear.
+ * camera moving in rather than a keyhole growing on a flat wall. It is
+ * vector and re-rendered each frame, so the edge stays crisp at 30x.
  *
- * Cheap on purpose: scroll is read once per animation frame, the glow and the
- * whole wall drop out of rendering the moment they're invisible, and
- * prefers-reduced-motion skips all of it in CSS -- the video just plays.
+ * Built to be cheap to redraw, because the first version wasn't: it cut the
+ * keyhole with an SVG <mask> and lit it through a Gaussian blur filter, both
+ * rasterised on the CPU every frame, and its glow "breathed" on a CSS loop
+ * that repainted the whole scene even while nobody was scrolling. Now the
+ * keyhole is a hole in the wall's own path (the outline sits inside the
+ * rectangle and the path is filled even-odd), the glow is a plain radial
+ * gradient, and nothing animates unless the page is moving.
+ *
+ * SmoothScroll is mounted here, not site-wide: with a mouse wheel, native
+ * scrolling moves in notches and the zoom jumped with each one. Its own
+ * comment explains why the homepage deliberately goes without.
  */
 
 // Scene geometry, in the SVG's own units (1600 x 1000, sliced to cover).
@@ -29,12 +37,31 @@ const CY = 420;
 const R = 52;
 /** The keyhole sits on the floor line, as in the reference. */
 const FLOOR_Y = 640;
-/** The slot starts inside the circle so the two read as one opening, and
- *  widens toward the floor. */
-const SLOT_TOP = CY + R * 0.6;
-const SLOT_TOP_HALF = 26;
+/** Slot half-width where it meets the circle, and at the floor. */
+const JOIN_HALF = 26;
 const SLOT_BOTTOM_HALF = 54;
-const SLOT_POINTS = `${CX - SLOT_TOP_HALF},${SLOT_TOP} ${CX + SLOT_TOP_HALF},${SLOT_TOP} ${CX + SLOT_BOTTOM_HALF},${FLOOR_Y} ${CX - SLOT_BOTTOM_HALF},${FLOOR_Y}`;
+/** Where the slot's edges meet the circle, so the outline is one closed
+ *  shape. A circle and a trapezoid overlapping would, filled even-odd, turn
+ *  their overlap back into wall. */
+const JOIN_Y = CY + Math.sqrt(R * R - JOIN_HALF * JOIN_HALF);
+const KEYHOLE =
+  `M ${CX - JOIN_HALF} ${JOIN_Y} A ${R} ${R} 0 1 1 ${CX + JOIN_HALF} ${JOIN_Y} ` +
+  `L ${CX + SLOT_BOTTOM_HALF} ${FLOOR_Y} L ${CX - SLOT_BOTTOM_HALF} ${FLOOR_Y} Z`;
+
+function circlePath(cx: number, cy: number, r: number): string {
+  return `M ${cx - r} ${cy} A ${r} ${r} 0 1 0 ${cx + r} ${cy} A ${r} ${r} 0 1 0 ${cx - r} ${cy} Z`;
+}
+
+/** The wall down to the floor line, with the keyhole as a hole in it. */
+const WALL = `M ${-VB_W} ${-VB_H} H ${VB_W * 2} V ${FLOOR_Y} H ${-VB_W} Z ${KEYHOLE}`;
+/** Faint warmth on the wall around the keyhole -- holed the same way, or it
+ *  would tint the view through it. */
+const AURA_R = 300;
+const AURA_CY = CY + 40;
+const AURA = `${circlePath(CX, AURA_CY, AURA_R)} ${KEYHOLE}`;
+/** The light on the floor: the lower half of an ellipse from the keyhole's base. */
+const SPILL = `M ${CX - 600} ${FLOOR_Y} A 600 320 0 0 0 ${CX + 600} ${FLOOR_Y} Z`;
+
 /** Farthest point of the scene from the focal point. Once the round part of
  *  the opening is wider than this, no wall can be on screen at any aspect. */
 const COVER_RADIUS = Math.hypot(VB_W / 2, VB_H - CY);
@@ -43,10 +70,13 @@ const MAX_ZOOM = 34;
 const ZOOM_END = 0.85;
 /** The glow is gone by here, so the lobby shows through the keyhole early. */
 const GLOW_END = 0.18;
+/** The intro overlay (glass cards) is out of the way by here. */
+const INTRO_END = 0.14;
 
 export function KeyholeHero({
   videoSrc,
   posterSrc,
+  intro,
   children,
 }: {
   videoSrc: string;
@@ -54,6 +84,10 @@ export function KeyholeHero({
    *  Low Power Mode, which blocks autoplay. Without one, the keyhole would
    *  open onto a blank video there rather than the lobby. */
   posterSrc?: string;
+  /** Floats over the wall at the start (the page's glass cards) and fades
+   *  and drifts toward the viewer as the camera pushes in. Not part of the
+   *  scene, so it never zooms with it. */
+  intro?: ReactNode;
   children: ReactNode;
 }) {
   const trackRef = useRef<HTMLElement>(null);
@@ -82,6 +116,7 @@ export function KeyholeHero({
       stickTop = parseFloat(getComputedStyle(stage).top) || 0;
     };
     measure();
+
     let frame = 0;
     const update = () => {
       frame = 0;
@@ -104,6 +139,7 @@ export function KeyholeHero({
       wall.style.visibility = R * k > COVER_RADIUS ? "hidden" : "";
 
       stage.style.setProperty("--kh-p", p.toFixed(4));
+      track.classList.toggle("is-past-intro", p >= INTRO_END);
       track.classList.toggle("is-open", p >= 0.86);
     };
     const onScroll = () => {
@@ -125,6 +161,7 @@ export function KeyholeHero({
 
   return (
     <section ref={trackRef} className="keyhole-hero">
+      <SmoothScroll />
       <div ref={stageRef} className="keyhole-stage">
         <video
           className="keyhole-video"
@@ -146,57 +183,53 @@ export function KeyholeHero({
           focusable="false"
         >
           <defs>
-            {/* White shows the wall, black cuts the keyhole out of it. */}
-            <mask id="kh-cut" maskUnits="userSpaceOnUse" x={-VB_W} y={-VB_H} width={VB_W * 3} height={VB_H * 3}>
-              <rect className="kh-mask-open" x={-VB_W} y={-VB_H} width={VB_W * 3} height={VB_H * 3} />
-              <circle className="kh-mask-hole" cx={CX} cy={CY} r={R} />
-              <polygon className="kh-mask-hole" points={SLOT_POINTS} />
-            </mask>
-            <clipPath id="kh-floor-clip">
-              <rect x={-VB_W} y={FLOOR_Y} width={VB_W * 3} height={VB_H * 2} />
-            </clipPath>
-            <filter id="kh-blur" x="-100%" y="-100%" width="300%" height="300%">
-              <feGaussianBlur stdDeviation="26" />
-            </filter>
-            <radialGradient id="kh-light" cx="0.5" cy="0.5" r="0.5">
+            <radialGradient id="kh-light" gradientUnits="userSpaceOnUse" cx={CX} cy={CY} r={230}>
               <stop offset="0" className="kh-stop-core" />
               <stop offset="1" className="kh-stop-warm" />
             </radialGradient>
-            <linearGradient id="kh-light-slot" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" className="kh-stop-core" />
-              <stop offset="1" className="kh-stop-warm" />
-            </linearGradient>
-            <radialGradient id="kh-spill" cx="0.5" cy="0.5" r="0.5">
-              <stop offset="0" className="kh-stop-spill" />
-              <stop offset="1" className="kh-stop-spill-fade" />
+            <radialGradient id="kh-halo" gradientUnits="userSpaceOnUse" cx={CX} cy={CY + 50} r={210}>
+              <stop offset="0" className="kh-stop-halo" />
+              <stop offset="1" className="kh-stop-halo-fade" />
             </radialGradient>
-            <radialGradient id="kh-aura" cx="0.5" cy="0.5" r="0.5">
+            <radialGradient id="kh-aura" gradientUnits="userSpaceOnUse" cx={CX} cy={AURA_CY} r={AURA_R}>
               <stop offset="0" className="kh-stop-aura" />
               <stop offset="1" className="kh-stop-aura-fade" />
+            </radialGradient>
+            <radialGradient
+              id="kh-spill"
+              gradientUnits="userSpaceOnUse"
+              cx={CX}
+              cy={FLOOR_Y}
+              r={600}
+              gradientTransform={`translate(${CX} ${FLOOR_Y}) scale(1 0.55) translate(${-CX} ${-FLOOR_Y})`}
+            >
+              <stop offset="0" className="kh-stop-spill" />
+              <stop offset="1" className="kh-stop-spill-fade" />
             </radialGradient>
           </defs>
 
           <g ref={sceneRef}>
-            <g mask="url(#kh-cut)">
-              <rect className="kh-wall" x={-VB_W} y={-VB_H} width={VB_W * 3} height={VB_H + FLOOR_Y} />
-              <rect className="kh-floor" x={-VB_W} y={FLOOR_Y} width={VB_W * 3} height={VB_H * 2} />
-              <circle cx={CX} cy={CY + 40} r={300} fill="url(#kh-aura)" />
-              <ellipse cx={CX} cy={FLOOR_Y} rx={600} ry={320} fill="url(#kh-spill)" clipPath="url(#kh-floor-clip)" />
-            </g>
+            <path className="kh-wall" d={WALL} fillRule="evenodd" />
+            <rect className="kh-floor" x={-VB_W} y={FLOOR_Y} width={VB_W * 3} height={VB_H * 2} />
+            <path d={AURA} fillRule="evenodd" fill="url(#kh-aura)" />
+            <path d={SPILL} fill="url(#kh-spill)" />
             <g ref={lightRef}>
-              <g className="kh-halo" filter="url(#kh-blur)">
-                <circle className="kh-halo-shape" cx={CX} cy={CY} r={R} />
-                <polygon className="kh-halo-shape" points={SLOT_POINTS} />
-              </g>
-              <circle cx={CX} cy={CY} r={R} fill="url(#kh-light)" />
-              <polygon points={SLOT_POINTS} fill="url(#kh-light-slot)" />
+              <circle cx={CX} cy={CY + 50} r={210} fill="url(#kh-halo)" />
+              <path d={KEYHOLE} fill="url(#kh-light)" />
             </g>
           </g>
 
-          <text className="kh-hint" x={CX} y={FLOOR_Y + 130} textAnchor="middle">
+          {/* Two positions for one hint: on the floor on wide screens, above
+              the keyhole on phones, where the stacked glass cards sit on the
+              floor and would cover it. CSS shows one or the other. */}
+          <text className="kh-hint kh-hint-floor" x={CX} y={FLOOR_Y + 130} textAnchor="middle">
+            SCROLL TO STEP INSIDE
+          </text>
+          <text className="kh-hint kh-hint-top" x={CX} y={CY - R - 64} textAnchor="middle">
             SCROLL TO STEP INSIDE
           </text>
         </svg>
+        {intro ? <div className="keyhole-intro">{intro}</div> : null}
         {children}
       </div>
     </section>

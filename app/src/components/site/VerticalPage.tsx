@@ -24,6 +24,7 @@ export function VerticalPage({
   heroAlt,
   heroVideo,
   heroReveal,
+  heroIntro,
   bullets,
   ctaHref,
   ctaLabel,
@@ -51,6 +52,9 @@ export function VerticalPage({
    * per page -- hotels only for now; the other verticals share this
    * component and keep the plain video hero. */
   heroReveal?: "keyhole";
+  /** Keyhole variant only: floats over the wall at the start and fades as
+   * the camera pushes in -- the page's glass cards (e.g. HotelHeroCards). */
+  heroIntro?: ReactNode;
   bullets: Bullet[];
   ctaHref: string;
   ctaLabel: string;
@@ -90,7 +94,7 @@ export function VerticalPage({
       <Nav />
       <main>
         {heroVideo && heroReveal === "keyhole" ? (
-          <KeyholeHero videoSrc={heroVideo.videoSrc} posterSrc={heroVideo.posterSrc}>
+          <KeyholeHero videoSrc={heroVideo.videoSrc} posterSrc={heroVideo.posterSrc} intro={heroIntro}>
             {heroCopy}
           </KeyholeHero>
         ) : (

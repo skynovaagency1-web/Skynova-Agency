@@ -2,6 +2,7 @@ import { Gem, Palmtree, UtensilsCrossed } from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { VerticalPage } from "@/components/site/VerticalPage";
+import { HotelHeroCards } from "@/components/site/HotelHeroCards";
 import { HotelCollectionsSection } from "@/components/site/HotelCollections";
 import { CategoryGridSection } from "@/components/site/CategoryGrid";
 import { DestinationPicksSection } from "@/components/site/DestinationPicks";
@@ -36,6 +37,7 @@ export const Route = createFileRoute("/hotels")({
       description="From boutique stays to full resorts, filtered by neighborhood first and star rating second."
       heroVideo={{ videoSrc: "/assets/hero/hotel-lobby.mp4", posterSrc: "/assets/hero/hotel-lobby-poster.webp" }}
       heroReveal="keyhole"
+      heroIntro={<HotelHeroCards />}
       heroAlt="A bellhop rolling a luggage cart through a grand hotel lobby"
       ctaHref={hotelsLink()}
       ctaLabel="Browse stays"
