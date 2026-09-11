@@ -217,6 +217,18 @@
   --keyhole-light-warm: #f3d49a;
   --keyhole-spill: #f0cf8f;
   --keyhole-hint: #cdbf9f;
+  /* The corridor and the door at its end (KeyholeHero). */
+  --corr-wall: #cbb690;
+  --corr-floor: #5a3d25;
+  --corr-shade: #0b0907;
+  --corr-molding: #ead9b3;
+  --corr-bronze: #3a2a18;
+  --door-wall: #b39c76;
+  --door-wood: #3a2314;
+  --door-panel: #311d10;
+  --door-edge: #1f120a;
+  --step-tread: #b5a68b;
+  --step-riser: #7a6c57;
   --sky-shadow-sm: 0 1px 2px rgba(28, 26, 20, 0.04), 0 8px 20px -6px rgba(28, 26, 20, 0.08);
   --sky-shadow-md: 0 2px 4px rgba(28, 26, 20, 0.05), 0 16px 32px -12px rgba(28, 26, 20, 0.12);
   --sky-shadow-float:
@@ -5155,7 +5167,7 @@ html.lenis body { height: auto; }
   position: relative;
   /* svh, not dvh: the track's length must not change as a phone's address
      bar slides away mid-scroll, or the zoom would jump. */
-  height: 230svh;
+  height: 360svh;
   background: var(--keyhole-wall);
 }
 .keyhole-stage {
@@ -5175,7 +5187,7 @@ html.lenis body { height: auto; }
   height: 100%;
   object-fit: cover;
   /* Keeps drifting in after the doorway opens, as if stepping through. */
-  transform: scale(calc(1.18 - 0.18 * var(--kh-p, 0)));
+  transform: scale(calc(1.18 - 0.18 * var(--kh-z, 0)));
 }
 .keyhole-wall {
   position: absolute;
@@ -5188,8 +5200,8 @@ html.lenis body { height: auto; }
 /* The headline arrives once the doorway is open, as on the homepage hero. */
 .keyhole-stage .dest-detail-copy {
   z-index: 3;
-  opacity: clamp(0, calc((var(--kh-p, 0) - 0.78) * 6), 1);
-  transform: translateY(calc((1 - clamp(0, calc((var(--kh-p, 0) - 0.78) * 6), 1)) * 1.25rem));
+  opacity: clamp(0, calc((var(--kh-p, 0) - 0.88) * 9), 1);
+  transform: translateY(calc((1 - clamp(0, calc((var(--kh-p, 0) - 0.88) * 9), 1)) * 1.25rem));
 }
 /* An invisible button must not take a click... */
 .keyhole-hero:not(.is-open) .dest-detail-copy { pointer-events: none; }
@@ -5202,15 +5214,10 @@ html.lenis body { height: auto; }
   position: absolute;
   inset: 0;
   z-index: 3;
-  opacity: clamp(0, calc(1 - var(--kh-p, 0) * 7), 1);
-  transform: scale(calc(1 + var(--kh-p, 0) * 0.8));
+  opacity: clamp(0, calc(1 - var(--kh-p, 0) * 12), 1);
+  transform: scale(calc(1 + var(--kh-p, 0) * 1.4));
 }
 .keyhole-hero.is-past-intro .keyhole-intro { pointer-events: none; visibility: hidden; }
-.kh-hint-top { display: none; }
-@media (max-width: 900px) {
-  .kh-hint-top { display: inline; }
-  .kh-hint-floor { display: none; }
-}
 /* Phones: the homepage rules stack the info card and the stat over the
    floor, and at full size the info card's top reached the keyhole's base
    (measured on a 375x812 screen: card top 531px, keyhole base 543px).
@@ -5221,28 +5228,18 @@ html.lenis body { height: auto; }
   .keyhole-intro .hero-card-thumb { display: none; }
 }
 
-.kh-wall { fill: var(--keyhole-wall); }
-.kh-floor { fill: var(--keyhole-floor); }
 .kh-stop-core { stop-color: var(--keyhole-light-core); }
 .kh-stop-warm { stop-color: var(--keyhole-light-warm); }
 .kh-stop-spill { stop-color: var(--keyhole-spill); stop-opacity: 0.5; }
 .kh-stop-spill-fade { stop-color: var(--keyhole-spill); stop-opacity: 0; }
-.kh-stop-aura { stop-color: var(--keyhole-spill); stop-opacity: 0.12; }
-.kh-stop-aura-fade { stop-color: var(--keyhole-spill); stop-opacity: 0; }
 .kh-stop-halo { stop-color: var(--keyhole-light-warm); stop-opacity: 0.55; }
 .kh-stop-halo-fade { stop-color: var(--keyhole-light-warm); stop-opacity: 0; }
-.kh-hint {
-  fill: var(--keyhole-hint);
-  font-family: var(--font-mono);
-  font-size: 17px;
-  letter-spacing: 0.32em;
-  opacity: clamp(0, calc(1 - var(--kh-p, 0) * 9), 1);
-}
 @media (prefers-reduced-motion: reduce) {
   .keyhole-hero { height: auto; }
   .keyhole-stage { position: relative; top: 0; height: 76vh; min-height: 520px; }
   .keyhole-wall { display: none; }
   .keyhole-intro { display: none; }
+  .kh-hint-pill { display: none; }
   .keyhole-video { transform: none; }
   .keyhole-stage .dest-detail-copy { opacity: 1; transform: none; }
   .keyhole-hero .dest-detail-copy { pointer-events: auto; }
@@ -5275,4 +5272,53 @@ html.lenis body { height: auto; }
   line-height: 1.5;
 }
 .trend-detail strong { color: var(--sky-ink); font-weight: 600; }
+
+/* ---- Corridor + door (KeyholeHero, act one) ----
+   Solid fills on purpose: depth is the .cr-shade layer's opacity, set per
+   frame, so nothing is recoloured or re-rasterised as the camera moves. */
+.cr-wall { fill: var(--corr-wall); }
+.cr-floor { fill: var(--corr-floor); }
+.cr-shade { fill: var(--corr-shade); }
+.cr-molding { fill: none; stroke: var(--corr-molding); stroke-width: 14; }
+.cr-chain { stroke: var(--corr-bronze); stroke-width: 3; }
+.cr-lamp { fill: var(--corr-bronze); }
+.cr-stop-glow { stop-color: var(--keyhole-light-warm); stop-opacity: 0.9; }
+.cr-stop-glow-fade { stop-color: var(--keyhole-light-warm); stop-opacity: 0; }
+/* Soft and wide: a hard pool on each arch's strip of floor made the
+   strips read as a staircase in the first preview. */
+.cr-stop-pool { stop-color: var(--keyhole-spill); stop-opacity: 0.18; }
+.cr-stop-pool-fade { stop-color: var(--keyhole-spill); stop-opacity: 0; }
+.kd-wall { fill: var(--door-wall); }
+.kd-floor { fill: var(--corr-floor); }
+.kd-door { fill: var(--door-wood); }
+.kd-panel { fill: var(--door-panel); stroke: var(--door-edge); stroke-width: 4; }
+.kd-seam { fill: none; stroke: var(--door-edge); stroke-width: 4; }
+.kd-molding { fill: none; stroke: var(--corr-molding); stroke-width: 16; }
+.kd-tread { fill: var(--step-tread); }
+.kd-riser { fill: var(--step-riser); }
+.kd-stop-spill { stop-color: var(--keyhole-spill); stop-opacity: 0.7; }
+.kd-stop-spill-fade { stop-color: var(--keyhole-spill); stop-opacity: 0.08; }
+/* An HTML pill rather than SVG text: at the start the door is small and far
+   away, so the hint has to sit on the stage, not in the scene. */
+.kh-hint-pill {
+  position: absolute;
+  top: 14%;
+  left: 50%;
+  z-index: 3;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 0.45rem 0.95rem;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--keyhole-hint);
+  background: color-mix(in srgb, var(--keyhole-wall) 55%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+  opacity: clamp(0, calc(1 - var(--kh-p, 0) * 18), 1);
+}
 
