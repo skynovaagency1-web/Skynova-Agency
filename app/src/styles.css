@@ -209,6 +209,14 @@
   --sky-coral-deep: #583714;
   --sky-coral-ink: #1c1400;
   --sky-coral-wash: rgba(201, 162, 39, 0.12);
+  /* Keyhole hero (hotels): the wall, its floor, and the warm light through
+     the keyhole. Tokens because every one is used from an SVG class. */
+  --keyhole-wall: #0b0907;
+  --keyhole-floor: #16110b;
+  --keyhole-light-core: #fffaf0;
+  --keyhole-light-warm: #f3d49a;
+  --keyhole-spill: #f0cf8f;
+  --keyhole-hint: #cdbf9f;
   --sky-shadow-sm: 0 1px 2px rgba(28, 26, 20, 0.04), 0 8px 20px -6px rgba(28, 26, 20, 0.08);
   --sky-shadow-md: 0 2px 4px rgba(28, 26, 20, 0.05), 0 16px 32px -12px rgba(28, 26, 20, 0.12);
   --sky-shadow-float:
@@ -5138,3 +5146,84 @@ html.lenis body { height: auto; }
       scale(calc(1 - var(--d) * 0.18));
   }
 }
+
+/* ---- Keyhole hero (hotels) -- components/site/KeyholeHero.tsx ----
+   After the "For hotel hero section" reference. The section is a scroll
+   track; the stage sticks under the nav while the camera pushes through the
+   keyhole. --kh-p (0..1) is written by the component each frame. */
+.keyhole-hero {
+  position: relative;
+  /* svh, not dvh: the track's length must not change as a phone's address
+     bar slides away mid-scroll, or the zoom would jump. */
+  height: 230svh;
+  background: var(--keyhole-wall);
+}
+.keyhole-stage {
+  position: sticky;
+  top: 4.25rem; /* under the sticky nav, like the homepage stage */
+  height: calc(100dvh - 4.25rem);
+  min-height: 480px;
+  overflow: hidden;
+  background: var(--keyhole-wall);
+}
+.keyhole-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Keeps drifting in after the doorway opens, as if stepping through. */
+  transform: scale(calc(1.18 - 0.18 * var(--kh-p, 0)));
+}
+.keyhole-wall {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+/* The headline arrives once the doorway is open, as on the homepage hero. */
+.keyhole-stage .dest-detail-copy {
+  z-index: 3;
+  opacity: clamp(0, calc((var(--kh-p, 0) - 0.78) * 6), 1);
+  transform: translateY(calc((1 - clamp(0, calc((var(--kh-p, 0) - 0.78) * 6), 1)) * 1.25rem));
+}
+/* An invisible button must not take a click... */
+.keyhole-hero:not(.is-open) .dest-detail-copy { pointer-events: none; }
+/* ...but a keyboard user who tabs to it has to be able to see it. */
+.keyhole-stage .dest-detail-copy:focus-within { opacity: 1; transform: none; pointer-events: auto; }
+
+.kh-mask-open { fill: white; }
+.kh-mask-hole { fill: black; }
+.kh-wall { fill: var(--keyhole-wall); }
+.kh-floor { fill: var(--keyhole-floor); }
+.kh-halo-shape { fill: var(--keyhole-light-warm); }
+.kh-stop-core { stop-color: var(--keyhole-light-core); }
+.kh-stop-warm { stop-color: var(--keyhole-light-warm); }
+.kh-stop-spill { stop-color: var(--keyhole-spill); stop-opacity: 0.5; }
+.kh-stop-spill-fade { stop-color: var(--keyhole-spill); stop-opacity: 0; }
+.kh-stop-aura { stop-color: var(--keyhole-spill); stop-opacity: 0.12; }
+.kh-stop-aura-fade { stop-color: var(--keyhole-spill); stop-opacity: 0; }
+.kh-halo { animation: kh-breathe 3.6s ease-in-out infinite; }
+@keyframes kh-breathe {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.85; }
+}
+.kh-hint {
+  fill: var(--keyhole-hint);
+  font-family: var(--font-mono);
+  font-size: 17px;
+  letter-spacing: 0.32em;
+  opacity: clamp(0, calc(1 - var(--kh-p, 0) * 9), 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .keyhole-hero { height: auto; }
+  .keyhole-stage { position: relative; top: 0; height: 76vh; min-height: 520px; }
+  .keyhole-wall { display: none; }
+  .keyhole-video { transform: none; }
+  .keyhole-stage .dest-detail-copy { opacity: 1; transform: none; }
+  .keyhole-hero .dest-detail-copy { pointer-events: auto; }
+  .kh-halo { animation: none; }
+}
+

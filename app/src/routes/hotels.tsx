@@ -35,6 +35,7 @@ export const Route = createFileRoute("/hotels")({
       title="Stay somewhere unforgettable."
       description="From boutique stays to full resorts, filtered by neighborhood first and star rating second."
       heroVideo={{ videoSrc: "/assets/hero/hotel-lobby.mp4" }}
+      heroReveal="keyhole"
       heroAlt="A bellhop rolling a luggage cart through a grand hotel lobby"
       ctaHref={hotelsLink()}
       ctaLabel="Browse stays"

@@ -6,6 +6,7 @@ import { Footer } from "./Footer";
 import { FaqSection } from "./FaqSection";
 import { Newsletter } from "./Newsletter";
 import { CardActions } from "./CardActions";
+import { KeyholeHero } from "./KeyholeHero";
 import { DESTINATIONS } from "@/data/destinations";
 import { useReveal } from "@/hooks/use-reveal";
 
@@ -20,6 +21,7 @@ export function VerticalPage({
   heroImage,
   heroAlt,
   heroVideo,
+  heroReveal,
   bullets,
   ctaHref,
   ctaLabel,
@@ -42,6 +44,11 @@ export function VerticalPage({
    * since most verticals still use a plain static heroImage. Takes
    * priority over heroImage when set. */
   heroVideo?: HeroVideo;
+  /** "keyhole": scrolling pushes the camera through a lit keyhole into the
+   * hero video (components/site/KeyholeHero.tsx). Needs heroVideo. Opt-in
+   * per page -- hotels only for now; the other verticals share this
+   * component and keep the plain video hero. */
+  heroReveal?: "keyhole";
   bullets: Bullet[];
   ctaHref: string;
   ctaLabel: string;
@@ -61,45 +68,54 @@ export function VerticalPage({
     .map((slug) => DESTINATIONS.find((d) => d.slug === slug))
     .filter((d): d is NonNullable<typeof d> => Boolean(d));
 
+  // Shared by both hero variants below.
+  const heroCopy = (
+    <div className={`dest-detail-copy ${heroVideo ? "dest-detail-copy-light" : ""}`}>
+      <div className="site-container">
+        <p className="site-eyebrow mb-3">{eyebrow}</p>
+        <h1 className="site-h2 max-w-2xl text-4xl md:text-6xl">{title}</h1>
+        <p className="site-ink-muted mt-4 max-w-lg text-base leading-relaxed">{description}</p>
+        <a href={ctaHref} target="_blank" rel="noopener noreferrer" className="btn-hero-pill mt-7 inline-flex">
+          <span className="spark" />
+          <span>{ctaLabel}</span>
+        </a>
+      </div>
+    </div>
+  );
+
   return (
     <>
       <Nav />
       <main>
-        <section className="dest-detail-hero">
-          {heroVideo ? (
-            <>
-              <video
-                className="dest-detail-media"
-                src={heroVideo.videoSrc}
-                autoPlay
-                muted
-                loop
-                playsInline
-                aria-hidden="true"
-              />
-              {heroVideo.overlaySrc ? (
-                <img src={heroVideo.overlaySrc} alt="" aria-hidden="true" className="dest-detail-window-overlay" />
-              ) : null}
-              <div className="dest-detail-mask-dark" />
-            </>
-          ) : (
-            <>
-              <img src={heroImage} alt={heroAlt} className="dest-detail-media" fetchPriority="high" />
-              <div className="dest-detail-mask" />
-            </>
-          )}
-          <div className={`dest-detail-copy ${heroVideo ? "dest-detail-copy-light" : ""}`}>
-            <div className="site-container">
-              <p className="site-eyebrow mb-3">{eyebrow}</p>
-              <h1 className="site-h2 max-w-2xl text-4xl md:text-6xl">{title}</h1>
-              <p className="site-ink-muted mt-4 max-w-lg text-base leading-relaxed">{description}</p>
-              <a href={ctaHref} target="_blank" rel="noopener noreferrer" className="btn-hero-pill mt-7 inline-flex">
-                <span className="spark" />
-                <span>{ctaLabel}</span>
-              </a>
-            </div>
-          </div>
-        </section>
+        {heroVideo && heroReveal === "keyhole" ? (
+          <KeyholeHero videoSrc={heroVideo.videoSrc}>{heroCopy}</KeyholeHero>
+        ) : (
+          <section className="dest-detail-hero">
+            {heroVideo ? (
+              <>
+                <video
+                  className="dest-detail-media"
+                  src={heroVideo.videoSrc}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  aria-hidden="true"
+                />
+                {heroVideo.overlaySrc ? (
+                  <img src={heroVideo.overlaySrc} alt="" aria-hidden="true" className="dest-detail-window-overlay" />
+                ) : null}
+                <div className="dest-detail-mask-dark" />
+              </>
+            ) : (
+              <>
+                <img src={heroImage} alt={heroAlt} className="dest-detail-media" fetchPriority="high" />
+                <div className="dest-detail-mask" />
+              </>
+            )}
+            {heroCopy}
+          </section>
+        )}
 
         <section className="site-section">
           <div ref={gridRef} className="site-container grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
