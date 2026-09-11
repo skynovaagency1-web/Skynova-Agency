@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Search } from "lucide-react";
 
-import { DESTINATIONS } from "@/data/destinations";
+import { SEARCH_OPTIONS, resolvePlace } from "@/data/search-cities";
 import { flightsLink, hotelsLink, carRentalLink, toursLink, esimLink } from "@/lib/affiliate";
 
 /**
@@ -52,26 +52,19 @@ export function TripSearch() {
 
   const active = MODES.find((m) => m.id === mode)!;
 
-  // Exact name first, then prefix. Typing "port" should reach Portugal, but
-  // an exact "Jordan" must never be beaten by a longer prefix match.
-  const match = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return null;
-    return (
-      DESTINATIONS.find((d) => d.name.toLowerCase() === q) ??
-      DESTINATIONS.find((d) => d.name.toLowerCase().startsWith(q)) ??
-      null
-    );
-  }, [query]);
-
-  const place = match?.name ?? query.trim();
+  // Countries AND their main cities, resolved in data/search-cities.ts. A
+  // bare city used to go to Hotellook raw, and "Dubai" landed on Dubai
+  // International Airport hotels -- Booking's matcher ranks that airport above
+  // the city. Known cities now go out as "City, Country".
+  const resolved = useMemo(() => resolvePlace(query), [query]);
+  const match = resolved?.destination ?? null;
 
   const href = useMemo(() => {
     switch (mode) {
       case "hotels":
-        return hotelsLink(place || undefined, { checkIn, checkOut });
+        return hotelsLink(resolved?.hotelsQuery || undefined, { checkIn, checkOut });
       case "tours":
-        return toursLink(place || undefined);
+        return toursLink(resolved?.toursQuery || undefined);
       case "esim":
         return esimLink(match?.slug);
       case "flights":
@@ -79,11 +72,14 @@ export function TripSearch() {
       case "cars":
         return carRentalLink();
     }
-  }, [mode, place, checkIn, checkOut, match]);
+  }, [mode, resolved, checkIn, checkOut, match]);
 
+  // eSIMs are sold per country, so that note names the country even when a
+  // city was typed; the others name exactly what gets searched.
+  const noteLabel = mode === "esim" ? match?.name : resolved?.label;
   const note = active.prefills
-    ? place
-      ? `Opens ${active.partner} results for ${place}.`
+    ? noteLabel
+      ? `Opens ${active.partner} results for ${noteLabel}.`
       : `Opens ${active.partner}. Add a destination to land straight on results.`
     : `Opens ${active.partner}' own search — they need airport and pickup codes, so we don't guess them for you.`;
 
@@ -165,8 +161,8 @@ export function TripSearch() {
           </div>
 
           <datalist id="trip-search-destinations">
-            {DESTINATIONS.map((d) => (
-              <option key={d.slug} value={d.name} />
+            {SEARCH_OPTIONS.map((o) => (
+              <option key={o} value={o} />
             ))}
           </datalist>
 
