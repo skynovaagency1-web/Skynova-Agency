@@ -63,6 +63,24 @@ export const POSTS: Post[] = [
     destinationSlug: "south-africa",
   },
   {
+    slug: "zanzibar-which-coast",
+    tag: "Hotel tips",
+    title: "Zanzibar after safari: which coast to stay on, and how many nights",
+    excerpt:
+      "The island's beaches look identical in photographs. They are not -- on one coast the tide takes the sea out so far you walk to reach it.",
+    readTime: "6 min read",
+    destinationSlug: "tanzania",
+  },
+  {
+    slug: "australia-fly-or-drive",
+    tag: "Trip planning",
+    title: "Australia is bigger than you think: fly between regions, drive within them",
+    excerpt:
+      "Sydney to Cairns is a three-hour flight or several long days on the road. A first trip goes better when the map, not the wish list, sets the plan.",
+    readTime: "6 min read",
+    destinationSlug: "australia",
+  },
+  {
     slug: "48-hours-in-lisbon",
     tag: "City guide",
     title: "48 hours in Lisbon: a fast, affordable first trip to Portugal",

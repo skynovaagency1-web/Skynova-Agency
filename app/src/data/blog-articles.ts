@@ -380,6 +380,98 @@ export const ARTICLES: Record<string, Article> = {
     ],
     related: ["kenya-safari-basics", "driving-on-the-other-side", "rental-car-damage-waiver"],
   },
+  "zanzibar-which-coast": {
+    dek: "The island's beaches are not interchangeable. The tide decides more than the brochure does.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "Zanzibar is the classic way to end a Tanzanian safari: a short flight from the parks, an old town on the UNESCO list, and a coastline that looks the same in every photograph. It is not the same. **On the east coast the tide can take the sea out so far that you walk across the sand to reach it; in the north you can swim at almost any hour.** Which of those suits you is the main decision, and it decides the hotel." },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**Swimming whenever you like, and sunsets:** the north, around Nungwi and Kendwa.",
+        "**Quiet, long beaches and kitesurfing:** the east coast -- Paje, Jambiani, Michamvi -- if you can plan around the tide.",
+        "**Snorkelling at Mnemba Atoll:** the northeast, around Matemwe, closest to the reef.",
+        "**Stone Town:** one night, at the start. It is a stop, not a beach base.",
+      ]},
+
+      { kind: "h2", text: "The tide is the whole story" },
+      { kind: "para", text: "Zanzibar's east coast faces the Indian Ocean across a broad, shallow reef flat. At low tide the water pulls back a long way -- often hundreds of metres -- leaving sand, rock pools and the seaweed farms that villagers tend at low water. It is lovely to walk, but you cannot swim until the sea comes back." },
+      { kind: "para", text: "Tides run on a roughly twelve-hour cycle and arrive a little later each day, and the biggest swings come around the full and new moon. Look up a tide table for your dates before you choose a hotel -- in some weeks of the month, low tide lands in the middle of every afternoon." },
+      { kind: "callout", title: "Ask the hotel one question", text: "Can I swim from the beach at low tide? On the east coast the honest answer is often no -- which is why a pool matters more there than it would elsewhere." },
+
+      { kind: "h2", text: "The north: Nungwi and Kendwa" },
+      { kind: "para", text: "At the northern tip the tide makes far less difference, so the sea stays close and swimmable through most of the day. The beaches face west, which means sunsets over the water, and the area has the island's widest choice of hotels and restaurants. The trade-off is company: this is the busiest stretch of coast, and Nungwi in particular has a lively beach of bars and boats." },
+
+      { kind: "h2", text: "The east: Paje, Jambiani and Michamvi" },
+      { kind: "para", text: "The east coast is where Zanzibar is quietest -- long white beaches, small guesthouses, fishing villages. Paje is the kitesurfing centre, with steady winds for much of the year and a shallow lagoon for learners. Jambiani, to the south, is sleepier still. Michamvi sits on a narrow peninsula, so it has a west-facing shore as well, and a sunset to go with it." },
+
+      { kind: "h2", text: "Stone Town: one night is right" },
+      { kind: "para", text: "Stone Town is a maze of carved doors, narrow alleys and old merchant houses, and it is at its best in the late afternoon and evening, when the heat drops and the food stalls set up in the waterfront gardens. A night there at the start of your stay is enough to see it properly. It has no beach worth the name, so do not make it your base." },
+
+      { kind: "h2", text: "How many nights" },
+      { kind: "para", text: "Our Tanzania route gives Zanzibar four nights after the safari: one in Stone Town, then three on the coast. Treat that as the minimum -- after a week of dawn game drives, the first beach day tends to disappear into sleep. Add a night or two if you can. Splitting the coast between two hotels only makes sense once you are staying long enough for both to feel like a holiday." },
+      { kind: "cta", link: "hotels", destination: "Nungwi, Tanzania", label: "Compare hotels in Nungwi", note: "Live rates from our hotel partner -- or search Paje or Stone Town the same way." },
+
+      { kind: "h2", text: "Getting there from the parks" },
+      { kind: "list", items: [
+        "**By light aircraft:** small planes link the Serengeti airstrips with Zanzibar, often with a stop on the way. It saves a whole day, but the luggage allowance is strict -- often around 15 kg, in a soft bag.",
+        "**On the island:** the coast is an hour or more from the airport by road, so arrange a pick-up before you land.",
+        "**Money:** lodges and many hotels price in US dollars. Bring newer notes -- older ones are often refused.",
+      ]},
+      { kind: "callout", title: "Check the entry rules before you fly", text: "Zanzibar introduced a compulsory travel insurance policy for foreign visitors in 2024, bought separately from any cover you already hold. Check whether it still applies for your dates, and buy it online rather than at the airport." },
+      { kind: "cta", link: "airport", label: "Book an airport transfer in Zanzibar", note: "Pick-ups from Zanzibar airport to Stone Town or the coast, booked before you land." },
+
+      { kind: "h2", text: "What to wear off the beach" },
+      { kind: "para", text: "Zanzibar is predominantly Muslim. Swimwear is fine on hotel beaches, but cover shoulders and knees in Stone Town and the villages -- which is also simply more comfortable in the sun." },
+      { kind: "cta", link: "tours", destination: "Mnemba Atoll snorkelling", label: "Compare Mnemba snorkelling trips", note: "Boat trips to the atoll from our booking partners." },
+    ],
+    related: ["kenya-safari-basics", "thailand-which-coast-which-month", "boutique-vs-resort"],
+  },
+
+  "australia-fly-or-drive": {
+    dek: "Australia is about the size of the mainland United States. A first trip goes better when you plan it the way Australians travel it.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "Almost every first itinerary for Australia starts the same way: Sydney, the Great Barrier Reef, Uluru, perhaps Melbourne. It is a good list. It is also four places spread across a continent roughly the size of the mainland United States, and no road trip strings them together in a normal holiday." },
+      { kind: "para", text: "**Fly between regions, and drive -- or take a tour -- within them.** That is how Australians do it, and it is the difference between a trip spent seeing things and one spent watching a highway." },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**Sydney to Cairns:** fly, about three hours. By road it is well over 2,000 km.",
+        "**Sydney to Melbourne:** fly, about an hour and a half. By road it is a very long day each way.",
+        "**Uluru:** fly into its own airport, next to the resort village. By road it is a long way from anywhere.",
+        "**The Great Ocean Road and the Daintree:** hire a car -- these are the places where driving is the point.",
+      ]},
+
+      { kind: "h2", text: "How the distances actually look" },
+      { kind: "para", text: "A rough rule: between states is a flight, within a region is a drive. Sydney to Cairns by road is about the distance from London to Moscow. Uluru sits in the middle of the country, hundreds of kilometres from the nearest town of any size -- part of what makes it extraordinary, and the reason nearly everyone flies in." },
+      { kind: "para", text: "Domestic flights are frequent on the main routes, and once you count fuel, time and the extra nights on the road, a long drive is rarely the cheap option it looks. Flights into Uluru are fewer and come from a handful of cities, so fix those dates first and build the rest of the trip around them." },
+      { kind: "callout", title: "Three time zones, and daylight saving in only some", text: "Queensland and the Northern Territory do not change their clocks, while New South Wales and Victoria do. For about half the year that puts Sydney an hour ahead of Cairns and ninety minutes ahead of Uluru. Check every connection in local time at both ends." },
+
+      { kind: "h2", text: "Where driving is the point" },
+      { kind: "para", text: "**The Great Ocean Road** runs west from near Melbourne past the Twelve Apostles, and it is made for a car: lookouts, beaches and small towns you would miss from a coach. Give it two or three days rather than one long return trip." },
+      { kind: "para", text: "**Far North Queensland** is the other. From Cairns, the coast road north to Port Douglas and on to the Daintree rainforest is one of the country's great drives, and a car lets you stay somewhere quieter than the city. The reef itself needs no car -- boats leave from the marinas at Cairns and Port Douglas, and many operators collect from hotels." },
+      { kind: "cta", link: "cars", label: "Compare car hire in Cairns", note: "Pick-up at Cairns airport or in town from our booking partners." },
+
+      { kind: "h2", text: "What catches drivers out" },
+      { kind: "list", items: [
+        "**Traffic drives on the left,** as in the UK, Japan and much of the old Commonwealth.",
+        "**Wildlife at dusk and dawn.** Kangaroos are most active then and have no road sense. Outside the cities, plan to be off the road by dark.",
+        "**Unsealed roads.** Many hire agreements exclude them, even where the map shows a road. Check before you plan a shortcut.",
+        "**Gaps between fuel stops.** In remote country, fill up whenever you can, not when you need to.",
+      ]},
+
+      { kind: "h2", text: "How long you actually need" },
+      { kind: "para", text: "Our Australia route fits Sydney, the reef and Uluru into eight days, and that is the tight version -- every move is a flight and half a day gone. Ten to fourteen days is more comfortable and leaves room for Melbourne or a few days on the road. With only a week, pick two regions, not three." },
+      { kind: "callout", title: "Stinger season in the tropics", text: "From roughly November to May, box jellyfish and other stingers are found in the waters of tropical Queensland. Swim inside the netted enclosures on patrolled beaches, and wear the stinger suit the reef boats hand out -- it is routine, not a warning sign." },
+      { kind: "cta", link: "hotels", destination: "Cairns, Australia", label: "Compare hotels in Cairns", note: "Live rates from our hotel partner, close to the reef boats." },
+
+      { kind: "h2", text: "Before you fly" },
+      { kind: "para", text: "Everyone except New Zealand citizens needs a visa or an electronic travel authority to enter Australia, granted before you board. Apply through the official government channel, well ahead of the trip -- not through a third-party site charging a fee on top." },
+      { kind: "cta", link: "flights", label: "Compare flights to Sydney", note: "Fares into Sydney from our booking partners." },
+    ],
+    related: ["driving-on-the-other-side", "best-time-to-book-a-flight", "one-way-rental-fees"],
+  },
 
 
   "japan-rail-pass-worth-it": {
