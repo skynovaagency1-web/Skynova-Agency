@@ -718,6 +718,161 @@ export const ARTICLES: Record<string, Article> = {
     ],
     related: ["martinique-rum-distilleries", "croatia-ferries-vs-driving", "packing-carry-on-only"],
   },
+  "jamaica-getting-around": {
+    dek: "Jamaica is bigger and slower to cross than it looks, and its roads ask a lot of drivers. How to move between Negril, the north coast, Port Antonio and Kingston without losing days.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "Jamaica looks small on the map, and the drive times come as a surprise. Roads wind along the coast and over the hills, towns run into one another, and the traffic -- goats included -- sets its own pace. Montego Bay and Kingston, the two international airports, are three to four hours apart." },
+      { kind: "para", text: "**Fly into Montego Bay and out of Kingston, use coaches and private drivers between towns, and hire a car only if you are a confident driver on the left.**" },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**Airport to hotel:** a pre-booked transfer. It is the easiest hour of the trip.",
+        "**Between the main towns:** air-conditioned express coaches run to a timetable between Negril, Montego Bay, Ocho Rios and Kingston, and they are good value.",
+        "**Day trips and awkward routes:** a private driver for the day, with the price agreed in advance.",
+        "**Short local hops:** a licensed route taxi -- look for the red number plates.",
+        "**A hire car:** only if you are comfortable on narrow, busy roads, driving on the left.",
+      ]},
+      { kind: "cta", link: "airport", label: "Book an airport transfer in Montego Bay", note: "Pre-booked pickups from Sangster International to Negril, Ocho Rios and beyond." },
+
+      { kind: "h2", text: "Plan the route in one direction" },
+      { kind: "para", text: "Our Jamaica route runs west to east: Negril, Ocho Rios, Port Antonio, then the Blue Mountains and Kingston. Book the flights open-jaw -- into Montego Bay, out of Kingston -- and you never backtrack. Heading back to Montego Bay at the end would cost you most of a day." },
+      { kind: "para", text: "It also solves Port Antonio, the most rewarding stop on the island and the hardest to reach. It is a long way from Montego Bay, but on a west-to-east route you arrive from Ocho Rios along the coast, and Kingston is close by when you leave." },
+
+      { kind: "h2", text: "Coaches: the underrated option" },
+      { kind: "para", text: "The express coaches between the main towns are comfortable, air-conditioned and run to a schedule, with their own terminals in the bigger towns. They are the cheapest civilised way to cover a long distance, and between Montego Bay, Ocho Rios and Kingston they are often simply the best way." },
+
+      { kind: "h2", text: "Taxis and route taxis" },
+      { kind: "para", text: "Licensed taxis and route taxis in Jamaica carry red PP number plates -- the letters stand for public passenger. Route taxis are shared cars that run a fixed route and pick people up along the way, fitting in more passengers than you would think possible; they are cheap and very local. For anything longer, or after dark, use a registered taxi or a driver your hotel recommends." },
+      { kind: "callout", title: "Agree the fare first", text: "Taxis in tourist areas rarely use meters. Settle the price -- and the currency -- before you get in, and pay in Jamaican dollars where you can; US dollars are accepted, usually at a poor rate." },
+
+      { kind: "h2", text: "Driving yourself" },
+      { kind: "para", text: "Jamaica drives on the left. The main highways are good -- the toll road over the hills from Kingston has cut the run to Ocho Rios to around an hour -- but many other roads are narrow, potholed and shared with overtaking buses, pedestrians and animals. Outside the towns, avoid driving after dark." },
+      { kind: "para", text: "The Blue Mountains are a special case. The roads up are steep, narrow and slow, and the final stretch to the Blue Mountain Peak trailhead needs a four-wheel drive. Most visitors let a local driver or their guesthouse handle it." },
+      { kind: "cta", link: "cars", label: "Compare car hire in Montego Bay", note: "Pick-up at Sangster International, with one-way options to Kingston, from our booking partners." },
+      { kind: "cta", link: "hotels", destination: "Port Antonio, Jamaica", label: "Compare hotels in Port Antonio", note: "Live rates from our hotel partner, from guesthouses to villas." },
+      { kind: "cta", link: "flights", label: "Compare flights to Jamaica", note: "Fares into Montego Bay or Kingston from our booking partners." },
+    ],
+    related: ["driving-on-the-other-side", "one-way-rental-fees", "rental-car-damage-waiver"],
+  },
+
+  "exumas-base-and-boat-day": {
+    dek: "The Exuma Cays are the Bahamas of the photographs. The boat day is the point -- and where you sleep decides how long you spend on the boat just getting there.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "The Exumas are a chain of hundreds of cays and islets strung out for more than a hundred miles south-east of Nassau, over water so clear and shallow it seems to glow. Most of what people come for -- the swimming pigs, Thunderball Grotto, the sandbars -- sits in the middle of the chain, around Staniel Cay. That is the thing to plan around." },
+      { kind: "para", text: "**Base on Great Exuma for choice and flights, or at Staniel Cay to wake up next to the sights. Either way, book a small-boat day with an operator that respects the wildlife.**" },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**Great Exuma, around George Town:** the main island, with the airport and most of the hotels and restaurants. The boat day is a long run north.",
+        "**Staniel Cay:** a tiny island in the middle of the cays, with a small airstrip. The pigs and Thunderball are minutes away.",
+        "**A day trip from Nassau:** possible by fast boat or small plane, but a long day for a short look.",
+      ]},
+
+      { kind: "h2", text: "The boat day" },
+      { kind: "para", text: "A day in the cays strings together the stops that made the Exumas famous: the swimming pigs at Big Major Cay, the nurse sharks that gather at Compass Cay, rock iguanas on some of the smaller cays, a snorkel through Thunderball Grotto, and lunch on a sandbar that only appears at low tide." },
+      { kind: "para", text: "The tide matters. Thunderball Grotto is best snorkelled around low slack water, when the current through the cave eases, and a good captain plans the day around it -- which is a good reason to trust their order of stops." },
+      { kind: "callout", title: "Choose an operator that keeps its distance", text: "The swimming pigs have been harmed before by visitors feeding them the wrong things. Go with an operator that controls the feeding and keeps groups small, and leave the iguanas and sharks unfed too." },
+      { kind: "cta", link: "tours", destination: "Exuma swimming pigs tour", label: "Compare Exuma boat tours", note: "Small-group boat days through the cays from our booking partners." },
+
+      { kind: "h2", text: "The land and sea park" },
+      { kind: "para", text: "Much of the central chain is a protected land and sea park, one of the oldest of its kind in the Caribbean. Nothing can be taken -- no shells, no fish, no coral -- and the reefs show it. Some boat days stop in the park; if you are a keen snorkeller, ask for one that does." },
+
+      { kind: "h2", text: "Getting there" },
+      { kind: "list", items: [
+        "**Into Great Exuma:** international flights land at Exuma International near George Town, alongside frequent domestic flights from Nassau.",
+        "**To Staniel Cay:** small planes from Nassau or Florida to the airstrip, or a boat from Great Exuma.",
+        "**On Great Exuma:** hire a car -- the island is long, taxis are expensive, and driving is on the left.",
+      ]},
+
+      { kind: "h2", text: "What it costs" },
+      { kind: "para", text: "The Bahamas is expensive, and the Out Islands more so: almost everything arrives by boat or plane. A boat day is a significant cost on its own, especially a private charter, and shared trips bring it down. Self-catering, where you can find it, helps with the rest." },
+      { kind: "cta", link: "hotels", destination: "Great Exuma, Bahamas", label: "Compare hotels on Great Exuma", note: "Live rates from our hotel partner around George Town." },
+      { kind: "cta", link: "flights", label: "Compare flights to the Bahamas", note: "Fares into Nassau and Great Exuma from our booking partners." },
+    ],
+    related: ["fiji-mamanuca-or-yasawa", "driving-on-the-other-side", "free-cancellation-fine-print"],
+  },
+
+  "samana-whale-watching": {
+    dek: "Every winter, thousands of humpback whales arrive off the Dominican Republic's north-east coast. Seeing them is easy -- if you go at the right time and base yourself in the right place.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "Each year, humpback whales from the North Atlantic travel south to the warm, shallow waters off the Dominican Republic to mate and give birth. Samaná Bay is one of the most dependable places in the world to see them: breaching, tail-slapping, and mothers with calves, often within an hour of the harbour." },
+      { kind: "para", text: "**Go between mid-January and mid-March, stay on the Samaná peninsula rather than day-tripping from Punta Cana, and book a licensed operator.**" },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**When:** roughly mid-January to mid-March, with the middle of that window the most reliable.",
+        "**Where from:** boats leave the harbour at Samaná town, on the bay.",
+        "**Where to stay:** Las Terrenas for beaches and restaurants, or Samaná town to be on the doorstep.",
+        "**From Punta Cana:** possible as a day tour, but a very long day. Better to move to the peninsula for a few nights.",
+      ]},
+
+      { kind: "h2", text: "How the trips work" },
+      { kind: "para", text: "Whale-watching boats leave Samaná town in the morning and spend a few hours out in the bay, where the whales gather. The season is regulated: operators must be licensed, boats keep set distances and limit the time spent with each group of whales, and swimming with them is not allowed in the bay. That is good for the whales, and it keeps the whole experience calm." },
+      { kind: "para", text: "Many trips finish with a stop on Cayo Levantado, a small island in the bay, for a swim and lunch." },
+      { kind: "callout", title: "Take the seasickness seriously", text: "The bay can be choppy, especially towards the open Atlantic, and much of the trip is spent stopped and rolling while you watch. If you are prone to seasickness, take something before you board." },
+      { kind: "cta", link: "tours", destination: "Samana whale watching", label: "Compare whale-watching trips in Samaná", note: "Licensed operators from Samaná harbour, from our booking partners." },
+
+      { kind: "h2", text: "Getting in the water: the Silver Bank" },
+      { kind: "para", text: "If watching from a boat is not enough, the Silver Bank -- a protected area of open ocean well offshore to the north -- is one of the few places in the world where in-water encounters with humpbacks are permitted. Access is by licensed liveaboard boats only, usually on week-long trips from Puerto Plata, booked many months ahead." },
+
+      { kind: "h2", text: "The rest of the peninsula" },
+      { kind: "para", text: "Samaná is worth a few days even without the whales. El Limón waterfall is a hike through the hills from the village of the same name -- horses are offered, but it is an easy enough walk. Las Terrenas has long beaches and some of the best food in the country, and Los Haitises National Park, across the bay, is a maze of mangroves and limestone islets reached by boat." },
+
+      { kind: "h2", text: "Getting there" },
+      { kind: "list", items: [
+        "**From Santo Domingo:** a little over two hours by road on the motorway to the north-east. Our route starts in the capital, which makes Samaná the natural next stop.",
+        "**By air:** Samaná El Catey airport takes some international flights and is well placed for Las Terrenas.",
+        "**From Punta Cana:** a long drive round, or a day tour that combines road and boat.",
+      ]},
+      { kind: "cta", link: "hotels", destination: "Las Terrenas, Dominican Republic", label: "Compare hotels in Las Terrenas", note: "Live rates from our hotel partner -- or search Samaná the same way." },
+      { kind: "cta", link: "flights", label: "Compare flights to Santo Domingo", note: "Fares into Santo Domingo from our booking partners." },
+    ],
+    related: ["exumas-base-and-boat-day", "jamaica-getting-around", "free-cancellation-fine-print"],
+  },
+
+  "cuba-getting-around": {
+    dek: "Cuba's main sights are a few hours apart by road, and every way of covering those hours has a catch. How to choose -- and why your casa host is the most useful travel agent on the island.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "A first trip to Cuba usually links the same places: Havana, the tobacco valley at Viñales, and the colonial towns of Trinidad and Cienfuegos. None of them is far apart by most countries' standards, but getting between them takes more planning than you might expect. Seats sell out, fuel runs short, and the internet you would normally book on comes and goes." },
+      { kind: "para", text: "**Take the tourist coaches when you can book ahead, shared taxis when you want speed and a pick-up at the door, and a hire car only if you booked it months ago and are ready for the roads.**" },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**Viazul coaches:** the cheapest and most predictable. Book ahead and arrive early.",
+        "**Colectivos (shared taxis):** faster, collected from your casa, and not much dearer. Your host can arrange one.",
+        "**A private driver:** for day trips, or when the timetable does not fit. Agree the price in advance.",
+        "**A hire car:** expensive, in short supply and hard work. Only for confident drivers who like a challenge.",
+        "**Trains:** slow and unreliable. An experience, not a plan.",
+      ]},
+
+      { kind: "h2", text: "Mind the map: Havana is the hub" },
+      { kind: "para", text: "Viñales lies west of Havana and Trinidad well to the south-east, so a route that takes in both usually passes back through the capital. Direct shared taxis from Viñales to Trinidad do exist, but it is a long day in the back of a car. Our route follows the natural order: Havana, out west to Viñales, then back and on to Cienfuegos and Trinidad." },
+
+      { kind: "h2", text: "Viazul: the tourist coaches" },
+      { kind: "para", text: "Viazul is the national coach company for visitors, linking the main towns on air-conditioned buses -- sometimes very air-conditioned, so bring a layer. Fares are fixed and reasonable, and it is the most predictable service you will find. Book ahead where you can, as buses fill up in the high season, and get to the station well before departure." },
+
+      { kind: "h2", text: "Colectivos: the shared taxis" },
+      { kind: "para", text: "Colectivos are shared taxis -- sometimes a classic American car, sometimes a modern minivan -- running between the main tourist towns. They pick you up at your casa, drop you at the next one, and usually beat the coach on time. Your host will book one with a phone call the day before, which is typical of how Cuba works: the person you are staying with is the best travel agent on the island." },
+      { kind: "callout", title: "Let your host book the next host", text: "Casa owners know each other across the country. Ask yours to recommend and book your next casa, and your next ride. It saves hours of patchy internet, and the recommendations are usually good." },
+
+      { kind: "h2", text: "Hiring a car" },
+      { kind: "para", text: "Car hire in Cuba is run by state companies, costs far more than you would expect, and the few cars available are booked months ahead. Fuel shortages mean queues at petrol stations, signposting is patchy, and roads can be potholed and shared with horse carts, cyclists and livestock. Avoid driving after dark entirely." },
+      { kind: "para", text: "If you do drive, download offline maps before you go, keep the tank above half, and never pass a station that has fuel without thinking about stopping." },
+
+      { kind: "h2", text: "Before you set off" },
+      { kind: "list", items: [
+        "**Carry cash** for transport, as for everything else -- most drivers take nothing else.",
+        "**Download offline maps,** since mobile data is patchy and wi-fi is often paid by the hour.",
+        "**Build in a loose day.** Power cuts and fuel shortages can shift plans at short notice, and the country runs on its own clock.",
+      ]},
+      { kind: "cta", link: "flights", label: "Compare flights to Havana", note: "Fares into Havana from our booking partners." },
+    ],
+    related: ["jamaica-getting-around", "samana-whale-watching", "free-cancellation-fine-print"],
+  },
 
 
   "japan-rail-pass-worth-it": {

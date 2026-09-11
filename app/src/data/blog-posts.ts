@@ -135,6 +135,42 @@ export const POSTS: Post[] = [
     destinationSlug: "guadeloupe",
   },
   {
+    slug: "jamaica-getting-around",
+    tag: "Trip planning",
+    title: "Getting around Jamaica: transfers, coaches, route taxis or a hire car",
+    excerpt:
+      "Montego Bay and Kingston are three to four hours apart, and the roads ask a lot of drivers. How to move around the island without losing days.",
+    readTime: "6 min read",
+    destinationSlug: "jamaica",
+  },
+  {
+    slug: "exumas-base-and-boat-day",
+    tag: "Tours & activities",
+    title: "The Exumas: where to base yourself, and how to do the boat day properly",
+    excerpt:
+      "The Exuma Cays are the Bahamas of the photographs. Where you sleep decides how long you spend on the boat just getting to them.",
+    readTime: "6 min read",
+    destinationSlug: "bahamas",
+  },
+  {
+    slug: "samana-whale-watching",
+    tag: "Tours & activities",
+    title: "Whale watching in Samaná: when to go, how it works, and where to stay",
+    excerpt:
+      "Every winter thousands of humpbacks gather off the Dominican Republic. Seeing them is easy -- if you go at the right time and base yourself in the right place.",
+    readTime: "6 min read",
+    destinationSlug: "dominican-republic",
+  },
+  {
+    slug: "cuba-getting-around",
+    tag: "Trip planning",
+    title: "Getting around Cuba: Viazul coaches, shared taxis, or a hire car",
+    excerpt:
+      "Every way of getting around Cuba has a catch. How to choose -- and why your casa host is the best travel agent on the island.",
+    readTime: "6 min read",
+    destinationSlug: "cuba",
+  },
+  {
     slug: "48-hours-in-lisbon",
     tag: "City guide",
     title: "48 hours in Lisbon: a fast, affordable first trip to Portugal",
