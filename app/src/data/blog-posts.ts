@@ -9,6 +9,15 @@ export type Post = {
 
 export const POSTS: Post[] = [
   {
+    slug: "where-to-stay-in-dubai",
+    tag: "City guide",
+    title: "Where to stay in Dubai: a neighbourhood guide for your first trip",
+    excerpt:
+      "Dubai is a chain of districts strung along one long road. Pick the wrong end and the trip disappears into taxis -- here is how to choose.",
+    readTime: "7 min read",
+    destinationSlug: "united-arab-emirates",
+  },
+  {
     slug: "48-hours-in-lisbon",
     tag: "City guide",
     title: "48 hours in Lisbon: a fast, affordable first trip to Portugal",

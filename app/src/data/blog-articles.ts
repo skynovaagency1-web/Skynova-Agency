@@ -37,6 +37,92 @@ export type Article = {
 
 export const ARTICLES: Record<string, Article> = {
   // ────────────────────────────────────────────────────────────────
+  "where-to-stay-in-dubai": {
+    dek: "Dubai runs about 30 kilometres from the old souks to the Marina, and where you sleep decides how much of the trip you spend in taxis.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "Most cities let you pick a hotel and walk out into the middle of things. Dubai does not. It is a chain of separate districts strung along Sheikh Zayed Road and the coast, roughly 30 kilometres from the souks on the Creek to the towers of the Marina, and the gap between them is usually a taxi ride, not a stroll." },
+      { kind: "para", text: "That makes the neighbourhood the most important booking decision of the trip -- more than the star rating, and more than the view. **Pick the area first, then the hotel inside it.**" },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**First visit, three or four nights:** Downtown, or Business Bay next door for less money.",
+        "**Beach holiday with some life in the evenings:** Dubai Marina and JBR.",
+        "**A resort you barely leave:** Palm Jumeirah.",
+        "**Quieter, low-rise beach:** Jumeirah and Umm Suqeim, near the Burj Al Arab.",
+        "**Tight budget, or culture over glamour:** Deira and Bur Dubai, around the Creek.",
+        "**Short stopover or late-night arrival:** Deira again -- it is the closest area to the main airport.",
+      ]},
+
+      { kind: "h2", text: "Downtown Dubai: the landmarks on your doorstep" },
+      { kind: "para", text: "This is the postcard: the Burj Khalifa, Dubai Mall and the fountain show that plays across the lake every evening. Stay here and the biggest sights are a walk away, which in Dubai is a genuine luxury." },
+      { kind: "para", text: "It is also on the Metro's Red Line, with a covered, air-conditioned walkway linking the station to the mall -- useful when the afternoon heat makes any outdoor walk a bad idea. The trade-off is price. Rooms with a view of the tower carry a premium, and there is no beach, so budget for a taxi or two to the coast." },
+
+      { kind: "h2", text: "Business Bay: Downtown's cheaper neighbour" },
+      { kind: "para", text: "Business Bay sits directly beside Downtown along the canal, and is mostly newer towers and hotel apartments. You can often get a similar skyline for noticeably less, and the better-placed hotels are a short taxi or a longer walk from Dubai Mall." },
+      { kind: "para", text: "Check the exact location on a map before you book. The district is large, parts of it are still under construction, and \"near Downtown\" in a listing can mean five minutes or twenty-five." },
+
+      { kind: "h2", text: "Dubai Marina and JBR: the lively beach base" },
+      { kind: "para", text: "If you want sand and a bit of life after dark, this is the easiest choice. The Marina is a ring of towers around a man-made waterway with a long promenade, and JBR beside it has an open public beach and The Walk, a strip of restaurants and cafés at street level." },
+      { kind: "para", text: "It suits couples, groups and anyone who wants to step out of the hotel and find dinner without a plan. The Dubai Tram links it to the Metro and to the Palm's monorail. The catch is distance: **Downtown and the old town are 30 to 45 minutes away by car**, longer at rush hour, so sightseeing days start with a journey." },
+
+      { kind: "h2", text: "Palm Jumeirah: a resort you don't need to leave" },
+      { kind: "para", text: "The Palm is where the big beach resorts are, each with its own stretch of private sand, pools and restaurants. It is the right answer for a honeymoon or a family trip where the plan is mostly pool, beach and long dinners." },
+      { kind: "para", text: "It is the wrong answer if you want to explore. The hotels on the outer crescent are a long way from everything else, and although a monorail runs the length of the trunk, most outings start with a taxi. Price the resort's food and drink as well as the room -- when leaving takes effort, you will eat most meals on site." },
+
+      { kind: "h2", text: "Jumeirah and Umm Suqeim: the quiet beach" },
+      { kind: "para", text: "Between Downtown and the Marina, the coast along Jumeirah Beach Road is low-rise and residential, with public beaches such as Kite Beach, the Burj Al Arab, and the Madinat Jumeirah complex with its souk-style shops and canals." },
+      { kind: "para", text: "It feels more like a neighbourhood than a resort strip, and it sits usefully between the two ends of the city. The Metro runs along Sheikh Zayed Road a few kilometres inland, though, so you will rely on taxis and ride-hailing more than you would in Downtown or the Marina." },
+
+      { kind: "h2", text: "Deira and Bur Dubai: old Dubai, and the best value" },
+      { kind: "para", text: "The city began on the Creek, and this is still its most characterful corner: the gold and spice souks in Deira, the restored lanes of the Al Fahidi historic district in Bur Dubai, and wooden abra boats that cross the water for small change." },
+      { kind: "para", text: "Hotels here are routinely the cheapest in the city, and **Deira is about 15 minutes from Dubai International Airport**, which makes it ideal for a stopover or a late arrival. It is busy, crowded and very real, and it is a long way from the beaches -- allow 40 minutes or more to reach the Marina." },
+      { kind: "callout", title: "Not every hotel has a bar", text: "Alcohol is served only in licensed venues, which in Dubai mostly means hotels. Some hotels do not hold a licence, particularly budget properties in the older districts and many hotel apartments. If a drink at the end of the day matters to you, check the listing before you book." },
+
+      { kind: "h2", text: "Al Barsha: mid-range value in the middle" },
+      { kind: "para", text: "Worth a look if prices elsewhere put you off. Al Barsha is built around the Mall of the Emirates, home of the indoor ski slope, with a Metro stop at the mall and plenty of mid-range hotels. It is not pretty, but it sits roughly halfway between Downtown and the Marina, and the beach at Umm Suqeim is a short taxi ride away." },
+
+      // "Dubai" alone resolves to Dubai International Airport on Hotellook's
+      // redirect; the country qualifier lands on the city-wide results.
+      { kind: "cta", link: "hotels", destination: "Dubai, United Arab Emirates", label: "Compare hotels in Dubai", note: "Live rates across every neighbourhood from our booking partners." },
+
+      { kind: "h2", text: "Split the stay" },
+      { kind: "para", text: "For a first trip of five nights or more, a split works well: two or three nights in Downtown for the sights, then the rest by the beach in the Marina, JBR or the Palm. The move costs one taxi ride of half an hour or so, and you get each half of Dubai at its best instead of commuting between them every day." },
+      { kind: "para", text: "On a long weekend, pick one base. A move eats half a day you do not have." },
+
+      { kind: "h2", text: "Getting around from wherever you stay" },
+      { kind: "list", items: [
+        "**The Metro** is clean, cheap and air-conditioned. The Red Line runs the length of the city along Sheikh Zayed Road, through the airport and Downtown and on past the Marina; the Green Line covers the Creek and old Dubai. You pay with a rechargeable Nol card.",
+        "**Taxis and ride-hailing** are plentiful and metered, and Careem and Uber both operate. Anywhere the Metro misses, this is how you will move.",
+        "**The tram and the Palm monorail** connect the Marina, JBR and the Palm to the Red Line.",
+        "**Walking** works well within one district in winter, and is hard going from June to September, when afternoon temperatures regularly pass 40°C.",
+      ]},
+      { kind: "para", text: "Landing at Dubai International? The Red Line stops at Terminals 1 and 3, so a Downtown or Marina hotel is reachable without a taxi if your luggage is manageable. Arriving late at night or with a lot of bags, a pre-booked transfer is simpler." },
+      { kind: "cta", link: "airport", label: "Book an airport transfer", note: "Pre-booked pickups from Dubai's airports, priced before you travel." },
+      { kind: "para", text: "Sort out data before you fly, too. You will book most journeys on your phone, and an eSIM installed at home means maps and ride-hailing work the moment you land -- no kiosk queue, and no surprise from your own network's roaming charges." },
+      { kind: "cta", link: "esim", destination: "united-arab-emirates", label: "Get a UAE eSIM", note: "Data plans you can install before you leave home." },
+
+      { kind: "h2", text: "When prices move" },
+      { kind: "para", text: "Dubai hotel prices follow the weather. **November to March is peak season**, with the most comfortable temperatures and the highest rates, especially over Christmas and New Year. Book early for those dates." },
+      { kind: "para", text: "**June to September is the opposite:** fierce heat, and some of the lowest luxury-hotel prices of the year. If the plan is mostly pool, beach club and air-conditioned malls, summer can be excellent value." },
+      { kind: "para", text: "Two other things shift prices. Large conventions at the Dubai World Trade Centre can fill business hotels in Downtown and Business Bay for a week at a time. And Ramadan, which moves about eleven days earlier each year, often brings lower rates and a slower, quieter pace during the day." },
+      { kind: "callout", title: "Compare the total, not the nightly rate", text: "Dubai hotel bills usually carry a service charge, a municipality fee and VAT, and hotels also collect a Tourism Dirham fee per room, per night. Some booking sites fold all of this into the headline price and some add it at checkout or at the hotel. Compare final totals before deciding which hotel is cheaper." },
+
+      { kind: "h2", text: "Before you book" },
+      { kind: "list", items: [
+        "**Choose the neighbourhood first**, then filter hotels inside it.",
+        "**Trust the map pin**, not the listing's description of where the hotel is.",
+        "**Confirm the total price**, including city fees and the Tourism Dirham.",
+        "**Read the cancellation terms** -- peak-season rates are often non-refundable.",
+        "**Plan the arrival:** Metro or transfer from the airport, and data on your phone before you land.",
+        "**Check the entry rules for your passport.** Many nationalities can enter visa-free or get a visa on arrival, but not all.",
+      ]},
+
+      { kind: "cta", link: "flights", label: "Compare flights to Dubai", note: "Fares into Dubai from our booking partners." },
+    ],
+    related: ["free-cancellation-fine-print", "boutique-vs-resort", "qatar-layover"],
+  },
+
   "japan-rail-pass-worth-it": {
     dek: "Since the 2023 price rise the pass loses money on a lot of ordinary itineraries -- price yours before you buy.",
     published: "2026-09-08",
