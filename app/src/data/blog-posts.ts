@@ -18,6 +18,15 @@ export const POSTS: Post[] = [
     destinationSlug: "united-arab-emirates",
   },
   {
+    slug: "where-to-stay-in-marrakech",
+    tag: "City guide",
+    title: "Where to stay in Marrakech: riads, the medina and the new town",
+    excerpt:
+      "Inside the walls or outside them is the real decision. Here is what each part of Marrakech is like to stay in -- and what a riad actually is.",
+    readTime: "7 min read",
+    destinationSlug: "morocco",
+  },
+  {
     slug: "48-hours-in-lisbon",
     tag: "City guide",
     title: "48 hours in Lisbon: a fast, affordable first trip to Portugal",

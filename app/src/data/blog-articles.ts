@@ -122,6 +122,79 @@ export const ARTICLES: Record<string, Article> = {
     ],
     related: ["free-cancellation-fine-print", "boutique-vs-resort", "qatar-layover"],
   },
+  "where-to-stay-in-marrakech": {
+    dek: "The medina is where Marrakech happens and where cars can't reach, so the real decision is a riad inside the walls or a hotel outside them.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "Marrakech splits cleanly in two. Inside the red walls of the medina is the city everyone pictures -- the souks, Jemaa el-Fnaa, lanes too narrow for a car -- and it is full of riads, old courtyard houses turned into small hotels. Outside the walls are the new town and the resort districts: wide streets, big pools, and hotels that look like hotels anywhere." },
+      { kind: "para", text: "Neither is right for everyone. **Decide inside or outside the walls first; the hotel follows from that.**" },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**First visit, three or four nights:** a riad in the medina, within about ten minutes' walk of Jemaa el-Fnaa.",
+        "**The medina, but calmer:** the Kasbah, or the southern medina near the Bahia Palace.",
+        "**A proper pool and room to switch off:** Hivernage, a short taxi ride from the walls.",
+        "**Restaurants, cafes and easy taxis:** Gueliz, the French-era new town.",
+        "**A resort you barely leave:** the Palmeraie, north-east of the city.",
+        "**Small children, or anyone who finds stairs hard:** outside the walls. Riads mean stairs, and the medina means walking.",
+      ]},
+
+      { kind: "h2", text: "The medina, and what a riad actually is" },
+      { kind: "para", text: "A riad is a traditional house built around an inner courtyard, usually with a fountain or a small plunge pool, rooms opening onto galleries above it and a roof terrace on top. Most have somewhere between a handful and a dozen rooms. From the lane outside they are a blank wall and a door; inside, the city's noise drops away." },
+      { kind: "para", text: "Staying in one is the reason many people come -- breakfast on the roof, the call to prayer at dusk, the souks a few minutes away. The trade-offs are real, though. Rooms are often small, sound carries across an open courtyard, there is rarely a lift, and the pool is usually one you can cross in two strokes." },
+      { kind: "callout", title: "Cars stop at the edge", text: "Most of the medina's lanes are too narrow for a car, so a taxi drops you at the nearest gate or square and the last stretch is on foot. Good riads send someone to meet you there and wheel your bags in -- ask for it when you book, especially if you land after dark. Medina addresses are hard to find the first time, even with a map." },
+
+      { kind: "h2", text: "Around Jemaa el-Fnaa and the souks" },
+      { kind: "para", text: "For a first visit, the lanes north of the main square -- around Mouassine and the souks -- put everything within walking distance: the square at night, the markets by day, and the Koutoubia minaret as a landmark you can always steer by. It is also the busiest, most intense part of the medina, which is exactly the point for some people and too much for others." },
+      { kind: "para", text: "Right beside the square you will hear it late into the night. A few lanes back is the sweet spot." },
+
+      { kind: "h2", text: "The Kasbah and the southern medina: quieter, still inside the walls" },
+      { kind: "para", text: "South of the square, the Kasbah quarter around the Saadian Tombs, and the old Jewish quarter, the Mellah, beside the Bahia Palace, feel more residential. You are still inside the walls and still walking everywhere, with less of the souks' pressure. The Kasbah is also the side of the medina nearest the airport, which makes arriving simpler." },
+
+      { kind: "h2", text: "Hivernage: pools and space, close to the walls" },
+      { kind: "para", text: "Just outside the walls to the west, Hivernage is where many of the larger hotels sit, with real swimming pools, gardens, and the nightlife the medina largely lacks. The medina is a short taxi ride, or a longish walk, away." },
+      { kind: "para", text: "It suits anyone who wants Marrakech by day and a pool to come back to -- and it is the easy choice in summer, when the heat makes a plunge pool feel like a gesture." },
+
+      { kind: "h2", text: "Gueliz: the new town" },
+      { kind: "para", text: "Gueliz is the city the French laid out in the last century: wide avenues, cafes, galleries, modern restaurants and ordinary city hotels. It is where a lot of Marrakech eats out, it is easy to reach by car, and the Majorelle Garden is close by. It is not atmospheric the way the medina is -- but plenty of travellers would rather visit the medina than sleep in it." },
+
+      { kind: "h2", text: "The Palmeraie: a resort, not a base" },
+      { kind: "para", text: "North-east of the city, the palm grove is resort country: spacious hotels and villas with large grounds and pools, far quieter than anywhere in town. It is the wrong answer if you want to explore -- the medina is a drive away and you will depend on taxis or the hotel shuttle -- and the right one for a few days of doing very little." },
+
+      { kind: "cta", link: "hotels", destination: "Marrakech, Morocco", label: "Compare hotels and riads in Marrakech", note: "Live rates from our hotel partner, from medina riads to Palmeraie resorts." },
+
+      { kind: "h2", text: "Split the stay" },
+      { kind: "para", text: "On a week, a split works well: three or four nights in a riad for the medina, then a few at a hotel with a real pool -- or up in the High Atlas, where mountain guesthouses around villages like Imlil are roughly an hour and a half from the city and the air is noticeably cooler." },
+      { kind: "para", text: "If the Sahara is on your list, plan it separately. It is two long driving days each way, not a day trip -- we cover how to fit it in on its own page." },
+
+      { kind: "h2", text: "Getting there and getting around" },
+      { kind: "list", items: [
+        "**From the airport:** Marrakech Menara is close to the city, usually a short taxi ride to the edge of the medina. Agree the fare before you get in, or book a transfer ahead.",
+        "**In the medina:** walk. Distances are short; finding your way is the challenge, so download an offline map before you go.",
+        "**Between districts:** petits taxis are cheap and plentiful. Ask for the meter, or agree a price before you set off.",
+        "**Data:** you will lean on a map constantly in the medina, so sort out an eSIM before you land.",
+      ]},
+      { kind: "cta", link: "airport", label: "Book an airport transfer in Marrakech", note: "Private and shared transfers from Menara, booked before you land." },
+      { kind: "cta", link: "esim", destination: "morocco", label: "Get a Morocco eSIM", note: "Data plans you can activate before you fly." },
+
+      { kind: "h2", text: "When prices move" },
+      { kind: "para", text: "**Spring and autumn are peak season** -- roughly March to May and September to November -- with warm days and rates to match. **Summer is fiercely hot**, often well above 35C, and prices drop to suit; it is when a hotel with a real pool earns its keep." },
+      { kind: "para", text: "Winter days are mild and bright, but nights are cold, and an old riad around an open courtyard can be chilly -- check that rooms have heating. Christmas, New Year and Easter push prices up. Ramadan moves every year and changes the rhythm of the city: many restaurants close in daylight, and evenings come alive." },
+      { kind: "callout", title: "Not every riad serves alcohol", text: "Many medina riads don't, and some don't allow it on the premises. If a drink with dinner matters to you, check before you book -- the bigger hotels in Hivernage and the Palmeraie almost always do." },
+
+      { kind: "h2", text: "Before you book" },
+      { kind: "list", items: [
+        "**Find it on a map**, not just in the listing. In the medina, the nearest gate or landmark matters more than the address.",
+        "**Ask how arrival works** -- where the taxi stops, and whether someone meets you.",
+        "**Check heating or air conditioning** for the season you are travelling in.",
+        "**Count the stairs** if anyone in your group finds them hard; lifts are rare in riads.",
+        "**Compare the total**, including tourist tax and breakfast, not just the nightly rate.",
+      ]},
+      { kind: "cta", link: "tours", destination: "Marrakech", label: "Compare Marrakech tours", note: "Souk walks, cooking classes and Atlas day trips from our booking partners." },
+      { kind: "cta", link: "flights", label: "Compare flights to Marrakech", note: "Fares into Marrakech Menara from our booking partners." },
+    ],
+    related: ["marrakech-sahara-how-long", "where-to-stay-in-dubai", "boutique-vs-resort"],
+  },
 
   "japan-rail-pass-worth-it": {
     dek: "Since the 2023 price rise the pass loses money on a lot of ordinary itineraries -- price yours before you buy.",
