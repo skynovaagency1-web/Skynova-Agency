@@ -317,6 +317,62 @@ export const COLLECTIONS: Collection[] = [
       "dominican-republic",
     ],
   },
+  {
+    slug: "mountain-retreats",
+    name: "Mountain retreats",
+    tagline: "Thin air, slow mornings",
+    icon: "🏔️",
+    intro: [
+      "A mountain retreat is a different trip from a mountain adventure. The point is not the summit; it is waking up somewhere cool and quiet, with a view that does the work and nothing on the schedule before breakfast. These are the destinations where that is easy to arrange — where the mountains come with good places to stay in them, not just trailheads.",
+      "Some are obvious. Switzerland and New Zealand's Southern Alps built their hospitality around altitude, and the lodges around Banff in the Canadian Rockies are among the best mountain stays anywhere. Others are less so. Sri Lanka's hill country is tea estates and old planters' bungalows close to two thousand metres up, a few hours from the coast. Oman's Jebel Akhdar is terraced villages and cool nights above the desert heat, and Morocco's High Atlas puts stone guesthouses within a morning's drive of Marrakech.",
+      "Peru and Argentina ask more of you. Cusco sits at around 3,400 metres, so a day or two of doing very little on arrival is part of the plan rather than time lost. Patagonia's retreats are remote, and the weather decides more of the itinerary than you do.",
+      "Seasons run opposite across the list: the Alps and the Rockies for summer walking or winter snow, the Andes and Patagonia in the southern summer, the Atlas and Jebel Akhdar outside the hottest months.",
+    ],
+    highlights: [
+      "Alpine and Rockies lodges built around the view",
+      "Tea-country and desert-mountain retreats most itineraries skip",
+      "Altitude days built into the plan in the Andes",
+      "Opposite seasons north and south of the equator",
+    ],
+    destinationSlugs: [
+      "switzerland",
+      "new-zealand",
+      "canada",
+      "sri-lanka",
+      "oman",
+      "morocco",
+      "peru",
+      "argentina",
+    ],
+  },
+  {
+    slug: "business-travel",
+    name: "Business travel",
+    tagline: "Fly in, work, fly out",
+    icon: "💼",
+    intro: [
+      "A work trip is judged on different things. Not the view — the connection. Can you fly in nonstop, get from the terminal to a meeting without losing half a day, and sleep somewhere central enough that a cancelled flight is an inconvenience rather than a crisis? These destinations answer yes more reliably than most.",
+      "The Gulf hubs are built for it. Dubai and Doha are two of the best-connected airports in the world, close enough to their business districts to schedule a meeting on the day you land, and both turn a long-haul trip into a stopover rather than an ordeal. Amsterdam does the same job for Europe: the train from the station under Schiphol reaches the city centre in about a quarter of an hour.",
+      "Seoul, Istanbul and the big American cities are the other kind of business trip, where a trade fair or a head office is the reason to go and the sheer size of the place is the thing to plan around. There, where you stay matters more than the star rating — a hotel on the right metro line saves hours across a week.",
+      "Riyadh and Australia's east-coast cities round out the list for anyone whose work takes them there. Entry rules for business visitors differ from tourist rules almost everywhere here, so check what your passport needs before anything is booked.",
+    ],
+    highlights: [
+      "Gulf hubs with short airport-to-city runs and easy stopovers",
+      "Amsterdam's train from the station under the terminal",
+      "Big-city stays chosen by metro line, not star rating",
+      "Business-visitor entry rules to check before you book",
+    ],
+    destinationSlugs: [
+      "united-arab-emirates",
+      "qatar",
+      "netherlands",
+      "south-korea",
+      "turkey",
+      "united-states",
+      "saudi-arabia",
+      "australia",
+    ],
+  },
 ];
 
 export function getCollectionBySlug(slug: string): Collection | undefined {

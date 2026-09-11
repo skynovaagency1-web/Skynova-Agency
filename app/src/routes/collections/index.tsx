@@ -8,6 +8,27 @@ import { Newsletter } from "@/components/site/Newsletter";
 import { COLLECTIONS, collectionDestinations } from "@/data/collections";
 import { PHOTO_SLUGS } from "@/data/destinations";
 
+/** Written out, as the headline always was. */
+function numberWords(n: number): string {
+  const ones = [
+    "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+    "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen",
+  ];
+  const tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+  if (n < 20) return ones[n];
+  if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 ? `-${ones[n % 10]}` : "");
+  return String(n);
+}
+const capitalise = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
+
+/** Counted, never typed. The headline read "Ten ways into thirty-six
+ *  countries" long after both numbers had stopped being true -- every one of
+ *  the 42 destinations sits in a collection -- and "destinations", because
+ *  Martinique, Guadeloupe and the Pacific territories are not countries. */
+const DESTINATION_COUNT = new Set(COLLECTIONS.flatMap((c) => c.destinationSlugs)).size;
+const HEADLINE = `${capitalise(numberWords(COLLECTIONS.length))} ways into ${numberWords(DESTINATION_COUNT)} destinations.`;
+const COLLECTIONS_DESCRIPTION = `${capitalise(numberWords(COLLECTIONS.length))} themed ways into our ${DESTINATION_COUNT} destinations -- from ${COLLECTIONS[0].name.toLowerCase()} and ${COLLECTIONS[1].name.toLowerCase()} to ${COLLECTIONS[COLLECTIONS.length - 1].name.toLowerCase()}, each with seasons and booking links.`;
+
 export const Route = createFileRoute("/collections/")({
   head: () => ({
     meta: [
@@ -15,7 +36,7 @@ export const Route = createFileRoute("/collections/")({
       {
         name: "description",
         content:
-          "Ten themed ways into our destination catalogue -- city breaks, beaches, luxury, family, honeymoon, food, history, nature, nightlife and best value.",
+          COLLECTIONS_DESCRIPTION,
       },
     ],
   }),
@@ -24,9 +45,7 @@ export const Route = createFileRoute("/collections/")({
 
 /** Collections carry no image of their own -- only an emoji. Each one's lead
  *  photograph is the first of its destinations that actually has one, which
- *  gives all ten a distinct image (Portugal, Fiji, Qatar, Australia, French
- *  Polynesia, Italy, Egypt, New Zealand, Spain, Vietnam) with nothing to
- *  maintain by hand. */
+ *  gives each collection a distinct image with nothing to maintain by hand. */
 function leadPhoto(slug: string): string | null {
   const first = collectionDestinations(COLLECTIONS.find((c) => c.slug === slug)!).find((d) =>
     PHOTO_SLUGS.has(d.slug),
@@ -49,7 +68,7 @@ function CollectionsIndex() {
           <div className="site-container">
             <p className="site-eyebrow mb-3">Collections</p>
             <h1 className="site-h2 max-w-2xl text-4xl md:text-5xl">
-              Ten ways into thirty-six countries.
+              {HEADLINE}
             </h1>
             <p className="site-ink-muted mt-4 max-w-xl text-base leading-relaxed">
               Most people do not start with a country -- they start with a kind of trip. These are

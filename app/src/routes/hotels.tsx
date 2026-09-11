@@ -90,7 +90,7 @@ export const Route = createFileRoute("/hotels")({
           { icon: UtensilsCrossed, title: "All-inclusive stays", detail: "Meals and drinks folded into the rate, no separate tab to track." },
         ]}
       />
-      <HotelCollectionsSection href={hotelsLink()} />
+      <HotelCollectionsSection />
       <DestinationPicksSection
         eyebrow="Travel inspiration"
         heading="Wherever the trip is going."

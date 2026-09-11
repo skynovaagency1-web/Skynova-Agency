@@ -5248,3 +5248,31 @@ html.lenis body { height: auto; }
   .keyhole-hero .dest-detail-copy { pointer-events: auto; }
 }
 
+/* ---- Stacked carousel additions (components/site/StackedCarousel.tsx) ----
+   A destination without a photograph gets its flag on a gradient in its own
+   accent (--card-accent, set from data) instead of a broken image, and
+   collection pages caption the front card with its one-line hook -- the one
+   thing the card grid they replaced showed that a photo stack does not. */
+.trend-card-fallback {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--card-accent) 55%, white), var(--card-accent));
+}
+.trend-card-fallback-flag {
+  font-size: 4.5rem;
+  line-height: 1;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.25));
+}
+.trend-detail {
+  max-width: 34rem;
+  min-height: 3em; /* two lines reserved, so hooks of different lengths never shift the buttons */
+  margin: 0.25rem auto 1rem;
+  text-align: center;
+  color: var(--sky-ink-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.trend-detail strong { color: var(--sky-ink); font-weight: 600; }
+

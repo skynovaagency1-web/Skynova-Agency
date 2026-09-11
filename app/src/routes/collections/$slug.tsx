@@ -2,11 +2,9 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 
 import { Nav } from "@/components/site/Nav";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
-import { useReveal } from "@/hooks/use-reveal";
 import { Footer } from "@/components/site/Footer";
 import { Newsletter } from "@/components/site/Newsletter";
-import { CardActions } from "@/components/site/CardActions";
-import { PHOTO_SLUGS } from "@/data/destinations";
+import { StackedCarousel } from "@/components/site/StackedCarousel";
 import { COLLECTIONS, getCollectionBySlug, collectionDestinations } from "@/data/collections";
 import { DESTINATION_DETAILS } from "@/data/destination-details";
 import { hotelsLink, flightsLink } from "@/lib/affiliate";
@@ -35,7 +33,6 @@ export const Route = createFileRoute("/collections/$slug")({
 });
 
 function CollectionPage() {
-  const gridRef = useReveal<HTMLDivElement>();
   const { collection, destinations } = Route.useLoaderData();
   const others = COLLECTIONS.filter((c) => c.slug !== collection.slug);
 
@@ -76,37 +73,18 @@ function CollectionPage() {
 
         <section className="site-section">
           <div className="site-container">
-            <p className="site-eyebrow mb-5">
-              {destinations.length} destinations in this collection
-            </p>
-            <div ref={gridRef} className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
-              {destinations.map((d) => (
-                <div key={d.slug} className="relative">
-                  <Link to="/destinations/$slug" params={{ slug: d.slug }} className="collection-dest-card">
-                    {PHOTO_SLUGS.has(d.slug) ? (
-                      <img
-                        src={`/assets/destinations/${d.slug}.webp`}
-                        alt={d.name}
-                        loading="lazy"
-                        className="collection-dest-media"
-                      />
-                    ) : (
-                      <span className="collection-dest-flag" aria-hidden="true">
-                        {d.flag}
-                      </span>
-                    )}
-                    <span className="collection-dest-body">
-                      <span className="collection-dest-name">
-                        {PHOTO_SLUGS.has(d.slug) ? `${d.flag} ` : ""}
-                        {d.name}
-                      </span>
-                      <span className="collection-dest-hook">{d.hook}</span>
-                    </span>
-                  </Link>
-                  <CardActions slug={d.slug} name={d.name} />
-                </div>
-              ))}
-            </div>
+            {/* The destinations, as a stacked carousel after the "3d photo"
+                reference -- it replaced a card grid. Each card's one-line hook
+                survives as the caption under the front card. */}
+            <StackedCarousel
+              items={destinations}
+              eyebrow={`${destinations.length} destinations in this collection`}
+              intro="Choose one to bring it forward. Each opens its full guide, with season notes and booking links."
+              label="Destinations in this collection"
+              moreHref="#compare"
+              moreLabel="Compare seasons"
+              showHook
+            />
 
             {/* Compare at a glance.
                 The card grid above is for browsing -- photograph, name, hook.
@@ -119,7 +97,7 @@ function CollectionPage() {
                 nothing is templated or inferred. Wrapped in its own scroll
                 container so a long season note never makes the page itself
                 scroll sideways. */}
-            <div className="compare-wrap mt-10">
+            <div id="compare" className="compare-wrap mt-10 scroll-mt-24">
               <table className="compare-table">
                 <caption className="compare-caption">
                   {collection.name}: when to go, at a glance
