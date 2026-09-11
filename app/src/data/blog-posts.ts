@@ -171,6 +171,42 @@ export const POSTS: Post[] = [
     destinationSlug: "cuba",
   },
   {
+    slug: "alula-hegra-planning",
+    tag: "Tours & activities",
+    title: "AlUla and Hegra: booking the sites, getting around, and how many days",
+    excerpt:
+      "Hegra is Saudi Arabia's first UNESCO site, and you cannot just drive in. How the booking works, getting around the valley, and how long to give it.",
+    readTime: "6 min read",
+    destinationSlug: "saudi-arabia",
+  },
+  {
+    slug: "french-polynesia-on-a-budget",
+    tag: "Hotel tips",
+    title: "French Polynesia without the resort bill: pensions, roulottes and the air pass",
+    excerpt:
+      "Family guesthouses, food trucks and a multi-island air pass are how much of French Polynesia actually travels. Save the bungalow for the end.",
+    readTime: "6 min read",
+    destinationSlug: "french-polynesia",
+  },
+  {
+    slug: "new-caledonia-islands-and-coutume",
+    tag: "Trip planning",
+    title: "New Caledonia's islands: flights, ferries, and la coutume",
+    excerpt:
+      "Two airports, long ferry crossings and customary land: how to reach the Isle of Pines and the Loyalty Islands, and how to arrive as a guest.",
+    readTime: "6 min read",
+    destinationSlug: "new-caledonia",
+  },
+  {
+    slug: "samoa-car-and-ferry",
+    tag: "Car rentals",
+    title: "Upolu and Savai'i by car: the permit, the ferry, and driving through villages",
+    excerpt:
+      "Samoa's two main islands are best seen by car, and the car can ride the ferry. The paperwork, the crossing, and the village customs that matter on the road.",
+    readTime: "6 min read",
+    destinationSlug: "samoa",
+  },
+  {
     slug: "48-hours-in-lisbon",
     tag: "City guide",
     title: "48 hours in Lisbon: a fast, affordable first trip to Portugal",

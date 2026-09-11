@@ -873,6 +873,172 @@ export const ARTICLES: Record<string, Article> = {
     ],
     related: ["jamaica-getting-around", "samana-whale-watching", "free-cancellation-fine-print"],
   },
+  "alula-hegra-planning": {
+    dek: "Hegra is Saudi Arabia's first UNESCO site and the reason most visitors come to AlUla. You cannot just drive in -- almost everything here is booked ahead, and knowing that shapes the whole trip.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "AlUla is a desert valley in north-west Saudi Arabia, lined with sandstone cliffs and scattered with the remains of kingdoms that grew rich on the incense trade. Its centrepiece is Hegra: more than a hundred monumental tombs carved into rock outcrops by the Nabataeans, the same people who built Petra. Unlike Petra, it is quiet." },
+      { kind: "para", text: "**Book Hegra and the other headline sites when you book your flights, hire a car or arrange transfers for the gaps, and give AlUla three days.**" },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**Hegra:** by booked tour only. You cannot visit on your own.",
+        "**Dadan and Jabal Ikmah:** ticketed, and best booked at the same time.",
+        "**AlUla Old Town:** the mud-brick village, easy to wander and lovely in the evening.",
+        "**Elephant Rock:** a giant rock formation that is at its best at sunset.",
+        "**Getting around:** a hire car from the airport, or transfers -- the sites are spread along the valley.",
+      ]},
+
+      { kind: "h2", text: "Why everything is booked" },
+      { kind: "para", text: "AlUla is managed as a protected heritage area, and access to its key sites is controlled. Hegra is visited on guided tours that leave a visitor centre at set times -- by bus with stops at the main tombs, or on smaller specialist tours. Tickets are sold online through the official AlUla booking site and sell out in the cool season, so book them together with your flights and hotel." },
+      { kind: "callout", title: "Plan the day around the tour time", text: "With Hegra fixed to a time slot, build each day backwards from it: the tour in the morning or late afternoon, when the light is best and the heat least, and something unhurried in between." },
+
+      { kind: "h2", text: "Getting around the valley" },
+      { kind: "para", text: "AlUla's sites are spread along a valley tens of kilometres long, and taxis and ride-hailing are thin on the ground compared with the big cities. The simplest answer is a hire car from the airport: the roads are good, quiet and well signed. If you would rather not drive, hotels and tour operators arrange transfers to each booked site." },
+      { kind: "para", text: "A 4x4 is only needed to go off-road into the desert, which is better done with a guide anyway." },
+      { kind: "cta", link: "cars", label: "Compare car hire in AlUla", note: "Pick-up at AlUla airport from our booking partners." },
+
+      { kind: "h2", text: "Where to stay" },
+      { kind: "para", text: "Accommodation is limited and not cheap. The choice runs from luxury desert resorts tucked into the canyons to simpler hotels and camps near the town. Book early for the cool months, November to March, when AlUla is at its best -- and bring a warm layer, because desert nights can be surprisingly cold." },
+      { kind: "cta", link: "hotels", destination: "AlUla, Saudi Arabia", label: "Compare hotels in AlUla", note: "Live rates from our hotel partner, from desert resorts to town hotels." },
+
+      { kind: "h2", text: "Getting there" },
+      { kind: "list", items: [
+        "**By air:** AlUla has its own airport, with domestic flights from Riyadh and Jeddah and a small number of international routes.",
+        "**By road:** a long drive from anywhere -- the flight is almost always the better choice.",
+        "**Entry:** many nationalities can get an e-visa online in minutes. Check the current rules for your passport.",
+      ]},
+
+      { kind: "h2", text: "What to know" },
+      { kind: "list", items: [
+        "**Dress modestly** -- shoulders and knees covered. An abaya is not required for visitors.",
+        "**No alcohol,** anywhere in the country, hotels included.",
+        "**Photography** is fine at the sites, but ask before photographing people.",
+      ]},
+      { kind: "cta", link: "flights", label: "Compare flights to Saudi Arabia", note: "Fares into Riyadh or Jeddah from our booking partners, with onward flights to AlUla." },
+    ],
+    related: ["jordan-pass-explained", "oman-4x4-or-not", "marrakech-sahara-how-long"],
+  },
+
+  "french-polynesia-on-a-budget": {
+    dek: "French Polynesia's reputation is overwater bungalows at eye-watering prices. The islands also run on family guesthouses, food trucks and a ferry that costs less than a taxi -- which is how much of the country actually travels.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "The photographs are of overwater bungalows, and the prices match. But French Polynesia is also a place where people live and work, with a network of family-run guesthouses, cheap evening food trucks and ferries between the nearest islands. Use them and the trip costs far less than the resort version -- and you see a great deal more of island life." },
+      { kind: "para", text: "**Stay in pensions, eat at the roulottes, buy a multi-island air pass, and save the bungalow for the last night or two.**" },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**Where to sleep:** pensions de famille -- family guesthouses, often with breakfast and dinner included.",
+        "**Where to eat:** the roulottes, food trucks that gather in Papeete in the evening and turn up across the islands.",
+        "**Getting between islands:** the ferry to Moorea, and an Air Tahiti multi-island pass for the rest.",
+        "**Which islands:** Moorea for value, and Huahine or Maupiti instead of -- or as well as -- Bora Bora.",
+      ]},
+
+      { kind: "h2", text: "Pensions: the other way to stay" },
+      { kind: "para", text: "Pensions de famille are small guesthouses run by local families, from simple rooms in a garden to bungalows on a private motu. Many include breakfast and dinner, which matters on islands where restaurants are few. You eat with your hosts and the other guests, local knowledge comes thrown in, and there are often kayaks or bikes to borrow. English can be limited in some -- a little French goes a long way." },
+
+      { kind: "h2", text: "Roulottes: dinner for less" },
+      { kind: "para", text: "Roulottes are food trucks, and in the evening they gather on Papeete's waterfront, serving everything from steak frites and Chinese noodles to poisson cru -- raw fish in lime and coconut milk. They are where locals eat, the food is good, and a meal costs a fraction of a resort dinner." },
+
+      { kind: "h2", text: "The air pass" },
+      { kind: "para", text: "Beyond Moorea, a short ferry ride from Tahiti, every island hop is a flight, and flights are the biggest cost after accommodation. Air Tahiti sells multi-island passes covering set groups of islands, and for three or more islands they usually work out cheaper than separate tickets. They come with conditions -- a fixed group of islands, and limits on stopping anywhere twice -- so plan the route before you buy." },
+      { kind: "callout", title: "Watch the luggage allowance", text: "Inter-island flights have their own baggage allowance, and it can be smaller than the one on your international ticket. Check it before you pack, especially if you are bringing dive gear." },
+      { kind: "cta", link: "flights", label: "Compare flights to Tahiti", note: "Fares into Papeete from our booking partners." },
+
+      { kind: "h2", text: "The islands that give the most for the money" },
+      { kind: "list", items: [
+        "**Moorea:** dramatic peaks, lagoon snorkelling with rays, plenty of pensions, and a ferry from Papeete instead of a flight.",
+        "**Huahine:** quieter and greener, with ancient marae temple sites and a relaxed village feel. Far fewer visitors than Bora Bora.",
+        "**Maupiti:** a small island with a Bora Bora-style lagoon and no big resorts at all -- only pensions.",
+        "**Fakarava:** in the Tuamotus, for the diving, with pensions right on the lagoon.",
+      ]},
+      { kind: "para", text: "Tipping is not expected. Carry cash for pensions, markets and the smaller islands -- card acceptance thins out quickly away from the resorts." },
+
+      { kind: "h2", text: "Still want the bungalow?" },
+      { kind: "para", text: "Have it -- just not for the whole trip. Two nights over the water at the end, after a week of pensions, is a fine way to finish, and it keeps the single biggest cost under control. Book it once the rest of the route is fixed." },
+      { kind: "cta", link: "hotels", destination: "Moorea, French Polynesia", label: "Compare hotels on Moorea", note: "Live rates from our hotel partner, from pensions to resorts." },
+    ],
+    related: ["fiji-mamanuca-or-yasawa", "boutique-vs-resort", "hotel-room-upgrade-tips"],
+  },
+
+  "new-caledonia-islands-and-coutume": {
+    dek: "New Caledonia's most beautiful places are its smaller islands, and much of the land there belongs to Kanak clans. Getting there takes some planning; being welcome takes a small, simple gesture.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "Most visitors land at Nouméa, spend a day or two on its lagoon beaches, and then head for the islands: the Isle of Pines to the south-east, and the Loyalty Islands -- Ouvéa, Lifou and Maré -- further out. They are some of the most beautiful places in the Pacific, and they work differently from the capital. Much of the land is held under customary ownership by Kanak clans, facilities are simple, and visitors are guests in a very real sense." },
+      { kind: "para", text: "**Fly when time matters, take the ferry when it does not, and learn the coutume before you go.**" },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**Isle of Pines:** a short flight or a ferry of a few hours from Nouméa. The easiest island to reach and the best set up for visitors.",
+        "**Lifou and Maré:** by plane, or on the ferry that calls at both.",
+        "**Ouvéa:** by plane. Ferries are rare.",
+        "**On arrival anywhere tribal:** a small customary gift, the coutume, for your hosts.",
+      ]},
+
+      { kind: "h2", text: "Two airports, and a ferry" },
+      { kind: "para", text: "Nouméa has two airports, and it catches people out. International flights arrive at La Tontouta, around 45 minutes' drive north of the city. Domestic flights to the islands leave from Magenta, a small airport in the city itself. If you are connecting straight from an international arrival to an island flight, leave plenty of time for the transfer." },
+      { kind: "cta", link: "airport", label: "Book an airport transfer from La Tontouta", note: "Pre-booked pickups into Nouméa, arranged before you land." },
+      { kind: "para", text: "The ferries leave from Nouméa's harbour. They cost less than flying and carry more luggage, but the crossings are long and the open water can be rough. Many people fly one way and sail the other." },
+      { kind: "callout", title: "Check the luggage limit on island flights", text: "Domestic flights use small aircraft with lower baggage allowances than international ones. If you arrive with a big suitcase, ask your Nouméa hotel to store part of it." },
+
+      { kind: "h2", text: "La coutume: how to be a good guest" },
+      { kind: "para", text: "When you arrive in a Kanak tribe -- to stay, to visit a site on its land, or to ask permission to use a beach -- custom asks for a small gesture of respect to the chief or your host. Traditionally it is a length of fabric, often with a modest banknote, offered with a few words saying who you are and why you have come. Your host will usually explain what is expected, and in tribal accommodation it is often part of the welcome." },
+      { kind: "para", text: "It is not a fee, and not a formality to rush. It is how you become a guest rather than a trespasser -- and it is often the start of the best conversations of the trip. Separately, some beaches, caves and paths on customary land charge a small entry fee or need permission; if you are not sure, ask in the village or at your accommodation." },
+
+      { kind: "h2", text: "Staying in a tribe" },
+      { kind: "para", text: "On the Loyalty Islands and the Isle of Pines, some of the most memorable places to stay are run by tribes themselves: simple bungalows or traditional round houses, often with meals such as bougna, cooked in an earth oven. Facilities are basic and English is rarely spoken, but the welcome is warm and the setting usually spectacular. Many do not take online bookings, so ask the tourist office in Nouméa to help." },
+
+      { kind: "h2", text: "Before you book" },
+      { kind: "list", items: [
+        "**Check the current advice.** There have been periods of civil unrest in recent years; read your government's travel advice before you book, and again before you go.",
+        "**Bring cash** for the islands. Cards work in Nouméa, much less reliably beyond it.",
+        "**A little French** helps enormously -- English is far less widely spoken here than elsewhere in the Pacific.",
+        "**Arrange island transport ahead.** Hire cars are few on the smaller islands; your accommodation can usually organise a pick-up.",
+      ]},
+      { kind: "cta", link: "hotels", destination: "Isle of Pines, New Caledonia", label: "Compare hotels on the Isle of Pines", note: "Live rates from our hotel partner -- or search Lifou the same way." },
+      { kind: "cta", link: "flights", label: "Compare flights to New Caledonia", note: "Fares into La Tontouta from our booking partners." },
+    ],
+    related: ["french-polynesia-on-a-budget", "samoa-car-and-ferry", "fiji-mamanuca-or-yasawa"],
+  },
+
+  "samoa-car-and-ferry": {
+    dek: "Samoa's two main islands are best seen by car, and the car can go on the ferry between them. The roads are easy; the village customs are what to learn.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "Samoa is two big islands and a handful of small ones. Upolu has the capital, Apia, the international airport and the famous south-coast beaches; Savai'i, across a short strait, is bigger, emptier and slower still. The local buses are cheerful, colourful and run whenever they run." },
+      { kind: "para", text: "**To see either island properly, hire a car -- and take it with you on the ferry.**" },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**Upolu:** a hire car. The coast road loops the island, and the south-coast beaches are a long way from Apia by bus.",
+        "**Savai'i:** the same car, on the vehicle ferry -- if your hire company allows it.",
+        "**Your licence:** you need a temporary Samoan driving permit, usually arranged through the hire company.",
+        "**Sunday:** travel as little as possible. Much of the country stops.",
+      ]},
+
+      { kind: "h2", text: "The paperwork" },
+      { kind: "para", text: "Visitors cannot drive on a home licence alone. You need a temporary Samoan permit, issued when you show your own licence -- most hire companies arrange it when you collect the car. Samoa switched to driving on the left in 2009, so watch yourself at junctions if you are used to the right." },
+
+      { kind: "h2", text: "Taking the car to Savai'i" },
+      { kind: "para", text: "Vehicle ferries cross from Mulifanua wharf, at the western end of Upolu, to Salelologa on Savai'i in around an hour or so. Check before you book that your hire company lets its cars on the ferry -- most do, some charge extra -- and reserve the car's place on the boat in busy periods." },
+      { kind: "para", text: "The airport is at the western end of Upolu too, close to the wharf. That makes it easy to go to Savai'i first, or to finish near the airport, as our Samoa route does." },
+      { kind: "callout", title: "Fill up in Salelologa", text: "Fuel stations on Savai'i are few once you leave the wharf town. Fill the tank before you set off round the island." },
+
+      { kind: "h2", text: "Driving through villages" },
+      { kind: "para", text: "The main roads run straight through village after village, and village life happens on and beside the road: children walking to school, dogs asleep on the warm tarmac, pigs wandering across. Drive slowly -- the speed limits are low for good reason -- and give way generously." },
+      { kind: "para", text: "In many villages, early evening brings a short prayer curfew, signalled by a gong or a bell. Traffic is expected to slow right down or stop, and walking through the village is best left until it ends. Follow what local drivers do." },
+      { kind: "para", text: "On Sunday, most places close, ferry services are reduced, and many villages ask visitors not to swim at their beaches. Swim at your own accommodation, rest, and save the driving for Monday." },
+
+      { kind: "h2", text: "Custom fees" },
+      { kind: "para", text: "Most beaches, waterfalls and natural sites sit on village land, and the village charges a small custom fee to enter -- To Sua Ocean Trench and the blowholes on Savai'i included. Carry small notes in tala; cards are rarely accepted outside Apia." },
+      { kind: "cta", link: "cars", label: "Compare car hire in Samoa", note: "Pick-up at Faleolo airport or in Apia from our booking partners." },
+      { kind: "cta", link: "hotels", destination: "Apia, Samoa", label: "Compare hotels in Apia", note: "Live rates from our hotel partner for the start of the trip." },
+      { kind: "cta", link: "flights", label: "Compare flights to Samoa", note: "Fares into Faleolo from our booking partners." },
+    ],
+    related: ["fiji-mamanuca-or-yasawa", "driving-on-the-other-side", "new-caledonia-islands-and-coutume"],
+  },
 
 
   "japan-rail-pass-worth-it": {
