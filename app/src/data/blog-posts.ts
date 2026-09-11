@@ -117,6 +117,24 @@ export const POSTS: Post[] = [
     destinationSlug: "argentina",
   },
   {
+    slug: "martinique-rum-distilleries",
+    tag: "Tours & activities",
+    title: "Martinique's rum trail: which distilleries, which season, and who drives",
+    excerpt:
+      "Martinique's rum has its own appellation and its distilleries are beautiful estates. The hard part is getting between them -- and deciding who drives.",
+    readTime: "6 min read",
+    destinationSlug: "martinique",
+  },
+  {
+    slug: "guadeloupe-les-saintes-or-marie-galante",
+    tag: "Trip planning",
+    title: "Les Saintes or Marie-Galante: choosing Guadeloupe's outer islands",
+    excerpt:
+      "Les Saintes for a bay and a village you can walk; Marie-Galante for empty beaches, cane fields and rum. How to choose, and how the ferries work.",
+    readTime: "6 min read",
+    destinationSlug: "guadeloupe",
+  },
+  {
     slug: "48-hours-in-lisbon",
     tag: "City guide",
     title: "48 hours in Lisbon: a fast, affordable first trip to Portugal",

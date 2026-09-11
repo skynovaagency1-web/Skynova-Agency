@@ -638,6 +638,86 @@ export const ARTICLES: Record<string, Article> = {
     ],
     related: ["iguazu-brazil-or-argentina-side", "new-zealand-south-island", "free-cancellation-fine-print"],
   },
+  "martinique-rum-distilleries": {
+    dek: "Martinique's rum has its own appellation, and its distilleries are some of the loveliest estates in the Caribbean. The hard part is not choosing them -- it is getting between them.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "Most of the world's rum is made from molasses, the syrup left over from making sugar. Martinique's is made from freshly pressed sugar cane juice, and the island's rhum agricole is protected by an AOC -- the same kind of appellation France gives its wines and cheeses. The distilleries that make it are working estates set among cane fields, gardens and old plantation houses, and a visit is as much about the landscape as the glass." },
+      { kind: "para", text: "**Plan two or three estates a day, group them by region, and settle who is driving before the first tasting.**" },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**The north:** Depaz, at the foot of Mont Pelée, and Neisson, near Le Carbet, pair well with a day in Saint-Pierre. JM sits further up, near the island's northern tip.",
+        "**The Atlantic side:** Clément, near Le François, with its gardens and art collection, and Saint-James at Sainte-Marie, with its rum museum.",
+        "**When:** the cane harvest, roughly February to June, is when the mills and stills are running. Outside it, you still get the estates and the tastings.",
+        "**Getting there:** a hire car with a designated driver, or a tour that does the driving.",
+      ]},
+
+      { kind: "h2", text: "What you are tasting" },
+      { kind: "para", text: "Rhum agricole tastes grassier and fresher than molasses rum, and the unaged rhum blanc -- usually bottled at 50 per cent or more -- can come as a shock. It is the base of the island's ti' punch: a splash of rum, a slice of lime and a spoonful of cane syrup, mixed in the glass by whoever is drinking it. Rhum vieux is aged for at least three years in oak and sipped like a brandy." },
+
+      { kind: "h2", text: "The driving problem" },
+      { kind: "para", text: "Tastings are generous, the roads between estates are narrow and winding, and France's drink-driving limit applies here exactly as it does in Paris -- with a lower limit still for newly qualified drivers. The police do run checks." },
+      { kind: "para", text: "The fixes are simple. Choose a designated driver for the day and let them taste with the spittoon. Or book a distillery tour with transport, which also gets you someone who knows which estates are open that day." },
+      { kind: "callout", title: "Check the opening days", text: "Some estates close on Sundays or keep shorter hours outside the harvest, and tours of the working distillery may only run while it is in production. Check before you drive to the far end of the island." },
+      { kind: "cta", link: "tours", destination: "Martinique rum distillery tour", label: "Compare distillery tours in Martinique", note: "Rum estate visits with transport from our booking partners." },
+
+      { kind: "h2", text: "Taking bottles home" },
+      { kind: "para", text: "Estate shops sell bottles you will not find at home, often for less than duty-free. Pack them in checked luggage, since hand-luggage liquid limits apply. And although Martinique is part of France, it sits outside the EU's tax area, so customs allowances apply when you fly back -- check the limit for spirits before you fill a suitcase." },
+
+      { kind: "h2", text: "Fitting it into the week" },
+      { kind: "para", text: "Our Martinique route saves the distilleries for the last day, which works well: by then you know the roads. If you are spending a day in the north for Saint-Pierre and the volcano, fold Depaz and Neisson into it instead, and give the last day to the Atlantic side." },
+      { kind: "cta", link: "cars", label: "Compare car hire in Martinique", note: "Pick-up at Fort-de-France airport from our booking partners." },
+      { kind: "cta", link: "hotels", destination: "Les Trois-Ilets, Martinique", label: "Compare hotels in Trois-Ilets", note: "Live rates from our hotel partner, across the bay from Fort-de-France." },
+      { kind: "cta", link: "flights", label: "Compare flights to Martinique", note: "Fares into Fort-de-France from our booking partners." },
+    ],
+    related: ["guadeloupe-les-saintes-or-marie-galante", "rental-car-damage-waiver", "packing-carry-on-only"],
+  },
+
+  "guadeloupe-les-saintes-or-marie-galante": {
+    dek: "Guadeloupe's smaller islands are a short ferry ride away, and they are where the trip slows right down. Which one suits you depends on what you want to do once you arrive.",
+    published: "2026-09-11",
+    blocks: [
+      { kind: "para", text: "Guadeloupe's two main islands -- green, volcanic Basse-Terre and flat, beachy Grande-Terre -- make a good week on their own. But the islands off their coasts are what many visitors remember longest: Les Saintes to the south, Marie-Galante to the south-east, La Désirade to the east. Each is a ferry ride away, and each feels a long way back in time." },
+      { kind: "para", text: "**Les Saintes for a beautiful bay and a village you can walk; Marie-Galante for empty beaches, cane fields and rum. With ten days, do both.**" },
+
+      { kind: "h2", text: "The short answer" },
+      { kind: "list", items: [
+        "**Les Saintes:** small, pretty, busy by day and calm by evening. Stay a night or two -- day-trippers miss the best of it.",
+        "**Marie-Galante:** bigger, flatter and quieter, with three rum distilleries and some of the emptiest beaches in the Caribbean. Two nights at least.",
+        "**La Désirade:** the quietest of all -- a long, narrow island with one main road. For a day, or for anyone who really wants to disappear.",
+        "**Short on time:** Les Saintes, as a day trip from Basse-Terre.",
+      ]},
+
+      { kind: "h2", text: "Les Saintes: the bay" },
+      { kind: "para", text: "Terre-de-Haut, the main island of Les Saintes, wraps around a bay that regularly appears on lists of the most beautiful in the world, watched over by an old hilltop fort. There are very few cars; people get about on foot, by e-bike or on scooters. The village is all painted houses, small restaurants and a quay where boats come and go." },
+      { kind: "para", text: "In the middle of the day the ferries bring in a crowd. By late afternoon they have gone, and the island is yours -- which is the reason to stay the night. The guesthouses are small and few, so book well ahead." },
+
+      { kind: "h2", text: "Marie-Galante: the slow one" },
+      { kind: "para", text: "Marie-Galante is round, flat and far quieter. It is covered in sugar cane, dotted with the ruins of old windmills, and still sees the occasional ox cart on its lanes. Its three distilleries make rum at a strength that deserves respect, and its beaches -- long, pale and often empty -- are why so many people come back." },
+      { kind: "para", text: "It is big enough that you need wheels. Rent a car or a scooter when you arrive; most visitors leave the mainland hire car behind." },
+
+      { kind: "h2", text: "How the ferries work" },
+      { kind: "list", items: [
+        "**To Les Saintes:** the shortest crossing is from Trois-Rivières on Basse-Terre, well under an hour. Boats also run from Pointe-à-Pitre.",
+        "**To Marie-Galante:** from Pointe-à-Pitre, around an hour across more open water.",
+        "**To La Désirade:** from Saint-François on Grande-Terre.",
+        "**Timetables change** with the season and the weather. Book ahead in the high season, and check again the day before you travel.",
+      ]},
+      { kind: "callout", title: "The crossing can be lively", text: "The channel to Marie-Galante in particular is open sea, and on a windy day the boat moves. If you are prone to seasickness, sit low and towards the back, watch the horizon, and take something before you board rather than after." },
+
+      { kind: "h2", text: "Before you go" },
+      { kind: "list", items: [
+        "**Bring cash.** Cards are widely accepted on the main islands, less so on the outer ones.",
+        "**Pack light** if you can -- you will be carrying your bag on and off small boats and up village streets.",
+        "**Book the rooms first.** The outer islands have few places to stay, and the good ones go early for the dry season, December to April.",
+      ]},
+      { kind: "cta", link: "hotels", destination: "Terre-de-Haut, Guadeloupe", label: "Compare hotels on Les Saintes", note: "Live rates from our hotel partner on Terre-de-Haut -- or search Marie-Galante the same way." },
+      { kind: "cta", link: "cars", label: "Compare car hire in Guadeloupe", note: "Pick-up at Pointe-à-Pitre airport for the main islands, from our booking partners." },
+      { kind: "cta", link: "flights", label: "Compare flights to Guadeloupe", note: "Fares into Pointe-à-Pitre from our booking partners." },
+    ],
+    related: ["martinique-rum-distilleries", "croatia-ferries-vs-driving", "packing-carry-on-only"],
+  },
 
 
   "japan-rail-pass-worth-it": {
