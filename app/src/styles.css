@@ -5211,6 +5211,15 @@ html.lenis body { height: auto; }
   .kh-hint-top { display: inline; }
   .kh-hint-floor { display: none; }
 }
+/* Phones: the homepage rules stack the info card and the stat over the
+   floor, and at full size the info card's top reached the keyhole's base
+   (measured on a 375x812 screen: card top 531px, keyhole base 543px).
+   Without its tag row and thumbnail it sits clear. Scoped to the keyhole,
+   so the homepage cards keep both. */
+@media (max-width: 900px) {
+  .keyhole-intro .hero-card-tags,
+  .keyhole-intro .hero-card-thumb { display: none; }
+}
 
 .kh-wall { fill: var(--keyhole-wall); }
 .kh-floor { fill: var(--keyhole-floor); }
