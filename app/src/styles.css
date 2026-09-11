@@ -201,7 +201,12 @@
   --sky-ink: #1c1a14;
   --sky-ink-muted: #6e6555;
   --sky-coral: #c9a227;
-  --sky-coral-deep: #93711d;
+  /* Deep accent, from the palette reference (#583714 -> #FFEB97). Used as
+     TEXT in ~29 rules, many of them on the cream --sky-bg-raised panels,
+     where the previous #93711d measured 4.25:1 -- under AA. This clears
+     9.96:1 there and 10.65:1 on white. Destination pages override it
+     inline with their own accent, so they are unaffected. */
+  --sky-coral-deep: #583714;
   --sky-coral-ink: #1c1400;
   --sky-coral-wash: rgba(201, 162, 39, 0.12);
   --sky-shadow-sm: 0 1px 2px rgba(28, 26, 20, 0.04), 0 8px 20px -6px rgba(28, 26, 20, 0.08);
@@ -718,7 +723,7 @@ html {
     /* Fill is a variable so a page can retint the button without touching the
        sheen above it. The fallback IS the original gold, so every page that
        does not set --btn-pill-fill renders exactly as before. */
-    var(--btn-pill-fill, linear-gradient(180deg, #f4cf72 0%, #e8b53f 52%, #c9a227 100%));
+    var(--btn-pill-fill, linear-gradient(180deg, #ffeb97 0%, #e8b53f 52%, #c9a227 100%));
   color: var(--sky-coral-ink);
   border-radius: 999px;
   padding: 0.9rem 1.85rem;
