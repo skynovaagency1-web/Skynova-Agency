@@ -46,17 +46,24 @@ function ToursPage() {
         { q: t("tours.q4"), a: t("tours.a4") },
       ]}
     >
+      {/* Photo cards, like every other vertical. Tours was the one page still
+          showing icon panels here, so it was the only vertical whose "ways to
+          experience it" section did not look like the rest of the site. The
+          photographs are generic to the category rather than to a destination
+          -- these six are Adventure, Culture, Food, Family, Romantic and
+          Luxury, not six places. */}
       <CategoryGridSection
         eyebrow={t("tours.categoryEyebrow")}
         heading={t("tours.categoryHeading")}
         href={toursLink()}
+        variant="photo"
         categories={[
-          { icon: Mountain, title: t("tours.cat1Title"), detail: t("tours.cat1Detail") },
-          { icon: Landmark, title: t("tours.cat2Title"), detail: t("tours.cat2Detail") },
-          { icon: UtensilsCrossed, title: t("tours.cat3Title"), detail: t("tours.cat3Detail") },
-          { icon: Users, title: t("tours.cat4Title"), detail: t("tours.cat4Detail") },
-          { icon: Heart, title: t("tours.cat5Title"), detail: t("tours.cat5Detail") },
-          { icon: Sparkles, title: t("tours.cat6Title"), detail: t("tours.cat6Detail") },
+          { icon: Mountain, title: t("tours.cat1Title"), detail: t("tours.cat1Detail"), imageSrc: "/assets/tours/tour-adventure.webp" },
+          { icon: Landmark, title: t("tours.cat2Title"), detail: t("tours.cat2Detail"), imageSrc: "/assets/tours/tour-culture.webp" },
+          { icon: UtensilsCrossed, title: t("tours.cat3Title"), detail: t("tours.cat3Detail"), imageSrc: "/assets/tours/tour-food.webp" },
+          { icon: Users, title: t("tours.cat4Title"), detail: t("tours.cat4Detail"), imageSrc: "/assets/tours/tour-family.webp" },
+          { icon: Heart, title: t("tours.cat5Title"), detail: t("tours.cat5Detail"), imageSrc: "/assets/tours/tour-romantic.webp" },
+          { icon: Sparkles, title: t("tours.cat6Title"), detail: t("tours.cat6Detail"), imageSrc: "/assets/tours/tour-luxury.webp" },
         ]}
       />
       <section className="site-section pt-0">
