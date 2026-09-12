@@ -9,6 +9,8 @@ import { toursLink } from "@/lib/affiliate";
 const TOUR_WIDGET_SRC =
   "https://tpscr.com/content?currency=USD&trs=519959&shmarker=720297&locale=en&city_id=107&category=2&amount=3&powered_by=true&campaign_id=137&promo_id=4497";
 
+import { useT } from "@/lib/i18n-strings";
+
 export const Route = createFileRoute("/tours")({
   head: () => ({
     meta: [
@@ -16,63 +18,56 @@ export const Route = createFileRoute("/tours")({
       { name: "description", content: "Skip-the-line tours, day trips and local guides, bookable the moment you land." },
     ],
   }),
-  component: () => (
+  component: ToursPage,
+});
+
+function ToursPage() {
+  const t = useT();
+  return (
     <VerticalPage
-      eyebrow="Tours & activities"
-      title="Go see it, not just land there."
-      description="Skip-the-line tours, day trips and local guides, bookable the moment you land."
+      eyebrow={t("service.tours")}
+      title={t("home.toursHeading")}
+      description={t("home.toursCopy")}
       heroImage="/assets/sections/tours-landmarks.webp"
-      heroAlt="Aerial view of a coastline landmark"
+      heroAlt={t("home.toursAlt2")}
       ctaHref={toursLink()}
-      ctaLabel="Explore tours"
+      ctaLabel={t("home.exploreTours")}
       bullets={[
-        { title: "Local guides", body: "Small-group and private tours led by people who live there." },
-        { title: "Day trips", body: "Out-of-town routes bookable the night before." },
-        { title: "Skip-the-line access", body: "Landmark tickets bundled with a guided walkthrough." },
+        { title: t("tours.b1Title"), body: t("tours.b1Body") },
+        { title: t("tours.b2Title"), body: t("tours.b2Body") },
+        { title: t("tours.b3Title"), body: t("tours.b3Body") },
       ]}
       destinationSlugs={["peru", "jordan", "namibia", "fiji"]}
-      faqHeading="Tour questions, answered."
+      faqHeading={t("tours.faqHeading")}
       faqs={[
-        {
-          q: "Can I cancel a tour booking?",
-          a: "Most experiences offer free cancellation up to 24 hours before -- terms are shown before you pay.",
-        },
-        {
-          q: "Are tours private or group?",
-          a: "Both are usually available -- you can filter by private, small-group, or larger group tours.",
-        },
-        {
-          q: "Do I need to book in advance?",
-          a: "Popular experiences and skip-the-line tickets sell out, so booking a day or two ahead is safer.",
-        },
-        {
-          q: "What languages are tours available in?",
-          a: "This varies by city and guide -- available languages are listed on each experience before you book.",
-        },
+        { q: t("tours.q1"), a: t("tours.a1") },
+        { q: t("tours.q2"), a: t("tours.a2") },
+        { q: t("tours.q3"), a: t("tours.a3") },
+        { q: t("tours.q4"), a: t("tours.a4") },
       ]}
     >
       <CategoryGridSection
-        eyebrow="Ways to experience it"
-        heading="Not just a landmark -- a way in."
+        eyebrow={t("tours.categoryEyebrow")}
+        heading={t("tours.categoryHeading")}
         href={toursLink()}
         categories={[
-          { icon: Mountain, title: "Adventure", detail: "Hikes, dives, and routes that get the heart rate up." },
-          { icon: Landmark, title: "Culture", detail: "Museums, heritage sites, and guided history walks." },
-          { icon: UtensilsCrossed, title: "Food", detail: "Markets, tastings, and meals with someone who knows the city." },
-          { icon: Users, title: "Family", detail: "Paced for kids, without skipping the good parts." },
-          { icon: Heart, title: "Romantic", detail: "Quieter experiences built for two." },
-          { icon: Sparkles, title: "Luxury", detail: "Private guides and after-hours access." },
+          { icon: Mountain, title: t("tours.cat1Title"), detail: t("tours.cat1Detail") },
+          { icon: Landmark, title: t("tours.cat2Title"), detail: t("tours.cat2Detail") },
+          { icon: UtensilsCrossed, title: t("tours.cat3Title"), detail: t("tours.cat3Detail") },
+          { icon: Users, title: t("tours.cat4Title"), detail: t("tours.cat4Detail") },
+          { icon: Heart, title: t("tours.cat5Title"), detail: t("tours.cat5Detail") },
+          { icon: Sparkles, title: t("tours.cat6Title"), detail: t("tours.cat6Detail") },
         ]}
       />
       <section className="site-section pt-0">
         <div className="site-container">
-          <p className="site-eyebrow mb-3">Popular right now</p>
-          <h2 className="site-h2 max-w-md text-3xl md:text-4xl">Tours worth booking today.</h2>
+          <p className="site-eyebrow mb-3">{t("cars.popularNow")}</p>
+          <h2 className="site-h2 max-w-md text-3xl md:text-4xl">{t("tours.popularHeading")}</h2>
           <div className="site-panel affiliate-widget-frame mt-8">
             <AffiliateWidget src={TOUR_WIDGET_SRC} />
           </div>
         </div>
       </section>
     </VerticalPage>
-  ),
-});
+  );
+}

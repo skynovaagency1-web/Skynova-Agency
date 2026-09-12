@@ -7,11 +7,13 @@ import { DestinationPicksSection } from "@/components/site/DestinationPicks";
 import { TravelGuidesSection } from "@/components/site/TravelGuides";
 import { bikeRentalLink } from "@/lib/affiliate";
 
-const CYCLING_DESTINATIONS = [
-  { name: "Switzerland", slug: "switzerland-cycling", detail: "Lake paths and alpine passes for every fitness level." },
-  { name: "Italy", slug: "italy", detail: "Tuscan backroads and coastal towns built for slow riding." },
-  { name: "Vietnam", slug: "vietnam", detail: "Rice-paddy tracks and old-quarter streets, best seen at bike speed." },
-  { name: "New Zealand", slug: "new-zealand", detail: "Purpose-built trails through some of the country's best scenery." },
+import { useT, type TKey } from "@/lib/i18n-strings";
+
+const CYCLING_DESTINATIONS: { name: string; slug: string; detailKey: TKey }[] = [
+  { name: "Switzerland", slug: "switzerland-cycling", detailKey: "bikes.pick1Detail" },
+  { name: "Italy", slug: "italy", detailKey: "bikes.pick2Detail" },
+  { name: "Vietnam", slug: "vietnam", detailKey: "bikes.pick3Detail" },
+  { name: "New Zealand", slug: "new-zealand", detailKey: "bikes.pick4Detail" },
 ];
 
 export const Route = createFileRoute("/bike-rentals")({
@@ -21,66 +23,59 @@ export const Route = createFileRoute("/bike-rentals")({
       { name: "description", content: "City bikes, e-bikes and mountain bikes, plus guided rides in the cities you're already visiting." },
     ],
   }),
-  component: () => (
+  component: BikeRentalsPage,
+});
+
+function BikeRentalsPage() {
+  const t = useT();
+  return (
     <VerticalPage
-      eyebrow="Bike rentals"
-      title="See the destination differently."
-      description="City bikes, e-bikes and mountain bikes, plus guided rides in the cities you're already visiting."
+      eyebrow={t("service.bikeRentals")}
+      title={t("bikes.title")}
+      description={t("bikes.description")}
       heroImage="/assets/sections/bike-rentals.webp"
-      heroAlt="A cyclist riding along a palm-lined promenade at sunset"
+      heroAlt={t("bikes.heroAlt")}
       ctaHref={bikeRentalLink()}
-      ctaLabel="Find a bike"
+      ctaLabel={t("bikes.cta")}
       bullets={[
-        { title: "Every kind of ride", body: "City cruisers through e-bikes and mountain bikes, from local shops." },
-        { title: "Guided or self-guided", body: "Ride with a local, or pick up a bike and go on your own route." },
-        { title: "Helmet and lock included", body: "Standard with most rentals -- confirmed before you book." },
+        { title: t("bikes.b1Title"), body: t("bikes.b1Body") },
+        { title: t("bikes.b2Title"), body: t("bikes.b2Body") },
+        { title: t("bikes.b3Title"), body: t("bikes.b3Body") },
       ]}
       destinationSlugs={["switzerland", "vietnam", "new-zealand", "italy"]}
-      faqHeading="Bike rental questions, answered."
+      faqHeading={t("bikes.faqHeading")}
       faqs={[
-        {
-          q: "Is a helmet included with the rental?",
-          a: "Most listings include one -- it's shown on the rental's own details before you book.",
-        },
-        {
-          q: "Can I rent for more than one day?",
-          a: "Yes -- multi-day and weekly rates are usually cheaper per day than booking single days back to back.",
-        },
-        {
-          q: "What's the difference between a guided ride and a rental?",
-          a: "A rental is just the bike, on your own route. A guided ride includes a local leading a planned route.",
-        },
-        {
-          q: "How far can an e-bike go on one charge?",
-          a: "This varies by model and terrain -- estimated range is listed on each e-bike's own rental page.",
-        },
+        { q: t("bikes.q1"), a: t("bikes.a1") },
+        { q: t("bikes.q2"), a: t("bikes.a2") },
+        { q: t("bikes.q3"), a: t("bikes.a3") },
+        { q: t("bikes.q4"), a: t("bikes.a4") },
       ]}
     >
       <CategoryGridSection
-        eyebrow="Every kind of ride"
-        heading="Pick the bike for the route."
+        eyebrow={t("bikes.b1Title")}
+        heading={t("bikes.categoryHeading")}
         href={bikeRentalLink()}
         variant="photo"
         categories={[
-          { icon: Building2, title: "City cycling", detail: "Cruisers and hybrids built for flat streets and short hops.", imageSrc: "/assets/bikes/bike-city.webp" },
-          { icon: BatteryCharging, title: "E-bikes", detail: "Pedal assist for longer rides and hillier routes.", imageSrc: "/assets/bikes/bike-ebike.webp" },
-          { icon: Mountain, title: "Mountain bikes", detail: "Trail-ready bikes for terrain a city bike can't handle.", imageSrc: "/assets/bikes/bike-mtb.webp" },
-          { icon: Waves, title: "Coastal routes", detail: "Flat, scenic paths built for riding along the water.", imageSrc: "/assets/bikes/bike-coastal.webp" },
-          { icon: Compass, title: "Guided tours", detail: "A local leading the route, so you don't have to plan it.", imageSrc: "/assets/bikes/bike-guided.webp" },
+          { icon: Building2, title: t("bikes.cat1Title"), detail: t("bikes.cat1Detail"), imageSrc: "/assets/bikes/bike-city.webp" },
+          { icon: BatteryCharging, title: t("bikes.cat2Title"), detail: t("bikes.cat2Detail"), imageSrc: "/assets/bikes/bike-ebike.webp" },
+          { icon: Mountain, title: t("bikes.cat3Title"), detail: t("bikes.cat3Detail"), imageSrc: "/assets/bikes/bike-mtb.webp" },
+          { icon: Waves, title: t("bikes.cat4Title"), detail: t("bikes.cat4Detail"), imageSrc: "/assets/bikes/bike-coastal.webp" },
+          { icon: Compass, title: t("bikes.cat5Title"), detail: t("bikes.cat5Detail"), imageSrc: "/assets/bikes/bike-guided.webp" },
         ]}
       />
       <DestinationPicksSection
-        eyebrow="Cycling destinations"
-        heading="Places that reward two wheels."
-        items={CYCLING_DESTINATIONS}
+        eyebrow={t("bikes.picksEyebrow")}
+        heading={t("bikes.picksHeading")}
+        items={CYCLING_DESTINATIONS.map((d) => ({ name: d.name, slug: d.slug, detail: t(d.detailKey) }))}
         href={bikeRentalLink()}
         altSuffix="cycling route"
       />
       <TravelGuidesSection
-        eyebrow="Cycling guides"
-        heading="Ride like you've done this before."
+        eyebrow={t("bikes.guidesEyebrow")}
+        heading={t("bikes.guidesHeading")}
         slugs={["ebike-vs-regular-bike-rental", "cycling-city-rules-abroad"]}
       />
     </VerticalPage>
-  ),
-});
+  );
+}

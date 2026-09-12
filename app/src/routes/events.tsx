@@ -32,11 +32,13 @@ const EVENTS_WIDGET_SRC =
   "https://tpscr.com/content?currency=USD&trs=519959&shmarker=720297&language=en" +
   "&layout=horizontal&cards=4&powered_by=true&campaign_id=89&promo_id=3947";
 
-const TRENDING_EVENTS = [
-  { name: "Festival season", slug: "event-festival", detail: "Headline stages and the crowd that comes for them." },
-  { name: "Fireworks & celebrations", slug: "event-fireworks", detail: "New Year's, national days, and the nights built around a sky show." },
-  { name: "Opera & theatre", slug: "event-opera", detail: "A seat at the kind of venue that's part of the show." },
-  { name: "Big-match sport", slug: "event-stadium", detail: "The fixtures worth planning a trip around." },
+import { useT, type TKey } from "@/lib/i18n-strings";
+
+const TRENDING_EVENTS: { name: string; slug: string; detailKey: TKey }[] = [
+  { name: "Festival season", slug: "event-festival", detailKey: "events.pick1Detail" },
+  { name: "Fireworks & celebrations", slug: "event-fireworks", detailKey: "events.pick2Detail" },
+  { name: "Opera & theatre", slug: "event-opera", detailKey: "events.pick3Detail" },
+  { name: "Big-match sport", slug: "event-stadium", detailKey: "events.pick4Detail" },
 ];
 
 export const Route = createFileRoute("/events")({
@@ -46,74 +48,64 @@ export const Route = createFileRoute("/events")({
       { name: "description", content: "Concerts, museums, attractions and skip-the-line passes in the cities you are already visiting." },
     ],
   }),
-  component: () => (
+  component: EventsPage,
+});
+
+function EventsPage() {
+  const t = useT();
+  return (
     <VerticalPage
-      eyebrow="Events & tickets"
-      title="Your next unforgettable experience starts here."
-      description="Concerts, museums, attractions and skip-the-line passes in the cities you are already visiting."
+      eyebrow={t("service.events")}
+      title={t("events.title")}
+      description={t("home.eventsCopy")}
       heroImage="/assets/sections/events.webp"
-      heroAlt="Event ticket stub resting on a dark surface"
+      heroAlt={t("home.eventsAlt")}
       ctaHref={eventsLink()}
-      ctaLabel="Find events"
+      ctaLabel={t("home.findEvents")}
       bullets={[
-        { title: "Skip-the-line passes", body: "Museums and landmark attractions without the wait." },
-        { title: "Mobile tickets", body: "Delivered to your inbox the moment you book." },
-        { title: "Local shows and concerts", body: "Booked in the same flow as the rest of the trip." },
+        { title: t("events.b1Title"), body: t("events.b1Body") },
+        { title: t("events.b2Title"), body: t("events.b2Body") },
+        { title: t("events.b3Title"), body: t("events.b3Body") },
       ]}
       destinationSlugs={["italy", "spain", "south-korea", "united-states"]}
-      faqHeading="Event & ticket questions, answered."
+      faqHeading={t("events.faqHeading")}
       faqs={[
-        {
-          q: "Are tickets delivered instantly?",
-          a: "Most are -- mobile tickets land in your inbox right after checkout, ready to show at the door.",
-        },
-        {
-          q: "Can I get a refund if plans change?",
-          a: "Refund and exchange terms are set per event and shown before you pay.",
-        },
-        {
-          q: "Do skip-the-line passes guarantee entry?",
-          a: "They guarantee a faster queue, not a specific time slot -- some attractions also offer timed entry.",
-        },
-        {
-          q: "Are these official tickets?",
-          a: "Yes -- bookings go through the venue's or a licensed partner's own ticketing system.",
-        },
+        { q: t("events.q1"), a: t("events.a1") },
+        { q: t("events.q2"), a: t("events.a2") },
+        { q: t("events.q3"), a: t("events.a3") },
+        { q: t("events.q4"), a: t("events.a4") },
       ]}
     >
       <CategoryGridSection
-        eyebrow="What's on"
-        heading="Whatever the city's known for, tonight."
+        eyebrow={t("events.categoryEyebrow")}
+        heading={t("events.categoryHeading")}
         href={eventsLink()}
         categories={[
-          { icon: Music, title: "Concerts", detail: "Touring acts and local venues, booked ahead." },
-          { icon: Trophy, title: "Sports", detail: "Matches and races in the cities hosting them." },
-          { icon: Drama, title: "Theatre", detail: "West End, Broadway, and local stages alike." },
-          { icon: FerrisWheel, title: "Theme parks", detail: "Skip-the-line entry to the big ones." },
-          { icon: Landmark, title: "Museums", detail: "Timed entry to the exhibits worth planning around." },
-          { icon: Camera, title: "Attractions", detail: "Landmarks, viewpoints, and the photo-op stops." },
-          { icon: Users, title: "Family events", detail: "Paced and timed for kids, without the adult-only fine print." },
-          { icon: PartyPopper, title: "Seasonal events", detail: "Holiday markets, festivals, and the dates that only happen once a year." },
+          { icon: Music, title: t("events.cat1Title"), detail: t("events.cat1Detail") },
+          { icon: Trophy, title: t("events.cat2Title"), detail: t("events.cat2Detail") },
+          { icon: Drama, title: t("events.cat3Title"), detail: t("events.cat3Detail") },
+          { icon: FerrisWheel, title: t("events.cat4Title"), detail: t("events.cat4Detail") },
+          { icon: Landmark, title: t("events.cat5Title"), detail: t("events.cat5Detail") },
+          { icon: Camera, title: t("events.cat6Title"), detail: t("events.cat6Detail") },
+          { icon: Users, title: t("events.cat7Title"), detail: t("events.cat7Detail") },
+          { icon: PartyPopper, title: t("events.cat8Title"), detail: t("events.cat8Detail") },
         ]}
       />
       <section className="site-section pt-0">
         <div className="site-container">
-          <p className="site-eyebrow mb-3">Book now</p>
-          <h2 className="site-h2 max-w-md text-3xl md:text-4xl">Tickets, live from Tiqets.</h2>
-          <p className="site-ink-muted mt-4 max-w-md text-base leading-relaxed">
-            Real availability and prices. You check out with Tiqets &mdash; Skynova doesn&rsquo;t
-            handle the payment or set the price.
-          </p>
+          <p className="site-eyebrow mb-3">{t("events.bookNow")}</p>
+          <h2 className="site-h2 max-w-md text-3xl md:text-4xl">{t("events.widgetHeading")}</h2>
+          <p className="site-ink-muted mt-4 max-w-md text-base leading-relaxed">{t("events.widgetCopy")}</p>
           <AffiliateWidget src={EVENTS_WIDGET_SRC} className="mt-8" />
         </div>
       </section>
       <DestinationPicksSection
-        eyebrow="Trending events"
-        heading="What's worth booking around right now."
-        items={TRENDING_EVENTS}
+        eyebrow={t("events.picksEyebrow")}
+        heading={t("events.picksHeading")}
+        items={TRENDING_EVENTS.map((e) => ({ name: e.name, slug: e.slug, detail: t(e.detailKey) }))}
         href={eventsLink()}
         altSuffix="event"
       />
     </VerticalPage>
-  ),
-});
+  );
+}
