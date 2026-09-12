@@ -16,6 +16,7 @@ import {
   PHOTO_SLUGS,
 } from "@/data/destinations";
 import { collectionsForDestination } from "@/data/collections";
+import { useT, type TKey } from "@/lib/i18n-strings";
 import { DESTINATION_DETAILS } from "@/data/destination-details";
 import { POSTS } from "@/data/blog-posts";
 import { ARTICLE_SLUGS } from "@/data/blog-articles";
@@ -40,10 +41,10 @@ const ATTRACTION_ICONS = ["\u{1F3DB}\u{FE0F}", "\u{1F3D4}\u{FE0F}", "\u{1F30A}",
 const FOOD_ICONS = ["\u{1F37D}\u{FE0F}", "\u{1F958}", "\u{1F35C}", "\u{1F377}"];
 /** Know-before-you-go rows, in fixed order so the numbering is stable. */
 const TIP_ROWS = [
-  { key: "currency", label: "Currency", icon: "\u{1F4B1}" },
-  { key: "transport", label: "Getting around", icon: "\u{1F686}" },
-  { key: "safety", label: "Safety", icon: "\u{1F6E1}\u{FE0F}" },
-  { key: "language", label: "Language", icon: "\u{1F4AC}" },
+  { key: "currency", labelKey: "dest.tipCurrency" as TKey, icon: "\u{1F4B1}" },
+  { key: "transport", labelKey: "dest.tipTransport" as TKey, icon: "\u{1F686}" },
+  { key: "safety", labelKey: "dest.tipSafety" as TKey, icon: "\u{1F6E1}\u{FE0F}" },
+  { key: "language", labelKey: "dest.tipLanguage" as TKey, icon: "\u{1F4AC}" },
 ] as const;
 
 /**
@@ -82,6 +83,7 @@ export const Route = createFileRoute("/destinations/$slug")({
 });
 
 function DestinationPage() {
+  const t = useT();
   const attractionsRef = useReveal<HTMLDivElement>();
   const foodRef = useReveal<HTMLDivElement>();
   const { destination, detail } = Route.useLoaderData();
@@ -130,64 +132,64 @@ function DestinationPage() {
     partners: { label: string; href: string }[];
   }[] = [
     {
-      title: "Flights",
+      title: t("service.flights"),
       vertical: "/flights",
-      copy: `Compare fares into ${name}.`,
+      copy: t("dest.copyFlights", { name }),
       partners: [{ label: "Aviasales", href: flightsLink() }],
     },
     {
-      title: "Hotels",
+      title: t("service.hotels"),
       vertical: "/hotels",
-      copy: `Stays across ${name}, compared in one search.`,
+      copy: t("dest.copyHotels", { name }),
       partners: [{ label: "Hotellook", href: hotelsLink(name) }],
     },
     {
-      title: "Car rentals",
+      title: t("service.carRentals"),
       vertical: "/car-rentals",
-      copy: `Collect on arrival and drive ${name} at your own pace.`,
+      copy: t("dest.copyCars", { name }),
       partners: [
         { label: "Rentalcars", href: carRentalLink() },
         ...(discoverCars ? [{ label: "Discover Cars", href: discoverCars }] : []),
       ],
     },
     {
-      title: "Tours & activities",
+      title: t("service.tours"),
       vertical: "/tours",
-      copy: `Guided trips and day tours across ${name}.`,
+      copy: t("dest.copyTours", { name }),
       partners: [{ label: "GetYourGuide", href: toursLink(name) }],
     },
     {
-      title: "Events & tickets",
+      title: t("service.events"),
       vertical: "/events",
-      copy: `Attractions and shows in ${name}, booked ahead.`,
+      copy: t("dest.copyEvents", { name }),
       partners: [
         { label: "Tiqets", href: eventsLink() },
         { label: "GetYourGuide", href: attractionsLink(name) },
       ],
     },
     {
-      title: "Airport transfers",
+      title: t("dest.bookAirport"),
       vertical: "/airport-services",
-      copy: `Meet-and-greet and private transfers on arrival in ${name}.`,
+      copy: t("dest.copyAirport", { name }),
       partners: [{ label: "GetTransfer", href: airportServicesLink() }],
     },
     {
-      title: "Bike rentals",
+      title: t("service.bikeRentals"),
       vertical: "/bike-rentals",
-      copy: `Rent a bike and cover ${name} at street level.`,
+      copy: t("dest.copyBikes", { name }),
       partners: [{ label: "GetYourGuide", href: bikeRentalLink(name) }],
     },
     {
-      title: "eSIM",
+      title: t("dest.bookEsim"),
       vertical: "/esim",
-      copy: `Data the moment you land in ${name}, no roaming fees.`,
+      copy: t("dest.copyEsim", { name }),
       partners: [{ label: "Airalo", href: esimLink(destination.slug) }],
     },
   ];
   const path = `/destinations/${destination.slug}`;
   const trail = [
-    { name: "Home", path: "/" },
-    { name: "Destinations", path: "/destinations" },
+    { name: t("nav.home"), path: "/" },
+    { name: t("nav.destinations"), path: "/destinations" },
     { name },
   ];
 
@@ -229,7 +231,7 @@ function DestinationPage() {
         // untrue. As a named recommendation list it says exactly what it is.
         "@type": "ItemList",
         "@id": absUrl(path) + "#stays",
-        name: `Where to stay in ${name}`,
+        name: t("dest.staysListName", { name }),
         itemListElement: detail.hotels.map((h, i) => ({
           "@type": "ListItem",
           position: i + 1,
@@ -274,7 +276,7 @@ function DestinationPage() {
           {hasPhoto ? (
             <img
               src={`/assets/destinations/${destination.slug}.webp`}
-              alt={`${name} travel scene`}
+              alt={t("dest.photoAlt", { name })}
               className="dest-detail-media"
               fetchPriority="high"
             />
@@ -308,24 +310,24 @@ function DestinationPage() {
               <dl className="dest-hero-stats">
                 <div className="dest-hero-stat">
                   <dt className="dest-hero-stat-figure">{detail.attractions.length}</dt>
-                  <dd className="dest-hero-stat-label">things to see</dd>
+                  <dd className="dest-hero-stat-label">{t("dest.statAttractions")}</dd>
                 </div>
                 <div className="dest-hero-stat">
                   <dt className="dest-hero-stat-figure">{detail.itinerary.length}</dt>
-                  <dd className="dest-hero-stat-label">day route</dd>
+                  <dd className="dest-hero-stat-label">{t("dest.statRoute")}</dd>
                 </div>
                 <div className="dest-hero-stat">
                   <dt className="dest-hero-stat-figure">{booking.length}</dt>
-                  <dd className="dest-hero-stat-label">ways to book</dd>
+                  <dd className="dest-hero-stat-label">{t("dest.statBook")}</dd>
                 </div>
               </dl>
               <div className="dest-hero-actions">
                 <a href="#book" className="btn-hero-pill dest-hero-cta">
                   <span className="spark" />
-                  <span>Book {name}</span>
+                  <span>{t("dest.book", { name })}</span>
                   <span className="dest-hero-cta-arrow" aria-hidden="true">→</span>
                 </a>
-                <WishlistButton itemType="destination" itemSlug={destination.slug} variant="inline" label={`Save ${name}`} />
+                <WishlistButton itemType="destination" itemSlug={destination.slug} variant="inline" label={t("dest.save", { name })} />
               </div>
             </div>
           </div>
@@ -334,7 +336,7 @@ function DestinationPage() {
         {/* 2. Why choose {name} */}
         <section className="site-section site-hairline border-t">
           <div className="site-container">
-            <p className="site-eyebrow mb-3">Why Choose {name}</p>
+            <p className="site-eyebrow mb-3">{t("dest.whyChoose", { name })}</p>
             <p className="site-h2 max-w-3xl text-2xl leading-snug md:text-3xl">{detail.whyChoose}</p>
           </div>
         </section>
@@ -342,8 +344,8 @@ function DestinationPage() {
         {/* 3. Why visit -- 4 feature cards */}
         <section className="site-section site-hairline border-t">
           <div className="site-container">
-            <p className="site-eyebrow mb-3">Why Visit {name}</p>
-            <h2 className="site-h2 max-w-lg text-3xl md:text-4xl">What makes it worth the trip.</h2>
+            <p className="site-eyebrow mb-3">{t("dest.whyVisit", { name })}</p>
+            <h2 className="site-h2 max-w-lg text-3xl md:text-4xl">{t("dest.whatMakes")}</h2>
             <div ref={attractionsRef} className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
               {detail.whyVisit.map((card) => (
                 <div key={card.title} className="site-panel adv-card p-6">
@@ -363,9 +365,9 @@ function DestinationPage() {
                wrong places, so the number stands in for the pin. */}
         <section className="dest-atlas">
           <div className="site-container">
-            <p className="site-eyebrow dest-atlas-eyebrow mb-3">See &amp; Do</p>
+            <p className="site-eyebrow dest-atlas-eyebrow mb-3">{t("dest.seeAndDo")}</p>
             <h2 className="site-h2 dest-atlas-title max-w-lg text-3xl md:text-4xl">
-              Top attractions in {name}.
+              {t("dest.topAttractions", { name })}
             </h2>
             <div className="dest-atlas-grid mt-10">
               {detail.attractions.map((a, i) => {
@@ -405,8 +407,8 @@ function DestinationPage() {
         {/* 5. Local food */}
         <section className="site-section site-hairline border-t">
           <div className="site-container">
-            <p className="site-eyebrow mb-3">Eat & Drink</p>
-            <h2 className="site-h2 max-w-lg text-3xl md:text-4xl">Local food in {name}.</h2>
+            <p className="site-eyebrow mb-3">{t("dest.eatDrink")}</p>
+            <h2 className="site-h2 max-w-lg text-3xl md:text-4xl">{t("dest.localFood", { name })}</h2>
             <p className="site-ink-muted mt-4 max-w-lg text-base leading-relaxed">{detail.foodIntro}</p>
             <div ref={foodRef} className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
               {detail.dishes.map((dish, i) => {
@@ -434,8 +436,8 @@ function DestinationPage() {
         {/* 6. Best hotels */}
         <section className="site-section site-hairline border-t">
           <div className="site-container">
-            <p className="site-eyebrow mb-3">Where to Stay</p>
-            <h2 className="site-h2 max-w-lg text-3xl md:text-4xl">Best hotels in {name}.</h2>
+            <p className="site-eyebrow mb-3">{t("dest.whereToStay")}</p>
+            <h2 className="site-h2 max-w-lg text-3xl md:text-4xl">{t("dest.bestHotels", { name })}</h2>
             <div className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-5">
               {detail.hotels.map((hotel) => (
                 <div key={hotel.name} className="site-panel p-6">
@@ -451,7 +453,7 @@ function DestinationPage() {
               rel="noopener noreferrer"
               className="btn-underline mt-8"
             >
-              Compare all {name} hotels <span className="arrow" aria-hidden="true">&rarr;</span>
+              {t("dest.compareHotels", { name })} <span className="arrow" aria-hidden="true">&rarr;</span>
             </a>
           </div>
         </section>
@@ -460,12 +462,12 @@ function DestinationPage() {
         <section className="site-section site-hairline border-t">
           <div className="site-container grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start">
             <div>
-              <p className="site-eyebrow mb-3">Sample Route</p>
+              <p className="site-eyebrow mb-3">{t("dest.sampleRoute")}</p>
               <h2 className="site-h2 max-w-md text-3xl md:text-4xl">
-                A {itineraryDays(detail.itinerary)}-day {name} itinerary.
+                {t("dest.itineraryHeading", { days: itineraryDays(detail.itinerary), name })}
               </h2>
               <p className="site-ink-muted mt-4 max-w-md text-base leading-relaxed">
-                A realistic pace for a first visit -- stretch it or compress it to fit your trip.
+                {t("dest.itineraryCopy")}
               </p>
             </div>
             <div className="route-steps-flow">
@@ -492,7 +494,7 @@ function DestinationPage() {
         <section className="site-section site-hairline border-t">
           <div className="site-container">
             <div className="site-panel p-6 md:p-8">
-              <p className="site-eyebrow mb-3">Best Time to Visit</p>
+              <p className="site-eyebrow mb-3">{t("dest.bestTimeLabel")}</p>
               <p className="text-lg leading-relaxed md:text-xl">{detail.bestTime}</p>
             </div>
           </div>
@@ -501,7 +503,7 @@ function DestinationPage() {
         {/* 9. Travel tips */}
         <section className="site-section site-hairline border-t">
           <div className="site-container">
-            <p className="site-eyebrow mb-5">Know Before You Go</p>
+            <p className="site-eyebrow mb-5">{t("dest.kbyg")}</p>
             {/* Numbered banner rows, after the reference. Its rows are five
                 unrelated hues; these are four steps of the destination's own
                 accent instead, because a rainbow here would fight the
@@ -515,7 +517,7 @@ function DestinationPage() {
                 >
                   <span className="kbyg-index">{String(i + 1).padStart(2, "0")}</span>
                   <div className="kbyg-band">
-                    <p className="kbyg-label">{row.label}</p>
+                    <p className="kbyg-label">{t(row.labelKey)}</p>
                     <p className="kbyg-text">{detail.tips[row.key]}</p>
                     <span className="kbyg-icon" aria-hidden="true">
                       {row.icon}
@@ -530,8 +532,8 @@ function DestinationPage() {
         {/* 10. FAQs */}
         <section className="site-section site-hairline border-t">
           <div className="site-container">
-            <p className="site-eyebrow mb-3">FAQs</p>
-            <h2 className="site-h2 max-w-lg text-3xl md:text-4xl">Common {name} questions.</h2>
+            <p className="site-eyebrow mb-3">{t("dest.faqs")}</p>
+            <h2 className="site-h2 max-w-lg text-3xl md:text-4xl">{t("dest.commonQuestions", { name })}</h2>
             <div className="mt-8 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-5">
               {detail.faqs.map((faq) => (
                 <div key={faq.q} className="site-panel p-6">
@@ -546,7 +548,7 @@ function DestinationPage() {
         {/* 11. CTA -- booking links customized for this destination */}
         <section id="book" className="site-section site-hairline border-t">
           <div className="site-container">
-            <p className="site-eyebrow mb-5">Book {name}</p>
+            <p className="site-eyebrow mb-5">{t("dest.book", { name })}</p>
             <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
               {booking.map((b) => (
                 <div key={b.title} className="dest-mini-card">
@@ -573,7 +575,7 @@ function DestinationPage() {
               ))}
             </div>
             <Link to="/destinations" className="btn-underline mt-8">
-              Back to all destinations <span className="arrow" aria-hidden="true">&rarr;</span>
+              {t("dest.backToAll")} <span className="arrow" aria-hidden="true">&rarr;</span>
             </Link>
           </div>
         </section>
@@ -584,9 +586,11 @@ function DestinationPage() {
         {guides.length > 0 && (
           <section className="site-section site-hairline border-t">
             <div className="site-container">
-              <p className="site-eyebrow mb-3">Read first</p>
+              <p className="site-eyebrow mb-3">{t("dest.readFirst")}</p>
               <h2 className="site-h2 max-w-lg text-3xl md:text-4xl">
-                {guides.length === 1 ? "A guide" : `${guides.length} guides`} for {name}.
+                {guides.length === 1
+                  ? t("dest.guideOne", { name })
+                  : t("dest.guideMany", { count: guides.length, name })}
               </h2>
               <div className="dest-guides-grid mt-8">
                 {guides.map((post) => (
@@ -618,9 +622,9 @@ function DestinationPage() {
         {related.length > 0 && (
           <section className="site-section site-hairline border-t">
             <div className="site-container">
-              <p className="site-eyebrow mb-3">Where to next</p>
+              <p className="site-eyebrow mb-3">{t("dest.whereNext")}</p>
               <h2 className="site-h2 max-w-lg text-3xl md:text-4xl">
-                Travellers to {name} also look at these.
+                {t("dest.alsoLook", { name })}
               </h2>
               <div className="related-dest-grid mt-8">
                 {related.map((d) => (
@@ -651,15 +655,15 @@ function DestinationPage() {
         <section className="site-section site-hairline border-t closing-cta">
           <div className="site-container text-center">
             <h2 className="site-h2 mx-auto max-w-lg text-3xl md:text-4xl">
-              Start planning your {name} trip.
+              {t("dest.startPlanningTrip", { name })}
             </h2>
             <p className="site-ink-muted mx-auto mt-3 max-w-sm text-base">
-              Flights, stays, cars, and things to do &mdash; compared in one place, booked with trusted travel partners.
+              {t("dest.closingCopy")}
             </p>
             <div className="mt-7 flex flex-wrap items-center justify-center gap-5">
               <a href={flightsLink()} target="_blank" rel="noopener noreferrer" className="btn-final-banner">
                 <span className="burst" />
-                <span>Start your trip</span>
+                <span>{t("nav.startTrip")}</span>
               </a>
             </div>
           </div>
@@ -671,7 +675,7 @@ function DestinationPage() {
         {collections.length > 0 && (
           <section className="site-section site-hairline border-t">
             <div className="site-container">
-              <p className="site-eyebrow mb-5">{name} also appears in</p>
+              <p className="site-eyebrow mb-5">{t("dest.appearsIn", { name })}</p>
               <div className="collection-more">
                 {collections.map((c) => (
                   <Link
