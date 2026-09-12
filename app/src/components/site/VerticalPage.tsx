@@ -11,6 +11,7 @@ import { DESTINATIONS } from "@/data/destinations";
 import { useReveal } from "@/hooks/use-reveal";
 import { StructuredData } from "@/components/StructuredData";
 import { breadcrumbJsonLd, faqJsonLd, jsonLd } from "@/lib/seo";
+import { useT } from "@/lib/i18n-strings";
 
 type Bullet = { title: string; body: string };
 type Faq = { q: string; a: string };
@@ -71,6 +72,7 @@ export function VerticalPage({
    * (e.g. flight travel guides) -- optional, most verticals don't need it. */
   afterDestinations?: ReactNode;
 }) {
+  const t = useT();
   const gridRef = useReveal<HTMLDivElement>();
   const destinations = destinationSlugs
     .map((slug) => DESTINATIONS.find((d) => d.slug === slug))
@@ -81,7 +83,7 @@ export function VerticalPage({
   // here rather than in FaqSection, because destination pages emit their own
   // FAQPage and would otherwise carry two.
   const structuredData = jsonLd([
-    breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: eyebrow }]),
+    breadcrumbJsonLd([{ name: t("nav.home"), path: "/" }, { name: eyebrow }]),
     ...(faqs && faqs.length > 0 ? [faqJsonLd(faqs)] : []),
   ]);
 
@@ -154,7 +156,7 @@ export function VerticalPage({
         {destinations.length > 0 && (
           <section className="site-section pt-0">
             <div className="site-container">
-              <p className="site-eyebrow mb-5">Popular destinations</p>
+              <p className="site-eyebrow mb-5">{t("vertical.popularDestinations")}</p>
               <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
                 {destinations.map((d) => (
                   <div key={d.slug} className="relative">
@@ -167,7 +169,7 @@ export function VerticalPage({
                 ))}
               </div>
               <Link to="/destinations" className="btn-underline mt-6">
-                Browse all destinations <span className="arrow">&rarr;</span>
+                {t("vertical.browseAll")} <span className="arrow">&rarr;</span>
               </Link>
             </div>
           </section>
@@ -175,7 +177,7 @@ export function VerticalPage({
 
         {afterDestinations}
 
-        {faqs && faqs.length > 0 && <FaqSection heading={faqHeading ?? `${eyebrow} questions, answered.`} faqs={faqs} />}
+        {faqs && faqs.length > 0 && <FaqSection heading={faqHeading ?? t("vertical.faqHeading", { name: eyebrow })} faqs={faqs} />}
       </main>
       <Newsletter />
       <Footer />

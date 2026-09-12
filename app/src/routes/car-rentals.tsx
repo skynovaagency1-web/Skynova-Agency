@@ -28,11 +28,13 @@ const CAR_WIDGET_FORM_SRC =
 const CAR_WIDGET_BANNER_SRC =
   "https://tpscr.com/content?trs=519959&shmarker=720297&locale=en&width=100&height=100&powered_by=true&campaign_id=10&promo_id=2082";
 
-const ROAD_TRIPS = [
-  { name: "Great Ocean Road", slug: "road-great-ocean", detail: "Victoria's coastline, the Twelve Apostles included." },
-  { name: "Iceland Ring Road", slug: "road-iceland", detail: "A full loop of the island, glaciers and all." },
-  { name: "Pacific Coast Highway", slug: "road-pch", detail: "Big Sur's cliffs, bridges, and turnouts built for stopping." },
-  { name: "Route 66", slug: "road-route66", detail: "The original American road trip, still driveable end to end." },
+import { useT, type TKey } from "@/lib/i18n-strings";
+
+const ROAD_TRIPS: { name: string; slug: string; detailKey: TKey }[] = [
+  { name: "Great Ocean Road", slug: "road-great-ocean", detailKey: "cars.road1Detail" },
+  { name: "Iceland Ring Road", slug: "road-iceland", detailKey: "cars.road2Detail" },
+  { name: "Pacific Coast Highway", slug: "road-pch", detailKey: "cars.road3Detail" },
+  { name: "Route 66", slug: "road-route66", detailKey: "cars.road4Detail" },
 ];
 
 export const Route = createFileRoute("/car-rentals")({
@@ -42,44 +44,37 @@ export const Route = createFileRoute("/car-rentals")({
       { name: "description", content: "Economy to executive SUVs, picked up at arrivals and dropped off anywhere on the route." },
     ],
   }),
-  component: () => (
+  component: CarRentalsPage,
+});
+
+function CarRentalsPage() {
+  const t = useT();
+  return (
     <VerticalPage
-      eyebrow="Car rentals"
-      title="Drive your journey."
-      description="Economy to executive SUVs, picked up at arrivals and dropped off anywhere on the route."
+      eyebrow={t("service.carRentals")}
+      title={t("cars.title")}
+      description={t("home.carsCopy")}
       heroVideo={{ videoSrc: "/assets/hero/car-rentals-hero.mp4" }}
-      heroAlt="Luxury car parked along a coastal road"
+      heroAlt={t("home.carsAlt")}
       ctaHref={carRentalLink()}
-      ctaLabel="Reserve a car"
+      ctaLabel={t("home.reserveCar")}
       bullets={[
-        { title: "Every class of car", body: "Economy through executive SUV, from the major rental networks." },
-        { title: "Flexible pickup and drop-off", body: "Collect at arrivals, return it anywhere else on the route." },
-        { title: "Transparent pricing", body: "The rate shown is the rental company's own price at checkout." },
+        { title: t("cars.b1Title"), body: t("cars.b1Body") },
+        { title: t("cars.b2Title"), body: t("cars.b2Body") },
+        { title: t("cars.b3Title"), body: t("cars.b3Body") },
       ]}
       destinationSlugs={["namibia", "new-zealand", "united-states", "australia"]}
-      faqHeading="Car rental questions, answered."
+      faqHeading={t("cars.faqHeading")}
       faqs={[
-        {
-          q: "Do I need an international driving license?",
-          a: "It depends on the country -- Rentalcars' own listing for each car states what's accepted at pickup.",
-        },
-        {
-          q: "Is insurance included in the price?",
-          a: "Basic cover is usually included; excess and upgrade options are shown before you confirm the booking.",
-        },
-        {
-          q: "Can I pick up in one city and drop off in another?",
-          a: "Many rental partners allow one-way rentals -- availability and any one-way fee are shown at checkout.",
-        },
-        {
-          q: "What's the minimum age to rent?",
-          a: "This varies by country and car class -- it's listed on each rental company's own terms before you book.",
-        },
+        { q: t("cars.q1"), a: t("cars.a1") },
+        { q: t("cars.q2"), a: t("cars.a2") },
+        { q: t("cars.q3"), a: t("cars.a3") },
+        { q: t("cars.q4"), a: t("cars.a4") },
       ]}
       afterDestinations={
         <TravelGuidesSection
-          eyebrow="Destination driving guides"
-          heading="Know before you drive off."
+          eyebrow={t("cars.guidesEyebrow")}
+          heading={t("cars.guidesHeading")}
           slugs={["rental-car-damage-waiver", "driving-on-the-other-side", "one-way-rental-fees"]}
         />
       }
@@ -92,29 +87,29 @@ export const Route = createFileRoute("/car-rentals")({
         </div>
       </section>
       <CategoryGridSection
-        eyebrow="Every class of car"
-        heading="From city runabouts to the open road."
+        eyebrow={t("cars.b1Title")}
+        heading={t("cars.categoryHeading")}
         href={carRentalLink()}
         variant="photo"
         categories={[
-          { icon: Gem, title: "Luxury cars", detail: "Executive sedans and premium marques.", imageSrc: "/assets/cars/car-luxury.webp" },
-          { icon: Mountain, title: "SUVs", detail: "Ground clearance for coastal roads and mountain passes.", imageSrc: "/assets/cars/car-suv.webp" },
-          { icon: Users, title: "Family vehicles", detail: "Room for the whole group and the luggage.", imageSrc: "/assets/cars/car-family.webp" },
-          { icon: Sun, title: "Convertibles", detail: "Top down for coastal drives and warm-weather routes.", imageSrc: "/assets/cars/car-convertible.webp" },
-          { icon: BatteryCharging, title: "Electric vehicles", detail: "Charging-network coverage checked before you book.", imageSrc: "/assets/cars/car-ev.webp" },
+          { icon: Gem, title: t("cars.cat1Title"), detail: t("cars.cat1Detail"), imageSrc: "/assets/cars/car-luxury.webp" },
+          { icon: Mountain, title: t("cars.cat2Title"), detail: t("cars.cat2Detail"), imageSrc: "/assets/cars/car-suv.webp" },
+          { icon: Users, title: t("cars.cat3Title"), detail: t("cars.cat3Detail"), imageSrc: "/assets/cars/car-family.webp" },
+          { icon: Sun, title: t("cars.cat4Title"), detail: t("cars.cat4Detail"), imageSrc: "/assets/cars/car-convertible.webp" },
+          { icon: BatteryCharging, title: t("cars.cat5Title"), detail: t("cars.cat5Detail"), imageSrc: "/assets/cars/car-ev.webp" },
         ]}
       />
       <DestinationPicksSection
-        eyebrow="Popular road trips"
-        heading="Routes worth renting for."
-        items={ROAD_TRIPS}
+        eyebrow={t("cars.roadEyebrow")}
+        heading={t("cars.roadHeading")}
+        items={ROAD_TRIPS.map((r) => ({ name: r.name, slug: r.slug, detail: t(r.detailKey) }))}
         href={carRentalLink()}
         altSuffix="road"
       />
       <section className="site-section pt-0">
         <div className="site-container">
-          <p className="site-eyebrow mb-3">Popular right now</p>
-          <h2 className="site-h2 max-w-md text-3xl md:text-4xl">Cars worth booking today.</h2>
+          <p className="site-eyebrow mb-3">{t("cars.popularNow")}</p>
+          <h2 className="site-h2 max-w-md text-3xl md:text-4xl">{t("cars.popularHeading")}</h2>
           <div className="site-panel affiliate-widget-frame mt-8">
             <AffiliateWidget src={CAR_WIDGET_RESULTS_SRC} />
           </div>
@@ -124,5 +119,5 @@ export const Route = createFileRoute("/car-rentals")({
         </div>
       </section>
     </VerticalPage>
-  ),
-});
+  );
+}

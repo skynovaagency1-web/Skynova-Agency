@@ -9,18 +9,22 @@ import { DestinationPicksSection } from "@/components/site/DestinationPicks";
 import { TravelGuidesSection } from "@/components/site/TravelGuides";
 import { hotelsLink } from "@/lib/affiliate";
 
-const FEATURED_LUXURY = [
-  { name: "Maldives", slug: "maldives", detail: "Overwater villas built around the reef, not just the view." },
-  { name: "Dubai", slug: "dubai", detail: "Rooftop pools and a skyline that does the decorating for you." },
-  { name: "Santorini", slug: "santorini", detail: "Caldera-view suites carved into the cliffside." },
-  { name: "Seychelles", slug: "seychelles", detail: "Granite coves and beach villas with almost no one else around." },
+import { useT, type TKey } from "@/lib/i18n-strings";
+
+/** Place names stay as they are -- they are proper nouns, not copy. Only the
+ *  line under each one is translated. */
+const FEATURED_LUXURY: { name: string; slug: string; detailKey: TKey }[] = [
+  { name: "Maldives", slug: "maldives", detailKey: "hotels.maldivesDetail" },
+  { name: "Dubai", slug: "dubai", detailKey: "hotels.dubaiDetail" },
+  { name: "Santorini", slug: "santorini", detailKey: "hotels.santoriniDetail" },
+  { name: "Seychelles", slug: "seychelles", detailKey: "hotels.seychellesDetail" },
 ];
 
-const TRAVEL_INSPIRATION = [
-  { name: "Paris", slug: "paris", detail: "A balcony, a view of the rooftops, and the Metro at your door." },
-  { name: "Bali", slug: "bali", detail: "Rice-terrace retreats and villas built around their own pool." },
-  { name: "Tokyo", slug: "tokyo", detail: "Compact, precise rooms in a city built for walking to them." },
-  { name: "New York", slug: "new-york", detail: "A skyline view worth the extra floor." },
+const TRAVEL_INSPIRATION: { name: string; slug: string; detailKey: TKey }[] = [
+  { name: "Paris", slug: "paris", detailKey: "hotels.parisDetail" },
+  { name: "Bali", slug: "bali", detailKey: "hotels.baliDetail" },
+  { name: "Tokyo", slug: "tokyo", detailKey: "hotels.tokyoDetail" },
+  { name: "New York", slug: "new-york", detailKey: "hotels.newYorkDetail" },
 ];
 
 export const Route = createFileRoute("/hotels")({
@@ -30,73 +34,69 @@ export const Route = createFileRoute("/hotels")({
       { name: "description", content: "Boutique stays to full resorts, filtered by neighborhood and rating." },
     ],
   }),
-  component: () => (
+  component: HotelsPage,
+});
+
+function HotelsPage() {
+  const t = useT();
+  const resolve = (items: { name: string; slug: string; detailKey: TKey }[]) =>
+    items.map((i) => ({ name: i.name, slug: i.slug, detail: t(i.detailKey) }));
+
+  return (
     <VerticalPage
-      eyebrow="Hotels"
-      title="Stay somewhere unforgettable."
-      description="From boutique stays to full resorts, filtered by neighborhood first and star rating second."
+      eyebrow={t("service.hotels")}
+      title={t("hotels.title")}
+      description={t("home.hotelsCopy")}
       heroVideo={{ videoSrc: "/assets/hero/hotel-lobby.mp4", posterSrc: "/assets/hero/hotel-lobby-poster.webp" }}
       heroReveal="keyhole"
       heroIntro={<HotelHeroCards />}
-      heroAlt="A bellhop rolling a luggage cart through a grand hotel lobby"
+      heroAlt={t("hotels.heroAlt")}
       ctaHref={hotelsLink()}
-      ctaLabel="Browse stays"
+      ctaLabel={t("home.browseStays")}
       bullets={[
-        { title: "Boutique to full resort", body: "Filter by neighborhood, then by star rating and amenities." },
-        { title: "Real-time availability", body: "Rates and rooms pulled live from the Hotellook network." },
-        { title: "No booking fee from us", body: "The price shown at checkout is the property's own rate." },
+        { title: t("hotels.b1Title"), body: t("hotels.b1Body") },
+        { title: t("hotels.b2Title"), body: t("hotels.b2Body") },
+        { title: t("hotels.b3Title"), body: t("hotels.b3Body") },
       ]}
       destinationSlugs={["switzerland", "peru", "kenya", "jordan"]}
-      faqHeading="Hotel questions, answered."
+      faqHeading={t("hotels.faqHeading")}
       faqs={[
-        {
-          q: "Is the price shown the final price?",
-          a: "Yes -- it's the property's own rate from the Hotellook network. Skynova earns a commission, you don't pay extra for it.",
-        },
-        {
-          q: "Can I cancel a hotel booking?",
-          a: "Cancellation terms are set by the property and shown before you pay -- many listings offer free cancellation.",
-        },
-        {
-          q: "Do you charge a booking fee?",
-          a: "No -- Skynova doesn't add a fee on top of the rate you see at checkout.",
-        },
-        {
-          q: "How do I contact the hotel directly?",
-          a: "Your confirmation email includes the property's contact details once you've booked through the partner site.",
-        },
+        { q: t("hotels.q1"), a: t("hotels.a1") },
+        { q: t("hotels.q2"), a: t("hotels.a2") },
+        { q: t("hotels.q3"), a: t("hotels.a3") },
+        { q: t("hotels.q4"), a: t("hotels.a4") },
       ]}
       afterDestinations={
         <TravelGuidesSection
-          eyebrow="Latest travel guides"
-          heading="Book a better stay."
+          eyebrow={t("hotels.guidesEyebrow")}
+          heading={t("hotels.guidesHeading")}
           slugs={["hotel-room-upgrade-tips", "boutique-vs-resort", "free-cancellation-fine-print"]}
         />
       }
     >
       <DestinationPicksSection
-        eyebrow="Featured luxury hotels"
-        heading="The stays worth planning a trip around."
-        items={FEATURED_LUXURY}
+        eyebrow={t("hotels.luxuryEyebrow")}
+        heading={t("hotels.luxuryHeading")}
+        items={resolve(FEATURED_LUXURY)}
         href={hotelsLink()}
       />
       <CategoryGridSection
-        eyebrow="Popular travel categories"
-        heading="Every kind of stay, one search."
+        eyebrow={t("hotels.categoryEyebrow")}
+        heading={t("hotels.categoryHeading")}
         href={hotelsLink()}
         categories={[
-          { icon: Gem, title: "Boutique hotels", detail: "Small, independent properties with real neighborhood character." },
-          { icon: Palmtree, title: "Full resorts", detail: "On-site pools, spas, and everything else you'd have to leave for otherwise." },
-          { icon: UtensilsCrossed, title: "All-inclusive stays", detail: "Meals and drinks folded into the rate, no separate tab to track." },
+          { icon: Gem, title: t("hotels.cat1Title"), detail: t("hotels.cat1Detail") },
+          { icon: Palmtree, title: t("hotels.cat2Title"), detail: t("hotels.cat2Detail") },
+          { icon: UtensilsCrossed, title: t("hotels.cat3Title"), detail: t("hotels.cat3Detail") },
         ]}
       />
       <HotelCollectionsSection />
       <DestinationPicksSection
-        eyebrow="Travel inspiration"
-        heading="Wherever the trip is going."
-        items={TRAVEL_INSPIRATION}
+        eyebrow={t("hotels.inspirationEyebrow")}
+        heading={t("hotels.inspirationHeading")}
+        items={resolve(TRAVEL_INSPIRATION)}
         href={hotelsLink()}
       />
     </VerticalPage>
-  ),
-});
+  );
+}
