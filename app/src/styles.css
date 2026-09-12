@@ -5540,9 +5540,13 @@ html.lenis body { height: auto; }
   /* The arch: a tall radius on the head, a gentle one at the foot. */
   border-radius: 999px 999px var(--sky-radius-lg) var(--sky-radius-lg);
   border: 1px solid transparent;
-  background: linear-gradient(var(--sky-glass-bg), var(--sky-glass-bg)) padding-box, var(--sky-glass-edge) border-box;
-  -webkit-backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
-  backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
+  /* A dark tint, never the light --sky-glass-bg: the media layer sits at
+     z-index:-1, so whatever fills the card paints over the photograph. The
+     46% white fill bleached the brightest image (Events) into a grey blank
+     in day mode while night, being dark, looked correct. No blur here
+     either -- the photo covers the card, so it would render nothing and
+     cost the most on the phones this section is mostly read on. */
+  background: linear-gradient(rgba(10, 8, 6, 0.22), rgba(10, 8, 6, 0.22)) padding-box, var(--sky-glass-edge) border-box;
   box-shadow: var(--sky-shadow-md);
   color: #f5f0e6;
   transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 260ms ease;
@@ -5554,7 +5558,7 @@ html.lenis body { height: auto; }
 .vcard-scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(10, 8, 6, 0.12) 0%, rgba(10, 8, 6, 0.5) 52%, rgba(10, 8, 6, 0.88) 100%);
+  background: linear-gradient(180deg, rgba(10, 8, 6, 0.1) 0%, rgba(10, 8, 6, 0.34) 38%, rgba(10, 8, 6, 0.8) 72%, rgba(10, 8, 6, 0.95) 100%);
 }
 .vcard-chip {
   position: absolute;
