@@ -1329,21 +1329,50 @@ html {
 /* Flight route cards + hotel collection cards -- same card shell, both
    link straight out to the vertical's affiliate CTA (no fake pricing or
    per-hotel data to show, so the card itself is the pitch). */
+/* The photo cards on the vertical pages, in the same glass language as the
+   homepage grid: the photograph fills the whole card instead of sitting in
+   a box above a cream bar, the copy rides on it, and the frame is the
+   site's two-layer edge rather than a flat border. Same shell still serves
+   flight routes, destination picks, hotel collections and guides -- the
+   markup did not change, only what it looks like.
+
+   The tint is deliberately dark and fixed rather than --sky-glass-bg: the
+   media layer sits at z-index:-1, so whatever fills the card paints over
+   the photograph, and a light fill leaves every image milky in day mode. */
 .route-card {
   position: relative;
-  display: block;
-  border-radius: var(--sky-radius-md);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: clamp(13rem, 19vw, 17rem);
+  padding: 0.9rem;
   overflow: hidden;
+  isolation: isolate;
+  border-radius: 999px 999px var(--sky-radius-lg) var(--sky-radius-lg);
   border: 1px solid transparent;
-  background: linear-gradient(var(--sky-bg-raised), var(--sky-bg-raised)) padding-box, var(--sky-glass-edge) border-box;
-  box-shadow: var(--sky-shadow-sm);
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
+  background: linear-gradient(rgba(10, 8, 6, 0.22), rgba(10, 8, 6, 0.22)) padding-box, var(--sky-glass-edge) border-box;
+  box-shadow: var(--sky-shadow-md);
+  color: #f5f0e6;
+  transition: box-shadow 0.26s ease, transform 0.26s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.route-card:hover { box-shadow: var(--sky-shadow-md); transform: translateY(-2px); }
-.route-card-media { position: relative; aspect-ratio: 16 / 10; overflow: hidden; }
+.route-card:hover { box-shadow: var(--sky-shadow-float); transform: translateY(-4px); }
+.route-card-media { position: absolute; inset: 0; z-index: -1; overflow: hidden; }
 .route-card-media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
 .route-card:hover .route-card-media img { transform: scale(1.06); }
-.route-card-copy { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 1rem 1.25rem; }
+/* The scrim the overlaid copy needs. It is a pseudo-element because these
+   cards have no scrim in their markup, and five components share them. */
+.route-card-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 8, 6, 0.1) 0%, rgba(10, 8, 6, 0.34) 38%, rgba(10, 8, 6, 0.8) 72%, rgba(10, 8, 6, 0.95) 100%);
+}
+.route-card-copy { display: flex; align-items: flex-end; justify-content: space-between; gap: 0.75rem; padding: 0; }
+/* Ink flips to light, including the muted utility class used inside the
+   card's own markup, which is dark by definition everywhere else. */
+.route-card .route-card-path { color: #f5f0e6; }
+.route-card .site-ink-muted { color: rgba(245, 240, 230, 0.76); }
+.route-card .route-card-cta { color: #ecc95f; }
 .route-card-path {
   display: flex;
   align-items: center;
@@ -1352,7 +1381,7 @@ html {
   font-size: 0.82rem;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  color: var(--sky-ink);
+  color: #f5f0e6;
 }
 .route-card-path-stack { display: block; text-transform: none; font-family: var(--font-display); font-size: 1rem; letter-spacing: normal; }
 .route-card-cta { flex-shrink: 0; display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.8rem; color: var(--sky-coral-deep); font-weight: 500; }
