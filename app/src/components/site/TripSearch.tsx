@@ -4,6 +4,7 @@ import { Search } from "lucide-react";
 
 import { SEARCH_OPTIONS, resolvePlace } from "@/data/search-cities";
 import { flightsLink, hotelsLink, carRentalLink, toursLink, esimLink } from "@/lib/affiliate";
+import { useT, type TKey } from "@/lib/i18n-strings";
 
 /**
  * The homepage's one interactive thing.
@@ -29,12 +30,12 @@ import { flightsLink, hotelsLink, carRentalLink, toursLink, esimLink } from "@/l
 
 type Mode = "hotels" | "flights" | "cars" | "tours" | "esim";
 
-const MODES: { id: Mode; label: string; partner: string; prefills: boolean }[] = [
-  { id: "hotels", label: "Hotels", partner: "Hotellook", prefills: true },
-  { id: "flights", label: "Flights", partner: "Aviasales", prefills: false },
-  { id: "cars", label: "Car rental", partner: "Rentalcars", prefills: false },
-  { id: "tours", label: "Tours", partner: "GetYourGuide", prefills: true },
-  { id: "esim", label: "eSIM", partner: "Airalo", prefills: true },
+const MODES: { id: Mode; labelKey: TKey; partner: string; prefills: boolean }[] = [
+  { id: "hotels", labelKey: "search.modeHotels", partner: "Hotellook", prefills: true },
+  { id: "flights", labelKey: "search.modeFlights", partner: "Aviasales", prefills: false },
+  { id: "cars", labelKey: "search.modeCars", partner: "Rentalcars", prefills: false },
+  { id: "tours", labelKey: "search.modeTours", partner: "GetYourGuide", prefills: true },
+  { id: "esim", labelKey: "search.modeEsim", partner: "Airalo", prefills: true },
 ];
 
 /** YYYY-MM-DD, `days` from today. */
@@ -49,6 +50,7 @@ export function TripSearch() {
   const [query, setQuery] = useState("");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
+  const t = useT();
 
   const active = MODES.find((m) => m.id === mode)!;
 
@@ -79,22 +81,22 @@ export function TripSearch() {
   const noteLabel = mode === "esim" ? match?.name : resolved?.label;
   const note = active.prefills
     ? noteLabel
-      ? `Opens ${active.partner} results for ${noteLabel}.`
-      : `Opens ${active.partner}. Add a destination to land straight on results.`
-    : `Opens ${active.partner}' own search — they need airport and pickup codes, so we don't guess them for you.`;
+      ? t("search.noteResults", { partner: active.partner, place: noteLabel })
+      : t("search.notePartner", { partner: active.partner })
+    : t("search.noteNoPrefill", { partner: active.partner });
 
   return (
     <section id="trip-search" className="trip-search-section" aria-labelledby="trip-search-heading">
       <div className="site-container">
         <div className="site-panel trip-search">
           <div className="trip-search-head">
-            <p className="site-eyebrow">Plan it here</p>
+            <p className="site-eyebrow">{t("search.eyebrow")}</p>
             <h2 id="trip-search-heading" className="site-h2 trip-search-title">
-              Where are you going?
+              {t("search.heading")}
             </h2>
           </div>
 
-          <div className="trip-search-modes" role="tablist" aria-label="What to search">
+          <div className="trip-search-modes" role="tablist" aria-label={t("search.tablistAria")}>
             {MODES.map((m) => (
               <button
                 key={m.id}
@@ -104,19 +106,19 @@ export function TripSearch() {
                 className={`trip-search-chip${m.id === mode ? " is-active" : ""}`}
                 onClick={() => setMode(m.id)}
               >
-                {m.label}
+                {t(m.labelKey)}
               </button>
             ))}
           </div>
 
           <div className="trip-search-row">
             <label className="trip-search-field trip-search-field-grow">
-              <span className="trip-search-label">Destination</span>
+              <span className="trip-search-label">{t("search.destination")}</span>
               <input
                 type="text"
                 list="trip-search-destinations"
                 className="trip-search-input"
-                placeholder="Portugal, Japan, Kenya…"
+                placeholder={t("search.placeholder")}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 autoComplete="off"
@@ -126,7 +128,7 @@ export function TripSearch() {
             {mode === "hotels" ? (
               <>
                 <label className="trip-search-field">
-                  <span className="trip-search-label">Check in</span>
+                  <span className="trip-search-label">{t("search.checkIn")}</span>
                   <input
                     type="date"
                     className="trip-search-input"
@@ -136,7 +138,7 @@ export function TripSearch() {
                   />
                 </label>
                 <label className="trip-search-field">
-                  <span className="trip-search-label">Check out</span>
+                  <span className="trip-search-label">{t("search.checkOut")}</span>
                   <input
                     type="date"
                     className="trip-search-input"
@@ -156,7 +158,7 @@ export function TripSearch() {
             >
               <span className="spark" />
               <Search size={17} aria-hidden="true" />
-              <span>Search {active.label.toLowerCase()}</span>
+              <span>{t("search.go", { what: t(active.labelKey).toLowerCase() })}</span>
             </a>
           </div>
 
@@ -172,7 +174,7 @@ export function TripSearch() {
               <>
                 {" "}
                 <Link to="/destinations/$slug" params={{ slug: match.slug }} className="trip-search-guide-link">
-                  Read the {match.name} guide first →
+                  {t("search.guideLink", { name: match.name })} →
                 </Link>
               </>
             ) : null}

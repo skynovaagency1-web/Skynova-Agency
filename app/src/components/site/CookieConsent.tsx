@@ -2,6 +2,7 @@ import { useSyncExternalStore } from "react";
 import { Link } from "@tanstack/react-router";
 
 import { getConsent, getServerConsent, setConsent, subscribeConsent } from "@/lib/consent";
+import { useT } from "@/lib/i18n-strings";
 
 /**
  * The one-time choice that gates Google Analytics (see GoogleAnalytics in
@@ -19,6 +20,7 @@ import { getConsent, getServerConsent, setConsent, subscribeConsent } from "@/li
  */
 export function CookieConsent() {
   const consent = useSyncExternalStore(subscribeConsent, getConsent, getServerConsent);
+  const t = useT();
 
   // null means undecided. A recorded "denied" hides this just as firmly as
   // an "accept" does -- asking again after someone said no is the dark
@@ -26,22 +28,20 @@ export function CookieConsent() {
   if (consent !== null) return null;
 
   return (
-    <div className="cookie-consent" role="dialog" aria-live="polite" aria-label="Cookie choice">
+    <div className="cookie-consent" role="dialog" aria-live="polite" aria-label={t("consent.aria")}>
       <p className="cookie-consent-copy">
-        We&rsquo;d like to use Google Analytics to see which pages are actually useful &mdash;
-        only if you say yes. Cloudflare&rsquo;s traffic counter runs either way and never sets a
-        cookie.{" "}
+        {t("consent.copy")}{" "}
         <Link to="/privacy" className="btn-underline">
-          Read the details
+          {t("consent.readDetails")}
         </Link>
         .
       </p>
       <div className="cookie-consent-actions">
         <button type="button" className="btn-framed" onClick={() => setConsent("denied")}>
-          Decline
+          {t("consent.decline")}
         </button>
         <button type="button" className="btn-solid-pill" onClick={() => setConsent("granted")}>
-          Accept
+          {t("consent.accept")}
         </button>
       </div>
     </div>

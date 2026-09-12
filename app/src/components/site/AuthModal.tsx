@@ -3,6 +3,7 @@ import { X, Heart, Gift, Users, Sparkles, CreditCard, ShieldCheck, Plane } from 
 
 import { useAuth } from "@/lib/auth-context";
 import { signIn, signUp, requestPasswordReset } from "@/lib/api/auth.functions";
+import { useT, type TKey } from "@/lib/i18n-strings";
 
 const REFERRAL_STORAGE_KEY = "skynova_ref";
 
@@ -19,29 +20,30 @@ function StarMark() {
   );
 }
 
-type Perk = { icon: ReactNode; label: string; featured?: boolean };
+type Perk = { icon: ReactNode; labelKey: TKey; featured?: boolean };
 
 /** Two grouped lists, mirroring the reference's right-hand panel. The first
  *  group is what the account does; the second is what people actually
  *  hesitate over before typing an email in. Referrals carry the raised pill
  *  because they are the one thing here no other travel site offers. */
 const ACCOUNT_PERKS: Perk[] = [
-  { icon: <Heart size={16} />, label: "Save destinations" },
-  { icon: <Gift size={16} />, label: "Send a trip as a gift" },
-  { icon: <Users size={16} />, label: "Earn on referrals", featured: true },
+  { icon: <Heart size={16} />, labelKey: "auth.saveDestinations" },
+  { icon: <Gift size={16} />, labelKey: "auth.giftTrip" },
+  { icon: <Users size={16} />, labelKey: "auth.earnReferrals", featured: true },
 ];
 
 const REASSURANCE: Perk[] = [
-  { icon: <Sparkles size={16} />, label: "Free to join" },
-  { icon: <CreditCard size={16} />, label: "No card needed" },
-  { icon: <ShieldCheck size={16} />, label: "We never resell your email" },
+  { icon: <Sparkles size={16} />, labelKey: "auth.freeToJoin" },
+  { icon: <CreditCard size={16} />, labelKey: "auth.noCard" },
+  { icon: <ShieldCheck size={16} />, labelKey: "auth.neverResell" },
 ];
 
 function PerkRow({ perk }: { perk: Perk }) {
+  const t = useT();
   return (
     <div className={`auth-modal-perk${perk.featured ? " is-featured" : ""}`}>
       {perk.icon}
-      <span>{perk.label}</span>
+      <span>{t(perk.labelKey)}</span>
       {perk.featured ? <span className="auth-modal-perk-dot" aria-hidden="true" /> : null}
     </div>
   );
@@ -67,6 +69,7 @@ export function AuthModal() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [resetSent, setResetSent] = useState(false);
+  const t = useT();
 
   useEffect(() => {
     if (authModalOpen) {
@@ -108,7 +111,7 @@ export function AuthModal() {
         closeAuthModal();
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong. Try again.");
+      setError(err instanceof Error ? err.message : t("auth.genericError"));
     } finally {
       setSubmitting(false);
     }
@@ -134,7 +137,7 @@ export function AuthModal() {
         </aside>
 
         <div className="auth-modal-panel">
-          <button type="button" className="auth-modal-close" onClick={closeAuthModal} aria-label="Close">
+          <button type="button" className="auth-modal-close" onClick={closeAuthModal} aria-label={t("auth.close")}>
             <X size={16} />
           </button>
 
@@ -146,19 +149,18 @@ export function AuthModal() {
 
             {mode === "forgot" ? (
               <>
-                <h2 className="auth-modal-title">Reset your password.</h2>
+                <h2 className="auth-modal-title">{t("auth.resetTitle")}</h2>
                 {resetSent ? (
                   <p className="text-sm leading-relaxed">
-                    If that email has a Skynova account, a link to choose a new password is on its way. It
-                    works once and expires in an hour.
+                    {t("auth.resetSent")}
                   </p>
                 ) : (
                   <form className="auth-modal-form" onSubmit={handleSubmit}>
                     <p className="site-ink-muted text-sm leading-relaxed">
-                      Enter the email on your account and we'll send you a link to choose a new password.
+                      {t("auth.resetIntro")}
                     </p>
                     <label className="auth-modal-field">
-                      <span>Email</span>
+                      <span>{t("auth.email")}</span>
                       <input
                         type="email"
                         required
@@ -170,12 +172,12 @@ export function AuthModal() {
                     {error ? <p className="auth-modal-error">{error}</p> : null}
                     <button type="submit" className="btn-hero-pill w-full justify-center" disabled={submitting}>
                       <span className="spark" />
-                      <span>{submitting ? "Please wait..." : "Send request"}</span>
+                      <span>{submitting ? t("auth.pleaseWait") : t("auth.sendRequest")}</span>
                     </button>
                   </form>
                 )}
                 <button type="button" className="auth-modal-back" onClick={() => switchMode("sign-in")}>
-                  &larr; Back to sign in
+                  &larr; {t("auth.backToSignIn")}
                 </button>
               </>
             ) : (
@@ -186,29 +188,29 @@ export function AuthModal() {
                     className={`auth-modal-tab${mode === "sign-in" ? " is-active" : ""}`}
                     onClick={() => switchMode("sign-in")}
                   >
-                    Sign in
+                    {t("auth.signIn")}
                   </button>
                   <button
                     type="button"
                     className={`auth-modal-tab${mode === "sign-up" ? " is-active" : ""}`}
                     onClick={() => switchMode("sign-up")}
                   >
-                    Sign up
+                    {t("auth.signUp")}
                   </button>
                 </div>
                 <h2 className="auth-modal-title">
-                  {mode === "sign-in" ? "Welcome back." : "Save trips and destinations."}
+                  {mode === "sign-in" ? t("auth.welcomeBack") : t("auth.saveTrips")}
                 </h2>
                 {mode === "sign-up" ? (
                   <div className="auth-modal-chips">
-                    <span className="auth-modal-chip">Free to join</span>
-                    <span className="auth-modal-chip">No card needed</span>
-                    <span className="auth-modal-chip">Earn on referrals</span>
+                    <span className="auth-modal-chip">{t("auth.freeToJoin")}</span>
+                    <span className="auth-modal-chip">{t("auth.noCard")}</span>
+                    <span className="auth-modal-chip">{t("auth.earnReferrals")}</span>
                   </div>
                 ) : null}
                 <form className="auth-modal-form" onSubmit={handleSubmit}>
                   <label className="auth-modal-field">
-                    <span>Email</span>
+                    <span>{t("auth.email")}</span>
                     <input
                       type="email"
                       required
@@ -218,7 +220,7 @@ export function AuthModal() {
                     />
                   </label>
                   <label className="auth-modal-field">
-                    <span>Password</span>
+                    <span>{t("auth.password")}</span>
                     <input
                       type="password"
                       required
@@ -230,25 +232,25 @@ export function AuthModal() {
                   </label>
                   {mode === "sign-in" ? (
                     <button type="button" className="auth-modal-forgot" onClick={() => switchMode("forgot")}>
-                      Forgot password?
+                      {t("auth.forgotPassword")}
                     </button>
                   ) : null}
                   {error ? <p className="auth-modal-error">{error}</p> : null}
                   <button type="submit" className="btn-hero-pill w-full justify-center" disabled={submitting}>
                     <span className="spark" />
                     <span>
-                      {submitting ? "Please wait..." : mode === "sign-in" ? "Sign in" : "Create account"}
+                      {submitting ? t("auth.pleaseWait") : mode === "sign-in" ? t("auth.signIn") : t("auth.createAccount")}
                     </span>
                   </button>
                   {mode === "sign-up" ? (
                     <p className="auth-modal-fineprint">
-                      By creating an account you agree to our{" "}
+                      {t("auth.fineprintBefore")}
                       <a href="/terms" target="_blank" rel="noopener noreferrer">
-                        Terms of Use
-                      </a>{" "}
-                      and{" "}
+                        {t("footer.terms")}
+                      </a>
+                      {t("auth.fineprintAnd")}
                       <a href="/privacy" target="_blank" rel="noopener noreferrer">
-                        Privacy Policy
+                        {t("footer.privacy")}
                       </a>
                       .
                     </p>
@@ -259,14 +261,14 @@ export function AuthModal() {
           </div>
 
           <aside className="auth-modal-perks">
-            <p className="auth-modal-perks-label">With an account</p>
+            <p className="auth-modal-perks-label">{t("auth.withAccount")}</p>
             {ACCOUNT_PERKS.map((perk) => (
-              <PerkRow key={perk.label} perk={perk} />
+              <PerkRow key={perk.labelKey} perk={perk} />
             ))}
             <div className="auth-modal-perks-rule" />
-            <p className="auth-modal-perks-label">Good to know</p>
+            <p className="auth-modal-perks-label">{t("auth.goodToKnow")}</p>
             {REASSURANCE.map((perk) => (
-              <PerkRow key={perk.label} perk={perk} />
+              <PerkRow key={perk.labelKey} perk={perk} />
             ))}
           </aside>
         </div>
