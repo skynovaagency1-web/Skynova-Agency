@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Nav } from "./Nav";
 import { Footer } from "./Footer";
 import { DESTINATIONS } from "@/data/destinations";
+import { useT } from "@/lib/i18n-strings";
 
 /**
  * 404 page.
@@ -26,6 +27,7 @@ const BACKDROP = "turkey";
 const SUGGESTED = ["japan", "italy", "kenya", "portugal", "thailand", "canada"] as const;
 
 export function NotFound() {
+  const t = useT();
   const picks = SUGGESTED.map((s) => DESTINATIONS.find((d) => d.slug === s)).filter(
     (d): d is NonNullable<typeof d> => Boolean(d),
   );
@@ -46,20 +48,20 @@ export function NotFound() {
             <p className="nf-code" aria-hidden="true">
               404
             </p>
-            <h1 className="nf-title">This route doesn&rsquo;t exist.</h1>
+            <h1 className="nf-title">{t("nf.title")}</h1>
             <p className="nf-sub">
-              The page has moved, or the link was mistyped. Everything else is where you left it.
+              {t("nf.sub")}
             </p>
             <Link to="/" className="btn-hero-pill nf-cta">
               <span className="spark" />
-              <span>Back to the homepage</span>
+              <span>{t("nf.back")}</span>
             </Link>
           </div>
         </section>
 
         <section className="site-section">
           <div className="site-container nf-onward">
-            <p className="site-eyebrow mb-4">Or pick up somewhere else</p>
+            <p className="site-eyebrow mb-4">{t("nf.onward")}</p>
             <div className="collection-more">
               {picks.map((d) => (
                 <Link
@@ -72,7 +74,7 @@ export function NotFound() {
                 </Link>
               ))}
               <Link to="/destinations" className="collection-chip">
-                All {DESTINATIONS.length} destinations →
+                {t("nf.allDestinations", { count: DESTINATIONS.length })} →
               </Link>
             </div>
           </div>

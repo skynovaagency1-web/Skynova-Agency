@@ -10,6 +10,7 @@ import { StackedCarousel } from "@/components/site/StackedCarousel";
 import { COLLECTIONS, getCollectionBySlug, collectionDestinations } from "@/data/collections";
 import { DESTINATION_DETAILS } from "@/data/destination-details";
 import { hotelsLink, flightsLink } from "@/lib/affiliate";
+import { useT } from "@/lib/i18n-strings";
 
 export const Route = createFileRoute("/collections/$slug")({
   loader: ({ params }) => {
@@ -35,6 +36,7 @@ export const Route = createFileRoute("/collections/$slug")({
 });
 
 function CollectionPage() {
+  const t = useT();
   const { collection, destinations } = Route.useLoaderData();
   const others = COLLECTIONS.filter((c) => c.slug !== collection.slug);
   // Breadcrumbs already emit their own BreadcrumbList; this adds what the
@@ -55,13 +57,13 @@ function CollectionPage() {
           <div className="site-container">
             <Breadcrumbs
               trail={[
-                { name: "Home", path: "/" },
-                { name: "Collections", path: "/collections" },
+                { name: t("nav.home"), path: "/" },
+                { name: t("nav.collections"), path: "/collections" },
                 { name: collection.name },
               ]}
             />
             <Link to="/collections" className="btn-underline mb-6 mt-4 inline-flex">
-              <span className="arrow">&larr;</span> All collections
+              <span className="arrow">&larr;</span> {t("nav.allCollections")}
             </Link>
             <p className="site-eyebrow mb-3">
               <span aria-hidden="true">{collection.icon}</span> {collection.tagline}
@@ -89,11 +91,11 @@ function CollectionPage() {
                 survives as the caption under the front card. */}
             <StackedCarousel
               items={destinations}
-              eyebrow={`${destinations.length} destinations in this collection`}
-              intro="Choose one to bring it forward. Each opens its full guide, with season notes and booking links."
-              label="Destinations in this collection"
+              eyebrow={t("coll.inCollection", { count: destinations.length })}
+              intro={t("coll.carouselIntro")}
+              label={t("coll.carouselLabel")}
               moreHref="#compare"
-              moreLabel="Compare seasons"
+              moreLabel={t("coll.compareSeasons")}
               showHook
             />
 
@@ -111,13 +113,13 @@ function CollectionPage() {
             <div id="compare" className="compare-wrap mt-10 scroll-mt-24">
               <table className="compare-table">
                 <caption className="compare-caption">
-                  {collection.name}: when to go, at a glance
+                  {t("coll.caption", { name: collection.name })}
                 </caption>
                 <thead>
                   <tr>
-                    <th scope="col">Destination</th>
-                    <th scope="col">Region</th>
-                    <th scope="col">Best time to go</th>
+                    <th scope="col">{t("coll.thDestination")}</th>
+                    <th scope="col">{t("coll.thRegion")}</th>
+                    <th scope="col">{t("coll.thBestTime")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -140,10 +142,9 @@ function CollectionPage() {
 
             <div className="collection-cta">
               <div>
-                <p className="collection-cta-title">Ready to price it up?</p>
+                <p className="collection-cta-title">{t("coll.ctaTitle")}</p>
                 <p className="collection-cta-note">
-                  Compare fares and stays across our booking partners -- you check out on their
-                  site, at their price.
+                  {t("coll.ctaNote")}
                 </p>
               </div>
               <div className="collection-cta-actions">
@@ -154,7 +155,7 @@ function CollectionPage() {
                   className="btn-hero-pill"
                 >
                   <span className="spark" />
-                  <span>Best hotels</span>
+                  <span>{t("coll.bestHotels")}</span>
                 </a>
                 <a
                   href={flightsLink()}
@@ -162,21 +163,20 @@ function CollectionPage() {
                   rel="noopener noreferrer sponsored"
                   className="btn-framed"
                 >
-                  Search flights
+                  {t("coll.searchFlights")}
                 </a>
               </div>
             </div>
 
             <p className="collection-disclosure">
-              Skynova Agency runs on the Travelpayouts affiliate network -- booking links may earn a
-              commission at no extra cost to you.
+              {t("footer.affiliate")}
             </p>
           </div>
         </section>
 
         <section className="site-section pt-0">
           <div className="site-container">
-            <p className="site-eyebrow mb-5">Other collections</p>
+            <p className="site-eyebrow mb-5">{t("coll.other")}</p>
             <div className="collection-more">
               {others.map((c) => (
                 <Link

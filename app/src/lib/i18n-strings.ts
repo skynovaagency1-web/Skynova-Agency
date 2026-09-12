@@ -786,6 +786,29 @@ export const EN = {
   "blog.allArticles": "All articles",
   "blog.startPlanning": "Start planning",
   "blog.keepReading": "Keep reading",
+
+  "coll.inCollection": "{count} destinations in this collection",
+  "coll.carouselIntro":
+    "Choose one to bring it forward. Each opens its full guide, with season notes and booking links.",
+  "coll.carouselLabel": "Destinations in this collection",
+  "coll.compareSeasons": "Compare seasons",
+  "coll.caption": "{name}: when to go, at a glance",
+  "coll.thDestination": "Destination",
+  "coll.thRegion": "Region",
+  "coll.thBestTime": "Best time to go",
+  "coll.ctaTitle": "Ready to price it up?",
+  "coll.ctaNote":
+    "Compare fares and stays across our booking partners -- you check out on their site, at their price.",
+  "coll.bestHotels": "Best hotels",
+  "coll.searchFlights": "Search flights",
+  "coll.other": "Other collections",
+
+  "nf.title": "This route doesn\u2019t exist.",
+  "nf.sub":
+    "The page has moved, or the link was mistyped. Everything else is where you left it.",
+  "nf.back": "Back to the homepage",
+  "nf.onward": "Or pick up somewhere else",
+  "nf.allDestinations": "All {count} destinations",
 } as const;
 
 export type TKey = keyof typeof EN;
@@ -1578,6 +1601,29 @@ const FR: Dict = {
   "blog.allArticles": "Tous les articles",
   "blog.startPlanning": "Commencer \u00e0 pr\u00e9parer",
   "blog.keepReading": "\u00c0 lire ensuite",
+
+  "coll.inCollection": "{count} destinations dans cette collection",
+  "coll.carouselIntro":
+    "Choisissez-en une pour la mettre en avant. Chacune ouvre son guide complet, avec les saisons et les liens de r\u00e9servation.",
+  "coll.carouselLabel": "Destinations de cette collection",
+  "coll.compareSeasons": "Comparer les saisons",
+  "coll.caption": "{name} : quand partir, en un coup d\u2019\u0153il",
+  "coll.thDestination": "Destination",
+  "coll.thRegion": "R\u00e9gion",
+  "coll.thBestTime": "Meilleure p\u00e9riode",
+  "coll.ctaTitle": "Pr\u00eat \u00e0 chiffrer le voyage ?",
+  "coll.ctaNote":
+    "Comparez les tarifs et les h\u00e9bergements chez nos partenaires -- vous payez sur leur site, \u00e0 leur prix.",
+  "coll.bestHotels": "Meilleurs h\u00f4tels",
+  "coll.searchFlights": "Rechercher des vols",
+  "coll.other": "Autres collections",
+
+  "nf.title": "Cette route n\u2019existe pas.",
+  "nf.sub":
+    "La page a \u00e9t\u00e9 d\u00e9plac\u00e9e, ou le lien a \u00e9t\u00e9 mal saisi. Tout le reste est l\u00e0 o\u00f9 vous l\u2019avez laiss\u00e9.",
+  "nf.back": "Retour \u00e0 l\u2019accueil",
+  "nf.onward": "Ou repartez d\u2019ailleurs",
+  "nf.allDestinations": "Les {count} destinations",
 };
 
 const DICTS: Record<Locale, Dict> = { en: EN, fr: FR };
