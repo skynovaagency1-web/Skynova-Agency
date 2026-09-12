@@ -6,6 +6,7 @@ import { Music2 } from "lucide-react";
 
 import { REGION_ORDER } from "@/data/destinations";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
+import { useT, type TKey } from "@/lib/i18n-strings";
 
 // lucide-react dropped brand/logo glyphs -- these four are plain inline SVG
 // marks instead of lucide imports.
@@ -47,22 +48,22 @@ const InstagramIcon = (p: IconProps) => (
   />
 );
 
-const VERTICALS = [
-  { to: "/flights", label: "Flights" },
-  { to: "/hotels", label: "Hotels" },
-  { to: "/car-rentals", label: "Car rentals" },
-  { to: "/airport-services", label: "Airport services" },
-  { to: "/events", label: "Events & tickets" },
-  { to: "/esim", label: "SIM & eSIM" },
-  { to: "/tours", label: "Tours & activities" },
-  { to: "/bike-rentals", label: "Bike rentals" },
+const VERTICALS: { to: string; labelKey: TKey }[] = [
+  { to: "/flights", labelKey: "service.flights" },
+  { to: "/hotels", labelKey: "service.hotels" },
+  { to: "/car-rentals", labelKey: "service.carRentals" },
+  { to: "/airport-services", labelKey: "service.airportServices" },
+  { to: "/events", labelKey: "service.events" },
+  { to: "/esim", labelKey: "service.esim" },
+  { to: "/tours", labelKey: "service.tours" },
+  { to: "/bike-rentals", labelKey: "service.bikeRentals" },
 ];
 
-const COMPANY_LINKS = [
-  { to: "/about", label: "About us" },
-  { to: "/reviews", label: "Reviews" },
-  { to: "/contact", label: "Contact us" },
-  { to: "/blog", label: "Blog" },
+const COMPANY_LINKS: { to: string; labelKey: TKey }[] = [
+  { to: "/about", labelKey: "nav.about" },
+  { to: "/reviews", labelKey: "nav.reviews" },
+  { to: "/contact", labelKey: "footer.contactUs" },
+  { to: "/blog", labelKey: "nav.blog" },
 ];
 
 const SOCIAL_LINKS = [
@@ -75,6 +76,7 @@ const SOCIAL_LINKS = [
 
 export function Footer() {
   const revealRef = useScrollReveal<HTMLElement>();
+  const t = useT();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -122,34 +124,33 @@ export function Footer() {
               <span className="font-semibold">Skynova Agency</span>
             </div>
             <p className="footer-ink-muted mt-4 max-w-sm text-sm leading-relaxed">
-              One search that reaches real airlines, real hotels, and real partners -- no markup, no
-              middleman, no juggling six tabs.
+              {t("footer.tagline")}
             </p>
           </div>
 
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 md:col-span-7">
             <div>
-              <p className="footer-heading">Book</p>
+              <p className="footer-heading">{t("footer.book")}</p>
               <ul className="space-y-2 text-xs">
                 {VERTICALS.map((v) => (
                   <li key={v.to}>
-                    <Link to={v.to} className="footer-link">{v.label}</Link>
+                    <Link to={v.to} className="footer-link">{t(v.labelKey)}</Link>
                   </li>
                 ))}
               </ul>
             </div>
             <div>
-              <p className="footer-heading">Company</p>
+              <p className="footer-heading">{t("footer.company")}</p>
               <ul className="space-y-2 text-xs">
                 {COMPANY_LINKS.map((l) => (
                   <li key={l.to}>
-                    <Link to={l.to} className="footer-link">{l.label}</Link>
+                    <Link to={l.to} className="footer-link">{t(l.labelKey)}</Link>
                   </li>
                 ))}
               </ul>
             </div>
             <div>
-              <p className="footer-heading">Destinations</p>
+              <p className="footer-heading">{t("footer.destinations")}</p>
               <ul className="space-y-2 text-xs">
                 {REGION_ORDER.map(({ region }) => (
                   <li key={region}>
@@ -160,7 +161,9 @@ export function Footer() {
                   </li>
                 ))}
                 <li>
-                  <Link to="/destinations" className="footer-link font-medium">All {DESTINATIONS.length} destinations &rarr;</Link>
+                  <Link to="/destinations" className="footer-link font-medium">
+                    {t("footer.allDestinations", { count: DESTINATIONS.length })} &rarr;
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -170,20 +173,19 @@ export function Footer() {
         <div className="footer-bottom">
           <div>
             <p className="footer-ink-muted text-[10px] uppercase tracking-widest">
-              Skynova Agency runs on the Travelpayouts affiliate network -- booking links may earn a
-              commission at no extra cost to you.
+              {t("footer.affiliate")}
             </p>
             <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
               <Link to="/privacy" className="footer-link text-[10px] uppercase tracking-widest">
-                Privacy Policy
+                {t("footer.privacy")}
               </Link>
               <Link to="/terms" className="footer-link text-[10px] uppercase tracking-widest">
-                Terms of Use
+                {t("footer.terms")}
               </Link>
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <span className="footer-ink-muted text-[10px] uppercase tracking-widest">Follow along</span>
+            <span className="footer-ink-muted text-[10px] uppercase tracking-widest">{t("footer.followAlong")}</span>
             <div className="flex items-center gap-3">
               {SOCIAL_LINKS.map(({ icon: Icon, label }) => (
                 <a key={label} href="#" aria-label={label} className="footer-social-icon">

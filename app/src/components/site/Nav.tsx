@@ -7,18 +7,19 @@ import { signOut } from "@/lib/api/auth.functions";
 import { VERTICALS } from "@/data/verticals";
 import { COLLECTIONS } from "@/data/collections";
 import { REGION_ORDER } from "@/data/destinations";
+import { useT, type TKey } from "@/lib/i18n-strings";
 
 const LINKS = [
   ...VERTICALS,
-  { key: "destinations", label: "Destinations", icon: MapPin, href: "/destinations" },
-  { key: "collections", label: "Collections", icon: Layers, href: "/collections" },
-  { key: "blog", label: "Blog", icon: Newspaper, href: "/blog" },
+  { key: "destinations", labelKey: "nav.destinations" as TKey, icon: MapPin, href: "/destinations" },
+  { key: "collections", labelKey: "nav.collections" as TKey, icon: Layers, href: "/collections" },
+  { key: "blog", labelKey: "nav.blog" as TKey, icon: Newspaper, href: "/blog" },
 ] as const;
 
 const COMPANY_LINKS = [
-  { to: "/about", label: "About us" },
-  { to: "/reviews", label: "Reviews" },
-  { to: "/contact", label: "Contact" },
+  { to: "/about", labelKey: "nav.about" as TKey },
+  { to: "/reviews", labelKey: "nav.reviews" as TKey },
+  { to: "/contact", labelKey: "nav.contact" as TKey },
 ] as const;
 
 export function Nav() {
@@ -31,6 +32,7 @@ export function Nav() {
   const exploreCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const accountCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { user, openAuthModal, refetchUser } = useAuth();
+  const t = useT();
 
   function openCompany() {
     if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -114,7 +116,7 @@ export function Nav() {
               aria-expanded={exploreOpen}
               onClick={() => setExploreOpen((v) => !v)}
             >
-              Explore <span className="caret">&#9662;</span>
+              {t("nav.explore")} <span className="caret">&#9662;</span>
             </button>
             {exploreOpen ? (
               <div className="site-nav-mega">
@@ -139,7 +141,7 @@ export function Nav() {
                       route in from the nav at all -- a lot of the site
                       hidden behind one "Destinations" link. */}
                   <div className="site-nav-mega-group">
-                    <p className="site-nav-mega-heading">Collections</p>
+                    <p className="site-nav-mega-heading">{t("nav.collections")}</p>
                     <div className="site-nav-mega-links">
                       {COLLECTIONS.slice(0, 6).map((c) => (
                         <Link
@@ -154,12 +156,12 @@ export function Nav() {
                       ))}
                     </div>
                     <Link to="/collections" className="site-nav-mega-more" onClick={() => setExploreOpen(false)}>
-                      All collections <span className="arrow">&rarr;</span>
+                      {t("nav.allCollections")} <span className="arrow">&rarr;</span>
                     </Link>
                   </div>
 
                   <div className="site-nav-mega-group">
-                    <p className="site-nav-mega-heading">By region</p>
+                    <p className="site-nav-mega-heading">{t("nav.byRegion")}</p>
                     <div className="site-nav-mega-links">
                       {REGION_ORDER.map(({ region, icon }) => (
                         <Link
@@ -174,20 +176,20 @@ export function Nav() {
                       ))}
                     </div>
                     <Link to="/destinations" className="site-nav-mega-more" onClick={() => setExploreOpen(false)}>
-                      All destinations <span className="arrow">&rarr;</span>
+                      {t("nav.allDestinations")} <span className="arrow">&rarr;</span>
                     </Link>
                   </div>
               </div>
             ) : null}
           </div>
           <Link to="/destinations" className="site-nav-link text-sm">
-            Destinations
+            {t("nav.destinations")}
           </Link>
           <Link to="/collections" className="site-nav-link text-sm">
-            Collections
+            {t("nav.collections")}
           </Link>
           <Link to="/blog" className="site-nav-link text-sm">
-            Blog
+            {t("nav.blog")}
           </Link>
           <div className="site-nav-dropdown" onMouseEnter={openCompany} onMouseLeave={scheduleCloseCompany}>
             <button
@@ -196,7 +198,7 @@ export function Nav() {
               aria-expanded={companyOpen}
               onClick={() => setCompanyOpen((v) => !v)}
             >
-              Company <span className="caret">&#9662;</span>
+              {t("nav.company")} <span className="caret">&#9662;</span>
             </button>
             {companyOpen ? (
               <div className="site-nav-dropdown-menu">
@@ -207,7 +209,7 @@ export function Nav() {
                     className="site-nav-dropdown-item"
                     onClick={() => setCompanyOpen(false)}
                   >
-                    {l.label}
+                    {t(l.labelKey)}
                   </Link>
                 ))}
               </div>
@@ -218,7 +220,7 @@ export function Nav() {
               <button
                 type="button"
                 className="site-nav-account-icon is-signed-in"
-                aria-label={`Account: ${user.email}`}
+                aria-label={t("nav.accountAria", { email: user.email })}
                 aria-expanded={accountOpen}
                 onClick={() => setAccountOpen((v) => !v)}
               >
@@ -228,10 +230,10 @@ export function Nav() {
                 <div className="site-nav-dropdown-menu site-nav-account-menu">
                   <p className="site-nav-account-email">{user.email}</p>
                   <Link to="/account" className="site-nav-dropdown-item" onClick={() => setAccountOpen(false)}>
-                    <User size={15} /> Your account
+                    <User size={15} /> {t("nav.yourAccount")}
                   </Link>
                   <button type="button" className="site-nav-dropdown-item site-nav-account-signout" onClick={handleSignOut}>
-                    <LogOut size={15} /> Sign out
+                    <LogOut size={15} /> {t("nav.signOut")}
                   </button>
                 </div>
               ) : null}
@@ -240,7 +242,7 @@ export function Nav() {
             <button
               type="button"
               className="site-nav-account-icon"
-              aria-label="Log in or sign up"
+              aria-label={t("nav.logInOrSignUp")}
               onClick={() => openAuthModal("sign-in")}
             >
               <User size={18} />
@@ -249,12 +251,12 @@ export function Nav() {
         </div>
         <div className="flex shrink-0 items-center gap-3">
           <Link to="/destinations" className="btn-nav-pill site-nav-cta">
-            <span>Start your trip</span>
+            <span>{t("nav.startTrip")}</span>
           </Link>
           <button
             type="button"
             className={`site-menu-btn${open ? " is-open" : ""}`}
-            aria-label={open ? "Close menu" : "Open menu"}
+            aria-label={open ? t("nav.closeMenu") : t("nav.openMenu")}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
           >
@@ -267,10 +269,10 @@ export function Nav() {
       <div className={`site-mobile-menu md:hidden${open ? " is-open" : ""}`} aria-hidden={!open}>
         <div className="site-container site-mobile-menu-inner">
           <div className="mobile-menu-topbar">
-            <Link to="/" className="mobile-menu-icon-btn" aria-label="Home" onClick={() => setOpen(false)}>
+            <Link to="/" className="mobile-menu-icon-btn" aria-label={t("nav.home")} onClick={() => setOpen(false)}>
               <Home size={18} />
             </Link>
-            <Link to="/contact" className="mobile-menu-icon-btn" aria-label="Contact" onClick={() => setOpen(false)}>
+            <Link to="/contact" className="mobile-menu-icon-btn" aria-label={t("nav.contact")} onClick={() => setOpen(false)}>
               <MessageCircle size={18} />
             </Link>
           </div>
@@ -278,10 +280,10 @@ export function Nav() {
           <div className="mobile-account-block">
             {user ? (
               <>
-                <p className="site-eyebrow mb-2">Signed in</p>
+                <p className="site-eyebrow mb-2">{t("nav.signedIn")}</p>
                 <p className="mobile-account-title">{user.email}</p>
                 <Link to="/account" className="btn-underline mt-2" onClick={() => setOpen(false)}>
-                  Your account <span className="arrow">&rarr;</span>
+                  {t("nav.yourAccount")} <span className="arrow">&rarr;</span>
                 </Link>
                 <button
                   type="button"
@@ -291,14 +293,14 @@ export function Nav() {
                     setOpen(false);
                   }}
                 >
-                  Sign out
+                  {t("nav.signOut")}
                 </button>
               </>
             ) : (
               <>
-                <p className="site-eyebrow mb-2">Your Skynova account</p>
-                <p className="mobile-account-title">Log in to plan your next trip.</p>
-                <p className="mobile-account-subtitle">Save destinations and share trips with friends.</p>
+                <p className="site-eyebrow mb-2">{t("nav.yourSkynovaAccount")}</p>
+                <p className="mobile-account-title">{t("nav.logInPrompt")}</p>
+                <p className="mobile-account-subtitle">{t("nav.saveDestinations")}</p>
                 <button
                   type="button"
                   className="btn-hero-pill mt-4 w-full justify-center"
@@ -307,7 +309,7 @@ export function Nav() {
                     setOpen(false);
                   }}
                 >
-                  <span>Log in / Sign up</span>
+                  <span>{t("nav.logInSignUp")}</span>
                 </button>
               </>
             )}
@@ -322,7 +324,7 @@ export function Nav() {
               onClick={() => setOpen(false)}
             >
               <Heart size={20} />
-              <span>Wish list</span>
+              <span>{t("nav.wishlist")}</span>
               <ChevronRight size={16} className="mobile-menu-row-chevron" />
             </Link>
             <Link
@@ -333,7 +335,7 @@ export function Nav() {
               onClick={() => setOpen(false)}
             >
               <Share2 size={20} />
-              <span>Share Skynova with friends</span>
+              <span>{t("nav.share")}</span>
               <ChevronRight size={16} className="mobile-menu-row-chevron" />
             </Link>
           </div>
@@ -347,7 +349,7 @@ export function Nav() {
               onClick={() => setOpen(false)}
             >
               <Gift size={20} />
-              <span>Gift</span>
+              <span>{t("nav.gift")}</span>
               <ChevronRight size={16} className="mobile-menu-row-chevron" />
             </Link>
           </div>
@@ -363,7 +365,7 @@ export function Nav() {
                 onClick={() => setOpen(false)}
               >
                 <l.icon size={20} />
-                <span>{l.label}</span>
+                <span>{"labelKey" in l ? t(l.labelKey) : l.label}</span>
                 <ChevronRight size={16} className="mobile-menu-row-chevron" />
               </Link>
             ))}
@@ -379,7 +381,7 @@ export function Nav() {
                 tabIndex={open ? undefined : -1}
                 onClick={() => setOpen(false)}
               >
-                <span>{l.label}</span>
+                <span>{t(l.labelKey)}</span>
                 <ChevronRight size={16} className="mobile-menu-row-chevron" />
               </Link>
             ))}
@@ -387,7 +389,7 @@ export function Nav() {
 
           <div className="site-mobile-menu-footer" style={{ "--i": rowIndex++ } as CSSProperties}>
             <Link to="/destinations" className="btn-nav-pill justify-center w-full" onClick={() => setOpen(false)}>
-              <span>Start your trip</span>
+              <span>{t("nav.startTrip")}</span>
             </Link>
           </div>
         </div>
