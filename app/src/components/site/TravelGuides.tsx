@@ -22,7 +22,7 @@ export function TravelGuidesSection({
       <div className="site-container">
         <p className="site-eyebrow mb-3">{eyebrow}</p>
         <h2 className="site-h2 max-w-md text-3xl md:text-4xl">{heading}</h2>
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
           {posts.map((post) => (
             <Link key={post.slug} to="/blog" className="route-card">
               <div className="route-card-media">

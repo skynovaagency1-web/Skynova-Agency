@@ -1408,6 +1408,17 @@ html {
 .route-card-path-stack { display: block; text-transform: none; font-family: var(--font-display); font-size: 1rem; letter-spacing: normal; }
 .route-card-cta { flex-shrink: 0; display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.8rem; color: var(--sky-coral-deep); font-weight: 500; }
 .route-card-cta .arrow { transition: transform 0.2s ease; }
+@media (max-width: 560px) {
+  /* Half-width cards: the title and the call to action cannot share a row
+     any more, and the type comes down to suit. */
+  .route-card { padding: 0.7rem; }
+  .route-card-copy { flex-direction: column; align-items: flex-start; gap: 0.3rem; }
+  .route-card-path { font-size: 0.72rem; }
+  .route-card-path-stack { font-size: 0.84rem; }
+  .route-card .site-ink-muted { font-size: 0.68rem; }
+  .route-card-cta { font-size: 0.7rem; }
+  .flight-path-code { font-size: 0.5rem; }
+}
 .route-card:hover .route-card-cta .arrow { transform: translateX(4px); }
 .category-card { display: block; text-align: left; }
 
@@ -1457,13 +1468,15 @@ html {
   font-weight: 600;
   letter-spacing: 0.06em;
   color: #fff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
-  opacity: 0.85;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+  opacity: 1;
   transition: color 0.3s ease;
 }
 .flight-route-card:hover .flight-path-code { color: var(--sky-coral); }
-.flight-path-code-origin { left: 12.5%; top: 91%; }
-.flight-path-code-dest { left: 87.5%; top: 15%; }
+/* Matched to the arc's endpoints in the 160x200 viewBox, and kept clear of
+   the arch curve so neither code is clipped at the corners. */
+.flight-path-code-origin { left: 16.25%; top: 84%; }
+.flight-path-code-dest { left: 77.5%; top: 31%; }
 @media (prefers-reduced-motion: reduce) {
   .flight-path-line { animation: none; opacity: 0.6; }
   .flight-route-card:hover .flight-path-line { animation: none; }

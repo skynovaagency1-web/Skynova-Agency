@@ -12,11 +12,17 @@ const ROUTES = [
   { fromCity: "Johannesburg", fromCode: "JNB", toCity: "Zanzibar", toCode: "ZNZ", toSlug: "zanzibar" },
 ];
 
-// The flight-path arc is the same shape on every card (the media box is a
-// fixed 16/10 aspect ratio at every breakpoint, so a 160x100 viewBox --
-// same 1.6 ratio -- scales cleanly everywhere with no distortion) --
-// only the endpoints' labels change per route.
-const ARC = "M 20 84 Q 80 8 140 26";
+// The flight-path arc is the same shape on every card. The viewBox has to
+// match the card's own aspect ratio or preserveAspectRatio="none" stretches
+// everything drawn in it -- when the cards became 4:5 portrait, a 160x100
+// box turned the endpoint dots into ovals. 160x200 is the same 4:5, so the
+// dots are round again and the stroke is even in both directions.
+//
+// The endpoints also sit further inside the box than the corners, because
+// the card's head is a 999px arch: anything drawn near the top corners is
+// outside the curve and gets clipped, which is what happened to the
+// destination codes (MLE, DPS, ZNZ).
+const ARC = "M 26 168 Q 80 40 124 62";
 
 export function FlightRoutesSection({ href }: { href: string }) {
   return (
@@ -24,7 +30,7 @@ export function FlightRoutesSection({ href }: { href: string }) {
       <div className="site-container">
         <p className="site-eyebrow mb-3">Popular routes</p>
         <h2 className="site-h2 max-w-md text-3xl md:text-4xl">Fares worth watching.</h2>
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
           {ROUTES.map((r, i) => {
             const pathId = `flight-arc-${r.fromCode}-${r.toCode}-${i}`;
             return (
@@ -38,10 +44,10 @@ export function FlightRoutesSection({ href }: { href: string }) {
               <div className="route-card-media">
                 <img src={`/assets/destinations/${r.toSlug}.webp`} alt={`${r.toCity} skyline`} loading="lazy" />
                 <div className="flight-path-overlay" aria-hidden="true">
-                  <svg viewBox="0 0 160 100" preserveAspectRatio="none" className="flight-path-svg">
+                  <svg viewBox="0 0 160 200" preserveAspectRatio="none" className="flight-path-svg">
                     <path id={pathId} d={ARC} className="flight-path-line" />
-                    <circle cx="20" cy="84" r="3" className="flight-path-dot flight-path-dot-origin" />
-                    <circle cx="140" cy="26" r="3" className="flight-path-dot flight-path-dot-dest" />
+                    <circle cx="26" cy="168" r="3" className="flight-path-dot flight-path-dot-origin" />
+                    <circle cx="124" cy="62" r="3" className="flight-path-dot flight-path-dot-dest" />
                     <g className="flight-path-plane">
                       <Plane size={11} strokeWidth={2.5} />
                       <animateMotion dur="2.4s" repeatCount="indefinite" rotate="auto">
