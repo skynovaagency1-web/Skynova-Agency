@@ -5322,3 +5322,29 @@ html.lenis body { height: auto; }
   opacity: clamp(0, calc(1 - var(--kh-p, 0) * 18), 1);
 }
 
+/* ---- Language switcher (components/site/LanguageSwitcher.tsx) ----
+   Hidden entirely until a second locale is published -- the component
+   returns null, so these rules simply never match until then. */
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.lang-switch-option {
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+  color: inherit;
+  opacity: 0.6;
+  transition: opacity 150ms ease, background-color 150ms ease;
+}
+.lang-switch-option:hover { opacity: 1; }
+.lang-switch-option.is-current {
+  opacity: 1;
+  font-weight: 600;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+.mobile-menu-lang { margin-top: 0.75rem; justify-content: center; width: 100%; }
+.footer-lang { margin-left: 0.5rem; }

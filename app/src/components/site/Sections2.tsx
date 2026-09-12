@@ -1,26 +1,28 @@
 import { Link } from "@tanstack/react-router";
 import { airportServicesLink, eventsLink, esimLink, toursLink } from "@/lib/affiliate";
+import { useT, type TKey } from "@/lib/i18n-strings";
 
 export function AirportSection() {
+  const t = useT();
   return (
     <section id="airport-services" className="site-hairline relative border-t">
       <div className="relative h-[70vh] min-h-[420px] w-full overflow-hidden">
-        <img src="/assets/sections/airport.webp" alt="Airport lounge seating with departure boards" className="h-full w-full object-cover" loading="lazy" />
+        <img src="/assets/sections/airport.webp" alt={t("home.airportAlt")} className="h-full w-full object-cover" loading="lazy" />
         <div className="absolute inset-0" style={{ background: "linear-gradient(to top, var(--sky-bg) 0%, transparent 45%)" }} />
         <div className="site-container absolute inset-x-0 bottom-10">
-          <h2 className="site-h2 max-w-md text-3xl md:text-4xl">Skip the queues.</h2>
+          <h2 className="site-h2 max-w-md text-3xl md:text-4xl">{t("home.airportHeading")}</h2>
           <p className="site-ink-muted mt-3 max-w-sm text-base leading-relaxed">
-            Private transfers, shared shuttles, lounge access and baggage help, booked before you land.
+            {t("home.airportCopy")}
           </p>
         </div>
       </div>
       <div className="site-container py-6">
         <a href={airportServicesLink()} className="btn-banner-bar">
-          <span>Add airport help</span>
+          <span>{t("home.addAirportHelp")}</span>
           <span aria-hidden="true">&rarr;</span>
         </a>
         <Link to="/airport-services" className="btn-view-all mt-4 inline-flex">
-          View all airport services <span className="arrow">&rarr;</span>
+          {t("home.viewAllAirport")} <span className="arrow">&rarr;</span>
         </Link>
       </div>
     </section>
@@ -28,24 +30,25 @@ export function AirportSection() {
 }
 
 export function EventsSection() {
+  const t = useT();
   return (
     <section id="events" className="site-section site-hairline border-t">
       <div className="site-container">
-        <h2 className="site-h2 max-w-md text-3xl md:text-4xl">Tickets to the good stuff.</h2>
+        <h2 className="site-h2 max-w-md text-3xl md:text-4xl">{t("home.eventsHeading")}</h2>
         <p className="site-ink-muted mt-4 max-w-md text-base leading-relaxed">
-          Concerts, museums, attractions and skip-the-line passes in the cities you are already visiting.
+          {t("home.eventsCopy")}
         </p>
         <div className="masonry-grid mt-8">
           <div className="masonry-item-a site-panel overflow-hidden">
-            <img src="/assets/sections/events.webp" alt="Event ticket stub resting on a dark surface" className="h-64 w-full object-cover md:h-80" loading="lazy" />
+            <img src="/assets/sections/events.webp" alt={t("home.eventsAlt")} className="h-64 w-full object-cover md:h-80" loading="lazy" />
           </div>
           <div className="masonry-item-b site-panel flex flex-col justify-between p-6">
-            <p className="site-eyebrow">Same day</p>
-            <p className="text-sm leading-relaxed">Mobile tickets land in your inbox the moment you book.</p>
+            <p className="site-eyebrow">{t("home.sameDay")}</p>
+            <p className="text-sm leading-relaxed">{t("home.eventsTickets")}</p>
             <div className="mt-4 flex flex-wrap items-center gap-5">
-              <a href={eventsLink()} className="btn-solid-pill w-fit">Find events</a>
+              <a href={eventsLink()} className="btn-solid-pill w-fit">{t("home.findEvents")}</a>
               <Link to="/events" className="btn-view-all">
-                View all <span className="arrow">&rarr;</span>
+                {t("home.viewAll")} <span className="arrow">&rarr;</span>
               </Link>
             </div>
           </div>
@@ -56,38 +59,39 @@ export function EventsSection() {
 }
 
 export function EsimSection() {
-  const plans = [
-    { label: "Local data plans", detail: "One country, ready on arrival." },
-    { label: "Regional passes", detail: "Cross borders without swapping SIMs." },
-    { label: "Unlimited talk & data", detail: "For longer stays and remote work." },
+  const t = useT();
+  const plans: { labelKey: TKey; detailKey: TKey }[] = [
+    { labelKey: "home.planLocal", detailKey: "home.planLocalDetail" },
+    { labelKey: "home.planRegional", detailKey: "home.planRegionalDetail" },
+    { labelKey: "home.planUnlimited", detailKey: "home.planUnlimitedDetail" },
   ];
   return (
     <section id="esim" className="site-section site-hairline border-t">
       <div className="site-container">
-        <p className="site-eyebrow mb-3">Connectivity</p>
-        <h2 className="site-h2 max-w-md text-3xl md:text-4xl">Stay connected on arrival.</h2>
+        <p className="site-eyebrow mb-3">{t("home.connectivity")}</p>
+        <h2 className="site-h2 max-w-md text-3xl md:text-4xl">{t("home.esimHeading")}</h2>
         <p className="site-ink-muted mt-4 max-w-md text-base leading-relaxed">
-          Instant eSIM activation before you land, or a physical SIM waiting at the airport counter.
+          {t("home.esimCopy")}
         </p>
         <Link to="/esim" className="btn-view-all mt-4 inline-flex">
-          View all eSIM plans <span className="arrow">&rarr;</span>
+          {t("home.viewAllEsim")} <span className="arrow">&rarr;</span>
         </Link>
         <div className="mt-8 grid gap-8 md:grid-cols-[280px_1fr] md:items-center">
           <div className="site-panel overflow-hidden">
-            <img src="/assets/sections/esim.webp" alt="Smartphone displaying an eSIM QR code" className="h-56 w-full object-cover" loading="lazy" />
+            <img src="/assets/sections/esim.webp" alt={t("home.esimAlt")} className="h-56 w-full object-cover" loading="lazy" />
           </div>
           <div className="hscroll">
             {plans.map((p) => (
-              <div key={p.label} className="site-panel w-64 shrink-0 p-5">
-                <p className="text-sm font-medium">{p.label}</p>
-                <p className="site-ink-muted mt-2 text-sm">{p.detail}</p>
+              <div key={p.labelKey} className="site-panel w-64 shrink-0 p-5">
+                <p className="text-sm font-medium">{t(p.labelKey)}</p>
+                <p className="site-ink-muted mt-2 text-sm">{t(p.detailKey)}</p>
                 <a href={esimLink()} className="btn-chip mt-4">
                   <span className="bars">
                     <span style={{ height: "4px" }} />
                     <span style={{ height: "7px" }} />
                     <span style={{ height: "10px" }} />
                   </span>
-                  Get connected
+                  {t("home.getConnected")}
                 </a>
               </div>
             ))}
@@ -99,29 +103,30 @@ export function EsimSection() {
 }
 
 export function ToursSection() {
+  const t = useT();
   return (
     <section id="tours" className="site-section site-hairline border-t">
       <div className="site-container">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h2 className="site-h2 max-w-md text-3xl md:text-4xl">Go see it, not just land there.</h2>
+            <h2 className="site-h2 max-w-md text-3xl md:text-4xl">{t("home.toursHeading")}</h2>
             <p className="site-ink-muted mt-4 max-w-md text-base leading-relaxed">
-              Skip-the-line tours, day trips and local guides, bookable the moment you land.
+              {t("home.toursCopy")}
             </p>
           </div>
           <div className="flex items-center gap-5">
             <Link to="/tours" className="btn-view-all">
-              View all <span className="arrow">&rarr;</span>
+              {t("home.viewAll")} <span className="arrow">&rarr;</span>
             </Link>
-            <a href={toursLink()} className="btn-circle" aria-label="Explore tours">&rarr;</a>
+            <a href={toursLink()} className="btn-circle" aria-label={t("home.exploreTours")}>&rarr;</a>
           </div>
         </div>
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           <div className="site-panel overflow-hidden">
-            <img src="/assets/sections/tours-compass.webp" alt="Brass compass resting on a map" className="h-64 w-full object-cover" loading="lazy" />
+            <img src="/assets/sections/tours-compass.webp" alt={t("home.toursAlt1")} className="h-64 w-full object-cover" loading="lazy" />
           </div>
           <div className="site-panel overflow-hidden">
-            <img src="/assets/sections/tours-landmarks.webp" alt="Aerial view of a coastline landmark" className="h-64 w-full object-cover" loading="lazy" />
+            <img src="/assets/sections/tours-landmarks.webp" alt={t("home.toursAlt2")} className="h-64 w-full object-cover" loading="lazy" />
           </div>
         </div>
       </div>
@@ -130,21 +135,22 @@ export function ToursSection() {
 }
 
 export function HowItWorksSection() {
-  const steps = [
-    { title: "Search once", detail: "One search bar, every vertical, live results from our partner networks." },
-    { title: "Compare honestly", detail: "Skynova adds no markup and sells no placement -- you see the partner's own results." },
-    { title: "Book everything", detail: "Check out with each partner directly; your booking sits with them, not us." },
+  const t = useT();
+  const steps: { titleKey: TKey; detailKey: TKey }[] = [
+    { titleKey: "home.step1Title", detailKey: "home.step1Detail" },
+    { titleKey: "home.step2Title", detailKey: "home.step2Detail" },
+    { titleKey: "home.step3Title", detailKey: "home.step3Detail" },
   ];
   return (
     <section id="how-it-works" className="site-section site-hairline border-t">
       <div className="site-container">
-        <h2 className="site-h2 max-w-md text-3xl md:text-4xl">How Skynova works.</h2>
+        <h2 className="site-h2 max-w-md text-3xl md:text-4xl">{t("home.howHeading")}</h2>
         <div className="mt-10 grid gap-8 md:grid-cols-3">
           {steps.map((s, i) => (
-            <div key={s.title} className="site-hairline border-t pt-5">
-              <p className="site-eyebrow mb-2">{["One", "Two", "Three"][i]}</p>
-              <h3 className="text-xl font-semibold">{s.title}</h3>
-              <p className="site-ink-muted mt-2 text-sm leading-relaxed">{s.detail}</p>
+            <div key={s.titleKey} className="site-hairline border-t pt-5">
+              <p className="site-eyebrow mb-2">{t((["home.one", "home.two", "home.three"] as TKey[])[i])}</p>
+              <h3 className="text-xl font-semibold">{t(s.titleKey)}</h3>
+              <p className="site-ink-muted mt-2 text-sm leading-relaxed">{t(s.detailKey)}</p>
             </div>
           ))}
         </div>
@@ -154,12 +160,13 @@ export function HowItWorksSection() {
 }
 
 export function TrustSection() {
+  const t = useT();
   const marks = ["Aviasales", "Hotellook", "Rentalcars", "GetYourGuide", "Airalo", "Tiqets"];
   const track = [...marks, ...marks];
   return (
     <section className="site-section site-hairline border-t overflow-hidden">
       <div className="site-container">
-        <p className="site-ink-muted mb-6 text-center text-sm">Booking runs through our travel-network partners</p>
+        <p className="site-ink-muted mb-6 text-center text-sm">{t("home.trustLine")}</p>
       </div>
       <div className="marquee-track">
         {track.map((m, i) => (
@@ -171,18 +178,19 @@ export function TrustSection() {
 }
 
 export function WhySection() {
-  const items = [
-    { title: "One search, every vertical", detail: "Flights through tours, compared side by side." },
-    { title: "Partner pricing, not markup", detail: "You check out directly with the airline, hotel or operator." },
-    { title: "Built for the whole trip", detail: "From the first flight search to the last day tour." },
+  const t = useT();
+  const items: { titleKey: TKey; detailKey: TKey }[] = [
+    { titleKey: "home.why1Title", detailKey: "home.why1Detail" },
+    { titleKey: "home.why2Title", detailKey: "home.why2Detail" },
+    { titleKey: "home.why3Title", detailKey: "home.why3Detail" },
   ];
   return (
     <section className="site-section site-hairline border-t">
       <div className="site-container grid gap-8 md:grid-cols-3">
         {items.map((it) => (
-          <div key={it.title} className="site-panel p-6">
-            <h3 className="text-lg font-semibold">{it.title}</h3>
-            <p className="site-ink-muted mt-2 text-sm leading-relaxed">{it.detail}</p>
+          <div key={it.titleKey} className="site-panel p-6">
+            <h3 className="text-lg font-semibold">{t(it.titleKey)}</h3>
+            <p className="site-ink-muted mt-2 text-sm leading-relaxed">{t(it.detailKey)}</p>
           </div>
         ))}
       </div>
@@ -191,14 +199,15 @@ export function WhySection() {
 }
 
 export function FinalCtaSection() {
+  const t = useT();
   return (
     <section className="site-section site-hairline border-t">
       <div className="site-container text-center">
-        <h2 className="site-h2 mx-auto max-w-lg text-3xl md:text-4xl">Start your trip.</h2>
-        <p className="site-ink-muted mx-auto mt-3 max-w-sm text-base">Pick a vertical above, or browse by destination.</p>
+        <h2 className="site-h2 mx-auto max-w-lg text-3xl md:text-4xl">{t("home.finalHeading")}</h2>
+        <p className="site-ink-muted mx-auto mt-3 max-w-sm text-base">{t("home.finalCopy")}</p>
         <Link to="/destinations" className="btn-final-banner mt-7 inline-flex">
           <span className="burst" />
-          <span>Start your trip</span>
+          <span>{t("nav.startTrip")}</span>
         </Link>
       </div>
     </section>

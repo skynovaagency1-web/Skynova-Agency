@@ -7,6 +7,7 @@ import { Music2 } from "lucide-react";
 import { REGION_ORDER } from "@/data/destinations";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import { useT, type TKey } from "@/lib/i18n-strings";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 // lucide-react dropped brand/logo glyphs -- these four are plain inline SVG
 // marks instead of lucide imports.
@@ -193,6 +194,7 @@ export function Footer() {
                 </a>
               ))}
             </div>
+            <LanguageSwitcher className="footer-lang" />
           </div>
         </div>
       </footer>

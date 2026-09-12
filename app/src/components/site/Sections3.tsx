@@ -5,6 +5,7 @@ import { getDestinationBySlug, type Destination, DESTINATIONS } from "@/data/des
 import { VERTICALS } from "@/data/verticals";
 import { Globe3D } from "@/components/site/Globe3D";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
+import { useT, type TKey } from "@/lib/i18n-strings";
 
 // Back to a curated 8 -- 25 chips around the globe read as cluttered.
 const ORBIT_SLUGS = ["portugal", "italy", "vietnam", "new-zealand", "switzerland", "peru", "kenya", "jordan"];
@@ -22,64 +23,62 @@ const DESTINATION_COUNT = DESTINATIONS.length;
 const VERTICAL_COUNT = VERTICALS.length;
 
 export function TrustLineSection() {
+  const t = useT();
   return (
     <section className="trust-strip">
       <div className="site-container">
         <p className="trust-strip-text">
-          <strong>{VERTICAL_COUNT}</strong> travel verticals · <strong>{DESTINATION_COUNT}</strong> destinations · booked through one
-          trusted partner network
+          <strong>{VERTICAL_COUNT}</strong> {t("home.trustVerticals")} ·{" "}
+          <strong>{DESTINATION_COUNT}</strong> {t("home.trustDestinations")} · {t("home.trustPartner")}
         </p>
       </div>
     </section>
   );
 }
 
-const ADVANTAGES = [
+const ADVANTAGES: { titleKey: TKey; detailKey: TKey; image: string; altKey: TKey }[] = [
   {
-    title: "Direct partner access",
-    detail:
-      "Every search routes straight to vetted flight, hotel, car and tour partners -- no reseller markup in between.",
+    titleKey: "home.adv1Title",
+    detailKey: "home.adv1Detail",
     image: "/assets/sections/flights.webp",
-    alt: "Window seat view from a jet cabin at golden hour",
+    altKey: "home.flightsAlt",
   },
   {
-    title: "One search, every vertical",
-    detail:
-      "Flights, stays, cars, airport help, eSIM and tours, compared in a single flow instead of six open tabs.",
+    titleKey: "home.why1Title",
+    detailKey: "home.adv2Detail",
     image: "/assets/sections/tours-landmarks.webp",
-    alt: "Aerial view of a coastline landmark",
+    altKey: "home.toursAlt2",
   },
   {
-    title: "Transparent, partner pricing",
-    detail:
-      "The price shown at checkout is the partner's own -- Skynova earns a commission, you don't pay extra for it.",
+    titleKey: "home.adv3Title",
+    detailKey: "home.adv3Detail",
     image: "/assets/sections/car-rentals.webp",
-    alt: "Luxury car parked along a coastal road",
+    altKey: "home.carsAlt",
   },
   {
-    title: "Built around your route",
-    detail:
-      "Destination guides and bundled add-ons matched to where you're actually going, not generic upsells.",
+    titleKey: "home.adv4Title",
+    detailKey: "home.adv4Detail",
     image: "/assets/sections/hotels.webp",
-    alt: "Infinity pool overlooking the coastline at a luxury hotel",
+    altKey: "home.hotelsAlt",
   },
 ];
 
 export function AdvantagesSection() {
   const revealRef = useScrollReveal<HTMLDivElement>();
+  const t = useT();
   return (
     <section className="site-section site-hairline border-t">
       <div className="site-container">
-        <p className="site-eyebrow mb-3">Why Skynova</p>
-        <h2 className="site-h2 max-w-lg text-3xl md:text-4xl">Built to book the whole trip, properly.</h2>
+        <p className="site-eyebrow mb-3">{t("home.whySkynova")}</p>
+        <h2 className="site-h2 max-w-lg text-3xl md:text-4xl">{t("home.advHeading")}</h2>
         <div ref={revealRef} className="scroll-reveal mt-10 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
           {ADVANTAGES.map((a) => (
-            <div key={a.title} className="benefit-tile">
+            <div key={a.titleKey} className="benefit-tile">
               <div className="benefit-tile-media">
-                <img src={a.image} alt={a.alt} loading="lazy" />
+                <img src={a.image} alt={t(a.altKey)} loading="lazy" />
               </div>
-              <p className="mt-4 font-semibold">{a.title}</p>
-              <p className="site-ink-muted mt-2 text-sm leading-relaxed">{a.detail}</p>
+              <p className="mt-4 font-semibold">{t(a.titleKey)}</p>
+              <p className="site-ink-muted mt-2 text-sm leading-relaxed">{t(a.detailKey)}</p>
             </div>
           ))}
         </div>
@@ -88,18 +87,18 @@ export function AdvantagesSection() {
   );
 }
 
-const SPECS = [
-  { label: "Verticals in one flow", value: String(VERTICAL_COUNT) },
-  { label: "Destinations routed", value: String(DESTINATION_COUNT) },
-  { label: "Markup added by Skynova", value: "$0" },
-  { label: "Support response window", value: "< 24h" },
+const SPECS: { labelKey: TKey; value: string }[] = [
+  { labelKey: "home.specVerticals", value: String(VERTICAL_COUNT) },
+  { labelKey: "home.specDestinations", value: String(DESTINATION_COUNT) },
+  { labelKey: "home.specMarkup", value: "$0" },
+  { labelKey: "home.specSupport", value: "< 24h" },
 ];
 
-const FLOW_STEPS = [
-  { n: "01", title: "Search once", detail: "One search bar, every vertical, live results from our partner networks." },
-  { n: "02", title: "Compare honestly", detail: "Skynova adds no markup and sells no placement -- you see the partner's own results." },
-  { n: "03", title: "Book with the partner", detail: "Checkout happens on the partner's own site, at their price." },
-  { n: "04", title: "Fly, stay, go", detail: "Your booking sits with them; we're just the front door." },
+const FLOW_STEPS: { n: string; titleKey: TKey; detailKey: TKey }[] = [
+  { n: "01", titleKey: "home.step1Title", detailKey: "home.step1Detail" },
+  { n: "02", titleKey: "home.step2Title", detailKey: "home.step2Detail" },
+  { n: "03", titleKey: "home.step3AltTitle", detailKey: "home.step3AltDetail" },
+  { n: "04", titleKey: "home.step4Title", detailKey: "home.step4Detail" },
 ];
 
 // A still frame from the hero's own cloud loop, not the video itself --
@@ -107,20 +106,20 @@ const FLOW_STEPS = [
 // the same mask-image technique as .hero-afterglow, rather than a
 // playing video pinned behind the content.
 export function BookingSpecSection() {
+  const t = useT();
   return (
     <section data-rail-dark="" id="how-it-works" className="site-section cloud-photo-section">
       <div className="site-container grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start">
         <div>
-          <p className="site-eyebrow mb-3">How a booking works</p>
-          <h2 className="site-h2 max-w-md text-3xl md:text-4xl">Inside every Skynova booking.</h2>
+          <p className="site-eyebrow mb-3">{t("home.howBookingWorks")}</p>
+          <h2 className="site-h2 max-w-md text-3xl md:text-4xl">{t("home.insideHeading")}</h2>
           <p className="site-ink-muted mt-4 max-w-md text-base leading-relaxed">
-            No inventory of our own, no hidden fees -- just a routing layer between you and the travel
-            partners who actually fulfill the trip.
+            {t("home.insideCopy")}
           </p>
           <div className="spec-sheet mt-8">
             {SPECS.map((s) => (
-              <div key={s.label} className="spec-row">
-                <span className="site-ink-muted text-sm">{s.label}</span>
+              <div key={s.labelKey} className="spec-row">
+                <span className="site-ink-muted text-sm">{t(s.labelKey)}</span>
                 <span className="font-mono text-sm font-semibold">{s.value}</span>
               </div>
             ))}
@@ -131,8 +130,8 @@ export function BookingSpecSection() {
             <div key={s.n} className="flow-step">
               <span className="flow-step-index">{s.n}</span>
               <div>
-                <p className="font-semibold">{s.title}</p>
-                <p className="site-ink-muted mt-1 text-sm leading-relaxed">{s.detail}</p>
+                <p className="font-semibold">{t(s.titleKey)}</p>
+                <p className="site-ink-muted mt-1 text-sm leading-relaxed">{t(s.detailKey)}</p>
               </div>
               {i < FLOW_STEPS.length - 1 ? <span className="flow-step-line" aria-hidden="true" /> : null}
             </div>
@@ -143,48 +142,49 @@ export function BookingSpecSection() {
   );
 }
 
-const BENEFITS = [
+const BENEFITS: { titleKey: TKey; detailKey: TKey; image: string; altKey: TKey }[] = [
   {
-    title: "Connected from touchdown",
-    detail: "eSIM activation before you land, or a physical SIM waiting at the counter.",
+    titleKey: "home.ben1Title",
+    detailKey: "home.ben1Detail",
     image: "/assets/sections/esim.webp",
-    alt: "Smartphone displaying an eSIM QR code",
+    altKey: "home.esimAlt",
   },
   {
-    title: "Skip the queues",
-    detail: "Private transfers, lounge access and baggage help, arranged before you land.",
+    titleKey: "home.ben2Title",
+    detailKey: "home.ben2Detail",
     image: "/assets/sections/airport.webp",
-    alt: "Airport lounge seating with departure boards",
+    altKey: "home.airportAlt",
   },
   {
-    title: "Local, guided, or solo",
-    detail: "Skip-the-line tours and day trips, bookable the moment you land.",
+    titleKey: "home.ben3Title",
+    detailKey: "home.ben3Detail",
     image: "/assets/sections/tours-compass.webp",
-    alt: "Brass compass resting on a map",
+    altKey: "home.toursAlt1",
   },
   {
-    title: "Support, whenever you need it",
-    detail: "A route to a real person if a booking needs a human touch.",
+    titleKey: "home.ben4Title",
+    detailKey: "home.ben4Detail",
     image: "/assets/sections/plate-cool.webp",
-    alt: "Atmospheric night sky plate",
+    altKey: "home.introAlt",
   },
 ];
 
 export function BenefitsStripSection() {
   const revealRef = useScrollReveal<HTMLDivElement>();
+  const t = useT();
   return (
     <section className="site-section site-hairline border-t">
       <div className="site-container">
-        <p className="site-eyebrow mb-3">Beyond the booking</p>
-        <h2 className="site-h2 max-w-md text-3xl md:text-4xl">The parts people forget to plan.</h2>
+        <p className="site-eyebrow mb-3">{t("home.beyondBooking")}</p>
+        <h2 className="site-h2 max-w-md text-3xl md:text-4xl">{t("home.benefitsHeading")}</h2>
         <div ref={revealRef} className="scroll-reveal mt-10 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
           {BENEFITS.map((b) => (
-            <div key={b.title} className="benefit-tile">
+            <div key={b.titleKey} className="benefit-tile">
               <div className="benefit-tile-media">
-                <img src={b.image} alt={b.alt} loading="lazy" />
+                <img src={b.image} alt={t(b.altKey)} loading="lazy" />
               </div>
-              <p className="mt-4 font-semibold">{b.title}</p>
-              <p className="site-ink-muted mt-2 text-sm leading-relaxed">{b.detail}</p>
+              <p className="mt-4 font-semibold">{t(b.titleKey)}</p>
+              <p className="site-ink-muted mt-2 text-sm leading-relaxed">{t(b.detailKey)}</p>
             </div>
           ))}
         </div>
@@ -209,24 +209,25 @@ function LiveClock() {
 }
 
 export function LiveStatsBarSection() {
+  const t = useT();
   return (
     <section className="stats-bar site-hairline border-y">
       <div className="site-container stats-bar-grid">
         <div className="stats-bar-item">
           <p className="stats-bar-value">{DESTINATION_COUNT}</p>
-          <p className="site-ink-muted text-xs uppercase tracking-wide">Countries served</p>
+          <p className="site-ink-muted text-xs uppercase tracking-wide">{t("home.countriesServed")}</p>
         </div>
         <div className="stats-bar-item">
           <p className="stats-bar-value">{VERTICAL_COUNT}</p>
-          <p className="site-ink-muted text-xs uppercase tracking-wide">Travel verticals</p>
+          <p className="site-ink-muted text-xs uppercase tracking-wide">{t("home.travelVerticals")}</p>
         </div>
         <div className="stats-bar-item">
           <p className="stats-bar-value">24/7</p>
-          <p className="site-ink-muted text-xs uppercase tracking-wide">Booking open</p>
+          <p className="site-ink-muted text-xs uppercase tracking-wide">{t("home.bookingOpen")}</p>
         </div>
         <div className="stats-bar-item">
           <p className="stats-bar-value"><LiveClock /></p>
-          <p className="site-ink-muted text-xs uppercase tracking-wide">Your local time</p>
+          <p className="site-ink-muted text-xs uppercase tracking-wide">{t("home.yourLocalTime")}</p>
         </div>
       </div>
     </section>
@@ -236,17 +237,18 @@ export function LiveStatsBarSection() {
 const ORBIT_DESTINATIONS = ORBIT_SLUGS.map(getDestinationBySlug).filter((d): d is Destination => Boolean(d));
 
 export function FlyAnywhereSection() {
+  const t = useT();
   return (
     <section className="site-section site-hairline border-t">
       <div className="site-container grid gap-10 lg:grid-cols-[1fr_auto] lg:items-center">
         <div>
-          <p className="site-eyebrow mb-3">Fly anywhere</p>
-          <h2 className="site-h2 max-w-md text-3xl md:text-4xl">{DESTINATIONS.length} destinations, one booking flow.</h2>
+          <p className="site-eyebrow mb-3">{t("home.flyAnywhere")}</p>
+          <h2 className="site-h2 max-w-md text-3xl md:text-4xl">{t("home.flyHeading", { count: DESTINATIONS.length })}</h2>
           <p className="site-ink-muted mt-4 max-w-md text-base leading-relaxed">
-            Every city below routes straight into flights, stays, cars and tours for that country.
+            {t("home.flyCopy")}
           </p>
           <Link to="/destinations" className="btn-view-all mt-8">
-            View all {DESTINATIONS.length} destinations <span className="arrow" aria-hidden="true">&rarr;</span>
+            {t("home.viewAllDestinationsCount", { count: DESTINATIONS.length })} <span className="arrow" aria-hidden="true">&rarr;</span>
           </Link>
         </div>
         <div className="orbit-stage">
@@ -271,24 +273,24 @@ export function FlyAnywhereSection() {
 }
 
 export function ClosingStatCtaSection() {
+  const t = useT();
   return (
     <section className="site-section site-hairline border-t closing-cta">
       <div className="site-container text-center">
         <p className="closing-cta-figure">{DESTINATION_COUNT}</p>
         <h2 className="site-h2 mx-auto max-w-lg text-3xl md:text-4xl">
-          Destinations routed through one search, not six tabs.
+          {t("home.closingHeading")}
         </h2>
         <p className="site-ink-muted mx-auto mt-3 max-w-sm text-base">
-          Flights, stays, cars, airport help, eSIM and tours -- start with a destination or a vertical,
-          we'll route the rest.
+          {t("home.closingCopy")}
         </p>
         <div className="mt-7 flex flex-wrap items-center justify-center gap-5">
           <Link to="/destinations" className="btn-final-banner">
             <span className="burst" />
-            <span>Start your trip</span>
+            <span>{t("nav.startTrip")}</span>
           </Link>
           <Link to="/contact" className="btn-ghost-link">
-            Talk to us <span className="arrow">&rarr;</span>
+            {t("home.talkToUs")} <span className="arrow">&rarr;</span>
           </Link>
         </div>
       </div>

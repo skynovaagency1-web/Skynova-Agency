@@ -8,6 +8,7 @@ import { VERTICALS } from "@/data/verticals";
 import { COLLECTIONS } from "@/data/collections";
 import { REGION_ORDER } from "@/data/destinations";
 import { useT, type TKey } from "@/lib/i18n-strings";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 const LINKS = [
   ...VERTICALS,
@@ -248,6 +249,7 @@ export function Nav() {
               <User size={18} />
             </button>
           )}
+          <LanguageSwitcher className="site-nav-lang" />
         </div>
         <div className="flex shrink-0 items-center gap-3">
           <Link to="/destinations" className="btn-nav-pill site-nav-cta">
@@ -391,6 +393,7 @@ export function Nav() {
             <Link to="/destinations" className="btn-nav-pill justify-center w-full" onClick={() => setOpen(false)}>
               <span>{t("nav.startTrip")}</span>
             </Link>
+            <LanguageSwitcher className="mobile-menu-lang" />
           </div>
         </div>
       </div>

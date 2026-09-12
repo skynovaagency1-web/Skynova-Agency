@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 
 import { subscribeToNewsletter } from "@/lib/api/newsletter.functions";
+import { useT } from "@/lib/i18n-strings";
 
 // This form used to store nothing at all: submitting flipped a local flag and
 // showed "You're on the list", so every address typed into it was discarded.
@@ -11,6 +12,7 @@ import { subscribeToNewsletter } from "@/lib/api/newsletter.functions";
 export function Newsletter() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
+  const t = useT();
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -27,28 +29,25 @@ export function Newsletter() {
   return (
     <section data-rail-dark="" className="newsletter-section">
       <div className="site-container newsletter-inner">
-        <p className="newsletter-eyebrow">Skynova Travel Club</p>
-        <h2 className="newsletter-heading">Join the Skynova Travel Club</h2>
-        <p className="newsletter-copy">
-          Destination inspiration, hotel deals, travel guides, flight offers and curated experiences --
-          straight to your inbox.
-        </p>
+        <p className="newsletter-eyebrow">{t("news.eyebrow")}</p>
+        <h2 className="newsletter-heading">{t("news.heading")}</h2>
+        <p className="newsletter-copy">{t("news.copy")}</p>
         {status === "done" ? (
-          <p className="newsletter-thanks">You're on the list -- look out for our next dispatch.</p>
+          <p className="newsletter-thanks">{t("news.thanks")}</p>
         ) : (
           <form className="newsletter-form" onSubmit={handleSubmit}>
             <input
               type="email"
               required
-              placeholder="Your email address"
-              aria-label="Email address"
+              placeholder={t("news.placeholder")}
+              aria-label={t("news.emailAria")}
               className="newsletter-input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={status === "sending"}
             />
             <button type="submit" className="newsletter-submit" disabled={status === "sending"}>
-              {status === "sending" ? "Joining..." : "Subscribe"}
+              {status === "sending" ? t("news.joining") : t("news.subscribe")}
             </button>
           </form>
         )}
@@ -56,10 +55,10 @@ export function Newsletter() {
           // Says what to do next rather than apologising -- and never claims
           // the address was saved, because it was not.
           <p className="newsletter-error" role="alert">
-            That didn&rsquo;t go through. Check the address and try again.
+            {t("news.error")}
           </p>
         ) : null}
-        <p className="newsletter-privacy">No spam. Unsubscribe anytime.</p>
+        <p className="newsletter-privacy">{t("news.privacy")}</p>
       </div>
     </section>
   );
