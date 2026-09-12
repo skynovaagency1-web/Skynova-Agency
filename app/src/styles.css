@@ -5586,9 +5586,24 @@ html.lenis body { height: auto; }
 .vcard-sub { font-size: 0.78rem; line-height: 1.5; color: rgba(245, 240, 230, 0.76); }
 @media (max-width: 1024px) { .vcard-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) {
-  .vcard-grid { grid-template-columns: 1fr; }
-  .vcard { min-height: 13rem; border-radius: var(--sky-radius-lg); }
-  .vcard-chip { inset-inline-start: 0.85rem; transform: none; }
+  /* Two up, not one. Full width spent the whole screen on a single photo
+     and turned eight verticals into a long scroll; paired, the set is two
+     thumb-flicks and you can compare them. The arch comes back with them:
+     it was only flattened because a 999px head on a full-width card reads
+     as a dome rather than an arch. */
+  .vcard-grid { grid-template-columns: repeat(2, 1fr); }
+  .vcard { min-height: 12.5rem; padding: 0.75rem; }
+  .vcard-chip { padding: 0.26rem 0.55rem; font-size: 0.56rem; letter-spacing: 0.1em; }
+  .vcard-title { font-size: 0.86rem; }
+  .vcard-sub {
+    font-size: 0.7rem;
+    /* Clamped so a long line cannot shove one card of a pair taller than
+       the other. The full copy is on the page the card links to. */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .vcard { transition: none; }
