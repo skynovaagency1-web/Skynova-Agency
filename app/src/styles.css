@@ -5348,3 +5348,59 @@ html.lenis body { height: auto; }
 }
 .mobile-menu-lang { margin-top: 0.75rem; justify-content: center; width: 100%; }
 .footer-lang { margin-left: 0.5rem; }
+
+/* ---- Day / night toggle (components/site/DayNightToggle.tsx) ----
+   A named pill after the owner's reference: the mode spelled out beside a
+   track, with a filled knob. Sized from the brand tokens so it belongs to
+   this site rather than looking like a borrowed control. */
+.daynight {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.3rem 0.35rem 0.3rem 0.9rem;
+  border: 1px solid var(--sky-line);
+  border-radius: 999px;
+  background: var(--sky-glass-bg);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--sky-ink);
+  cursor: pointer;
+  transition: border-color 200ms ease, background-color 200ms ease;
+}
+.daynight:hover { border-color: var(--sky-coral); }
+.daynight-label {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sky-coral-deep);
+}
+.daynight-track {
+  position: relative;
+  display: block;
+  width: 3.1rem;
+  height: 1.65rem;
+  border-radius: 999px;
+  background: var(--sky-bg-raised);
+  border: 1px solid var(--sky-line);
+  transition: background-color 220ms ease;
+}
+.daynight-knob {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 0.18rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 999px;
+  background: var(--btn-pill-fill, var(--sky-coral));
+  box-shadow: 0 2px 6px rgba(28, 26, 20, 0.28);
+  transform: translateY(-50%);
+  /* Logical offset, so the knob slides the correct way in a right-to-left
+     locale without a second rule. */
+  transition: inset-inline-start 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.daynight.is-night .daynight-track { background: var(--keyhole-wall); }
+.daynight.is-night .daynight-knob { inset-inline-start: calc(100% - 1.38rem); }
+@media (prefers-reduced-motion: reduce) {
+  .daynight-knob { transition: none; }
+}

@@ -826,6 +826,9 @@ export const EN = {
   "dest.closingCopy":
     "Flights, stays, cars, and things to do \u2014 compared in one place, booked with trusted travel partners.",
   "dest.appearsIn": "{name} also appears in",
+  "theme.day": "Day",
+  "theme.night": "Night",
+  "theme.aria": "Switch between day and night",
 } as const;
 
 export type TKey = keyof typeof EN;
@@ -1657,6 +1660,9 @@ const FR: Dict = {
   "dest.closingCopy":
     "Vols, h\u00e9bergements, voitures et activit\u00e9s \u2014 compar\u00e9s au m\u00eame endroit, r\u00e9serv\u00e9s chez des partenaires de confiance.",
   "dest.appearsIn": "{name} figure aussi dans",
+  "theme.day": "Jour",
+  "theme.night": "Nuit",
+  "theme.aria": "Basculer entre jour et nuit",
 };
 
 /**
@@ -1780,6 +1786,9 @@ const ES: Dict = {
   "news.subscribe": "Suscribirse",
   "news.error": "No se ha podido enviar. Revisa la dirección e inténtalo de nuevo.",
   "news.privacy": "Sin spam. Puedes darte de baja cuando quieras.",
+  "theme.day": "Día",
+  "theme.night": "Noche",
+  "theme.aria": "Cambiar entre día y noche",
 };
 const PT: Dict = {
   "nav.explore": "Explorar",
@@ -1892,6 +1901,9 @@ const PT: Dict = {
   "news.subscribe": "Inscrever-se",
   "news.error": "O envio não foi concluído. Verifique o endereço e tente novamente.",
   "news.privacy": "Sem spam. Cancele quando quiser.",
+  "theme.day": "Dia",
+  "theme.night": "Noite",
+  "theme.aria": "Alternar entre dia e noite",
 };
 const AR: Dict = {};
 
