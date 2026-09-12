@@ -24,6 +24,7 @@ import { NotFound } from "@/components/site/NotFound";
 import { absUrl } from "@/lib/seo";
 import {
   DEFAULT_LOCALE,
+  LOCALE_DIR,
   LOCALE_TAGS,
   PUBLISHED_LOCALES,
   localePath,
@@ -161,7 +162,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient; loca
 function RootShell({ children }: { children: ReactNode }) {
   const locale = useCurrentLocale();
   return (
-    <html lang={LOCALE_TAGS[locale]} style={{ colorScheme: "light" }}>
+    <html lang={LOCALE_TAGS[locale]} dir={LOCALE_DIR[locale]} style={{ colorScheme: "light" }}>
       <head>
         <HeadContent />
       </head>

@@ -12,7 +12,7 @@
  * prefix plus the hreflang tags in __root.tsx as the language signal.
  */
 
-export const LOCALES = ["en", "fr"] as const;
+export const LOCALES = ["en", "es", "pt", "ar", "fr"] as const;
 export type Locale = (typeof LOCALES)[number];
 
 /** Served at the root, with no prefix. */
@@ -32,6 +32,9 @@ export const PUBLISHED_LOCALES: readonly Locale[] = ["en"];
 /** Shown in the language switcher, in the language itself -- never "French". */
 export const LOCALE_LABELS: Record<Locale, string> = {
   en: "English",
+  es: "Español",
+  pt: "Português",
+  ar: "العربية",
   fr: "Français",
 };
 
@@ -39,7 +42,30 @@ export const LOCALE_LABELS: Record<Locale, string> = {
  *  key so a future "pt-BR" needs no change to the routing code. */
 export const LOCALE_TAGS: Record<Locale, string> = {
   en: "en",
+  es: "es",
+  /** Brazilian Portuguese: the larger market, and the one the site's own
+   *  Brazil guide is written for. Switch to "pt-PT" here if the audience
+   *  turns out to be European -- it changes vocabulary, not structure. */
+  pt: "pt-BR",
+  ar: "ar",
   fr: "fr",
+};
+
+/**
+ * Writing direction.
+ *
+ * Arabic runs right to left, which is a layout concern rather than a
+ * translation one: <html dir> flips text and inline flow, but physical CSS
+ * (margin-left, left:, translateX) stays put and has to be migrated to
+ * logical properties separately. Nothing is published in Arabic until that
+ * pass is done.
+ */
+export const LOCALE_DIR: Record<Locale, "ltr" | "rtl"> = {
+  en: "ltr",
+  es: "ltr",
+  pt: "ltr",
+  ar: "rtl",
+  fr: "ltr",
 };
 
 export function isLocale(value: string): value is Locale {

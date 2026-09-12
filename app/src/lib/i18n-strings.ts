@@ -1659,7 +1659,20 @@ const FR: Dict = {
   "dest.appearsIn": "{name} figure aussi dans",
 };
 
-const DICTS: Record<Locale, Dict> = { en: EN, fr: FR };
+/**
+ * Spanish, Portuguese and Arabic: routable, not yet translated.
+ *
+ * Empty on purpose rather than absent -- every key falls back to English, so
+ * /es, /pt and /ar render the site in English at correct, prefixed URLs while
+ * the translations are written. They stay out of PUBLISHED_LOCALES until the
+ * copy exists, so nothing links to them and no hreflang claims they are
+ * translations.
+ */
+const ES: Dict = {};
+const PT: Dict = {};
+const AR: Dict = {};
+
+const DICTS: Record<Locale, Dict> = { en: EN, es: ES, pt: PT, ar: AR, fr: FR };
 
 /** `{name}` placeholders, filled from `vars`. Left as written when a caller
  *  passes nothing for them, so a missing variable is visible rather than a
