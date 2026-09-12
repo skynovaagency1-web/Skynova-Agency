@@ -645,6 +645,60 @@ export const EN = {
   "esim.device1Body": "XS and every model since, including the current lineup.",
   "esim.device2Body": "S20 and newer, plus recent Galaxy Z Fold and Flip models.",
   "esim.device3Body": "Pixel 3 and every model since supports eSIM out of the box.",
+
+  "faq.eyebrow": "FAQ",
+  "faq.heading": "Questions, answered.",
+  "faq.intro":
+    "The things travelers usually want to know before they book their first trip through Skynova.",
+  "faq.ctaTitle1": "Ready for",
+  "faq.ctaTitle2": "your next trip?",
+  "faq.ctaSub": "One search, every vertical, zero markup.",
+  "faq.q1": "Does booking through Skynova cost more than going direct?",
+  "faq.a1":
+    "No -- the price you see is the partner's own price. Skynova earns a commission from the airline, hotel, or partner, never a markup added to what you pay.",
+  "faq.q2": "Who do I contact if something goes wrong with my booking?",
+  "faq.a2":
+    "Your booking sits directly with the airline, hotel, or partner you booked through, so their support team handles changes and issues -- our team can point you to the right contact if you're not sure where to start.",
+  "faq.q3": "Can I book flights, hotels, and a rental car in one search?",
+  "faq.a3":
+    "Yes -- flights, stays, car rentals, airport services, eSIM, and tours are all searchable from the same flow, routed to the partner that actually fulfills each one.",
+  "faq.q4": "Do I need a data plan before I land?",
+  "faq.a4":
+    "You can activate an eSIM before you leave or arrange a physical SIM waiting at the counter -- both are bookable from the same search as your flight.",
+  "faq.q5": "Is my payment information safe?",
+  "faq.a5":
+    "Checkout happens directly on the partner's own site at their price -- Skynova never stores your card details.",
+
+  "wishlist.eyebrow": "Wishlist",
+  "wishlist.heading": "Trips you're dreaming about.",
+  "wishlist.intro": "Save any destination with the heart icon and find it here later.",
+  "wishlist.signInCopy": "Sign in to see and manage your saved destinations.",
+  "wishlist.loading": "Loading your wishlist...",
+  "wishlist.emptyBefore": "Nothing saved yet -- browse ",
+  "wishlist.emptyLink": "destinations",
+  "wishlist.emptyAfter": " and tap the heart on any that catch your eye.",
+
+  "share.eyebrow": "Share Skynova",
+  "share.heading": "Send Skynova to a friend.",
+  "share.intro": "Share your link -- when someone signs up through it, it counts here.",
+  "share.signInCopy": "Sign in to get your personal share link.",
+  "share.loading": "Loading...",
+  "share.yourLink": "Your link",
+  "share.copied": "Copied",
+  "share.copyLink": "Copy link",
+  "share.share": "Share",
+  "share.tailOne": "friend has signed up through your link.",
+  "share.tailMany": "friends have signed up through your link.",
+
+  "gift.heading": "Give someone a trip to look forward to.",
+  "gift.intro": "Tell us who it's for and we'll be in touch to put a trip together with them.",
+  "gift.prefill": "I thought you'd love a trip to {name}.",
+  "gift.sent": "Got it -- we'll be in touch about a gift trip for {email}.",
+  "gift.recipientEmail": "Recipient's email",
+  "gift.messageOptional": "Message (optional)",
+  "gift.messagePlaceholder": "A trip idea, an occasion, anything that helps us put it together.",
+  "gift.sending": "Sending...",
+  "gift.send": "Send",
 } as const;
 
 export type TKey = keyof typeof EN;
@@ -1292,6 +1346,62 @@ const FR: Dict = {
   "esim.device1Body": "XS et tous les mod\u00e8les depuis, y compris la gamme actuelle.",
   "esim.device2Body": "S20 et plus r\u00e9cents, ainsi que les Galaxy Z Fold et Flip r\u00e9cents.",
   "esim.device3Body": "Le Pixel 3 et tous les mod\u00e8les depuis prennent en charge l\u2019eSIM nativement.",
+
+  "faq.eyebrow": "FAQ",
+  "faq.heading": "Vos questions, nos r\u00e9ponses.",
+  "faq.intro":
+    "Ce que les voyageurs veulent g\u00e9n\u00e9ralement savoir avant de r\u00e9server leur premier voyage avec Skynova.",
+  "faq.ctaTitle1": "Pr\u00eat pour",
+  "faq.ctaTitle2": "votre prochain voyage ?",
+  "faq.ctaSub": "Une recherche, tous les services, z\u00e9ro marge.",
+  "faq.q1": "R\u00e9server via Skynova co\u00fbte-t-il plus cher qu\u2019en direct ?",
+  "faq.a1":
+    "Non -- le prix affich\u00e9 est celui du partenaire. Skynova touche une commission de la compagnie, de l\u2019h\u00f4tel ou du partenaire, jamais une marge ajout\u00e9e \u00e0 ce que vous payez.",
+  "faq.q2": "Qui contacter en cas de probl\u00e8me avec ma r\u00e9servation ?",
+  "faq.a2":
+    "Votre r\u00e9servation est chez la compagnie, l\u2019h\u00f4tel ou le partenaire aupr\u00e8s duquel vous avez r\u00e9serv\u00e9 : c\u2019est son service client qui g\u00e8re les modifications et les incidents -- notre \u00e9quipe peut vous indiquer le bon interlocuteur si vous ne savez pas par o\u00f9 commencer.",
+  "faq.q3": "Puis-je r\u00e9server vols, h\u00f4tels et voiture dans une seule recherche ?",
+  "faq.a3":
+    "Oui -- vols, h\u00e9bergements, locations de voitures, services a\u00e9roport, eSIM et excursions se cherchent dans le m\u00eame parcours, chacun \u00e9tant rout\u00e9 vers le partenaire qui l\u2019assure.",
+  "faq.q4": "Faut-il un forfait data avant d\u2019atterrir ?",
+  "faq.a4":
+    "Vous pouvez activer une eSIM avant de partir ou faire pr\u00e9parer une SIM physique \u00e0 retirer au comptoir -- les deux se r\u00e9servent dans la m\u00eame recherche que votre vol.",
+  "faq.q5": "Mes informations de paiement sont-elles en s\u00e9curit\u00e9 ?",
+  "faq.a5":
+    "Le paiement se fait directement sur le site du partenaire, \u00e0 son prix -- Skynova ne conserve jamais vos donn\u00e9es bancaires.",
+
+  "wishlist.eyebrow": "Liste de souhaits",
+  "wishlist.heading": "Les voyages dont vous r\u00eavez.",
+  "wishlist.intro": "Enregistrez une destination avec le c\u0153ur et retrouvez-la ici plus tard.",
+  "wishlist.signInCopy": "Connectez-vous pour voir et g\u00e9rer vos destinations enregistr\u00e9es.",
+  "wishlist.loading": "Chargement de votre liste...",
+  "wishlist.emptyBefore": "Rien d\u2019enregistr\u00e9 pour l\u2019instant -- parcourez les ",
+  "wishlist.emptyLink": "destinations",
+  "wishlist.emptyAfter": " et appuyez sur le c\u0153ur sur celles qui vous plaisent.",
+
+  "share.eyebrow": "Partager Skynova",
+  "share.heading": "Envoyez Skynova \u00e0 un ami.",
+  "share.intro": "Partagez votre lien -- quand quelqu\u2019un s\u2019inscrit avec, cela compte ici.",
+  "share.signInCopy": "Connectez-vous pour obtenir votre lien de partage.",
+  "share.loading": "Chargement...",
+  "share.yourLink": "Votre lien",
+  "share.copied": "Copi\u00e9",
+  "share.copyLink": "Copier le lien",
+  "share.share": "Partager",
+  "share.tailOne": "ami s\u2019est inscrit via votre lien.",
+  "share.tailMany": "amis se sont inscrits via votre lien.",
+
+  "gift.heading": "Offrez \u00e0 quelqu\u2019un un voyage \u00e0 attendre avec impatience.",
+  "gift.intro":
+    "Dites-nous \u00e0 qui il est destin\u00e9 et nous vous recontacterons pour construire le voyage avec cette personne.",
+  "gift.prefill": "Je me suis dit qu\u2019un voyage \u00e0 {name} te plairait.",
+  "gift.sent": "C\u2019est not\u00e9 -- nous vous recontacterons au sujet d\u2019un voyage cadeau pour {email}.",
+  "gift.recipientEmail": "E-mail du destinataire",
+  "gift.messageOptional": "Message (facultatif)",
+  "gift.messagePlaceholder":
+    "Une id\u00e9e de voyage, une occasion, tout ce qui peut nous aider \u00e0 le pr\u00e9parer.",
+  "gift.sending": "Envoi...",
+  "gift.send": "Envoyer",
 };
 
 const DICTS: Record<Locale, Dict> = { en: EN, fr: FR };

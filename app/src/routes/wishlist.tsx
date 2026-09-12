@@ -7,6 +7,7 @@ import { WishlistButton } from "@/components/site/WishlistButton";
 import { useAuth } from "@/lib/auth-context";
 import { getWishlist } from "@/lib/api/wishlist.functions";
 import { getDestinationBySlug } from "@/data/destinations";
+import { useT } from "@/lib/i18n-strings";
 
 export const Route = createFileRoute("/wishlist")({
   head: () => ({
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/wishlist")({
 
 function WishlistPage() {
   const { user, isLoading: userLoading, openAuthModal } = useAuth();
+  const t = useT();
   const { data: items, isLoading: wishlistLoading } = useQuery({
     queryKey: ["wishlist"],
     queryFn: () => getWishlist(),
@@ -40,10 +42,10 @@ function WishlistPage() {
       <main>
         <section className="site-section">
           <div className="site-container">
-            <p className="site-eyebrow mb-3">Wishlist</p>
-            <h1 className="site-h2 max-w-2xl text-4xl md:text-6xl">Trips you're dreaming about.</h1>
+            <p className="site-eyebrow mb-3">{t("wishlist.eyebrow")}</p>
+            <h1 className="site-h2 max-w-2xl text-4xl md:text-6xl">{t("wishlist.heading")}</h1>
             <p className="site-ink-muted mt-4 max-w-lg text-base leading-relaxed">
-              Save any destination with the heart icon and find it here later.
+              {t("wishlist.intro")}
             </p>
           </div>
         </section>
@@ -52,23 +54,23 @@ function WishlistPage() {
           <div className="site-container">
             {!userLoading && !user ? (
               <div className="site-panel flex flex-col items-start gap-4 p-8">
-                <p className="text-base leading-relaxed">Sign in to see and manage your saved destinations.</p>
+                <p className="text-base leading-relaxed">{t("wishlist.signInCopy")}</p>
                 <button type="button" className="btn-hero-pill" onClick={() => openAuthModal("sign-in")}>
-                  <span>Sign in</span>
+                  <span>{t("auth.signIn")}</span>
                 </button>
               </div>
             ) : null}
 
-            {user && wishlistLoading ? <p className="site-ink-muted">Loading your wishlist...</p> : null}
+            {user && wishlistLoading ? <p className="site-ink-muted">{t("wishlist.loading")}</p> : null}
 
             {user && !wishlistLoading && destinations.length === 0 ? (
               <div className="site-panel p-8">
                 <p className="text-base leading-relaxed">
-                  Nothing saved yet -- browse{" "}
+                  {t("wishlist.emptyBefore")}
                   <Link to="/destinations" className="btn-underline">
-                    destinations
-                  </Link>{" "}
-                  and tap the heart on any that catch your eye.
+                    {t("wishlist.emptyLink")}
+                  </Link>
+                  {t("wishlist.emptyAfter")}
                 </p>
               </div>
             ) : null}

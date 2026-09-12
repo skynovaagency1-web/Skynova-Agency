@@ -7,6 +7,8 @@ import { Footer } from "@/components/site/Footer";
 import { StructuredData } from "@/components/StructuredData";
 import { breadcrumbJsonLd, faqJsonLd, jsonLd } from "@/lib/seo";
 
+import { useT } from "@/lib/i18n-strings";
+
 export const Route = createFileRoute("/faq")({
   head: () => ({
     meta: [
@@ -20,65 +22,52 @@ export const Route = createFileRoute("/faq")({
   component: FaqPage,
 });
 
-const FAQS = [
-  {
-    q: "Does booking through Skynova cost more than going direct?",
-    a: "No -- the price you see is the partner's own price. Skynova earns a commission from the airline, hotel, or partner, never a markup added to what you pay.",
-  },
-  {
-    q: "Who do I contact if something goes wrong with my booking?",
-    a: "Your booking sits directly with the airline, hotel, or partner you booked through, so their support team handles changes and issues -- our team can point you to the right contact if you're not sure where to start.",
-  },
-  {
-    q: "Can I book flights, hotels, and a rental car in one search?",
-    a: "Yes -- flights, stays, car rentals, airport services, eSIM, and tours are all searchable from the same flow, routed to the partner that actually fulfills each one.",
-  },
-  {
-    q: "Do I need a data plan before I land?",
-    a: "You can activate an eSIM before you leave or arrange a physical SIM waiting at the counter -- both are bookable from the same search as your flight.",
-  },
-  {
-    q: "Is my payment information safe?",
-    a: "Checkout happens directly on the partner's own site at their price -- Skynova never stores your card details.",
-  },
-];
-
-// Built from FAQS itself, so the markup can never say something the page
-// doesn't. The sitemap's comment claimed this page "carries FAQ markup"; until
-// now it carried none at all.
-const FAQ_LD = jsonLd([faqJsonLd(FAQS), breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "FAQ" }])]);
-
 function FaqPage() {
+  const t = useT();
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
+
+  // Built inside the component, from the same strings the page renders. It
+  // used to be a module constant, which would have emitted English FAQ markup
+  // on the French page -- structured data that disagrees with the page is
+  // worse than none.
+  const faqs = [
+    { q: t("faq.q1"), a: t("faq.a1") },
+    { q: t("faq.q2"), a: t("faq.a2") },
+    { q: t("faq.q3"), a: t("faq.a3") },
+    { q: t("faq.q4"), a: t("faq.a4") },
+    { q: t("faq.q5"), a: t("faq.a5") },
+  ];
+  const faqLd = jsonLd([
+    faqJsonLd(faqs),
+    breadcrumbJsonLd([{ name: t("nav.home"), path: "/" }, { name: t("faq.eyebrow") }]),
+  ]);
 
   return (
     <>
-      <StructuredData json={FAQ_LD} />
+      <StructuredData json={faqLd} />
       <Nav />
       <main>
         <section className="site-section">
           <div className="site-container">
-            <p className="site-eyebrow mb-3">FAQ</p>
-            <h1 className="site-h2 max-w-2xl text-4xl md:text-6xl">Questions, answered.</h1>
-            <p className="site-ink-muted mt-5 max-w-xl text-base leading-relaxed">
-              The things travelers usually want to know before they book their first trip through Skynova.
-            </p>
+            <p className="site-eyebrow mb-3">{t("faq.eyebrow")}</p>
+            <h1 className="site-h2 max-w-2xl text-4xl md:text-6xl">{t("faq.heading")}</h1>
+            <p className="site-ink-muted mt-5 max-w-xl text-base leading-relaxed">{t("faq.intro")}</p>
 
             <div className="faq-grid mt-12">
               <div className="faq-cta">
                 <h2 className="faq-cta-title">
-                  Ready for
+                  {t("faq.ctaTitle1")}
                   <br />
-                  your next trip?
+                  {t("faq.ctaTitle2")}
                 </h2>
-                <p className="faq-cta-sub">One search, every vertical, zero markup.</p>
+                <p className="faq-cta-sub">{t("faq.ctaSub")}</p>
                 <Link to="/destinations" className="faq-cta-btn">
-                  Start your trip
+                  {t("nav.startTrip")}
                 </Link>
               </div>
 
               <div className="faq-list">
-                {FAQS.map((item, i) => {
+                {faqs.map((item, i) => {
                   const isOpen = activeIndex === i;
                   return (
                     <div
