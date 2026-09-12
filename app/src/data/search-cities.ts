@@ -22,49 +22,229 @@ import { DESTINATIONS } from "@/data/destinations";
 
 type Dest = (typeof DESTINATIONS)[number];
 
-const CITIES: Record<string, readonly string[]> = {
-  portugal: ["Lisbon", "Porto", "Faro", "Funchal"],
-  switzerland: ["Zurich", "Geneva", "Lucerne", "Interlaken", "Zermatt"],
-  netherlands: ["Amsterdam", "Rotterdam", "Utrecht", "The Hague"],
-  croatia: ["Dubrovnik", "Split", "Zagreb", "Hvar"],
-  italy: ["Rome", "Florence", "Venice", "Milan", "Naples", "Amalfi"],
-  spain: ["Barcelona", "Madrid", "Seville", "Malaga", "Granada", "Palma de Mallorca", "Ibiza"],
-  vietnam: ["Hanoi", "Ho Chi Minh City", "Da Nang", "Hoi An"],
-  "south-korea": ["Seoul", "Busan", "Jeju"],
-  "sri-lanka": ["Colombo", "Kandy", "Galle", "Ella"],
-  japan: ["Tokyo", "Kyoto", "Osaka", "Hiroshima", "Sapporo"],
-  thailand: ["Bangkok", "Phuket", "Chiang Mai", "Krabi", "Koh Samui"],
-  indonesia: ["Bali", "Ubud", "Seminyak", "Jakarta", "Yogyakarta", "Lombok"],
-  "united-states": ["New York", "Los Angeles", "San Francisco", "Las Vegas", "Miami", "Orlando", "Chicago", "Honolulu"],
-  canada: ["Toronto", "Vancouver", "Montreal", "Quebec City", "Banff"],
-  brazil: ["Rio de Janeiro", "São Paulo", "Salvador", "Florianópolis"],
-  mexico: ["Mexico City", "Cancún", "Tulum", "Playa del Carmen", "Oaxaca"],
-  peru: ["Lima", "Cusco", "Arequipa"],
-  argentina: ["Buenos Aires", "Mendoza", "El Calafate", "Bariloche", "Ushuaia"],
-  martinique: ["Fort-de-France", "Les Trois-Îlets", "Le Diamant"],
-  guadeloupe: ["Pointe-à-Pitre", "Le Gosier", "Deshaies", "Saint-François"],
-  cuba: ["Havana", "Varadero", "Trinidad", "Viñales"],
-  "dominican-republic": ["Punta Cana", "Santo Domingo", "Puerto Plata", "Samaná"],
-  jamaica: ["Montego Bay", "Negril", "Ocho Rios", "Kingston"],
-  bahamas: ["Nassau", "Paradise Island", "Exuma", "Eleuthera"],
-  egypt: ["Cairo", "Luxor", "Aswan", "Hurghada", "Sharm El Sheikh"],
-  "south-africa": ["Cape Town", "Johannesburg", "Durban", "Stellenbosch"],
-  kenya: ["Nairobi", "Mombasa", "Diani Beach", "Lamu"],
-  namibia: ["Windhoek", "Swakopmund"],
-  morocco: ["Marrakech", "Fes", "Casablanca", "Chefchaouen", "Essaouira", "Tangier"],
-  tanzania: ["Zanzibar", "Stone Town", "Arusha", "Dar es Salaam"],
-  jordan: ["Amman", "Petra", "Aqaba", "Wadi Rum", "Dead Sea"],
-  oman: ["Muscat", "Salalah", "Nizwa"],
-  qatar: ["Doha"],
-  "united-arab-emirates": ["Dubai", "Abu Dhabi", "Sharjah", "Ras Al Khaimah"],
-  "saudi-arabia": ["Riyadh", "Jeddah", "AlUla"],
-  turkey: ["Istanbul", "Antalya", "Cappadocia", "Bodrum", "Izmir"],
-  australia: ["Sydney", "Melbourne", "Brisbane", "Gold Coast", "Cairns", "Perth"],
-  "new-zealand": ["Auckland", "Queenstown", "Wellington", "Christchurch", "Rotorua"],
-  fiji: ["Nadi", "Denarau Island", "Suva"],
-  "french-polynesia": ["Tahiti", "Papeete", "Bora Bora", "Moorea"],
-  "new-caledonia": ["Nouméa", "Île des Pins"],
-  samoa: ["Apia", "Upolu", "Savai'i"],
+/** A city is either a bare name, or a name with the IATA code of the
+ *  airport that serves it. The code is what lets the flights search open on
+ *  real results instead of a blank form.
+ *
+ *  Codes come from Travelpayouts' own city dataset
+ *  (api.travelpayouts.com/data/en/cities.json), matched on name WITHIN the
+ *  destination's country -- derived from the flag emoji, which is literally
+ *  the ISO code. That constraint is not decoration: unconstrained, "Paris"
+ *  resolves to PHT in Texas and "AlUla" to ALU in Somalia, neither of which
+ *  is where the visitor is going. Only entries with a flightable airport get
+ *  a code; Kyoto, Banff, Utrecht and the rest are matched but have no
+ *  commercial airport, so they keep the blank search rather than send
+ *  someone to the wrong place.
+ *
+ *  131 of 179 cities carry a code. The other 48 are not a defect -- a
+ *  working blank search beats a confident wrong answer. */
+type CityDef = string | { city: string; iata: string };
+
+const CITIES: Record<string, readonly CityDef[]> = {
+  portugal: [
+    { city: "Lisbon", iata: "LIS" },
+    { city: "Porto", iata: "OPO" },
+    { city: "Faro", iata: "FAO" },
+    { city: "Funchal", iata: "FNC" },
+  ],
+  switzerland: [
+    { city: "Zurich", iata: "ZRH" },
+    { city: "Geneva", iata: "GVA" },
+    "Lucerne",
+    "Interlaken",
+    "Zermatt",
+  ],
+  netherlands: [{ city: "Amsterdam", iata: "AMS" }, { city: "Rotterdam", iata: "RTM" }, "Utrecht", "The Hague"],
+  croatia: [
+    { city: "Dubrovnik", iata: "DBV" },
+    { city: "Split", iata: "SPU" },
+    { city: "Zagreb", iata: "ZAG" },
+    "Hvar",
+  ],
+  italy: [
+    { city: "Rome", iata: "ROM" },
+    { city: "Florence", iata: "FLR" },
+    { city: "Venice", iata: "VCE" },
+    { city: "Milan", iata: "MIL" },
+    { city: "Naples", iata: "NAP" },
+    "Amalfi",
+  ],
+  spain: [
+    { city: "Barcelona", iata: "BCN" },
+    { city: "Madrid", iata: "MAD" },
+    "Seville",
+    { city: "Malaga", iata: "AGP" },
+    { city: "Granada", iata: "GRX" },
+    "Palma de Mallorca",
+    { city: "Ibiza", iata: "IBZ" },
+  ],
+  vietnam: [
+    { city: "Hanoi", iata: "HAN" },
+    { city: "Ho Chi Minh City", iata: "SGN" },
+    { city: "Da Nang", iata: "DAD" },
+    "Hoi An",
+  ],
+  "south-korea": [{ city: "Seoul", iata: "SEL" }, { city: "Busan", iata: "PUS" }, { city: "Jeju", iata: "CJU" }],
+  "sri-lanka": [{ city: "Colombo", iata: "CMB" }, { city: "Kandy", iata: "KDZ" }, "Galle", "Ella"],
+  japan: [
+    { city: "Tokyo", iata: "TYO" },
+    "Kyoto",
+    { city: "Osaka", iata: "OSA" },
+    { city: "Hiroshima", iata: "HIJ" },
+    { city: "Sapporo", iata: "SPK" },
+  ],
+  thailand: [
+    { city: "Bangkok", iata: "BKK" },
+    { city: "Phuket", iata: "HKT" },
+    { city: "Chiang Mai", iata: "CNX" },
+    { city: "Krabi", iata: "KBV" },
+    { city: "Koh Samui", iata: "USM" },
+  ],
+  indonesia: [
+    "Bali",
+    "Ubud",
+    "Seminyak",
+    { city: "Jakarta", iata: "JKT" },
+    { city: "Yogyakarta", iata: "JOG" },
+    "Lombok",
+  ],
+  "united-states": [
+    { city: "New York", iata: "NYC" },
+    { city: "Los Angeles", iata: "LAX" },
+    { city: "San Francisco", iata: "SFO" },
+    { city: "Las Vegas", iata: "LAS" },
+    { city: "Miami", iata: "MIA" },
+    { city: "Orlando", iata: "ORL" },
+    { city: "Chicago", iata: "CHI" },
+    { city: "Honolulu", iata: "HNL" },
+  ],
+  canada: [
+    { city: "Toronto", iata: "YTO" },
+    { city: "Vancouver", iata: "YVR" },
+    { city: "Montreal", iata: "YMQ" },
+    "Quebec City",
+    "Banff",
+  ],
+  brazil: [
+    { city: "Rio de Janeiro", iata: "RIO" },
+    { city: "São Paulo", iata: "SAO" },
+    { city: "Salvador", iata: "SSA" },
+    { city: "Florianópolis", iata: "FLN" },
+  ],
+  mexico: [
+    { city: "Mexico City", iata: "MEX" },
+    { city: "Cancún", iata: "CUN" },
+    { city: "Tulum", iata: "TQO" },
+    "Playa del Carmen",
+    { city: "Oaxaca", iata: "OAX" },
+  ],
+  peru: [
+    { city: "Lima", iata: "LIM" },
+    { city: "Cusco", iata: "CUZ" },
+    { city: "Arequipa", iata: "AQP" },
+  ],
+  argentina: [
+    { city: "Buenos Aires", iata: "BUE" },
+    { city: "Mendoza", iata: "MDZ" },
+    { city: "El Calafate", iata: "FTE" },
+    "Bariloche",
+    { city: "Ushuaia", iata: "USH" },
+  ],
+  martinique: [{ city: "Fort-de-France", iata: "FDF" }, "Les Trois-Îlets", "Le Diamant"],
+  guadeloupe: [{ city: "Pointe-à-Pitre", iata: "PTP" }, "Le Gosier", "Deshaies", "Saint-François"],
+  cuba: [{ city: "Havana", iata: "HAV" }, { city: "Varadero", iata: "VRA" }, "Trinidad", "Viñales"],
+  "dominican-republic": [
+    { city: "Punta Cana", iata: "PUJ" },
+    { city: "Santo Domingo", iata: "SDQ" },
+    { city: "Puerto Plata", iata: "POP" },
+    "Samaná",
+  ],
+  jamaica: [
+    { city: "Montego Bay", iata: "MBJ" },
+    "Negril",
+    { city: "Ocho Rios", iata: "OCJ" },
+    { city: "Kingston", iata: "KIN" },
+  ],
+  bahamas: [{ city: "Nassau", iata: "NAS" }, "Paradise Island", "Exuma", "Eleuthera"],
+  egypt: [
+    { city: "Cairo", iata: "CAI" },
+    { city: "Luxor", iata: "LXR" },
+    { city: "Aswan", iata: "ASW" },
+    { city: "Hurghada", iata: "HRG" },
+    { city: "Sharm El Sheikh", iata: "SSH" },
+  ],
+  "south-africa": [
+    { city: "Cape Town", iata: "CPT" },
+    { city: "Johannesburg", iata: "JNB" },
+    { city: "Durban", iata: "DUR" },
+    "Stellenbosch",
+  ],
+  kenya: [
+    { city: "Nairobi", iata: "NBO" },
+    { city: "Mombasa", iata: "MBA" },
+    "Diani Beach",
+    { city: "Lamu", iata: "LAU" },
+  ],
+  namibia: [{ city: "Windhoek", iata: "WDH" }, "Swakopmund"],
+  morocco: [
+    { city: "Marrakech", iata: "RAK" },
+    "Fes",
+    { city: "Casablanca", iata: "CMN" },
+    "Chefchaouen",
+    { city: "Essaouira", iata: "ESU" },
+    { city: "Tangier", iata: "TNG" },
+  ],
+  tanzania: [
+    { city: "Zanzibar", iata: "ZNZ" },
+    "Stone Town",
+    { city: "Arusha", iata: "ARK" },
+    { city: "Dar es Salaam", iata: "DAR" },
+  ],
+  jordan: [{ city: "Amman", iata: "AMM" }, "Petra", { city: "Aqaba", iata: "AQJ" }, "Wadi Rum", "Dead Sea"],
+  oman: [{ city: "Muscat", iata: "MCT" }, { city: "Salalah", iata: "SLL" }, "Nizwa"],
+  qatar: [{ city: "Doha", iata: "DOH" }],
+  "united-arab-emirates": [
+    { city: "Dubai", iata: "DXB" },
+    { city: "Abu Dhabi", iata: "AUH" },
+    { city: "Sharjah", iata: "SHJ" },
+    { city: "Ras Al Khaimah", iata: "RKT" },
+  ],
+  "saudi-arabia": [
+    { city: "Riyadh", iata: "RUH" },
+    { city: "Jeddah", iata: "JED" },
+    { city: "AlUla", iata: "ULH" },
+  ],
+  turkey: [
+    { city: "Istanbul", iata: "IST" },
+    { city: "Antalya", iata: "AYT" },
+    "Cappadocia",
+    { city: "Bodrum", iata: "BJV" },
+    { city: "Izmir", iata: "IZM" },
+  ],
+  australia: [
+    { city: "Sydney", iata: "SYD" },
+    { city: "Melbourne", iata: "MEL" },
+    { city: "Brisbane", iata: "BNE" },
+    { city: "Gold Coast", iata: "OOL" },
+    { city: "Cairns", iata: "CNS" },
+    { city: "Perth", iata: "PER" },
+  ],
+  "new-zealand": [
+    { city: "Auckland", iata: "AKL" },
+    { city: "Queenstown", iata: "ZQN" },
+    { city: "Wellington", iata: "WLG" },
+    { city: "Christchurch", iata: "CHC" },
+    { city: "Rotorua", iata: "ROT" },
+  ],
+  fiji: [{ city: "Nadi", iata: "NAN" }, "Denarau Island", { city: "Suva", iata: "SUV" }],
+  "french-polynesia": [
+    "Tahiti",
+    { city: "Papeete", iata: "PPT" },
+    { city: "Bora Bora", iata: "BOB" },
+    { city: "Moorea", iata: "MOZ" },
+  ],
+  "new-caledonia": [{ city: "Nouméa", iata: "NOU" }, { city: "Île des Pins", iata: "ILP" }],
+  samoa: [{ city: "Apia", iata: "APW" }, "Upolu", "Savai'i"],
 };
 
 /** Other spellings people type, mapped to a canonical name above. Compared
@@ -118,12 +298,16 @@ function norm(s: string): string {
 
 const BY_SLUG = new Map<string, Dest>(DESTINATIONS.map((d) => [d.slug, d]));
 
-type CityEntry = { city: string; dest: Dest; label: string; key: string };
+type CityEntry = { city: string; dest: Dest; label: string; key: string; iata?: string };
 
 const CITY_ENTRIES: CityEntry[] = Object.entries(CITIES).flatMap(([slug, cities]) => {
   const dest = BY_SLUG.get(slug);
   if (!dest) return [];
-  return cities.map((city) => ({ city, dest, label: `${city}, ${dest.name}`, key: norm(city) }));
+  return cities.map((entry) => {
+    const city = typeof entry === "string" ? entry : entry.city;
+    const iata = typeof entry === "string" ? undefined : entry.iata;
+    return { city, dest, label: `${city}, ${dest.name}`, key: norm(city), iata };
+  });
 });
 
 const COUNTRY_BY_KEY = new Map<string, Dest>();
@@ -159,6 +343,10 @@ export type ResolvedPlace = {
   toursQuery: string;
   /** Shown in the note under the search box. */
   label: string;
+  /** IATA code for the flights deep link, when the city has one. Undefined
+   *  for a country (which airport would it mean?) and for cities with no
+   *  commercial airport -- both keep the partner's own blank search. */
+  iata?: string;
 };
 
 function forCountry(d: Dest): ResolvedPlace {
@@ -166,7 +354,7 @@ function forCountry(d: Dest): ResolvedPlace {
 }
 
 function forCity(c: CityEntry): ResolvedPlace {
-  return { destination: c.dest, hotelsQuery: c.label, toursQuery: c.city, label: c.label };
+  return { destination: c.dest, hotelsQuery: c.label, toursQuery: c.city, label: c.label, iata: c.iata };
 }
 
 /**

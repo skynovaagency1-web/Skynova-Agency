@@ -15,11 +15,30 @@
  */
 export const TP_MARKER = "720297";
 
-// Flights: Aviasales' real search deep link requires IATA airport codes
-// (e.g. "JFK2601LAX1"), not a city or country name -- there's no valid way
-// to pre-fill it from a destination name. This opens their live search tool.
-export function flightsLink(): string {
-  return `https://www.aviasales.com/?marker=${TP_MARKER}`;
+/**
+ * Flights: Aviasales' deep link takes a `params` value built from IATA codes,
+ * and a destination-only form is valid -- documented as "you can create a
+ * link without dates for the pre-filled search form, e.g. PARNYC, or specify
+ * only the point of departure: PAR".
+ *
+ * This site's search collects a destination and no origin, so the link is
+ * destination-only: the partner's form opens with the arrival airport already
+ * filled, and the visitor picks where they are flying from. That is a real
+ * improvement on the blank search this used to open, and it is the most the
+ * available data honestly supports.
+ *
+ * Dates are deliberately NOT appended. The grammar is ORIGIN + DDMM + DEST
+ * ("PAR0101NYC") -- the date sits between the two airports, so with no origin
+ * there is nowhere valid to put it: "DXB0410" is not a string the parser can
+ * read. The documented dateless form is the destination on its own.
+ *
+ * Without a code (a country, or a city with no commercial airport) the link
+ * is exactly what it always was.
+ */
+export function flightsLink(iata?: string): string {
+  const params = new URLSearchParams({ marker: TP_MARKER });
+  if (iata) params.set("params", iata);
+  return `https://www.aviasales.com/?${params.toString()}`;
 }
 
 // Hotels: Hotellook's search does accept a free-text destination plus

@@ -70,7 +70,7 @@ export function TripSearch() {
       case "esim":
         return esimLink(match?.slug);
       case "flights":
-        return flightsLink();
+        return flightsLink(resolved?.iata);
       case "cars":
         return carRentalLink();
     }
@@ -79,7 +79,10 @@ export function TripSearch() {
   // eSIMs are sold per country, so that note names the country even when a
   // city was typed; the others name exactly what gets searched.
   const noteLabel = mode === "esim" ? match?.name : resolved?.label;
-  const note = active.prefills
+  // Flights pre-fill only when the resolved place has an airport code, so the
+  // note has to follow the link rather than the mode.
+  const prefills = active.prefills || (mode === "flights" && Boolean(resolved?.iata));
+  const note = prefills
     ? noteLabel
       ? t("search.noteResults", { partner: active.partner, place: noteLabel })
       : t("search.notePartner", { partner: active.partner })
