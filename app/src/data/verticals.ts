@@ -7,6 +7,9 @@ export type Vertical = {
   href: string;
   title: string;
   subtitle: string;
+  /** The card photograph. Every vertical has one in public/assets/sections,
+   *  so a card is never a coloured rectangle with a label on it. */
+  image: string;
 };
 
 // Title/subtitle are pulled straight from each vertical's own hero copy
@@ -17,6 +20,7 @@ export type Vertical = {
 export const VERTICALS: Vertical[] = [
   {
     key: "flights",
+    image: "/assets/sections/flights.webp",
     label: "Flights",
     icon: Plane,
     href: "/flights",
@@ -25,6 +29,7 @@ export const VERTICALS: Vertical[] = [
   },
   {
     key: "hotels",
+    image: "/assets/sections/hotels.webp",
     label: "Hotels",
     icon: Building2,
     href: "/hotels",
@@ -33,6 +38,7 @@ export const VERTICALS: Vertical[] = [
   },
   {
     key: "car-rentals",
+    image: "/assets/sections/car-rentals.webp",
     label: "Car rentals",
     icon: Car,
     href: "/car-rentals",
@@ -41,6 +47,7 @@ export const VERTICALS: Vertical[] = [
   },
   {
     key: "airport-services",
+    image: "/assets/sections/airport.webp",
     label: "Airport",
     icon: Luggage,
     href: "/airport-services",
@@ -49,6 +56,7 @@ export const VERTICALS: Vertical[] = [
   },
   {
     key: "esim",
+    image: "/assets/sections/esim.webp",
     label: "SIM / eSIM",
     icon: Smartphone,
     href: "/esim",
@@ -57,6 +65,7 @@ export const VERTICALS: Vertical[] = [
   },
   {
     key: "tours",
+    image: "/assets/sections/tours-compass.webp",
     label: "Tours",
     icon: Compass,
     href: "/tours",
@@ -65,6 +74,7 @@ export const VERTICALS: Vertical[] = [
   },
   {
     key: "events",
+    image: "/assets/sections/events.webp",
     label: "Events",
     icon: Ticket,
     href: "/events",
@@ -73,6 +83,7 @@ export const VERTICALS: Vertical[] = [
   },
   {
     key: "bike-rentals",
+    image: "/assets/sections/bike-rentals.webp",
     label: "Bike rentals",
     icon: Bike,
     href: "/bike-rentals",

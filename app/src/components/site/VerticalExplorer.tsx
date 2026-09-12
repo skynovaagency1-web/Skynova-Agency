@@ -1,48 +1,48 @@
-import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 
 import { VERTICALS } from "@/data/verticals";
+import { useT } from "@/lib/i18n-strings";
 
-// The homepage's curated 6 (3x2 grid, per an earlier explicit request) --
-// the nav's mega menu (see Nav.tsx) shows all 8 from the same shared list.
-const FEATURED_KEYS = ["flights", "hotels", "car-rentals", "esim", "tours", "events"];
-const FEATURED = FEATURED_KEYS.map((key) => VERTICALS.find((v) => v.key === key)!);
-
-// Same hover/focus-to-preview pattern as the region explorer this
-// replaced, laid out as a 3x2 grid of verticals instead of a stacked
-// region list -- each tile is a real link to that vertical's own page.
+/**
+ * The eight verticals, as arch-topped glass cards over the cloud section.
+ *
+ * This replaced a curated six icon tiles plus a hover-preview panel. The
+ * panel existed to show a title and subtitle for whichever tile you were
+ * pointing at -- one at a time, and nothing at all on a touch screen, where
+ * there is no hover. Putting the copy on the card shows all eight at once
+ * and works the same way under a finger as under a cursor.
+ *
+ * After the owner's reference: a photograph behind frosted glass, an arched
+ * head, a small chip floating over the image, and the name in display type.
+ * The rim is the site's existing two-layer background-clip trick
+ * (--sky-glass-edge), not a flat border, so it catches light along the top
+ * and bottom edges the way the reference does.
+ */
 export function VerticalExplorerSection() {
-  const [active, setActive] = useState<string>(FEATURED[0].key);
-  const current = FEATURED.find((v) => v.key === active) ?? FEATURED[0];
+  const t = useT();
 
   return (
     <section data-rail-dark="" className="site-section cloud-photo-section">
       <div className="site-container">
-        <p className="site-eyebrow mb-3">Explore by vertical</p>
-        <h2 className="site-h2 max-w-lg text-3xl md:text-4xl">Every trip, one search away.</h2>
-        <div className="vertical-explorer-grid mt-8">
-          {FEATURED.map((v) => (
-            <Link
-              key={v.key}
-              to={v.href}
-              className={`vertical-explorer-item${active === v.key ? " is-active" : ""}`}
-              onMouseEnter={() => setActive(v.key)}
-              onFocus={() => setActive(v.key)}
-            >
-              <v.icon size={20} aria-hidden="true" />
-              <span>{v.label}</span>
+        <p className="site-eyebrow mb-3">{t("home.exploreVertical")}</p>
+        <h2 className="site-h2 max-w-lg text-3xl md:text-4xl">{t("home.everyTripHeading")}</h2>
+        <div className="vcard-grid mt-8">
+          {VERTICALS.map((v) => (
+            <Link key={v.key} to={v.href} className="vcard">
+              <span className="vcard-media" aria-hidden="true">
+                <img src={v.image} alt="" loading="lazy" decoding="async" />
+                <span className="vcard-scrim" />
+              </span>
+              <span className="vcard-chip">
+                <v.icon size={13} aria-hidden="true" />
+                {v.label}
+              </span>
+              <span className="vcard-body">
+                <span className="vcard-title">{v.title}</span>
+                <span className="vcard-sub">{v.subtitle}</span>
+              </span>
             </Link>
           ))}
-        </div>
-        <div className="region-explorer-preview mt-6" aria-live="polite">
-          <div key={current.key} className="region-explorer-preview-inner">
-            <p className="region-explorer-preview-tag">{current.label}</p>
-            <h3 className="region-explorer-preview-title">{current.title}</h3>
-            <p className="region-explorer-preview-subtitle">{current.subtitle}</p>
-            <Link to={current.href} className="btn-underline mt-5">
-              Open {current.label} <span className="arrow">&rarr;</span>
-            </Link>
-          </div>
         </div>
       </div>
     </section>

@@ -5357,7 +5357,7 @@ html.lenis body { height: auto; }
   display: inline-flex;
   align-items: center;
   gap: 0.7rem;
-  padding: 0.3rem 0.35rem 0.3rem 0.9rem;
+  padding: 0.28rem;
   border: 1px solid var(--sky-line);
   border-radius: 999px;
   background: var(--sky-glass-bg);
@@ -5368,39 +5368,52 @@ html.lenis body { height: auto; }
   transition: border-color 200ms ease, background-color 200ms ease;
 }
 .daynight:hover { border-color: var(--sky-coral); }
-.daynight-label {
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--sky-coral-deep);
-}
 .daynight-track {
   position: relative;
-  display: block;
-  width: 3.1rem;
-  height: 1.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 3.6rem;
+  height: 1.8rem;
+  padding-inline: 0.42rem;
   border-radius: 999px;
-  background: var(--sky-bg-raised);
+  background: var(--keyhole-wall);
   border: 1px solid var(--sky-line);
   transition: background-color 220ms ease;
 }
+/* The two faces sit under the knob and show through on the side the knob
+   is not covering -- the reference's lit sun and dimmed moon. */
+.daynight-face {
+  display: inline-flex;
+  line-height: 0;
+  transition: color 220ms ease, opacity 220ms ease;
+}
+.daynight-sun { color: var(--sky-coral); opacity: 1; }
+.daynight-moon { color: var(--sky-ink-muted); opacity: 0.55; }
+.daynight.is-night .daynight-sun { opacity: 0.35; color: var(--sky-ink-muted); }
+.daynight.is-night .daynight-moon { opacity: 1; color: var(--keyhole-light-warm); }
 .daynight-knob {
   position: absolute;
   inset-block-start: 50%;
-  inset-inline-start: 0.18rem;
-  width: 1.2rem;
-  height: 1.2rem;
+  inset-inline-start: 0.16rem;
+  display: grid;
+  place-items: center;
+  width: 1.44rem;
+  height: 1.44rem;
   border-radius: 999px;
+  color: var(--sky-coral-ink);
   background: var(--btn-pill-fill, var(--sky-coral));
-  box-shadow: 0 2px 6px rgba(28, 26, 20, 0.28);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.12) inset;
   transform: translateY(-50%);
-  /* Logical offset, so the knob slides the correct way in a right-to-left
-     locale without a second rule. */
-  transition: inset-inline-start 220ms cubic-bezier(0.4, 0, 0.2, 1);
+  /* Logical, so the knob travels the right way in Arabic. */
+  transition: inset-inline-start 240ms cubic-bezier(0.4, 0, 0.2, 1), background 240ms ease;
 }
-.daynight.is-night .daynight-track { background: var(--keyhole-wall); }
-.daynight.is-night .daynight-knob { inset-inline-start: calc(100% - 1.38rem); }
+.daynight.is-night .daynight-knob {
+  inset-inline-start: calc(100% - 1.6rem);
+  color: var(--keyhole-light-core);
+  background: linear-gradient(180deg, #2b3348, #171d2c);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(243, 212, 154, 0.22) inset;
+}
 @media (prefers-reduced-motion: reduce) {
   .daynight-knob { transition: none; }
 }
@@ -5500,7 +5513,80 @@ html.lenis body { height: auto; }
   z-index: 4;
 }
 @media (max-width: 640px) {
-  .hero-daynight { inset-block-start: 4.5rem; }
-  .hero-daynight .daynight-label { display: none; }
-  .hero-daynight { padding-inline: 0.35rem; }
+  /* Icons carry the meaning, so the control is identical on a phone --
+     only its distance from the sticky nav changes. */
+  .hero-daynight { inset-block-start: 4.4rem; }
+}
+
+/* ---- Vertical cards (components/site/VerticalExplorer.tsx) ----
+   After the owner's glassy-card reference: a photograph behind frosted
+   glass, an arched head, a chip floating over the image. The rim uses the
+   site's existing two-layer background-clip edge rather than a flat border,
+   so it catches light top and bottom. */
+.vcard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(0.7rem, 1.4vw, 1.1rem);
+}
+.vcard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: clamp(15rem, 22vw, 19rem);
+  padding: 1rem;
+  overflow: hidden;
+  isolation: isolate;
+  /* The arch: a tall radius on the head, a gentle one at the foot. */
+  border-radius: 999px 999px var(--sky-radius-lg) var(--sky-radius-lg);
+  border: 1px solid transparent;
+  background: linear-gradient(var(--sky-glass-bg), var(--sky-glass-bg)) padding-box, var(--sky-glass-edge) border-box;
+  -webkit-backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
+  backdrop-filter: blur(var(--sky-glass-blur)) saturate(160%);
+  box-shadow: var(--sky-shadow-md);
+  color: #f5f0e6;
+  transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 260ms ease;
+}
+.vcard:hover,
+.vcard:focus-visible { transform: translateY(-4px); box-shadow: var(--sky-shadow-float); }
+.vcard-media { position: absolute; inset: 0; z-index: -1; display: block; }
+.vcard-media img { width: 100%; height: 100%; object-fit: cover; }
+.vcard-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 8, 6, 0.12) 0%, rgba(10, 8, 6, 0.5) 52%, rgba(10, 8, 6, 0.88) 100%);
+}
+.vcard-chip {
+  position: absolute;
+  inset-block-start: 0.85rem;
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #f5f0e6;
+  background: rgba(16, 13, 8, 0.5);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+.vcard-body { display: flex; flex-direction: column; gap: 0.35rem; }
+.vcard-title { font-family: var(--font-display); font-size: 1rem; font-weight: 600; line-height: 1.25; }
+.vcard-sub { font-size: 0.78rem; line-height: 1.5; color: rgba(245, 240, 230, 0.76); }
+@media (max-width: 1024px) { .vcard-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) {
+  .vcard-grid { grid-template-columns: 1fr; }
+  .vcard { min-height: 13rem; border-radius: var(--sky-radius-lg); }
+  .vcard-chip { inset-inline-start: 0.85rem; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vcard { transition: none; }
+  .vcard:hover, .vcard:focus-visible { transform: none; }
 }

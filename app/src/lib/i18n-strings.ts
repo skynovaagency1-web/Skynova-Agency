@@ -829,6 +829,8 @@ export const EN = {
   "theme.day": "Day",
   "theme.night": "Night",
   "theme.aria": "Switch between day and night",
+  "home.exploreVertical": "Explore by vertical",
+  "home.everyTripHeading": "Every trip, one search away.",
 } as const;
 
 export type TKey = keyof typeof EN;
@@ -1663,6 +1665,8 @@ const FR: Dict = {
   "theme.day": "Jour",
   "theme.night": "Nuit",
   "theme.aria": "Basculer entre jour et nuit",
+  "home.exploreVertical": "Explorer par service",
+  "home.everyTripHeading": "Chaque voyage, à une recherche près.",
 };
 
 /**
@@ -1789,6 +1793,8 @@ const ES: Dict = {
   "theme.day": "Día",
   "theme.night": "Noche",
   "theme.aria": "Cambiar entre día y noche",
+  "home.exploreVertical": "Explora por servicio",
+  "home.everyTripHeading": "Cada viaje, a una búsqueda de distancia.",
 };
 const PT: Dict = {
   "nav.explore": "Explorar",
@@ -1904,6 +1910,8 @@ const PT: Dict = {
   "theme.day": "Dia",
   "theme.night": "Noite",
   "theme.aria": "Alternar entre dia e noite",
+  "home.exploreVertical": "Explore por serviço",
+  "home.everyTripHeading": "Cada viagem, a uma busca de distância.",
 };
 const AR: Dict = {};
 
