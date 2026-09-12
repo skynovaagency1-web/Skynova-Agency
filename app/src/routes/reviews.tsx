@@ -6,6 +6,8 @@ import { Footer } from "@/components/site/Footer";
 import { Newsletter } from "@/components/site/Newsletter";
 import { DESTINATIONS } from "@/data/destinations";
 import { REVIEWS, REVIEW_CATEGORIES, summarise, starString } from "@/data/reviews";
+import { useT, useLocale } from "@/lib/i18n-strings";
+import { LOCALE_TAGS } from "@/lib/i18n";
 
 export const Route = createFileRoute("/reviews")({
   head: () => ({
@@ -30,6 +32,9 @@ export const Route = createFileRoute("/reviews")({
 const BOOKING_TYPE_COUNT = REVIEW_CATEGORIES.length;
 
 function ReviewsPage() {
+  const t = useT();
+  const locale = useLocale();
+  const plural = (n: number) => new Intl.PluralRules(LOCALE_TAGS[locale]).select(n);
   const [category, setCategory] = useState<string>("All");
   const [shown, setShown] = useState(6);
 
@@ -48,11 +53,10 @@ function ReviewsPage() {
       <main className="reviews-page">
         <div className="site-container">
           <section className="reviews-hero">
-            <p className="site-eyebrow">Reviews</p>
-            <h1 className="site-h2 reviews-title">What travellers say after they land.</h1>
+            <p className="site-eyebrow">{t("nav.reviews")}</p>
+            <h1 className="site-h2 reviews-title">{t("reviews.title")}</h1>
             <p className="reviews-lede">
-              Every review is collected after the trip is over, from a completed partner booking. We publish
-              them unedited, including the ones that sting.
+              {t("reviews.lede")}
             </p>
           </section>
 
@@ -68,8 +72,7 @@ function ReviewsPage() {
                     {starString(0)}
                   </p>
                   <p className="reviews-score-note">
-                    No verified reviews yet. Reviews open here as soon as the first trips booked through
-                    Skynova are completed &mdash; nothing is published before then.
+                    {t("reviews.scoreNoteEmpty")}
                   </p>
                 </>
               ) : (
@@ -82,18 +85,23 @@ function ReviewsPage() {
                     {starString(Math.round(summary.average ?? 0))}
                   </p>
                   <p className="reviews-score-note">
-                    From{" "}
+                    {t("reviews.fromBefore")}
                     <strong>
-                      {summary.count} verified review{summary.count === 1 ? "" : "s"}
-                    </strong>{" "}
-                    across {DESTINATIONS.length} destinations and {BOOKING_TYPE_COUNT} booking types.
+                      {plural(summary.count) === "one"
+                        ? t("reviews.verifiedOne", { count: summary.count })
+                        : t("reviews.verifiedMany", { count: summary.count })}
+                    </strong>
+                    {t("reviews.acrossTail", {
+                      destinations: DESTINATIONS.length,
+                      types: BOOKING_TYPE_COUNT,
+                    })}
                   </p>
                 </>
               )}
             </div>
 
             <div className="site-panel reviews-breakdown">
-              <p className="reviews-breakdown-label">Rating breakdown</p>
+              <p className="reviews-breakdown-label">{t("reviews.breakdownLabel")}</p>
               <div className="reviews-breakdown-rows">
                 {summary.breakdown.map((row) => (
                   <div key={row.star} className="reviews-breakdown-row">
@@ -109,9 +117,7 @@ function ReviewsPage() {
                 ))}
               </div>
               <p className="reviews-breakdown-note">
-                {isEmpty
-                  ? "The breakdown fills in from published reviews. Nothing is estimated or carried over from anywhere else."
-                  : "Every star shown is counted from a published review — no weighting, no editing."}
+                {isEmpty ? t("reviews.breakdownNoteEmpty") : t("reviews.breakdownNote")}
               </p>
             </div>
           </section>
@@ -128,22 +134,22 @@ function ReviewsPage() {
                     setShown(6);
                   }}
                 >
-                  {c}
+                  {c === "All" ? t("reviews.all") : c}
                 </button>
               ))}
             </div>
             <span className="reviews-result-count">
-              {filtered.length} review{filtered.length === 1 ? "" : "s"}
+              {plural(filtered.length) === "one"
+                ? t("reviews.countOne", { count: filtered.length })
+                : t("reviews.countMany", { count: filtered.length })}
             </span>
           </section>
 
           {isEmpty ? (
             <section className="reviews-empty site-panel">
-              <h2 className="reviews-empty-title">Nothing published yet.</h2>
+              <h2 className="reviews-empty-title">{t("reviews.emptyTitle")}</h2>
               <p className="reviews-empty-body">
-                Skynova does not hold your booking &mdash; the partner does. That means a review can only be
-                requested once a partner confirms the trip actually happened, which is what makes the
-                &ldquo;verified&rdquo; label on this page mean anything. The first ones will appear here.
+                {t("reviews.emptyBody")}
               </p>
             </section>
           ) : (
@@ -151,7 +157,7 @@ function ReviewsPage() {
               {visible.map((r) => (
                 <article key={r.id} className="site-panel reviews-card">
                   <div className="reviews-card-top">
-                    <span className="reviews-card-stars" aria-label={`${r.stars} out of 5 stars`}>
+                    <span className="reviews-card-stars" aria-label={t("reviews.starsAria", { stars: r.stars })}>
                       {starString(r.stars)}
                     </span>
                     <span className="reviews-card-date">{r.date}</span>
@@ -166,7 +172,7 @@ function ReviewsPage() {
                       <span className="reviews-card-name">{r.name}</span>
                       <span className="reviews-card-meta">{r.meta}</span>
                     </span>
-                    <span className="reviews-card-verified">Verified</span>
+                    <span className="reviews-card-verified">{t("reviews.verified")}</span>
                   </div>
                 </article>
               ))}
@@ -176,12 +182,11 @@ function ReviewsPage() {
           <section className="reviews-more">
             {hasMore ? (
               <button type="button" className="reviews-more-btn" onClick={() => setShown((n) => n + 6)}>
-                Show more reviews <span className="reviews-more-arrow">&darr;</span>
+                {t("reviews.showMore")} <span className="reviews-more-arrow">&darr;</span>
               </button>
             ) : null}
             <p className="reviews-policy">
-              Reviews are requested 48 hours after the last leg of a trip. We can&rsquo;t edit or remove a
-              verified review &mdash; only reply to it.
+              {t("reviews.policy")}
             </p>
           </section>
         </div>

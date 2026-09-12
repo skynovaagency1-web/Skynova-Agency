@@ -9,6 +9,8 @@ import { signOut } from "@/lib/api/auth.functions";
 import { getWishlist } from "@/lib/api/wishlist.functions";
 import { getReferralStats } from "@/lib/api/referral.functions";
 import { getDestinationBySlug } from "@/data/destinations";
+import { useT, useLocale } from "@/lib/i18n-strings";
+import { LOCALE_TAGS } from "@/lib/i18n";
 
 export const Route = createFileRoute("/account")({
   head: () => ({
@@ -34,6 +36,8 @@ export const Route = createFileRoute("/account")({
  */
 function AccountPage() {
   const { user, isLoading, openAuthModal, refetchUser } = useAuth();
+  const t = useT();
+  const locale = useLocale();
   const [signingOut, setSigningOut] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -77,7 +81,7 @@ function AccountPage() {
         <main>
           <section className="site-section">
             <div className="site-container">
-              <p className="site-ink-muted">Loading your account…</p>
+              <p className="site-ink-muted">{t("account.loading")}</p>
             </div>
           </section>
         </main>
@@ -93,15 +97,14 @@ function AccountPage() {
         <main>
           <section className="site-section">
             <div className="site-container">
-              <p className="site-eyebrow mb-3">Account</p>
-              <h1 className="site-h2 max-w-2xl text-4xl md:text-5xl">Sign in to see your trips.</h1>
+              <p className="site-eyebrow mb-3">{t("account.eyebrow")}</p>
+              <h1 className="site-h2 max-w-2xl text-4xl md:text-5xl">{t("account.signedOutHeading")}</h1>
               <p className="site-ink-muted mt-4 max-w-lg text-base leading-relaxed">
-                Your saved destinations, referral link and gift requests live here. Signing up takes
-                an email and a password.
+                {t("account.signedOutCopy")}
               </p>
               <button type="button" className="btn-hero-pill mt-7" onClick={() => openAuthModal("sign-in")}>
                 <span className="spark" />
-                <span>Sign in or create an account</span>
+                <span>{t("account.signInOrCreate")}</span>
               </button>
             </div>
           </section>
@@ -123,8 +126,8 @@ function AccountPage() {
       <main>
         <section className="site-section pb-0">
           <div className="site-container">
-            <p className="site-eyebrow mb-3">Account</p>
-            <h1 className="site-h2 max-w-2xl text-4xl md:text-5xl">Your trips, in one place.</h1>
+            <p className="site-eyebrow mb-3">{t("account.eyebrow")}</p>
+            <h1 className="site-h2 max-w-2xl text-4xl md:text-5xl">{t("account.heading")}</h1>
             <p className="account-email">{user.email}</p>
           </div>
         </section>
@@ -132,16 +135,16 @@ function AccountPage() {
         <section className="site-section">
           <div className="site-container account-grid">
             <div className="site-panel p-7">
-              <p className="site-eyebrow mb-3">Saved destinations</p>
+              <p className="site-eyebrow mb-3">{t("account.saved")}</p>
               {wishlist.isLoading ? (
-                <p className="site-ink-muted text-sm">Loading…</p>
+                <p className="site-ink-muted text-sm">{t("account.loadingShort")}</p>
               ) : savedDestinations.length === 0 ? (
                 <>
                   <p className="site-ink-muted text-sm leading-relaxed">
-                    Nothing saved yet. Tap the heart on any destination to keep it here.
+                    {t("account.nothingSaved")}
                   </p>
                   <Link to="/destinations" className="btn-underline mt-4">
-                    Browse destinations <span className="arrow">&rarr;</span>
+                    {t("account.browseDestinations")} <span className="arrow">&rarr;</span>
                   </Link>
                 </>
               ) : (
@@ -159,54 +162,54 @@ function AccountPage() {
                     ))}
                   </div>
                   <Link to="/wishlist" className="btn-underline mt-4">
-                    Open your wishlist <span className="arrow">&rarr;</span>
+                    {t("account.openWishlist")} <span className="arrow">&rarr;</span>
                   </Link>
                 </>
               )}
             </div>
 
             <div className="site-panel p-7">
-              <p className="site-eyebrow mb-3">Your referral link</p>
+              <p className="site-eyebrow mb-3">{t("account.referralLink")}</p>
               {referral.data ? (
                 <>
                   <p className="site-ink-muted text-sm leading-relaxed">
-                    Share this and anyone who signs up through it is credited to you.
+                    {t("account.referralCopy")}
                   </p>
                   <p className="account-code">{referralLink}</p>
                   <div className="account-actions">
                     <button type="button" className="btn-framed" onClick={handleCopy}>
-                      {copied ? "Copied" : "Copy link"}
+                      {copied ? t("share.copied") : t("share.copyLink")}
                     </button>
                     <Link to="/share" className="btn-underline">
-                      Share page <span className="arrow">&rarr;</span>
+                      {t("account.sharePage")} <span className="arrow">&rarr;</span>
                     </Link>
                   </div>
                   <p className="account-stat">
                     <strong>{referral.data.referralCount}</strong>{" "}
-                    {referral.data.referralCount === 1 ? "person has" : "people have"} signed up
-                    through your link.
+                    {new Intl.PluralRules(LOCALE_TAGS[locale]).select(referral.data.referralCount) === "one"
+                      ? t("account.tailOne")
+                      : t("account.tailMany")}
                   </p>
                 </>
               ) : (
-                <p className="site-ink-muted text-sm">Loading…</p>
+                <p className="site-ink-muted text-sm">{t("account.loadingShort")}</p>
               )}
             </div>
 
             <div className="site-panel p-7">
-              <p className="site-eyebrow mb-3">Bookings</p>
+              <p className="site-eyebrow mb-3">{t("account.bookings")}</p>
               <p className="site-ink-muted text-sm leading-relaxed">
-                Skynova does not hold your bookings -- the partner you checked out with does, and
-                your confirmation came from them. For changes or refunds, contact them directly.
+                {t("account.bookingsCopy")}
               </p>
               <Link to="/contact" className="btn-underline mt-4">
-                Need help? Contact us <span className="arrow">&rarr;</span>
+                {t("account.needHelp")} <span className="arrow">&rarr;</span>
               </Link>
             </div>
 
             <div className="site-panel p-7">
-              <p className="site-eyebrow mb-3">Session</p>
+              <p className="site-eyebrow mb-3">{t("account.session")}</p>
               <p className="site-ink-muted text-sm leading-relaxed">
-                Signed in as {user.email}.
+                {t("account.signedInAs", { email: user.email })}
               </p>
               <button
                 type="button"
@@ -214,7 +217,7 @@ function AccountPage() {
                 onClick={handleSignOut}
                 disabled={signingOut}
               >
-                {signingOut ? "Signing out…" : "Sign out"}
+                {signingOut ? t("account.signingOut") : t("nav.signOut")}
               </button>
             </div>
           </div>

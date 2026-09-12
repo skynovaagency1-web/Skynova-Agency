@@ -699,6 +699,57 @@ export const EN = {
   "gift.messagePlaceholder": "A trip idea, an occasion, anything that helps us put it together.",
   "gift.sending": "Sending...",
   "gift.send": "Send",
+
+  "reviews.title": "What travellers say after they land.",
+  "reviews.lede":
+    "Every review is collected after the trip is over, from a completed partner booking. We publish them unedited, including the ones that sting.",
+  "reviews.scoreNoteEmpty":
+    "No verified reviews yet. Reviews open here as soon as the first trips booked through Skynova are completed \u2014 nothing is published before then.",
+  "reviews.fromBefore": "From ",
+  "reviews.verifiedOne": "{count} verified review",
+  "reviews.verifiedMany": "{count} verified reviews",
+  "reviews.acrossTail": " across {destinations} destinations and {types} booking types.",
+  "reviews.breakdownLabel": "Rating breakdown",
+  "reviews.breakdownNoteEmpty":
+    "The breakdown fills in from published reviews. Nothing is estimated or carried over from anywhere else.",
+  "reviews.breakdownNote":
+    "Every star shown is counted from a published review \u2014 no weighting, no editing.",
+  "reviews.all": "All",
+  "reviews.countOne": "{count} review",
+  "reviews.countMany": "{count} reviews",
+  "reviews.emptyTitle": "Nothing published yet.",
+  "reviews.emptyBody":
+    "Skynova does not hold your booking \u2014 the partner does. That means a review can only be requested once a partner confirms the trip actually happened, which is what makes the \u201cverified\u201d label on this page mean anything. The first ones will appear here.",
+  "reviews.starsAria": "{stars} out of 5 stars",
+  "reviews.verified": "Verified",
+  "reviews.showMore": "Show more reviews",
+  "reviews.policy":
+    "Reviews are requested 48 hours after the last leg of a trip. We can\u2019t edit or remove a verified review \u2014 only reply to it.",
+
+  "account.eyebrow": "Account",
+  "account.loading": "Loading your account\u2026",
+  "account.loadingShort": "Loading\u2026",
+  "account.signedOutHeading": "Sign in to see your trips.",
+  "account.signedOutCopy":
+    "Your saved destinations, referral link and gift requests live here. Signing up takes an email and a password.",
+  "account.signInOrCreate": "Sign in or create an account",
+  "account.heading": "Your trips, in one place.",
+  "account.saved": "Saved destinations",
+  "account.nothingSaved": "Nothing saved yet. Tap the heart on any destination to keep it here.",
+  "account.browseDestinations": "Browse destinations",
+  "account.openWishlist": "Open your wishlist",
+  "account.referralLink": "Your referral link",
+  "account.referralCopy": "Share this and anyone who signs up through it is credited to you.",
+  "account.sharePage": "Share page",
+  "account.tailOne": "person has signed up through your link.",
+  "account.tailMany": "people have signed up through your link.",
+  "account.bookings": "Bookings",
+  "account.bookingsCopy":
+    "Skynova does not hold your bookings -- the partner you checked out with does, and your confirmation came from them. For changes or refunds, contact them directly.",
+  "account.needHelp": "Need help? Contact us",
+  "account.session": "Session",
+  "account.signedInAs": "Signed in as {email}.",
+  "account.signingOut": "Signing out\u2026",
 } as const;
 
 export type TKey = keyof typeof EN;
@@ -1402,6 +1453,59 @@ const FR: Dict = {
     "Une id\u00e9e de voyage, une occasion, tout ce qui peut nous aider \u00e0 le pr\u00e9parer.",
   "gift.sending": "Envoi...",
   "gift.send": "Envoyer",
+
+  "reviews.title": "Ce que disent les voyageurs apr\u00e8s l\u2019atterrissage.",
+  "reviews.lede":
+    "Chaque avis est recueilli apr\u00e8s le voyage, \u00e0 partir d\u2019une r\u00e9servation partenaire finalis\u00e9e. Nous les publions tels quels, y compris ceux qui piquent.",
+  "reviews.scoreNoteEmpty":
+    "Aucun avis v\u00e9rifi\u00e9 pour l\u2019instant. Les avis s\u2019ouvriront ici d\u00e8s que les premiers voyages r\u00e9serv\u00e9s via Skynova seront termin\u00e9s \u2014 rien n\u2019est publi\u00e9 avant.",
+  "reviews.fromBefore": "Sur ",
+  "reviews.verifiedOne": "{count} avis v\u00e9rifi\u00e9",
+  "reviews.verifiedMany": "{count} avis v\u00e9rifi\u00e9s",
+  "reviews.acrossTail": " dans {destinations} destinations et {types} types de r\u00e9servation.",
+  "reviews.breakdownLabel": "R\u00e9partition des notes",
+  "reviews.breakdownNoteEmpty":
+    "La r\u00e9partition se remplit \u00e0 partir des avis publi\u00e9s. Rien n\u2019est estim\u00e9 ni repris d\u2019ailleurs.",
+  "reviews.breakdownNote":
+    "Chaque \u00e9toile affich\u00e9e provient d\u2019un avis publi\u00e9 \u2014 sans pond\u00e9ration, sans retouche.",
+  "reviews.all": "Tous",
+  "reviews.countOne": "{count} avis",
+  "reviews.countMany": "{count} avis",
+  "reviews.emptyTitle": "Rien de publi\u00e9 pour l\u2019instant.",
+  "reviews.emptyBody":
+    "Skynova ne d\u00e9tient pas votre r\u00e9servation \u2014 c\u2019est le partenaire. Un avis ne peut donc \u00eatre demand\u00e9 qu\u2019une fois que le partenaire a confirm\u00e9 que le voyage a bien eu lieu, et c\u2019est ce qui donne son sens au label \u00ab v\u00e9rifi\u00e9 \u00bb sur cette page. Les premiers appara\u00eetront ici.",
+  "reviews.starsAria": "{stars} \u00e9toiles sur 5",
+  "reviews.verified": "V\u00e9rifi\u00e9",
+  "reviews.showMore": "Voir plus d\u2019avis",
+  "reviews.policy":
+    "Les avis sont demand\u00e9s 48 heures apr\u00e8s la derni\u00e8re \u00e9tape du voyage. Nous ne pouvons ni modifier ni supprimer un avis v\u00e9rifi\u00e9 \u2014 seulement y r\u00e9pondre.",
+
+  "account.eyebrow": "Compte",
+  "account.loading": "Chargement de votre compte\u2026",
+  "account.loadingShort": "Chargement\u2026",
+  "account.signedOutHeading": "Connectez-vous pour voir vos voyages.",
+  "account.signedOutCopy":
+    "Vos destinations enregistr\u00e9es, votre lien de parrainage et vos demandes de cadeau sont ici. L\u2019inscription demande une adresse e-mail et un mot de passe.",
+  "account.signInOrCreate": "Se connecter ou cr\u00e9er un compte",
+  "account.heading": "Vos voyages, au m\u00eame endroit.",
+  "account.saved": "Destinations enregistr\u00e9es",
+  "account.nothingSaved":
+    "Rien d\u2019enregistr\u00e9 pour l\u2019instant. Appuyez sur le c\u0153ur d\u2019une destination pour la garder ici.",
+  "account.browseDestinations": "Parcourir les destinations",
+  "account.openWishlist": "Ouvrir votre liste de souhaits",
+  "account.referralLink": "Votre lien de parrainage",
+  "account.referralCopy":
+    "Partagez-le : toute personne qui s\u2019inscrit avec vous est attribu\u00e9e.",
+  "account.sharePage": "Page de partage",
+  "account.tailOne": "personne s\u2019est inscrite via votre lien.",
+  "account.tailMany": "personnes se sont inscrites via votre lien.",
+  "account.bookings": "R\u00e9servations",
+  "account.bookingsCopy":
+    "Skynova ne d\u00e9tient pas vos r\u00e9servations -- c\u2019est le partenaire chez qui vous avez pay\u00e9, et votre confirmation vient de lui. Pour toute modification ou remboursement, contactez-le directement.",
+  "account.needHelp": "Besoin d\u2019aide ? Contactez-nous",
+  "account.session": "Session",
+  "account.signedInAs": "Connect\u00e9 en tant que {email}.",
+  "account.signingOut": "D\u00e9connexion\u2026",
 };
 
 const DICTS: Record<Locale, Dict> = { en: EN, fr: FR };
