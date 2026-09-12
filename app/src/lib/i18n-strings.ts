@@ -773,6 +773,19 @@ export const EN = {
   "collections.destCount": "{count} destinations",
   "collections.prev": "Previous collection",
   "collections.next": "Next collection",
+
+  "blog.heading": "Trip ideas worth reading.",
+  "blog.subtitle":
+    "Destination guides, planning tips, and notes from the road -- each one links back to where you can start booking.",
+  "blog.viewAllDestinations": "View all destinations",
+  "blog.mustRead": "Must read",
+  "blog.readGuide": "Read the guide",
+  "blog.author": "By Skynova Agency",
+  "blog.readArticle": "Read article",
+  "blog.explore": "Explore {name}",
+  "blog.allArticles": "All articles",
+  "blog.startPlanning": "Start planning",
+  "blog.keepReading": "Keep reading",
 } as const;
 
 export type TKey = keyof typeof EN;
@@ -1552,6 +1565,19 @@ const FR: Dict = {
   "collections.destCount": "{count} destinations",
   "collections.prev": "Collection pr\u00e9c\u00e9dente",
   "collections.next": "Collection suivante",
+
+  "blog.heading": "Des id\u00e9es de voyage qui valent la lecture.",
+  "blog.subtitle":
+    "Guides de destination, conseils de pr\u00e9paration et notes de voyage -- chacun renvoie \u00e0 l\u2019endroit o\u00f9 commencer \u00e0 r\u00e9server.",
+  "blog.viewAllDestinations": "Voir toutes les destinations",
+  "blog.mustRead": "\u00c0 lire absolument",
+  "blog.readGuide": "Lire le guide",
+  "blog.author": "Par Skynova Agency",
+  "blog.readArticle": "Lire l\u2019article",
+  "blog.explore": "Explorer {name}",
+  "blog.allArticles": "Tous les articles",
+  "blog.startPlanning": "Commencer \u00e0 pr\u00e9parer",
+  "blog.keepReading": "\u00c0 lire ensuite",
 };
 
 const DICTS: Record<Locale, Dict> = { en: EN, fr: FR };

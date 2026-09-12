@@ -9,17 +9,10 @@ import { POSTS, PHOTO_SLUGS, TAG_CLASSES } from "@/data/blog-posts";
 import { hasArticle } from "@/data/blog-articles";
 import { StructuredData } from "@/components/StructuredData";
 import { breadcrumbJsonLd, itemListJsonLd, jsonLd } from "@/lib/seo";
+import { useT } from "@/lib/i18n-strings";
 
 // The written guides only -- a post card with no article body is not a
 // page, so it is not in the list (same rule as the sitemap).
-const BLOG_LD = jsonLd([
-  itemListJsonLd(
-    "Skynova travel guides",
-    POSTS.filter((p) => hasArticle(p.slug)).map((p) => ({ name: p.title, path: `/blog/${p.slug}` })),
-  ),
-  breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "Blog" }]),
-]);
-
 export const Route = createFileRoute("/blog/")({
   head: () => ({
     meta: [
@@ -57,27 +50,34 @@ function BlogMedia({ destinationSlug, alt }: { destinationSlug: string; alt: str
 }
 
 function BlogPage() {
+  const t = useT();
   const gridRef = useReveal<HTMLDivElement>();
+  const blogLd = jsonLd([
+    itemListJsonLd(
+      "Skynova travel guides",
+      POSTS.filter((p) => hasArticle(p.slug)).map((p) => ({ name: p.title, path: `/blog/${p.slug}` })),
+    ),
+    breadcrumbJsonLd([{ name: t("nav.home"), path: "/" }, { name: t("nav.blog") }]),
+  ]);
   const featured = POSTS.find((p) => p.slug === "kenya-safari-basics")!;
   const rest = POSTS.filter((p) => p.slug !== featured.slug);
   const featuredReadable = hasArticle(featured.slug);
 
   return (
     <>
-      <StructuredData json={BLOG_LD} />
+      <StructuredData json={blogLd} />
       <Nav />
       <main>
         <section className="site-section pb-0">
           <div className="site-container">
-            <span className="blog-badge">Blog</span>
-            <h1 className="blog-heading">Trip ideas worth reading.</h1>
+            <span className="blog-badge">{t("nav.blog")}</span>
+            <h1 className="blog-heading">{t("blog.heading")}</h1>
             <div className="blog-header-row">
               <p className="blog-subtitle">
-                Destination guides, planning tips, and notes from the road -- each one links back to
-                where you can start booking.
+                {t("blog.subtitle")}
               </p>
               <Link to="/destinations" className="btn-blog-pill">
-                View all destinations
+                {t("blog.viewAllDestinations")}
               </Link>
             </div>
           </div>
@@ -94,7 +94,7 @@ function BlogPage() {
                 <BlogMedia destinationSlug={featured.destinationSlug} alt={featured.title} />
               )}
               <div className="blog-featured-content">
-                <span className="blog-featured-badge">Must read</span>
+                <span className="blog-featured-badge">{t("blog.mustRead")}</span>
                 <h2 className="blog-featured-title">
                   {featuredReadable ? (
                     <Link to="/blog/$slug" params={{ slug: featured.slug }} className="blog-title-link">
@@ -107,11 +107,11 @@ function BlogPage() {
                 <p className="blog-featured-excerpt">{featured.excerpt}</p>
                 {featuredReadable ? (
                   <Link to="/blog/$slug" params={{ slug: featured.slug }} className="btn-underline mt-4 self-start">
-                    Read the guide <span className="arrow">&rarr;</span>
+                    {t("blog.readGuide")} <span className="arrow">&rarr;</span>
                   </Link>
                 ) : null}
                 <div className="blog-featured-footer">
-                  <span className="blog-author">By Skynova Agency</span>
+                  <span className="blog-author">{t("blog.author")}</span>
                   <span className={`blog-category-badge ${TAG_CLASSES[featured.tag] ?? ""}`}>
                     {featured.tag}
                   </span>
@@ -155,11 +155,11 @@ function BlogPage() {
                       <span className="site-ink-muted text-xs">{post.readTime}</span>
                       {readable ? (
                         <Link to="/blog/$slug" params={{ slug: post.slug }} className="btn-underline">
-                          Read article <span className="arrow">&rarr;</span>
+                          {t("blog.readArticle")} <span className="arrow">&rarr;</span>
                         </Link>
                       ) : destination ? (
                         <Link to="/destinations/$slug" params={{ slug: destination.slug }} className="btn-underline">
-                          Explore {destination.name} <span className="arrow">&rarr;</span>
+                          {t("blog.explore", { name: destination.name })} <span className="arrow">&rarr;</span>
                         </Link>
                       ) : null}
                     </div>

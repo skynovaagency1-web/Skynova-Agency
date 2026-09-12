@@ -7,6 +7,8 @@ import { getPostBySlug, POSTS, PHOTO_SLUGS, TAG_CLASSES } from "@/data/blog-post
 import { getArticle, hasArticle, type Block } from "@/data/blog-articles";
 import { getDestinationBySlug } from "@/data/destinations";
 import { absUrl, breadcrumbJsonLd, jsonLd } from "@/lib/seo";
+import { useT, useLocale } from "@/lib/i18n-strings";
+import { LOCALE_TAGS } from "@/lib/i18n";
 import {
   flightsLink,
   hotelsLink,
@@ -133,6 +135,8 @@ function ArticleBlock({ block }: { block: Block }) {
 }
 
 function ArticlePage() {
+  const t = useT();
+  const locale = useLocale();
   const { post, article } = Route.useLoaderData();
   const destination = getDestinationBySlug(post.destinationSlug);
   const hasPhoto = PHOTO_SLUGS.has(post.destinationSlug);
@@ -142,7 +146,7 @@ function ArticlePage() {
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
 
   const published = new Date(article.published);
-  const publishedLabel = published.toLocaleDateString("en-GB", {
+  const publishedLabel = published.toLocaleDateString(LOCALE_TAGS[locale], {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -161,7 +165,7 @@ function ArticlePage() {
     dateModified: article.updated ?? article.published,
     url: articleUrl,
     mainEntityOfPage: { "@type": "WebPage", "@id": articleUrl },
-    inLanguage: "en",
+    inLanguage: LOCALE_TAGS[locale],
     ...(hasPhoto ? { image: absUrl(`/assets/destinations/${post.destinationSlug}.webp`) } : {}),
     author: { "@type": "Organization", name: "Skynova Agency" },
     publisher: { "@type": "Organization", name: "Skynova Agency", logo: { "@type": "ImageObject", url: absUrl("/assets/brand/apple-touch-icon.png") } },
@@ -171,7 +175,11 @@ function ArticlePage() {
   // no article text can ever close the <script> tag early.
   const structuredData = jsonLd([
     articleLd,
-    breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "Blog", path: "/blog" }, { name: post.title }]),
+    breadcrumbJsonLd([
+      { name: t("nav.home"), path: "/" },
+      { name: t("nav.blog"), path: "/blog" },
+      { name: post.title },
+    ]),
   ]);
 
   return (
@@ -195,13 +203,13 @@ function ArticlePage() {
             <div className="article-hero-copy">
               <div className="site-container">
                 <Link to="/blog" className="article-back">
-                  <span className="arrow">&larr;</span> All articles
+                  <span className="arrow">&larr;</span> {t("blog.allArticles")}
                 </Link>
                 <span className={`blog-category-badge ${TAG_CLASSES[post.tag] ?? ""}`}>{post.tag}</span>
                 <h1 className="article-title">{post.title}</h1>
                 <p className="article-dek">{article.dek}</p>
                 <div className="article-meta">
-                  <span>By Skynova Agency</span>
+                  <span>{t("blog.author")}</span>
                   <span aria-hidden="true">·</span>
                   <time dateTime={article.published}>{publishedLabel}</time>
                   <span aria-hidden="true">·</span>
@@ -218,19 +226,19 @@ function ArticlePage() {
               ))}
 
               <p className="article-disclosure">
-                Skynova Agency runs on the Travelpayouts affiliate network -- booking links may earn a
-                commission at no extra cost to you.
+                {t("footer.affiliate")}
               </p>
 
               {destination ? (
                 <div className="article-dest-link">
-                  <p className="site-eyebrow mb-2">Start planning</p>
+                  <p className="site-eyebrow mb-2">{t("blog.startPlanning")}</p>
                   <Link
                     to="/destinations/$slug"
                     params={{ slug: destination.slug }}
                     className="btn-underline"
                   >
-                    {destination.flag} Explore {destination.name} <span className="arrow">&rarr;</span>
+                    {destination.flag} {t("blog.explore", { name: destination.name })}{" "}
+                    <span className="arrow">&rarr;</span>
                   </Link>
                 </div>
               ) : null}
@@ -240,7 +248,7 @@ function ArticlePage() {
           {related.length > 0 && (
             <section className="site-section">
               <div className="site-container">
-                <p className="site-eyebrow mb-5">Keep reading</p>
+                <p className="site-eyebrow mb-5">{t("blog.keepReading")}</p>
                 <div className="article-related">
                   {related.map((r) => {
                     const readable = hasArticle(r.slug);
