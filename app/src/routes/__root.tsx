@@ -22,6 +22,13 @@ import { OutboundClickTracker } from "@/components/site/OutboundClickTracker";
 import { PageViewTracker } from "@/components/site/PageViewTracker";
 import { NotFound } from "@/components/site/NotFound";
 import { absUrl } from "@/lib/seo";
+import {
+  DEFAULT_LOCALE,
+  LOCALE_TAGS,
+  PUBLISHED_LOCALES,
+  localePath,
+  type Locale,
+} from "@/lib/i18n";
 
 const DEFAULT_TITLE = "Skynova Agency — Premium Travel Booking";
 const DEFAULT_DESCRIPTION =
@@ -143,7 +150,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient; locale: Locale }>()({
   head: () => buildHead(appMeta),
   shellComponent: RootShell,
   component: RootComponent,
@@ -152,8 +159,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: ReactNode }) {
+  const locale = useCurrentLocale();
   return (
-    <html lang="en" style={{ colorScheme: "light" }}>
+    <html lang={LOCALE_TAGS[locale]} style={{ colorScheme: "light" }}>
       <head>
         <HeadContent />
       </head>
@@ -168,6 +176,15 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+/** The locale this router was built for. Router context rather than the URL,
+ *  because the /fr prefix is the router's `basepath` -- by the time a
+ *  component sees `location.pathname`, the prefix has been stripped off. */
+function useCurrentLocale(): Locale {
+  const router = useRouter();
+  const context = router.options.context as { locale?: Locale } | undefined;
+  return context?.locale ?? DEFAULT_LOCALE;
+}
+
 /** Absolute canonical URL for the current route.
  *
  * Search engines need one address per page. The site answers on both the
@@ -179,10 +196,42 @@ function RootShell({ children }: { children: ReactNode }) {
  * cannot do. Search params are deliberately dropped: ?ref= referral links
  * and filter params must not each register as a separate page. */
 function CanonicalLink() {
+  const locale = useCurrentLocale();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   // Collapse any trailing slash so /blog and /blog/ never disagree.
   const clean = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
-  return <link rel="canonical" href={`https://skynovaagency.com${clean}`} />;
+  // localePath re-applies the prefix the basepath stripped, so the French copy
+  // of a page is canonical to /fr/... and not to the English original.
+  return <link rel="canonical" href={absUrl(localePath(clean, locale))} />;
+}
+
+/**
+ * hreflang alternates.
+ *
+ * Emitted only once more than one locale is published, and only for locales
+ * whose pages actually exist: hreflang pointing at an untranslated copy tells
+ * Google the two URLs are the same page in another language when they are the
+ * same page in the same language, which is a duplicate-content signal rather
+ * than a translation one. x-default goes to English, the version served to
+ * anyone whose language we do not have.
+ */
+function AlternateLinks() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  if (PUBLISHED_LOCALES.length < 2) return null;
+  const clean = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
+  return (
+    <>
+      {PUBLISHED_LOCALES.map((loc) => (
+        <link
+          key={loc}
+          rel="alternate"
+          hrefLang={LOCALE_TAGS[loc]}
+          href={absUrl(localePath(clean, loc))}
+        />
+      ))}
+      <link rel="alternate" hrefLang="x-default" href={absUrl(localePath(clean, DEFAULT_LOCALE))} />
+    </>
+  );
 }
 
 function RootComponent() {
@@ -192,6 +241,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <CanonicalLink />
+        <AlternateLinks />
         {/* Site-wide, not just the homepage. It anchors to #how-it-works
             where that exists and otherwise starts at the top of the page. */}
         <FlightRail />

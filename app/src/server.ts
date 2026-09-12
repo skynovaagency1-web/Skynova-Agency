@@ -5,6 +5,7 @@ import { renderErrorPage } from "./lib/error-page";
 import { applySecurityHeaders } from "./lib/security-headers.server";
 import { handleOutboundClick } from "./lib/outbound-clicks.server";
 import { handlePageView } from "./lib/page-views.server";
+import { DEFAULT_LOCALE, LOCALES } from "./lib/i18n";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -119,6 +120,49 @@ function redirectLegacyUrl(request: Request): Response | null {
   return null;
 }
 
+/** Path prefixes for the non-default locales: ["/fr"]. English has none. */
+const LOCALE_PREFIXES = LOCALES.filter((l) => l !== DEFAULT_LOCALE).map((l) => `/${l}`);
+
+/**
+ * Files that exist once, at the root, whatever language a visitor is reading.
+ * Reachable under a locale prefix they would be a second crawlable copy --
+ * /fr/sitemap.xml served the same sitemap of canonical English URLs, which is
+ * precisely the duplicate this file's other redirects exist to prevent.
+ */
+const ROOT_ONLY_FILES = ["/sitemap.xml", "/robots.txt", "/llms.txt", "/site.webmanifest"];
+
+/**
+ * Locale prefixes, normalised before the router sees them.
+ *
+ * Returns a Response to send, a rewritten Request to continue with, or null.
+ *
+ * The bare prefix is the interesting case. "/fr" made the router answer 307
+ * to "/fr/" -- while the page at "/fr/" declares its canonical as "/fr",
+ * so a crawler was bounced between the two forms. Rewriting the path here
+ * means "/fr" renders its index directly, with a 200, at the URL the page
+ * claims for itself. The visitor's address bar never changes.
+ */
+function handleLocalePath(request: Request): Request | Response | null {
+  const url = new URL(request.url);
+  const prefix = LOCALE_PREFIXES.find(
+    (p) => url.pathname === p || url.pathname.startsWith(`${p}/`),
+  );
+  if (!prefix) return null;
+
+  const rest = url.pathname.slice(prefix.length);
+
+  if (ROOT_ONLY_FILES.includes(rest)) {
+    return Response.redirect(new URL(rest, url.origin).toString(), 301);
+  }
+
+  if (rest === "") {
+    url.pathname = `${prefix}/`;
+    return new Request(url, request);
+  }
+
+  return null;
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
@@ -127,6 +171,10 @@ export default {
 
       const legacy = redirectLegacyUrl(request);
       if (legacy) return legacy;
+
+      const localeResult = handleLocalePath(request);
+      if (localeResult instanceof Response) return localeResult;
+      if (localeResult) request = localeResult;
 
       // Affiliate click counter. Handled here, ahead of the SSR handler,
       // because the browser sends these with navigator.sendBeacon -- a plain
