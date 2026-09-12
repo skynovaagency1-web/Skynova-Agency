@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 
 import { HeroCards } from "@/components/site/HeroCards";
+import { DayNightToggle } from "@/components/site/DayNightToggle";
+import { applyThemeMode, getThemeMode, DEFAULT_THEME } from "@/lib/theme-mode";
 
 // Beats sourced from video are shipped as frame sequences and scrubbed by
 // scroll rather than played. A looping <video> runs on its own clock, so it
@@ -72,6 +74,21 @@ export function Hero() {
   // unmount it entirely (not just hide it) so it stops decoding/rendering
   // and every section below behaves like a normal page.
   const [showFixedBg, setShowFixedBg] = useState(true);
+
+  // Night mode is scoped to this page by mounting, not by a route check: the
+  // attribute goes on <html> (so CSS can reach .site-body, which lives on
+  // <body>, outside this tree) and comes off again when the hero unmounts.
+  // Without that, choosing night here and clicking through to /hotels would
+  // leave a dark ground under sections that have no dark styles at all.
+  //
+  // The stored answer is applied after hydration rather than before paint:
+  // the server renders day, so a night visitor sees one light frame. A
+  // pre-paint script in the document shell would fix that, but it would also
+  // apply the attribute on every page before this component could scope it.
+  useEffect(() => {
+    applyThemeMode(getThemeMode());
+    return () => applyThemeMode(DEFAULT_THEME);
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -417,6 +434,7 @@ export function Hero() {
               </div>
             </div>
           </div>
+          <DayNightToggle className="hero-daynight" />
           <HeroCards ref={cardsRef} />
           <p ref={hintRef} className="hero-scroll-hint">
             Scroll

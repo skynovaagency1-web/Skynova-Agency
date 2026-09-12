@@ -5404,3 +5404,103 @@ html.lenis body { height: auto; }
 @media (prefers-reduced-motion: reduce) {
   .daynight-knob { transition: none; }
 }
+
+/* ==========================================================================
+   Night mode (homepage only)
+   --------------------------------------------------------------------------
+   Applied as data-theme="night" on <html> by lib/theme-mode.ts, and removed
+   again when the hero unmounts (components/site/Hero.tsx) -- so leaving the
+   homepage cannot strand another page with a dark ground under light
+   sections.
+
+   The palette inverts the surface tokens and lifts the two that are read as
+   TEXT (--sky-ink, --sky-coral-deep) into light values. --sky-coral-ink is
+   left dark on purpose: it is the ink that sits ON the gold fill, which is
+   still gold at night.
+
+   Three homepage rules use --sky-ink as a dark SURFACE rather than as text,
+   so inverting the token alone would turn them cream with light text on top.
+   They are pinned below. Elsewhere on the site the same pattern exists
+   (blog chips, FAQ button, auth perks), but night mode never reaches those
+   pages, so they are deliberately not touched -- and .kbyg-band and
+   .route-step-body pair the token with color: var(--sky-bg), so they invert
+   correctly on their own.
+   ========================================================================== */
+:root[data-theme="night"] {
+  --sky-bg: #100d08;
+  --sky-bg-raised: #1a150d;
+  --sky-line: #33291a;
+  --sky-ink: #f5efe2;
+  --sky-ink-muted: #b9ad96;
+  --sky-coral: #d9b13d;
+  /* Read as text in ~40 rules, now on a dark ground, so it lifts from
+     #583714 to a light gold: 11.3:1 on --sky-bg, 9.8:1 on --sky-bg-raised. */
+  --sky-coral-deep: #f3d78a;
+  --sky-coral-wash: rgba(217, 177, 61, 0.16);
+  --sky-glass-bg: rgba(26, 21, 13, 0.52);
+  --sky-glass-bg-strong: rgba(26, 21, 13, 0.82);
+  --sky-glass-edge: linear-gradient(
+    180deg,
+    rgba(255, 236, 190, 0.5) 0%,
+    rgba(255, 236, 190, 0.14) 22%,
+    rgba(255, 236, 190, 0) 42%,
+    rgba(255, 236, 190, 0) 58%,
+    rgba(255, 236, 190, 0.1) 78%,
+    rgba(255, 236, 190, 0.42) 100%
+  );
+  --sky-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5), 0 8px 20px -6px rgba(0, 0, 0, 0.6);
+  --sky-shadow-md: 0 2px 4px rgba(0, 0, 0, 0.5), 0 16px 32px -12px rgba(0, 0, 0, 0.66);
+  --sky-shadow-float:
+    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 18px 40px -16px rgba(0, 0, 0, 0.7),
+    0 44px 84px -44px rgba(0, 0, 0, 0.7);
+}
+
+/* The page ground. Its gold radials are hardcoded, so the token swap alone
+   would leave a bright wash over a dark page. */
+:root[data-theme="night"] .site-body {
+  background:
+    radial-gradient(1100px 620px at 12% -8%, rgba(217, 177, 61, 0.14), transparent 60%),
+    radial-gradient(900px 520px at 102% 6%, rgba(217, 177, 61, 0.1), transparent 55%),
+    radial-gradient(70% 45% at 50% 100%, rgba(217, 177, 61, 0.08), transparent 60%),
+    var(--sky-bg);
+}
+
+/* The bright band under the hero: five cream and gold gradients, all
+   hardcoded, and the single largest light surface on the page. */
+:root[data-theme="night"] .hero-afterglow {
+  background:
+    radial-gradient(140% 180% at 12% -25%, rgba(90, 70, 28, 0.55), transparent 55%),
+    radial-gradient(120% 160% at 100% 130%, rgba(60, 46, 16, 0.5), transparent 60%),
+    linear-gradient(155deg, rgba(28, 22, 12, 0.92) 0%, rgba(22, 17, 9, 0.94) 32%, rgba(18, 14, 8, 0.95) 68%, rgba(16, 13, 8, 0.96) 100%);
+}
+:root[data-theme="night"] .hero-afterglow::before {
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 236, 190, 0.12) 45%, rgba(255, 236, 190, 0.04) 52%, transparent 65%);
+}
+
+/* Dark surfaces that would otherwise invert to cream, on this page only. */
+:root[data-theme="night"] .newsletter-section { background: var(--sky-bg-raised); }
+:root[data-theme="night"] .svc-marquee { background: var(--sky-bg-raised); }
+:root[data-theme="night"] .svc-marquee::before { background: linear-gradient(90deg, var(--sky-bg-raised), transparent); }
+:root[data-theme="night"] .svc-marquee::after { background: linear-gradient(270deg, var(--sky-bg-raised), transparent); }
+
+/* The hero frames are daylight footage -- runway, cabin, window. A grade
+   cools and darkens them to sit with the rest; it is a compromise, not a
+   substitute for night frames exported from the source clips. */
+:root[data-theme="night"] .hero-seq-layer,
+:root[data-theme="night"] .hero-video-fixed-el {
+  filter: brightness(0.62) saturate(0.82) contrast(1.06);
+}
+
+/* The toggle itself, sitting over the hero. */
+.hero-daynight {
+  position: absolute;
+  inset-block-start: 5.25rem;
+  inset-inline-end: clamp(1rem, 4vw, 2.5rem);
+  z-index: 4;
+}
+@media (max-width: 640px) {
+  .hero-daynight { inset-block-start: 4.5rem; }
+  .hero-daynight .daynight-label { display: none; }
+  .hero-daynight { padding-inline: 0.35rem; }
+}
