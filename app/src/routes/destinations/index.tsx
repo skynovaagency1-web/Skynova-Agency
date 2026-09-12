@@ -13,6 +13,7 @@ import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { StackedCarousel } from "@/components/site/StackedCarousel";
 import { absUrl, jsonLd } from "@/lib/seo";
 import { REGION_ORDER, getDestinationsByRegion, DESTINATIONS, type Region } from "@/data/destinations";
+import { useT } from "@/lib/i18n-strings";
 
 // An ItemList of every destination, so the index is understood as a
 // collection page rather than 25 unrelated links. Built once at module
@@ -68,6 +69,7 @@ function findAll(slugs: string[]) {
 }
 
 function DestinationsIndex() {
+  const t = useT();
   const { region } = Route.useSearch();
   const trending = findAll(TRENDING_SLUGS);
   const featured = findAll(FEATURED_SLUGS);
@@ -99,14 +101,13 @@ function DestinationsIndex() {
       <main>
         <section className="site-section">
           <div className="site-container">
-            <Breadcrumbs trail={[{ name: "Home", path: "/" }, { name: "Destinations" }]} />
-            <p className="site-eyebrow mb-3 mt-3">Destinations</p>
+            <Breadcrumbs trail={[{ name: t("nav.home"), path: "/" }, { name: t("nav.destinations") }]} />
+            <p className="site-eyebrow mb-3 mt-3">{t("nav.destinations")}</p>
             <h1 className="site-h2 max-w-2xl text-3xl md:text-5xl">
-              {DESTINATIONS.length} places, {REGION_ORDER.length} regions, one booking flow.
+              {t("dest.heading", { places: DESTINATIONS.length, regions: REGION_ORDER.length })}
             </h1>
             <p className="site-ink-muted mt-4 max-w-xl text-base leading-relaxed">
-              Every destination below routes straight into flights, stays, cars and tours for
-              that country -- no separate search each time.
+              {t("dest.intro")}
             </p>
           </div>
         </section>
@@ -115,15 +116,10 @@ function DestinationsIndex() {
           <div className="site-container">
             <StackedCarousel
               items={trending}
-              eyebrow="Trending now"
-              heading="Where to go next"
-              intro={
-                <>
-                  Our pick of {trending.length} places worth a look this season &mdash; choose one to bring it
-                  forward, or open the full directory.
-                </>
-              }
-              label="Trending destinations"
+              eyebrow={t("dest.trendingEyebrow")}
+              heading={t("dest.trendingHeading")}
+              intro={t("dest.trendingIntro", { count: trending.length })}
+              label={t("dest.trendingLabel")}
               moreHref="#directory"
             />
           </div>
@@ -131,17 +127,17 @@ function DestinationsIndex() {
 
         <section className="site-section pt-0">
           <div className="site-container">
-            <p className="site-eyebrow mb-5">Featured destinations</p>
+            <p className="site-eyebrow mb-5">{t("dest.featured")}</p>
             <div ref={featuredRef} className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
               {featured.map((d) => (
                 <div key={d.slug} className="relative h-full">
                   <Link to="/destinations/$slug" params={{ slug: d.slug }} className="block h-full">
                     <TiltCard className="dest-card glass-bezel">
-                      <span className="dest-pill-featured">Featured</span>
+                      <span className="dest-pill-featured">{t("dest.featuredPill")}</span>
                       <div className="dest-card-media">
                         <img
                           src={`/assets/destinations/${d.slug}.webp`}
-                          alt={`${d.name} travel scene`}
+                          alt={t("dest.photoAlt", { name: d.name })}
                           loading="lazy"
                         />
                       </div>
@@ -161,25 +157,25 @@ function DestinationsIndex() {
         <section id="directory" className="site-section pt-0 scroll-mt-24">
           <div className="site-container">
             <div className="directory-head">
-              <p className="site-eyebrow">Full directory</p>
+              <p className="site-eyebrow">{t("dest.directory")}</p>
               <GlassToggle
-                ariaLabel="Directory view"
+                ariaLabel={t("dest.directoryView")}
                 value={view}
                 onChange={setView}
                 options={[
-                  { value: "region", label: "By region" },
-                  { value: "az", label: "A–Z" },
+                  { value: "region", label: t("nav.byRegion") },
+                  { value: "az", label: t("dest.az") },
                 ]}
               />
             </div>
             {view === "region" ? (
-            <div className="region-filter-bar" role="group" aria-label="Filter destinations by region">
+            <div className="region-filter-bar" role="group" aria-label={t("dest.filterAria")}>
               <button
                 type="button"
                 className={`region-filter-btn${activeRegion === "all" ? " is-active" : ""}`}
                 onClick={() => selectRegion("all")}
               >
-                All
+                {t("reviews.all")}
               </button>
               {REGION_ORDER.map(({ region }) => (
                 <button

@@ -750,6 +750,29 @@ export const EN = {
   "account.session": "Session",
   "account.signedInAs": "Signed in as {email}.",
   "account.signingOut": "Signing out\u2026",
+
+  "dest.heading": "{places} places, {regions} regions, one booking flow.",
+  "dest.intro":
+    "Every destination below routes straight into flights, stays, cars and tours for that country -- no separate search each time.",
+  "dest.trendingEyebrow": "Trending now",
+  "dest.trendingHeading": "Where to go next",
+  "dest.trendingIntro":
+    "Our pick of {count} places worth a look this season \u2014 choose one to bring it forward, or open the full directory.",
+  "dest.trendingLabel": "Trending destinations",
+  "dest.featured": "Featured destinations",
+  "dest.featuredPill": "Featured",
+  "dest.photoAlt": "{name} travel scene",
+  "dest.directory": "Full directory",
+  "dest.directoryView": "Directory view",
+  "dest.az": "A\u2013Z",
+  "dest.filterAria": "Filter destinations by region",
+
+  "collections.headline": "{collections} ways into {destinations} destinations.",
+  "collections.intro":
+    "Most people do not start with a country -- they start with a kind of trip. These are the themes our destinations group into, and every one of them links straight through to booking.",
+  "collections.destCount": "{count} destinations",
+  "collections.prev": "Previous collection",
+  "collections.next": "Next collection",
 } as const;
 
 export type TKey = keyof typeof EN;
@@ -1506,6 +1529,29 @@ const FR: Dict = {
   "account.session": "Session",
   "account.signedInAs": "Connect\u00e9 en tant que {email}.",
   "account.signingOut": "D\u00e9connexion\u2026",
+
+  "dest.heading": "{places} destinations, {regions} r\u00e9gions, un seul parcours de r\u00e9servation.",
+  "dest.intro":
+    "Chaque destination ci-dessous m\u00e8ne directement aux vols, h\u00e9bergements, voitures et excursions du pays -- sans refaire une recherche \u00e0 chaque fois.",
+  "dest.trendingEyebrow": "Tendances du moment",
+  "dest.trendingHeading": "O\u00f9 aller ensuite",
+  "dest.trendingIntro":
+    "Notre s\u00e9lection de {count} destinations \u00e0 regarder cette saison \u2014 choisissez-en une pour la mettre en avant, ou ouvrez l\u2019annuaire complet.",
+  "dest.trendingLabel": "Destinations tendance",
+  "dest.featured": "Destinations en vedette",
+  "dest.featuredPill": "En vedette",
+  "dest.photoAlt": "Paysage de voyage : {name}",
+  "dest.directory": "Annuaire complet",
+  "dest.directoryView": "Affichage de l\u2019annuaire",
+  "dest.az": "A\u2013Z",
+  "dest.filterAria": "Filtrer les destinations par r\u00e9gion",
+
+  "collections.headline": "{collections} fa\u00e7ons d\u2019explorer {destinations} destinations.",
+  "collections.intro":
+    "La plupart des gens ne commencent pas par un pays -- ils commencent par un type de voyage. Voici les th\u00e8mes qui regroupent nos destinations, et chacun m\u00e8ne directement \u00e0 la r\u00e9servation.",
+  "collections.destCount": "{count} destinations",
+  "collections.prev": "Collection pr\u00e9c\u00e9dente",
+  "collections.next": "Collection suivante",
 };
 
 const DICTS: Record<Locale, Dict> = { en: EN, fr: FR };

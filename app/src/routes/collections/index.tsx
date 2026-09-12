@@ -9,6 +9,7 @@ import { StructuredData } from "@/components/StructuredData";
 import { breadcrumbJsonLd, itemListJsonLd, jsonLd } from "@/lib/seo";
 import { COLLECTIONS, collectionDestinations } from "@/data/collections";
 import { PHOTO_SLUGS } from "@/data/destinations";
+import { useT, useLocale } from "@/lib/i18n-strings";
 
 /** Written out, as the headline always was. */
 function numberWords(n: number): string {
@@ -28,16 +29,7 @@ const capitalise = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
  *  the 42 destinations sits in a collection -- and "destinations", because
  *  Martinique, Guadeloupe and the Pacific territories are not countries. */
 const DESTINATION_COUNT = new Set(COLLECTIONS.flatMap((c) => c.destinationSlugs)).size;
-const HEADLINE = `${capitalise(numberWords(COLLECTIONS.length))} ways into ${numberWords(DESTINATION_COUNT)} destinations.`;
 const COLLECTIONS_DESCRIPTION = `${capitalise(numberWords(COLLECTIONS.length))} themed ways into our ${DESTINATION_COUNT} destinations -- from ${COLLECTIONS[0].name.toLowerCase()} and ${COLLECTIONS[1].name.toLowerCase()} to ${COLLECTIONS[COLLECTIONS.length - 1].name.toLowerCase()}, each with seasons and booking links.`;
-
-const COLLECTIONS_LD = jsonLd([
-  itemListJsonLd(
-    "Skynova travel collections",
-    COLLECTIONS.map((c) => ({ name: c.name, path: `/collections/${c.slug}` })),
-  ),
-  breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "Collections" }]),
-]);
 
 export const Route = createFileRoute("/collections/")({
   head: () => ({
@@ -64,7 +56,24 @@ function leadPhoto(slug: string): string | null {
 }
 
 function CollectionsIndex() {
+  const t = useT();
+  const locale = useLocale();
   const gridRef = useReveal<HTMLDivElement>();
+  // English spells the numbers out, as this headline always did; French uses
+  // digits, because "douze facons d'explorer quarante-deux destinations" reads
+  // like a word puzzle.
+  const headline = t("collections.headline", {
+    collections:
+      locale === "en" ? capitalise(numberWords(COLLECTIONS.length)) : String(COLLECTIONS.length),
+    destinations: locale === "en" ? numberWords(DESTINATION_COUNT) : String(DESTINATION_COUNT),
+  });
+  const collectionsLd = jsonLd([
+    itemListJsonLd(
+      "Skynova travel collections",
+      COLLECTIONS.map((c) => ({ name: c.name, path: `/collections/${c.slug}` })),
+    ),
+    breadcrumbJsonLd([{ name: t("nav.home"), path: "/" }, { name: t("nav.collections") }]),
+  ]);
   // Coverflow position. Every card stays in the DOM at every position -- the
   // ones off to the sides are transformed away, not unmounted, so all ten
   // links remain in the HTML for crawlers.
@@ -72,19 +81,17 @@ function CollectionsIndex() {
   const last = COLLECTIONS.length - 1;
   return (
     <>
-      <StructuredData json={COLLECTIONS_LD} />
+      <StructuredData json={collectionsLd} />
       <Nav />
       <main>
         <section className="site-section">
           <div className="site-container">
-            <p className="site-eyebrow mb-3">Collections</p>
+            <p className="site-eyebrow mb-3">{t("nav.collections")}</p>
             <h1 className="site-h2 max-w-2xl text-4xl md:text-5xl">
-              {HEADLINE}
+              {headline}
             </h1>
             <p className="site-ink-muted mt-4 max-w-xl text-base leading-relaxed">
-              Most people do not start with a country -- they start with a kind of trip. These are
-              the themes our destinations group into, and every one of them links straight through
-              to booking.
+              {t("collections.intro")}
             </p>
 
             <div ref={gridRef} className="cover-flow mt-10">
@@ -145,7 +152,7 @@ function CollectionsIndex() {
                           </span>
                           <span className="cover-card-title">{c.name}</span>
                           <span className="cover-card-tagline">{c.tagline}</span>
-                          <span className="cover-card-meta">{dests.length} destinations &rarr;</span>
+                          <span className="cover-card-meta">{t("collections.destCount", { count: dests.length })} &rarr;</span>
                         </span>
                       </Link>
                     </div>
@@ -156,7 +163,7 @@ function CollectionsIndex() {
                 <button
                   type="button"
                   className="cover-flow-btn"
-                  aria-label="Previous collection"
+                  aria-label={t("collections.prev")}
                   onClick={() => setActive((n) => (n === 0 ? last : n - 1))}
                 >
                   &larr;
@@ -167,7 +174,7 @@ function CollectionsIndex() {
                 <button
                   type="button"
                   className="cover-flow-btn"
-                  aria-label="Next collection"
+                  aria-label={t("collections.next")}
                   onClick={() => setActive((n) => (n === last ? 0 : n + 1))}
                 >
                   &rarr;
