@@ -7,6 +7,7 @@ import { DESTINATIONS, REGION_ORDER } from "@/data/destinations";
 import { COLLECTIONS } from "@/data/collections";
 import { POSTS } from "@/data/blog-posts";
 import { ARTICLE_SLUGS } from "@/data/blog-articles";
+import { useT, type TKey } from "@/lib/i18n-strings";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -30,30 +31,29 @@ const DESTINATION_COUNT = DESTINATIONS.length;
 const REGION_COUNT = REGION_ORDER.length;
 const GUIDE_COUNT = ARTICLE_SLUGS.length;
 
-const COVERED = [
-  "Flights",
-  "Hotels",
-  "Car rentals",
-  "Airport services",
-  "Events & tickets",
-  "SIM & eSIM",
-  "Tours & activities",
-  "Bike rentals",
+const COVERED: TKey[] = [
+  "service.flights",
+  "service.hotels",
+  "service.carRentals",
+  "service.airportServices",
+  "service.events",
+  "service.esim",
+  "service.tours",
+  "service.bikeRentals",
 ];
 
 function AboutPage() {
+  const t = useT();
   return (
     <>
       <Nav />
       <main>
         <section className="site-section">
           <div className="site-container">
-            <p className="site-eyebrow mb-3">About Skynova Agency</p>
-            <h1 className="site-h2 max-w-2xl text-4xl md:text-6xl">One place for the whole trip.</h1>
+            <p className="site-eyebrow mb-3">{t("about.eyebrow")}</p>
+            <h1 className="site-h2 max-w-2xl text-4xl md:text-6xl">{t("about.heading")}</h1>
             <p className="site-ink-muted mt-5 max-w-xl text-base leading-relaxed">
-              Most trips get planned across six or seven open tabs -- one for flights, another
-              for the hotel, another for the rental car, another for tickets. Skynova Agency puts
-              all of it behind one search, one route in, one place to come back to before you go.
+              {t("about.intro")}
             </p>
           </div>
         </section>
@@ -61,20 +61,15 @@ function AboutPage() {
         <section className="site-section pt-0">
           <div className="site-container grid gap-8 md:grid-cols-2">
             <div className="site-panel p-7">
-              <p className="site-eyebrow mb-3">How it works</p>
+              <p className="site-eyebrow mb-3">{t("about.howItWorks")}</p>
               <p className="text-base leading-relaxed">
-                Skynova Agency does not hold inventory itself. Every flight, room, car, ticket,
-                eSIM and tour booked through the site is fulfilled by an established travel
-                partner -- we route each search to the right one and get out of the way at
-                checkout.
+                {t("about.howCopy")}
               </p>
             </div>
             <div className="site-panel p-7">
-              <p className="site-eyebrow mb-3">How we're paid</p>
+              <p className="site-eyebrow mb-3">{t("about.howPaid")}</p>
               <p className="text-base leading-relaxed">
-                We run on the Travelpayouts affiliate network. When a booking completes with one
-                of our partners, we earn a commission at no extra cost to the traveler -- the
-                price shown at checkout is the partner's own price.
+                {t("about.paidCopy")}
               </p>
             </div>
           </div>
@@ -82,23 +77,23 @@ function AboutPage() {
 
         <section className="site-section pt-0">
           <div className="site-container">
-            <p className="site-eyebrow mb-5">Where we are today</p>
+            <p className="site-eyebrow mb-5">{t("about.whereToday")}</p>
             <div className="about-stats">
               <div className="about-stat">
                 <p className="about-stat-num">{DESTINATION_COUNT}</p>
-                <p className="about-stat-label">destination guides</p>
+                <p className="about-stat-label">{t("about.statGuides")}</p>
               </div>
               <div className="about-stat">
                 <p className="about-stat-num">{REGION_COUNT}</p>
-                <p className="about-stat-label">regions covered</p>
+                <p className="about-stat-label">{t("about.statRegions")}</p>
               </div>
               <div className="about-stat">
                 <p className="about-stat-num">{COLLECTIONS.length}</p>
-                <p className="about-stat-label">themed collections</p>
+                <p className="about-stat-label">{t("about.statCollections")}</p>
               </div>
               <div className="about-stat">
                 <p className="about-stat-num">{GUIDE_COUNT}</p>
-                <p className="about-stat-label">written articles</p>
+                <p className="about-stat-label">{t("about.statArticles")}</p>
               </div>
             </div>
           </div>
@@ -107,19 +102,15 @@ function AboutPage() {
         <section className="site-section pt-0">
           <div className="site-container grid gap-8 md:grid-cols-2">
             <div className="site-panel p-7">
-              <p className="site-eyebrow mb-3">What we do not do</p>
+              <p className="site-eyebrow mb-3">{t("about.whatNot")}</p>
               <p className="text-base leading-relaxed">
-                We do not take your payment, hold your booking, or set the price. That all happens
-                with the partner. If something needs changing after you book, they are the ones who
-                can do it -- which is why their details are on your confirmation, not ours.
+                {t("about.whatNotCopy")}
               </p>
             </div>
             <div className="site-panel p-7">
-              <p className="site-eyebrow mb-3">Why the guides exist</p>
+              <p className="site-eyebrow mb-3">{t("about.whyGuides")}</p>
               <p className="text-base leading-relaxed">
-                Every destination here has a written guide rather than a stock paragraph, because
-                the useful part of planning a trip is knowing what a place actually costs, when to
-                go, and what the guidebook leaves out.
+                {t("about.whyGuidesCopy")}
               </p>
             </div>
           </div>
@@ -127,11 +118,11 @@ function AboutPage() {
 
         <section className="site-section pt-0">
           <div className="site-container">
-            <p className="site-eyebrow mb-5">What&rsquo;s covered</p>
+            <p className="site-eyebrow mb-5">{t("about.whatsCovered")}</p>
             <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-              {COVERED.map((item) => (
-                <div key={item} className="dest-mini-card">
-                  <p className="font-semibold">{item}</p>
+              {COVERED.map((key) => (
+                <div key={key} className="dest-mini-card">
+                  <p className="font-semibold">{t(key)}</p>
                 </div>
               ))}
             </div>

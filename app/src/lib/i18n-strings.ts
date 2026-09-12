@@ -261,6 +261,57 @@ export const EN = {
   "home.closingCopy":
     "Flights, stays, cars, airport help, eSIM and tours -- start with a destination or a vertical, we'll route the rest.",
   "home.talkToUs": "Talk to us",
+
+  "contact.heading": "Talk to Skynova Agency.",
+  "contact.intro":
+    "We usually reply within one working day. If your question is about a booking you have already made, the partner who took the payment can help fastest -- your confirmation email came from them.",
+  "contact.received": "Message received",
+  "contact.thanksNamed": "Thanks {name} -- we have your message and will reply to ",
+  "contact.thanksAnon": "Thanks for getting in touch -- we have your message and will reply to ",
+  "contact.nothingElse":
+    "Nothing else is needed from you. If it is urgent and about an existing booking, contact the partner directly in the meantime.",
+  "contact.yourName": "Your name",
+  "contact.namePlaceholder": "Jamie Rivera",
+  "contact.emailPlaceholder": "you@example.com",
+  "contact.about": "What is it about?",
+  "contact.message": "Message",
+  "contact.messagePlaceholder": "Tell us what you need.",
+  "contact.sending": "Sending\u2026",
+  "contact.send": "Send message",
+  "contact.error": "Something went wrong. Please try again.",
+  "contact.alreadyBooked": "Already booked?",
+  "contact.alreadyBookedCopy":
+    "Skynova does not hold your booking -- the partner does, and they took the payment. For changes, cancellations or refunds, contact them directly. Their details are on your confirmation email.",
+  "contact.commonQuestions": "Common questions",
+  "contact.commonCopy":
+    "Most questions about how booking works, pricing and cancellations are answered already.",
+  "contact.readFaq": "Read the FAQ",
+  "contact.partnerships": "Partnerships",
+  "contact.partnershipsCopy":
+    "Travel brands and affiliate networks -- choose \u201cPartnership\u201d above and we will route it to the right place.",
+
+  "about.eyebrow": "About Skynova Agency",
+  "about.heading": "One place for the whole trip.",
+  "about.intro":
+    "Most trips get planned across six or seven open tabs -- one for flights, another for the hotel, another for the rental car, another for tickets. Skynova Agency puts all of it behind one search, one route in, one place to come back to before you go.",
+  "about.howItWorks": "How it works",
+  "about.howCopy":
+    "Skynova Agency does not hold inventory itself. Every flight, room, car, ticket, eSIM and tour booked through the site is fulfilled by an established travel partner -- we route each search to the right one and get out of the way at checkout.",
+  "about.howPaid": "How we're paid",
+  "about.paidCopy":
+    "We run on the Travelpayouts affiliate network. When a booking completes with one of our partners, we earn a commission at no extra cost to the traveler -- the price shown at checkout is the partner's own price.",
+  "about.whereToday": "Where we are today",
+  "about.statGuides": "destination guides",
+  "about.statRegions": "regions covered",
+  "about.statCollections": "themed collections",
+  "about.statArticles": "written articles",
+  "about.whatNot": "What we do not do",
+  "about.whatNotCopy":
+    "We do not take your payment, hold your booking, or set the price. That all happens with the partner. If something needs changing after you book, they are the ones who can do it -- which is why their details are on your confirmation, not ours.",
+  "about.whyGuides": "Why the guides exist",
+  "about.whyGuidesCopy":
+    "Every destination here has a written guide rather than a stock paragraph, because the useful part of planning a trip is knowing what a place actually costs, when to go, and what the guidebook leaves out.",
+  "about.whatsCovered": "What\u2019s covered",
 } as const;
 
 export type TKey = keyof typeof EN;
@@ -518,6 +569,57 @@ const FR: Dict = {
   "home.closingCopy":
     "Vols, h\u00e9bergements, voitures, services a\u00e9roport, eSIM et excursions -- commencez par une destination ou un service, nous nous occupons du reste.",
   "home.talkToUs": "Parlez-nous",
+
+  "contact.heading": "Parlez \u00e0 Skynova Agency.",
+  "contact.intro":
+    "Nous r\u00e9pondons en g\u00e9n\u00e9ral sous un jour ouvr\u00e9. Si votre question porte sur une r\u00e9servation d\u00e9j\u00e0 effectu\u00e9e, le partenaire qui a encaiss\u00e9 le paiement vous aidera le plus vite -- votre e-mail de confirmation vient de lui.",
+  "contact.received": "Message re\u00e7u",
+  "contact.thanksNamed": "Merci {name} -- nous avons bien re\u00e7u votre message et vous r\u00e9pondrons \u00e0 ",
+  "contact.thanksAnon": "Merci de nous avoir \u00e9crit -- nous avons bien re\u00e7u votre message et vous r\u00e9pondrons \u00e0 ",
+  "contact.nothingElse":
+    "Rien d\u2019autre n\u2019est attendu de votre part. Si c\u2019est urgent et que cela concerne une r\u00e9servation existante, contactez le partenaire directement en attendant.",
+  "contact.yourName": "Votre nom",
+  "contact.namePlaceholder": "Camille Martin",
+  "contact.emailPlaceholder": "vous@exemple.com",
+  "contact.about": "De quoi s\u2019agit-il ?",
+  "contact.message": "Message",
+  "contact.messagePlaceholder": "Dites-nous ce dont vous avez besoin.",
+  "contact.sending": "Envoi\u2026",
+  "contact.send": "Envoyer le message",
+  "contact.error": "Un probl\u00e8me est survenu. Veuillez r\u00e9essayer.",
+  "contact.alreadyBooked": "D\u00e9j\u00e0 r\u00e9serv\u00e9 ?",
+  "contact.alreadyBookedCopy":
+    "Skynova ne d\u00e9tient pas votre r\u00e9servation -- c\u2019est le partenaire, et c\u2019est lui qui a encaiss\u00e9. Pour toute modification, annulation ou remboursement, contactez-le directement. Ses coordonn\u00e9es figurent sur votre e-mail de confirmation.",
+  "contact.commonQuestions": "Questions fr\u00e9quentes",
+  "contact.commonCopy":
+    "La plupart des questions sur la r\u00e9servation, les prix et les annulations ont d\u00e9j\u00e0 une r\u00e9ponse.",
+  "contact.readFaq": "Lire la FAQ",
+  "contact.partnerships": "Partenariats",
+  "contact.partnershipsCopy":
+    "Marques de voyage et r\u00e9seaux d\u2019affiliation -- choisissez \u00ab Partnership \u00bb ci-dessus et nous transmettrons au bon endroit.",
+
+  "about.eyebrow": "\u00c0 propos de Skynova Agency",
+  "about.heading": "Un seul endroit pour tout le voyage.",
+  "about.intro":
+    "La plupart des voyages se pr\u00e9parent dans six ou sept onglets ouverts -- un pour les vols, un pour l\u2019h\u00f4tel, un pour la voiture de location, un pour les billets. Skynova Agency r\u00e9unit tout cela derri\u00e8re une seule recherche, une seule porte d\u2019entr\u00e9e, un seul endroit o\u00f9 revenir avant de partir.",
+  "about.howItWorks": "Comment \u00e7a marche",
+  "about.howCopy":
+    "Skynova Agency ne d\u00e9tient aucun stock. Chaque vol, chambre, voiture, billet, eSIM et excursion r\u00e9serv\u00e9 via le site est assur\u00e9 par un partenaire de voyage \u00e9tabli -- nous orientons chaque recherche vers le bon et nous nous effa\u00e7ons au moment du paiement.",
+  "about.howPaid": "Comment nous sommes r\u00e9mun\u00e9r\u00e9s",
+  "about.paidCopy":
+    "Nous fonctionnons avec le r\u00e9seau d\u2019affiliation Travelpayouts. Lorsqu\u2019une r\u00e9servation aboutit chez l\u2019un de nos partenaires, nous touchons une commission sans co\u00fbt suppl\u00e9mentaire pour le voyageur -- le prix affich\u00e9 au paiement est celui du partenaire.",
+  "about.whereToday": "O\u00f9 nous en sommes",
+  "about.statGuides": "guides de destination",
+  "about.statRegions": "r\u00e9gions couvertes",
+  "about.statCollections": "collections th\u00e9matiques",
+  "about.statArticles": "articles r\u00e9dig\u00e9s",
+  "about.whatNot": "Ce que nous ne faisons pas",
+  "about.whatNotCopy":
+    "Nous n\u2019encaissons pas votre paiement, ne d\u00e9tenons pas votre r\u00e9servation et ne fixons pas le prix. Tout cela se passe chez le partenaire. Si quelque chose doit changer apr\u00e8s la r\u00e9servation, c\u2019est lui qui peut le faire -- et c\u2019est pourquoi ce sont ses coordonn\u00e9es qui figurent sur votre confirmation, pas les n\u00f4tres.",
+  "about.whyGuides": "Pourquoi ces guides existent",
+  "about.whyGuidesCopy":
+    "Chaque destination ici a un guide r\u00e9dig\u00e9 plut\u00f4t qu\u2019un paragraphe g\u00e9n\u00e9rique, parce que l\u2019utile, quand on pr\u00e9pare un voyage, c\u2019est de savoir ce qu\u2019un endroit co\u00fbte vraiment, quand y aller et ce que le guide touristique passe sous silence.",
+  "about.whatsCovered": "Ce qui est couvert",
 };
 
 const DICTS: Record<Locale, Dict> = { en: EN, fr: FR };

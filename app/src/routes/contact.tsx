@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { submitContactMessage, CONTACT_TOPICS } from "@/lib/api/contact.functions";
+import { useT } from "@/lib/i18n-strings";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -35,6 +36,7 @@ function ContactPage() {
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "sent" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+  const t = useT();
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -45,7 +47,7 @@ function ContactPage() {
       setStatus("sent");
     } catch (err) {
       setStatus("error");
-      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      setError(err instanceof Error ? err.message : t("contact.error"));
     }
   }
 
@@ -55,12 +57,10 @@ function ContactPage() {
       <main>
         <section className="site-section">
           <div className="site-container">
-            <p className="site-eyebrow mb-3">Contact</p>
-            <h1 className="site-h2 max-w-2xl text-4xl md:text-6xl">Talk to Skynova Agency.</h1>
+            <p className="site-eyebrow mb-3">{t("nav.contact")}</p>
+            <h1 className="site-h2 max-w-2xl text-4xl md:text-6xl">{t("contact.heading")}</h1>
             <p className="site-ink-muted mt-5 max-w-xl text-base leading-relaxed">
-              We usually reply within one working day. If your question is about a booking you have
-              already made, the partner who took the payment can help fastest -- your confirmation
-              email came from them.
+              {t("contact.intro")}
             </p>
           </div>
         </section>
@@ -70,20 +70,21 @@ function ContactPage() {
             <div>
               {status === "sent" ? (
                 <div className="site-panel p-8">
-                  <p className="site-eyebrow mb-3">Message received</p>
+                  <p className="site-eyebrow mb-3">{t("contact.received")}</p>
                   <p className="text-base leading-relaxed">
-                    Thanks {name.split(" ")[0] || "for getting in touch"} -- we have your message and
-                    will reply to <strong>{email}</strong>.
+                    {name.split(" ")[0]
+                      ? t("contact.thanksNamed", { name: name.split(" ")[0] })
+                      : t("contact.thanksAnon")}
+                    <strong>{email}</strong>.
                   </p>
                   <p className="site-ink-muted mt-3 text-sm leading-relaxed">
-                    Nothing else is needed from you. If it is urgent and about an existing booking,
-                    contact the partner directly in the meantime.
+                    {t("contact.nothingElse")}
                   </p>
                 </div>
               ) : (
                 <form className="site-panel flex flex-col gap-5 p-8" onSubmit={handleSubmit}>
                   <label className="auth-modal-field">
-                    <span>Your name</span>
+                    <span>{t("contact.yourName")}</span>
                     <input
                       type="text"
                       required
@@ -91,24 +92,24 @@ function ContactPage() {
                       autoComplete="name"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder="Jamie Rivera"
+                      placeholder={t("contact.namePlaceholder")}
                     />
                   </label>
 
                   <label className="auth-modal-field">
-                    <span>Email</span>
+                    <span>{t("auth.email")}</span>
                     <input
                       type="email"
                       required
                       autoComplete="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="you@example.com"
+                      placeholder={t("contact.emailPlaceholder")}
                     />
                   </label>
 
                   <label className="auth-modal-field">
-                    <span>What is it about?</span>
+                    <span>{t("contact.about")}</span>
                     <select
                       value={topic}
                       onChange={(e) => setTopic(e.target.value as (typeof CONTACT_TOPICS)[number])}
@@ -122,7 +123,7 @@ function ContactPage() {
                   </label>
 
                   <label className="auth-modal-field">
-                    <span>Message</span>
+                    <span>{t("contact.message")}</span>
                     <textarea
                       required
                       minLength={10}
@@ -130,7 +131,7 @@ function ContactPage() {
                       rows={6}
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      placeholder="Tell us what you need."
+                      placeholder={t("contact.messagePlaceholder")}
                     />
                   </label>
 
@@ -138,7 +139,7 @@ function ContactPage() {
 
                   <button type="submit" className="btn-hero-pill self-start" disabled={status === "submitting"}>
                     <span className="spark" />
-                    <span>{status === "submitting" ? "Sending…" : "Send message"}</span>
+                    <span>{status === "submitting" ? t("contact.sending") : t("contact.send")}</span>
                   </button>
                 </form>
               )}
@@ -146,28 +147,24 @@ function ContactPage() {
 
             <aside className="contact-aside">
               <div className="site-panel p-7">
-                <p className="site-eyebrow mb-3">Already booked?</p>
+                <p className="site-eyebrow mb-3">{t("contact.alreadyBooked")}</p>
                 <p className="site-ink-muted text-sm leading-relaxed">
-                  Skynova does not hold your booking -- the partner does, and they took the payment.
-                  For changes, cancellations or refunds, contact them directly. Their details are on
-                  your confirmation email.
+                  {t("contact.alreadyBookedCopy")}
                 </p>
               </div>
               <div className="site-panel p-7">
-                <p className="site-eyebrow mb-3">Common questions</p>
+                <p className="site-eyebrow mb-3">{t("contact.commonQuestions")}</p>
                 <p className="site-ink-muted text-sm leading-relaxed">
-                  Most questions about how booking works, pricing and cancellations are answered
-                  already.
+                  {t("contact.commonCopy")}
                 </p>
                 <Link to="/faq" className="btn-underline mt-4">
-                  Read the FAQ <span className="arrow">&rarr;</span>
+                  {t("contact.readFaq")} <span className="arrow">&rarr;</span>
                 </Link>
               </div>
               <div className="site-panel p-7">
-                <p className="site-eyebrow mb-3">Partnerships</p>
+                <p className="site-eyebrow mb-3">{t("contact.partnerships")}</p>
                 <p className="site-ink-muted text-sm leading-relaxed">
-                  Travel brands and affiliate networks -- choose “Partnership” above and we will
-                  route it to the right place.
+                  {t("contact.partnershipsCopy")}
                 </p>
               </div>
             </aside>
