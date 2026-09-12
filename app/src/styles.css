@@ -5541,11 +5541,11 @@ html.lenis body { height: auto; }
   border-radius: 999px 999px var(--sky-radius-lg) var(--sky-radius-lg);
   border: 1px solid transparent;
   /* A dark tint, never the light --sky-glass-bg: the media layer sits at
-     z-index:-1, so whatever fills the card paints over the photograph. The
-     46% white fill bleached the brightest image (Events) into a grey blank
-     in day mode while night, being dark, looked correct. No blur here
-     either -- the photo covers the card, so it would render nothing and
-     cost the most on the phones this section is mostly read on. */
+     z-index:-1, so whatever fills the card paints over the photograph, and
+     46% white left every image milky in day mode while night, being dark,
+     deepened them. No blur here either -- the photo covers the card, so it
+     renders nothing and costs the most on the phones this section is
+     mostly read on. */
   background: linear-gradient(rgba(10, 8, 6, 0.22), rgba(10, 8, 6, 0.22)) padding-box, var(--sky-glass-edge) border-box;
   box-shadow: var(--sky-shadow-md);
   color: #f5f0e6;
