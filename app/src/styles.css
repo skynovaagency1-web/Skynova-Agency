@@ -5759,7 +5759,7 @@ html.lenis body { height: auto; }
      truth for the same two properties. */
   will-change: transform, opacity;
 }
-.flyin-plane-img { width: min(96vw, 1040px); height: auto; max-width: none; }
+.flyin-plane-img { width: min(2000px, 165vw); height: auto; max-width: none; }
 
 /* Copy takes the slack between the nav and the cards, and centres in it. */
 .heroflyin-copy {
@@ -5809,7 +5809,7 @@ html.lenis body { height: auto; }
      the plane two screens, so it crossed and was gone inside half a flick. */
   .flyin { height: 190vh; }
   .flyin-sticky { padding-block: max(4.75rem, 8vh) 0.9rem; }
-  .flyin-plane-img { width: min(155vw, 600px); }
+  .flyin-plane-img { width: min(2000px, 190vw); }
   .heroflyin-copy .site-h2 { max-width: 13ch; }
   /* Clears the day/night toggle, which sits top-right at this width. */
   .heroflyin-copy { padding-block-start: 2.4rem; }

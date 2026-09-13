@@ -60,10 +60,13 @@ const ScrollFlyIn = React.forwardRef<HTMLDivElement, ScrollFlyInProps>(
       offset: ["start start", "end end"],
     });
 
-    const x = useTransform(scrollYProgress, [0, 1], ["-105vw", "105vw"]);
+    // The throw has to clear the aircraft's own width, not just the screen's.
+    // At 165vw wide, starting at -105vw left its nose already on screen before
+    // a pixel had been scrolled.
+    const x = useTransform(scrollYProgress, [0, 1], ["-185vw", "120vw"]);
     // Full opacity: the plane crosses in front of the copy, as the reference
     // has it, rather than sitting behind it as atmosphere.
-    const opacity = useTransform(scrollYProgress, [0.04, 0.15, 0.85, 0.96], [0, 1, 1, 0]);
+    const opacity = useTransform(scrollYProgress, [0.02, 0.12, 0.88, 0.98], [0, 1, 1, 0]);
 
     // Reduced motion parks the image mid-flight rather than hiding it: the
     // hero should still have its subject, it just must not move.

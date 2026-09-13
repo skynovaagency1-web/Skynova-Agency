@@ -24,10 +24,13 @@ import { applyThemeMode, getThemeMode, DEFAULT_THEME } from "@/lib/theme-mode";
  *  - the floating cards, which are the same HeroCards component, re-laid-out
  *    rather than re-written.
  *
- * The plane is the site's own cutout, not the reference's CDN image -- the
- * asset was already in the repo, unused, and a local file is one less
- * third-party dependency in the hero's critical path. (The site's CSP would
- * have allowed the remote one: img-src includes https:.)
+ * The plane is the reference component's own top-view jet, chosen by the
+ * owner over the repo's front-on airliner cutout. It is served from this
+ * repo rather than hot-linked from cdn.21st.dev -- a local file is one less
+ * third-party dependency in the hero's critical path -- and at 2000x1157
+ * against the old cutout's 900x420 it is no longer upscaled on a wide
+ * monitor. Its provenance and unstated licence are recorded in
+ * public/assets/landing/CREDITS.md.
  */
 export function HeroScroll() {
   useEffect(() => {
@@ -38,7 +41,7 @@ export function HeroScroll() {
   return (
     <ScrollFlyIn
       className="heroflyin"
-      imageUrl="/assets/landing/plane-cutout.webp"
+      imageUrl="/assets/landing/plane-jet-top.webp"
       imageAlt=""
     >
       <div className="heroflyin-copy site-container">
