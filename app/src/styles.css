@@ -5855,12 +5855,42 @@ html.lenis body { height: auto; }
   }
   .heroflyin-cards .hero-cards::-webkit-scrollbar { display: none; }
   .heroflyin-cards .hero-cards-bottom { display: contents; }
+  /* Sized for a short phone, not a tall one. At 68vw with 16px padding and
+     15px/12.5px type these were 255x227 -- 35% of an iPhone 8's 667px stage,
+     which is what made them read as oversized. */
   .heroflyin-cards .hero-card-info,
   .heroflyin-cards .hero-card-note,
-  .heroflyin-cards .hero-card-stat { flex: 0 0 68vw; width: auto; scroll-snap-align: center; }
+  .heroflyin-cards .hero-card-stat {
+    flex: 0 0 58vw;
+    width: auto;
+    padding: 12px;
+    scroll-snap-align: center;
+  }
   .heroflyin-cards .hero-card-note { display: block; }
-  /* No info card in this corner at phone width, so the toggle returns to it. */
-  .heroflyin-daynight { inset-block-start: 4.4rem; inset-inline-end: 1.15rem; inset-inline-start: auto; }
+  .heroflyin-cards .hero-card-title { font-size: 13.5px; }
+  .heroflyin-cards .hero-card-subtitle { font-size: 12.5px; }
+  .heroflyin-cards .hero-card-text { font-size: 11.5px; line-height: 1.45; margin-top: 6px; }
+  .heroflyin-cards .hero-card-tags { gap: 4px; margin-bottom: 8px; }
+  .heroflyin-cards .hero-card-tag { font-size: 0.56rem; padding: 0.22rem 0.5rem; }
+  .heroflyin-cards .hero-card-thumb { width: 44px; height: 56px; }
+  .heroflyin-cards .hero-card-link { font-size: 11px; }
+  .heroflyin-cards .hero-card-stat-figure { font-size: 22px; }
+  .heroflyin-cards .hero-card-stat-label { font-size: 10px; }
+  .heroflyin-cards .hero-cards { gap: 0.45rem; }
+  /* No info card in this corner at phone width, so the toggle returns to it.
+     Held above the copy rather than beside it: on a 375px screen the headline
+     wraps wider and ran straight into the toggle, which cleared it at 390px. */
+  /* The toggle was anchored to .flyin-content, which is vertically centred
+     in the stage -- so "top" resolved to the middle of the copy and the
+     control floated over the lede on a real phone. Making that box static
+     at this width re-anchors the toggle to the sticky stage itself, which
+     starts just under the nav. */
+  .flyin-content { position: static; }
+  .heroflyin-daynight {
+    inset-block-start: 0.65rem;
+    inset-inline-end: 0.9rem;
+    inset-inline-start: auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
