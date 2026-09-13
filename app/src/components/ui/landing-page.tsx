@@ -4,9 +4,18 @@ import { Globe } from "@/components/ui/globe";
 import { cn } from "@/lib/utils";
 
 /**
- * Scroll-driven globe, after the 21st.dev "landing-page" reference: a set of
- * full-height sections with one globe floating between them, moving and
+ * Scroll-driven stage, after the 21st.dev "landing-page" reference: a set of
+ * full-height sections with one subject floating between them, moving and
  * rescaling as each section takes the viewport.
+ *
+ * The reference hard-codes its globe. This takes the subject as a prop, still
+ * defaulting to that globe, because the homepage flies an airliner there
+ * instead -- and "what travels between the sections" is the caller's decision,
+ * not the stage's. Everything below is the same either way: the stage only
+ * positions and scales whatever it is given.
+ *
+ * (It is still exported from "landing-page.tsx", the reference's own filename,
+ * and the globe is still in components/ui/globe.tsx as the default subject.)
  *
  * THE ONE STRUCTURAL CHANGE: the reference is the whole page. It reads
  * progress from `document.documentElement.scrollHeight`, and its globe, dot
@@ -52,7 +61,7 @@ import { cn } from "@/lib/utils";
  * No "use client": this project has no RSC boundary, and a directive that does
  * nothing invites the next reader to believe there is one.
  */
-export interface ScrollGlobeSection {
+export interface ScrollStageSection {
   id: string;
   badge?: string;
   title: string;
@@ -63,11 +72,53 @@ export interface ScrollGlobeSection {
   actions?: { label: string; href?: string; external?: boolean; variant: "primary" | "secondary" }[];
 }
 
-export interface ScrollGlobeProps extends React.HTMLAttributes<HTMLDivElement> {
-  sections: ScrollGlobeSection[];
-  globeConfig?: { positions: { top: string; left: string; scale: number }[] };
-  /** Passed through to the globe -- the homepage swaps it at night. */
-  globeTextureUrl?: string;
+export interface StagePosition {
+  top: string;
+  left: string;
+  scale: number;
+  /** How much of the subject shows through. "backdrop" is the faint one, for
+   *  a position that sits behind copy. Defaults to backdrop at scale >= 1.8,
+   *  which is what the reference implies by dropping its globe's opacity
+   *  there -- but a narrow viewport needs to say so at any scale, because on a
+   *  phone every position is behind the copy. */
+  role?: "companion" | "backdrop";
+}
+
+export interface ScrollStageProps extends React.HTMLAttributes<HTMLDivElement> {
+  sections: ScrollStageSection[];
+  /** Where the subject sits for each section, in viewport units.
+   *  `narrowPositions` is the same list for viewports under 640px, where
+   *  "beside the copy" does not exist -- at 375px every anchor point overlaps
+   *  the headline, so the subject wants somewhere else entirely rather than
+   *  the wide layout shrunk down. Omitted, the wide positions are used at
+   *  every width. */
+  globeConfig?: { positions: StagePosition[]; narrowPositions?: StagePosition[] };
+  /** The thing that travels between the sections. Defaults to the reference's
+   *  rotating globe. Anything self-contained works -- the stage only positions
+   *  and scales it. */
+  subject?: React.ReactNode;
+  /** A selector for an element FURTHER DOWN THE PAGE that the subject flies to
+   *  and lands on once the sections are done -- the homepage's "Fly anywhere"
+   *  stage, which holds the WebGL globe.
+   *
+   *  Given one, the subject does not stop at the last section. It keeps going:
+   *  receding to almost nothing across the page in between, then growing back
+   *  to the target's own size and position, where `onDock` fires and the
+   *  caller can swap in whatever really lives there. Omitted, the subject
+   *  behaves as the reference's does and ends with the last section. */
+  dockTo?: string;
+  /** Fires true when the subject has arrived on `dockTo`, false when it leaves
+   *  again. The caller hands over to the real thing on true. */
+  onDock?: (docked: boolean) => void;
+  /** The subject's own rendered width at scale 1, in px. The dock target's
+   *  width is divided by this to get the scale at which the two are the same
+   *  size. Defaults to the stage's own globe. */
+  subjectBasePx?: number;
+  /** What fraction of `dockTo`'s width the thing living there actually fills.
+   *  1 means it fills the box. The homepage's WebGL globe does not: it is a
+   *  perspective canvas, and the planet inside it covers about seven tenths of
+   *  the frame, so docking to the full box overshot it by half again. */
+  dockFill?: number;
 }
 
 const defaultGlobeConfig = {
@@ -81,30 +132,79 @@ const defaultGlobeConfig = {
 
 const parsePercent = (value: string) => parseFloat(value.replace("%", ""));
 
-export function ScrollGlobe({
+const NARROW = "(max-width: 639px)";
+
+interface TransitState {
+  left: number;
+  top: number;
+  scale: number;
+  fade: number;
+  docked: boolean;
+}
+
+/** The subject's own rendered width at scale 1, in px -- the number the dock
+ *  target's width is divided by to get the scale that makes the two the same
+ *  size. It is the .globe default from styles.css; a caller whose subject is a
+ *  different size passes its own via `subjectBasePx`. */
+const DEFAULT_SUBJECT_BASE_PX = 250;
+
+const clamp01 = (n: number) => Math.min(Math.max(n, 0), 1);
+const mix = (from: number, to: number, t: number) => from + (to - from) * t;
+/** Ease-in-out, so the subject leaves and arrives gently instead of tracking
+ *  the scrollbar linearly. */
+const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
+
+/** Matches the stylesheet's own 640px break. Starts false so the server and
+ *  the hydration pass agree on the wide layout; the real answer arrives on the
+ *  commit straight after, which is the same shape lib/theme-mode.ts uses. */
+function useNarrow() {
+  const [narrow, setNarrow] = React.useState(false);
+  React.useEffect(() => {
+    const mql = window.matchMedia(NARROW);
+    const onChange = () => setNarrow(mql.matches);
+    onChange();
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+  return narrow;
+}
+
+export function ScrollStage({
   sections,
   globeConfig = defaultGlobeConfig,
-  globeTextureUrl,
+  subject = <Globe />,
+  dockTo,
+  onDock,
+  subjectBasePx = DEFAULT_SUBJECT_BASE_PX,
+  dockFill = 1,
   className,
   ...props
-}: ScrollGlobeProps) {
+}: ScrollStageProps) {
   const [activeSection, setActiveSection] = React.useState(0);
   const [scrollProgress, setScrollProgress] = React.useState(0);
   // Starts true: this renders at the top of the page, so the honest first
   // paint has the globe in it -- and SSR has no viewport to measure against.
   const [inView, setInView] = React.useState(true);
+  /** Set only while the subject is between the last section and the dock
+   *  target: {left, top} in viewport units, plus the scale and how faint it
+   *  has gone. Null means "use the active section's own position". */
+  const [transit, setTransit] = React.useState<TransitState | null>(null);
+  const docked = React.useRef(false);
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const sectionRefs = React.useRef<(HTMLElement | null)[]>([]);
   const frame = React.useRef<number | null>(null);
 
+  const narrow = useNarrow();
+  const source = (narrow && globeConfig.narrowPositions) || globeConfig.positions;
   const positions = React.useMemo(
     () =>
-      globeConfig.positions.map((p) => ({
+      source.map((p) => ({
         top: parsePercent(p.top),
         left: parsePercent(p.left),
         scale: p.scale,
+        role: p.role ?? (p.scale >= 1.8 ? "backdrop" : "companion"),
       })),
-    [globeConfig.positions],
+    [source],
   );
 
   // Guards a caller who hands over more sections than globe positions: the
@@ -138,7 +238,84 @@ export function ScrollGlobe({
       }
     });
     setActiveSection(nearest);
-  }, []);
+
+    // ---- The journey past the last section, to the dock target ----
+    if (!dockTo) return;
+    const target = document.querySelector<HTMLElement>(dockTo);
+    if (!target) return;
+    const targetRect = target.getBoundingClientRect();
+
+    if (rect.bottom > 0) {
+      // Still on the stage: the sections own the subject.
+      setTransit(null);
+      if (docked.current) {
+        docked.current = false;
+        onDock?.(false);
+      }
+      return;
+    }
+
+    // Document coordinates, not viewport ones. The two ends of this journey
+    // are thousands of pixels apart and only one of them is ever on screen, so
+    // expressing them as scroll positions is the only way the fractions stay
+    // meaningful at both ends.
+    const scrolled = window.scrollY;
+    const leavesAt = rect.bottom + scrolled; // stage bottom reaches viewport top
+    const arrivesAt =
+      targetRect.top + targetRect.height / 2 + scrolled - window.innerHeight / 2;
+    const span = arrivesAt - leavesAt;
+    const t = span > 0 ? clamp01((scrolled - leavesAt) / span) : 1;
+
+    // Position converges LATE -- nothing for the first 72% of the journey,
+    // then all of it. Interpolating position evenly instead was the obvious
+    // way and the wrong one: the target is four thousand pixels down, so an
+    // even mix sends the subject straight through the floor and it spends the
+    // middle three screens below the fold, invisible. Which makes the recede
+    // pointless and turns the whole journey into a disappearance.
+    // Parked at the last section's anchor instead, it stays on screen the
+    // whole way and the shrink is the thing you actually see.
+    const converge = ease(clamp01((t - 0.72) / 0.28));
+
+    // How much of the subject is present at all. One value drives both the
+    // size and the opacity, so they can never disagree: full as it leaves the
+    // stage, gone within the first tenth of the journey, and brought back by
+    // the same convergence that carries it onto the target.
+    //
+    // The exit is deliberately fast and measured on t, not on the eased value.
+    // Easing is quadratic at the start, so an eased ramp left the subject
+    // still 85% opaque and larger than it was in the hero a whole screen below
+    // it -- sitting on top of the trip search, which is the one thing this
+    // journey must not do.
+    const exit = clamp01(t / 0.1);
+    const presence = Math.max(1 - exit, converge);
+
+    // The last few percent: the travelling subject fades out as whatever
+    // really lives on the target fades in, both at the same place and the same
+    // size, so the swap is not a pop.
+    const handoff = clamp01((t - 0.92) / 0.08);
+    const arrived = t >= 0.94;
+
+    const last = positionFor(sectionRefs.current.length - 1);
+    setTransit({
+      left: mix(last.left, ((targetRect.left + targetRect.width / 2) / window.innerWidth) * 100, converge),
+      top: mix(last.top, ((targetRect.top + targetRect.height / 2) / window.innerHeight) * 100, converge),
+      // Ends at the target's own size: the dock element's width against the
+      // subject's natural width is the scale that makes them one object.
+      // Never all the way to nothing -- a subject that reaches zero has to be
+      // re-created on the way back, and the floor keeps it one continuous
+      // object the whole way down.
+      scale:
+        mix(last.scale, (targetRect.width * dockFill) / subjectBasePx, converge) *
+        (0.22 + 0.78 * presence),
+      fade: (0.08 + 0.92 * presence) * (1 - handoff),
+      docked: arrived,
+    });
+
+    if (arrived !== docked.current) {
+      docked.current = arrived;
+      onDock?.(arrived);
+    }
+  }, [dockTo, dockFill, onDock, positionFor, subjectBasePx]);
 
   React.useEffect(() => {
     let ticking = false;
@@ -163,30 +340,37 @@ export function ScrollGlobe({
   }, [update]);
 
   const current = positionFor(activeSection);
-  const globeTransform =
-    `translate3d(${current.left}vw, ${current.top}vh, 0) translate3d(-50%, -50%, 0) ` +
-    `scale3d(${current.scale}, ${current.scale}, 1)`;
+  // In transit the journey owns the subject; on the stage, the active section
+  // does. Same transform either way, so there is no seam where one hands to
+  // the other -- transit starts at exactly the last section's anchor.
+  const place = transit ?? current;
+  const subjectTransform =
+    `translate3d(${place.left}vw, ${place.top}vh, 0) translate3d(-50%, -50%, 0) ` +
+    `scale3d(${place.scale}, ${place.scale}, 1)`;
+  // The fixed layer must survive past the stage, or the subject would unmount
+  // the instant it set off on the longest part of its journey.
+  const subjectMounted = inView || transit !== null;
 
   return (
-    <div ref={containerRef} className={cn("scrollglobe", className)} {...props}>
+    <div ref={containerRef} className={cn("scrollstage", className)} {...props}>
       {/* One gate for all three fixed layers. The dot nav is in here with the
           rest for a reason: absolutely positioned in a three-section column it
           would centre itself in the middle section, so it would only appear
           during the third of the scroll it is least useful in. */}
       {inView && (
         <>
-          <div className="scrollglobe-progress" aria-hidden="true">
-            <div className="scrollglobe-progress-bar" style={{ transform: `scaleX(${scrollProgress})` }} />
+          <div className="scrollstage-progress" aria-hidden="true">
+            <div className="scrollstage-progress-bar" style={{ transform: `scaleX(${scrollProgress})` }} />
           </div>
 
-          <nav className="scrollglobe-nav" aria-label="Hero sections">
+          <nav className="scrollstage-nav" aria-label="Hero sections">
             {sections.map((section, index) => (
-              <div key={section.id} className="scrollglobe-nav-item">
+              <div key={section.id} className="scrollstage-nav-item">
                 <span
-                  className={cn("scrollglobe-nav-label", activeSection === index && "is-active")}
+                  className={cn("scrollstage-nav-label", activeSection === index && "is-active")}
                   aria-hidden="true"
                 >
-                  <span className="scrollglobe-nav-pip" />
+                  <span className="scrollstage-nav-pip" />
                   {section.badge ?? section.title}
                 </span>
                 <button
@@ -194,7 +378,7 @@ export function ScrollGlobe({
                   onClick={() =>
                     sectionRefs.current[index]?.scrollIntoView({ behavior: "smooth", block: "center" })
                   }
-                  className={cn("scrollglobe-nav-dot", activeSection === index && "is-active")}
+                  className={cn("scrollstage-nav-dot", activeSection === index && "is-active")}
                   aria-current={activeSection === index ? "true" : undefined}
                   aria-label={`Go to ${section.badge ?? section.title}`}
                 />
@@ -208,14 +392,23 @@ export function ScrollGlobe({
               an inline opacity here would outrank every media query, and a
               phone needs the globe fainter than a desktop does at the same
               scale. */}
-          <div
-            className="scrollglobe-globe"
-            data-role={current.scale >= 1.8 ? "backdrop" : "companion"}
-            style={{ transform: globeTransform }}
-          >
-            <Globe textureUrl={globeTextureUrl} />
-          </div>
         </>
+      )}
+
+      {subjectMounted && (
+        <div
+          className="scrollstage-subject"
+          data-role={transit ? "transit" : current.role}
+          style={{
+            transform: subjectTransform,
+            // In transit the fade is computed per frame and must not also be
+            // eased by the CSS transition, or the subject lags the scroll by
+            // most of a second on the way down.
+            ...(transit ? { opacity: transit.fade, transition: "none" } : {}),
+          }}
+        >
+          {subject}
+        </div>
       )}
 
 
@@ -227,29 +420,29 @@ export function ScrollGlobe({
             sectionRefs.current[index] = node;
           }}
           className={cn(
-            "scrollglobe-section",
+            "scrollstage-section",
             section.align === "center" && "is-center",
             section.align === "right" && "is-right",
           )}
         >
-          <div className="scrollglobe-copy">
+          <div className="scrollstage-copy">
             <p className="site-eyebrow mb-4">{section.badge}</p>
 
-            <h1 className={cn("site-h2", index === 0 ? "scrollglobe-title" : "scrollglobe-title-sm")}>
+            <h1 className={cn("site-h2", index === 0 ? "scrollstage-title" : "scrollstage-title-sm")}>
               {section.title}
-              {section.subtitle ? <span className="scrollglobe-subtitle">{section.subtitle}</span> : null}
+              {section.subtitle ? <span className="scrollstage-subtitle">{section.subtitle}</span> : null}
             </h1>
 
-            <p className="scrollglobe-lede">{section.description}</p>
+            <p className="scrollstage-lede">{section.description}</p>
 
             {section.features && (
-              <div className="scrollglobe-features">
+              <div className="scrollstage-features">
                 {section.features.map((feature) => (
-                  <div key={feature.title} className="scrollglobe-feature">
-                    <span className="scrollglobe-feature-pip" />
+                  <div key={feature.title} className="scrollstage-feature">
+                    <span className="scrollstage-feature-pip" />
                     <div>
-                      <h3 className="scrollglobe-feature-title">{feature.title}</h3>
-                      <p className="scrollglobe-feature-body">{feature.description}</p>
+                      <h3 className="scrollstage-feature-title">{feature.title}</h3>
+                      <p className="scrollstage-feature-body">{feature.description}</p>
                     </div>
                   </div>
                 ))}
@@ -257,7 +450,7 @@ export function ScrollGlobe({
             )}
 
             {section.actions && (
-              <div className="scrollglobe-actions">
+              <div className="scrollstage-actions">
                 {section.actions.map((action) =>
                   action.variant === "primary" ? (
                     <a
@@ -290,4 +483,4 @@ export function ScrollGlobe({
   );
 }
 
-export default ScrollGlobe;
+export default ScrollStage;

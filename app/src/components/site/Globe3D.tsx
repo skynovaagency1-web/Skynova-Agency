@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { onOrbitingChange } from "@/lib/flight-handoff";
+import { onDockedChange } from "@/lib/globe-handoff";
 
 // Real WebGL globe for the "Fly anywhere" section, replacing the CSS sphere
 // (a flat photo panned behind a border-radius) and the flat photo plane that
@@ -123,6 +124,18 @@ const SAT_BASE_RADIUS = 2.42;
 const SAT_SPAN = 0.3;
 
 export function Globe3D({ className }: { className?: string }) {
+  /* The hero's globe flies down the page and lands on this section, and at
+   * that moment it fades out and this one fades in at the same place and size
+   * -- one globe, two renderers, exactly as the aircraft is already handed
+   * between the rail and this canvas (lib/globe-handoff.ts).
+   *
+   * Starts hidden ONLY when a travelling stage says it will hand over. On any
+   * page without one -- and if the stage never initialises -- the signal
+   * reports docked immediately, so this can never end up permanently
+   * invisible waiting for a handoff that is not coming. */
+  const [docked, setDocked] = useState(true);
+  useEffect(() => onDockedChange(setDocked), []);
+
   const mountRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -594,5 +607,12 @@ export function Globe3D({ className }: { className?: string }) {
     };
   }, []);
 
-  return <div ref={mountRef} className={className} aria-hidden="true" />;
+  return (
+    <div
+      ref={mountRef}
+      className={className}
+      data-docked={docked ? "true" : "false"}
+      aria-hidden="true"
+    />
+  );
 }

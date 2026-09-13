@@ -6,7 +6,7 @@ import { Nav } from "@/components/site/Nav";
 // scrubbed boarding sequence, and HeroScroll.tsx the plane fly-in that used to
 // be here -- that one now also runs on /flights, as FlightHeroScroll. Swapping
 // this one import is still the whole switch, in any direction.
-import { HeroGlobe } from "@/components/site/HeroGlobe";
+import { HeroStage } from "@/components/site/HeroStage";
 import { TripSearch } from "@/components/site/TripSearch";
 import { TrustSection } from "@/components/site/Sections2";
 import {
@@ -80,7 +80,7 @@ function Index() {
       <StructuredData json={HOME_SCHEMA} />
       <Nav />
       <main>
-        <HeroGlobe />
+        <HeroStage />
         <TripSearch />
         <div ref={afterglowRef} className="hero-afterglow">
           <TrustLineSection />

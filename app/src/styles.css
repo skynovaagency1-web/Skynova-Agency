@@ -1997,6 +1997,16 @@ html {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  /* Hidden until the hero's globe finishes flying down the page and lands
+     here, then crossfades in underneath it at the same size -- see
+     lib/globe-handoff.ts. The attribute is "true" on any page with no
+     travelling stage, so this is never stuck invisible. */
+  opacity: 0;
+  transition: opacity 600ms ease;
+}
+.orbit-globe-3d[data-docked="true"] { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .orbit-globe-3d { transition: none; }
 }
 
 /* Destinations orbit again, just much slower than the original 46s lap
@@ -5936,7 +5946,7 @@ html.lenis body { height: auto; }
   .flyin-plane { transition: none; }
 }
 
-/* ---- Scroll-globe hero (components/ui/globe + ui/landing-page + site/HeroGlobe)
+/* ---- Scroll-stage hero (ui/landing-page + ui/globe + site/HeroStage)
    ----
    The homepage's opening act: three full-height sections sharing one globe
    that moves and rescales between them. The component owns the scroll maths
@@ -5951,7 +5961,7 @@ html.lenis body { height: auto; }
    rest); the globe is a clamped layout size the section scales rather than a
    fixed pixel diameter; and the copy column is a max-width in ch, so it
    wraps at the same measure at every width. */
-.heroglobe {
+.herostage {
   position: relative;
   /* The same night stage the fly-in hero used, for the same reason: the
      floating cards and the globe are both dark-ground objects, and the page's
@@ -5962,12 +5972,12 @@ html.lenis body { height: auto; }
     linear-gradient(180deg, #16130d 0%, #221d15 62%, #16130d 100%);
   color: #f5f0e6;
 }
-:root[data-theme="night"] .heroglobe {
+:root[data-theme="night"] .herostage {
   background:
     radial-gradient(120% 78% at 50% 12%, #191b26 0%, transparent 64%),
     linear-gradient(180deg, #0a0b11 0%, #131521 62%, #0a0b11 100%);
 }
-.heroglobe-daynight {
+.herostage-daynight {
   position: absolute;
   /* Below the sticky nav, above the first headline. */
   inset-block-start: clamp(4.6rem, 9vh, 6rem);
@@ -5975,13 +5985,13 @@ html.lenis body { height: auto; }
   z-index: 6;
 }
 
-.scrollglobe { position: relative; }
+.scrollstage { position: relative; }
 
 /* Runs over the nav's top edge, which is the one strip of the viewport that
    is always visible and never has content in it. Fixed rather than sticky so
    it cannot be pushed around by the sections under it; mounted only while the
    hero is on screen, so it is not a permanent line across the site. */
-.scrollglobe-progress {
+.scrollstage-progress {
   position: fixed;
   inset-block-start: 0;
   inset-inline: 0;
@@ -5990,15 +6000,15 @@ html.lenis body { height: auto; }
   background: rgba(245, 240, 230, 0.12);
   pointer-events: none;
 }
-.scrollglobe-progress-bar {
+.scrollstage-progress-bar {
   height: 100%;
   background: linear-gradient(90deg, var(--sky-coral), #f3e6b8);
   transform-origin: left center;
   transition: transform 0.15s ease-out;
 }
-:root[dir="rtl"] .scrollglobe-progress-bar { transform-origin: right center; }
+:root[dir="rtl"] .scrollstage-progress-bar { transform-origin: right center; }
 @media (prefers-reduced-motion: reduce) {
-  .scrollglobe-progress-bar { transition: none; }
+  .scrollstage-progress-bar { transition: none; }
 }
 
 /* ---- Section dot nav ----
@@ -6006,9 +6016,9 @@ html.lenis body { height: auto; }
    third of the width the headline needs, and the three sections are one swipe
    apart anyway -- the dots are a desktop convenience for a distance a phone
    does not have. */
-.scrollglobe-nav { display: none; }
+.scrollstage-nav { display: none; }
 @media (min-width: 640px) {
-  .scrollglobe-nav {
+  .scrollstage-nav {
     display: flex;
     position: fixed;
     inset-block-start: 50%;
@@ -6020,8 +6030,8 @@ html.lenis body { height: auto; }
     gap: clamp(0.9rem, 2vh, 1.5rem);
   }
 }
-.scrollglobe-nav-item { position: relative; display: flex; align-items: center; }
-.scrollglobe-nav-dot {
+.scrollstage-nav-item { position: relative; display: flex; align-items: center; }
+.scrollstage-nav-dot {
   width: 10px;
   height: 10px;
   border-radius: 999px;
@@ -6030,20 +6040,20 @@ html.lenis body { height: auto; }
   transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
   cursor: pointer;
 }
-.scrollglobe-nav-dot:hover { border-color: var(--sky-coral); transform: scale(1.25); }
-.scrollglobe-nav-dot.is-active {
+.scrollstage-nav-dot:hover { border-color: var(--sky-coral); transform: scale(1.25); }
+.scrollstage-nav-dot.is-active {
   background: var(--sky-coral);
   border-color: var(--sky-coral);
   box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.18);
 }
 @media (prefers-reduced-motion: reduce) {
-  .scrollglobe-nav-dot { transition: none; }
-  .scrollglobe-nav-dot:hover { transform: none; }
+  .scrollstage-nav-dot { transition: none; }
+  .scrollstage-nav-dot:hover { transform: none; }
 }
 
 /* The label shows itself when its section arrives, then withdraws -- the
    reference's `animate-fadeOut`, which it never defined a keyframe for. */
-.scrollglobe-nav-label {
+.scrollstage-nav-label {
   position: absolute;
   inset-inline-end: 1.5rem;
   top: 50%;
@@ -6066,20 +6076,20 @@ html.lenis body { height: auto; }
   transform: translateY(-50%);
   pointer-events: none;
 }
-.scrollglobe-nav-label.is-active { animation: scrollglobe-label-out 2.8s ease forwards; }
-.scrollglobe-nav-pip {
+.scrollstage-nav-label.is-active { animation: scrollstage-label-out 2.8s ease forwards; }
+.scrollstage-nav-pip {
   width: 6px;
   height: 6px;
   border-radius: 999px;
   background: var(--sky-coral);
 }
-@keyframes scrollglobe-label-out {
+@keyframes scrollstage-label-out {
   0% { opacity: 0; transform: translate(0.4rem, -50%) scale(0.96); }
   12%, 70% { opacity: 1; transform: translate(0, -50%) scale(1); }
   100% { opacity: 0; transform: translate(0.5rem, -50%) scale(0.95); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .scrollglobe-nav-label.is-active { animation: none; opacity: 1; }
+  .scrollstage-nav-label.is-active { animation: none; opacity: 1; }
 }
 
 /* ---- The globe layer ----
@@ -6087,7 +6097,7 @@ html.lenis body { height: auto; }
    three spheres appearing in turn. The transform is written by the component
    from the active section's position; the transition is the whole effect, so
    it is long and heavily eased. */
-.scrollglobe-globe {
+.scrollstage-subject {
   position: fixed;
   inset-block-start: 0;
   inset-inline-start: 0;
@@ -6095,20 +6105,30 @@ html.lenis body { height: auto; }
   pointer-events: none;
   will-change: transform, opacity;
   transition: transform 1400ms cubic-bezier(0.23, 1, 0.32, 1), opacity 1400ms ease;
-  /* Phone first, and much fainter than the desktop values. At 375px there is
-     no "beside the copy" to put a sphere in -- every position overlaps the
-     headline, so on a phone the globe is weather behind the words rather than
-     an object next to them. Measured on an iPhone 8: at the desktop's 0.85
-     the second section's lede sat on the Pacific at roughly 2.4:1. */
-  opacity: 0.34;
+  /* Opacity is set by ROLE, not by viewport. The phone used to get a blanket
+     dimming because every position there sat behind the headline; it no longer
+     does -- HeroStage gives narrow viewports their own anchor points, and the
+     opening one is in the clear space under the buttons. So a companion is at
+     full strength on a phone too, and only the positions genuinely behind copy
+     ask to be held back.
+     Dimming is also what turned the clouds brown at every width -- see the
+     note on .planefloat-cloud -- so the less of it, the better. */
+  opacity: 0.95;
 }
-.scrollglobe-globe[data-role="backdrop"] { opacity: 0.26; }
+/* Behind copy: far enough back that a headline still reads over it. */
+.scrollstage-subject[data-role="backdrop"] { opacity: 0.3; }
+/* In transit down the page the opacity is computed per frame and written
+   inline, so this must not set one -- and the 1400ms section transition must
+   not apply either, or the globe would lag the scrollbar by most of a second
+   the whole way down. The component switches the transition off inline; this
+   rule is only here to stop the two opacity sources fighting. */
+.scrollstage-subject[data-role="transit"] { opacity: 1; }
 @media (min-width: 640px) {
-  .scrollglobe-globe { opacity: 0.85; }
-  .scrollglobe-globe[data-role="backdrop"] { opacity: 0.4; }
+  .scrollstage-subject { opacity: 1; }
+  .scrollstage-subject[data-role="backdrop"] { opacity: 0.45; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .scrollglobe-globe { transition: none; }
+  .scrollstage-subject { transition: none; }
 }
 
 /* ---- Sections ----
@@ -6116,7 +6136,7 @@ html.lenis body { height: auto; }
    `100vh` is taller than what the visitor can see and the bottom of every
    section -- the CTA on section one, the third feature on section two -- sits
    under the chrome until they scroll. */
-.scrollglobe-section {
+.scrollstage-section {
   position: relative;
   z-index: 20;
   display: flex;
@@ -6129,30 +6149,30 @@ html.lenis body { height: auto; }
   padding-inline: 1.5rem;
 }
 @media (min-width: 768px) {
-  .scrollglobe-section { padding-inline: 2.5rem; }
+  .scrollstage-section { padding-inline: 2.5rem; }
 }
-.scrollglobe-section.is-center { align-items: center; text-align: center; }
-.scrollglobe-section.is-right { align-items: flex-end; text-align: end; }
+.scrollstage-section.is-center { align-items: center; text-align: center; }
+.scrollstage-section.is-right { align-items: flex-end; text-align: end; }
 
-.scrollglobe-copy {
+.scrollstage-copy {
   width: 100%;
   max-width: 1240px;
   margin-inline: auto;
 }
 /* Centre and right alignment size the copy to the text rather than to the
    container, so the block sits where the alignment says it does. */
-.is-center .scrollglobe-copy,
-.is-right .scrollglobe-copy { max-width: 62ch; }
+.is-center .scrollstage-copy,
+.is-right .scrollstage-copy { max-width: 62ch; }
 
-.scrollglobe-copy .site-eyebrow {
+.scrollstage-copy .site-eyebrow {
   color: #f3e6b8;
   border-left-color: #e3c569;
   background: linear-gradient(rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.14)) padding-box;
   box-shadow: none;
 }
 
-.scrollglobe-title,
-.scrollglobe-title-sm {
+.scrollstage-title,
+.scrollstage-title-sm {
   display: flex;
   flex-direction: column;
   gap: 0.1em;
@@ -6164,33 +6184,33 @@ html.lenis body { height: auto; }
   font-size: clamp(2.1rem, 8.5vw, 5rem);
   line-height: 1.05;
 }
-.scrollglobe-title-sm { font-size: clamp(1.8rem, 7vw, 3.75rem); }
-.is-center .scrollglobe-title,
-.is-center .scrollglobe-title-sm { margin-inline: auto; }
-.scrollglobe-subtitle {
+.scrollstage-title-sm { font-size: clamp(1.8rem, 7vw, 3.75rem); }
+.is-center .scrollstage-title,
+.is-center .scrollstage-title-sm { margin-inline: auto; }
+.scrollstage-subtitle {
   font-size: 0.62em;
   font-weight: 500;
   letter-spacing: 0.04em;
   color: rgba(245, 240, 230, 0.62);
 }
 
-.scrollglobe-lede {
+.scrollstage-lede {
   margin-block-start: 1.1rem;
   max-width: 46ch;
   font-size: clamp(0.95rem, 3.6vw, 1.125rem);
   line-height: 1.6;
   color: rgba(245, 240, 230, 0.78);
 }
-.is-center .scrollglobe-lede { margin-inline: auto; }
+.is-center .scrollstage-lede { margin-inline: auto; }
 
 /* Below 640px the copy and the globe share the same pixels -- see the globe's
    opacity note. The faint globe does most of the work; this is the rest of it,
    and only on the sizes that need it, because a shadow under every headline on
    a desktop would just look soft. */
 @media (max-width: 639px) {
-  .scrollglobe-title,
-  .scrollglobe-title-sm,
-  .scrollglobe-lede { text-shadow: 0 1px 12px rgba(10, 9, 6, 0.75); }
+  .scrollstage-title,
+  .scrollstage-title-sm,
+  .scrollstage-lede { text-shadow: 0 1px 12px rgba(10, 9, 6, 0.75); }
 }
 
 /* Short viewports, which is most phones once the browser chrome is counted --
@@ -6199,53 +6219,53 @@ html.lenis body { height: auto; }
    section still reads as one screenful instead of spilling a card over the
    fold. Height, not width: a 375x812 iPhone X needs none of it. */
 @media (max-height: 700px) {
-  .scrollglobe-section { padding-block: 4.6rem 1.25rem; }
+  .scrollstage-section { padding-block: 4.6rem 1.25rem; }
   /* Only the first section is ever aligned to the top of the viewport with
      the sticky nav over it, so only the first needs to clear it. The others
      scroll past it, and on a 560px-tall screen that 4.6rem was the difference
      between a section that fits and one that does not. */
-  .scrollglobe-section + .scrollglobe-section { padding-block-start: 2.6rem; }
-  .scrollglobe-copy .site-eyebrow { margin-block-end: 0.6rem; padding-block: 0.3rem; }
-  .scrollglobe-title-sm { font-size: clamp(1.6rem, 6vw, 3.75rem); }
-  .scrollglobe-lede { margin-block-start: 0.7rem; font-size: 0.92rem; line-height: 1.45; }
-  .scrollglobe-actions { margin-block-start: 1.3rem; }
-  .scrollglobe-features { margin-block-start: 1.1rem; gap: 0.5rem; }
-  .scrollglobe-feature { padding: 0.7rem 0.85rem; gap: 0.6rem; }
-  .scrollglobe-feature-pip { margin-block-start: 0.4rem; }
-  .scrollglobe-feature-title { font-size: 0.95rem; }
-  .scrollglobe-feature-body { margin-block-start: 0.2rem; font-size: 0.83rem; line-height: 1.4; }
+  .scrollstage-section + .scrollstage-section { padding-block-start: 2.6rem; }
+  .scrollstage-copy .site-eyebrow { margin-block-end: 0.6rem; padding-block: 0.3rem; }
+  .scrollstage-title-sm { font-size: clamp(1.6rem, 6vw, 3.75rem); }
+  .scrollstage-lede { margin-block-start: 0.7rem; font-size: 0.92rem; line-height: 1.45; }
+  .scrollstage-actions { margin-block-start: 1.3rem; }
+  .scrollstage-features { margin-block-start: 1.1rem; gap: 0.5rem; }
+  .scrollstage-feature { padding: 0.7rem 0.85rem; gap: 0.6rem; }
+  .scrollstage-feature-pip { margin-block-start: 0.4rem; }
+  .scrollstage-feature-title { font-size: 0.95rem; }
+  .scrollstage-feature-body { margin-block-start: 0.2rem; font-size: 0.83rem; line-height: 1.4; }
 }
 
-.scrollglobe-actions {
+.scrollstage-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 1.1rem;
   margin-block-start: 1.9rem;
 }
-.is-center .scrollglobe-actions { justify-content: center; }
-.is-right .scrollglobe-actions { justify-content: flex-end; }
-.scrollglobe-actions .btn-ghost-link { color: rgba(245, 240, 230, 0.86); }
+.is-center .scrollstage-actions { justify-content: center; }
+.is-right .scrollstage-actions { justify-content: flex-end; }
+.scrollstage-actions .btn-ghost-link { color: rgba(245, 240, 230, 0.86); }
 /* Full-width primary on the narrowest phones -- a pill that wraps onto its
    own line reads as a stray chip next to a text link. */
 @media (max-width: 380px) {
-  .scrollglobe-actions { gap: 0.9rem; }
-  .scrollglobe-actions .btn-hero-pill { width: 100%; justify-content: center; }
+  .scrollstage-actions { gap: 0.9rem; }
+  .scrollstage-actions .btn-hero-pill { width: 100%; justify-content: center; }
 }
 
 /* ---- Features ----
    One column to 640, two above. Never three: at 1240px three of these across
    leaves each one a 28ch measure, which is narrower than the lede above it. */
-.scrollglobe-features {
+.scrollstage-features {
   display: grid;
   gap: 0.8rem;
   margin-block-start: 1.9rem;
   max-width: 62ch;
 }
 @media (min-width: 640px) {
-  .scrollglobe-features { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 74ch; }
+  .scrollstage-features { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 74ch; }
 }
-.scrollglobe-feature {
+.scrollstage-feature {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
@@ -6258,16 +6278,16 @@ html.lenis body { height: auto; }
   text-align: start;
   transition: transform 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
 }
-.scrollglobe-feature:hover {
+.scrollstage-feature:hover {
   transform: translateY(-2px);
   border-color: rgba(201, 162, 39, 0.5);
   background: rgba(245, 240, 230, 0.1);
 }
 @media (prefers-reduced-motion: reduce) {
-  .scrollglobe-feature { transition: none; }
-  .scrollglobe-feature:hover { transform: none; }
+  .scrollstage-feature { transition: none; }
+  .scrollstage-feature:hover { transform: none; }
 }
-.scrollglobe-feature-pip {
+.scrollstage-feature-pip {
   flex: none;
   width: 7px;
   height: 7px;
@@ -6275,24 +6295,28 @@ html.lenis body { height: auto; }
   border-radius: 999px;
   background: var(--sky-coral);
 }
-.scrollglobe-feature-title {
+.scrollstage-feature-title {
   font-weight: 600;
   font-size: clamp(0.95rem, 3.6vw, 1.05rem);
   color: #f5f0e6;
 }
-.scrollglobe-feature-body {
+.scrollstage-feature-body {
   margin-block-start: 0.3rem;
   font-size: clamp(0.85rem, 3.3vw, 0.95rem);
   line-height: 1.55;
   color: rgba(245, 240, 230, 0.72);
 }
 
-/* ---- Globe ----
+/* ---- Alternate subject: the reference's rotating globe ----
+   (components/ui/globe.tsx.) Unused by the homepage since the aircraft took
+   the stage, and kept for the same reason Hero.tsx and HeroScroll.tsx are: it
+   is still the ScrollStage default, so deleting these rules would leave any
+   caller that omits `subject` with an unstyled div. Swapping it back in is one
+   prop in HeroStage.tsx.
+
    A layout size, not a transform: scaling a 250px sphere down to phone size
-   with `scale()` blurs the texture and the inset shadow rim together, and the
-   rim is the only thing making a flat map read as a ball. The section's own
-   scale still rides on top of this, which is how the same sphere can be a
-   companion on one section and a backdrop on the next. */
+   with scale() blurs the texture and the inset shadow rim together, and the
+   rim is the only thing making a flat map read as a ball. */
 .globe {
   --globe-size: clamp(150px, 40vw, 250px);
   position: relative;
@@ -6338,9 +6362,154 @@ html.lenis body { height: auto; }
   0%, 100% { opacity: 0.1; }
   50% { opacity: 1; }
 }
-/* Reduced motion stops the spin and the twinkle; it does not hide the globe.
-   The hero should still have its subject, it just must not move. */
 @media (prefers-reduced-motion: reduce) {
   .globe-sphere, .globe-star { animation: none; }
   .globe-star { opacity: 0.75; }
 }
+
+/* ---- The subject: an airliner holding station in cloud ----
+   (components/ui/plane-float.tsx.) A layout size, not a transform: the stage's
+   own scale rides on top of this, so the base has to be the size at which the
+   asset is honest. plane-cutout.webp holds 784px of actual aircraft, and 400px
+   here reaches 720px at the stage's largest scale -- under that, so the plane
+   is never upscaled on a wide monitor. Raising the base past 400px is what
+   starts softening it. */
+.planefloat {
+  --plane-size: clamp(190px, 52vw, 400px);
+  position: relative;
+  width: var(--plane-size);
+  /* The cutout is 900x420; the box is the plane's own aspect so the clouds,
+     positioned in percentages, keep their places at every size. */
+  aspect-ratio: 900 / 420;
+}
+
+/* Warm air around the aircraft, so it is lit by the same sky the page is.
+   Sits under everything, including the back cloud. Wide and weak on purpose:
+   at 0.22 in the middle it was a visible gold ellipse floating behind the
+   plane rather than light in the air around it. */
+.planefloat-glow {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: 128%;
+  height: 240%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(243, 230, 184, 0.1) 0%,
+    rgba(201, 162, 39, 0.05) 42%,
+    transparent 74%
+  );
+  z-index: 0;
+}
+
+.planefloat-plane {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Two loops on unrelated periods. Matched periods are what make a floating
+     element read as a GIF -- everything returns home on the same beat and the
+     loop announces itself. 6.5 and 11 share no factor, so the pair does not
+     repeat for over a minute. */
+  animation: plane-bob 6.5s ease-in-out infinite, plane-roll 11s ease-in-out infinite;
+  filter: drop-shadow(0 18px 26px rgba(10, 9, 6, 0.42));
+}
+@keyframes plane-bob {
+  0%, 100% { translate: 0 -2.6%; }
+  50% { translate: 0 2.6%; }
+}
+@keyframes plane-roll {
+  0%, 100% { rotate: -1.2deg; }
+  50% { rotate: 1.2deg; }
+}
+
+.planefloat-cloud {
+  position: absolute;
+  height: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  will-change: translate;
+}
+/* NO mix-blend-mode here, though screen is the obvious reach for white cloud
+   on a dark sky. It cannot work in this position: blending is confined to the
+   nearest stacking context, and the stage's subject layer establishes one with
+   its transform and opacity -- so the clouds would screen against the
+   transparency inside that group, not against the page's sky, and the property
+   would cost a compositing pass to do nothing.
+   The muddy brown of the first pass was never a blending problem anyway. It
+   was opacity stacked twice: 0.6 on the cloud inside a group composited at
+   0.85 left white rendering at about half strength over a dark brown ground,
+   which is mid-brown. The fix is to stop dimming it. */
+/* Painting order, which source order cannot express: the back cloud is behind
+   the aircraft, the other two in front of it. That is what puts the plane IN
+   the weather instead of on a picture of it. */
+/* The far one is also blurred: depth of field is what stops three copies of
+   one asset reading as three copies of one asset. */
+.planefloat-cloud-back {
+  z-index: 1;
+  opacity: 0.82;
+  filter: blur(3px);
+  animation: cloud-drift-a 34s ease-in-out infinite;
+}
+.planefloat-cloud-fore { z-index: 3; opacity: 0.95; animation: cloud-drift-b 47s ease-in-out infinite; }
+.planefloat-cloud-near {
+  z-index: 3;
+  opacity: 0.66;
+  filter: blur(1.5px);
+  animation: cloud-drift-c 26s ease-in-out infinite;
+}
+
+/* Percentages, never pixels: the stage scales this whole box, and a pixel
+   offset would drift against the plane as it grew. Each drifts on its own
+   path so they never travel as a block. */
+@keyframes cloud-drift-a {
+  0%, 100% { translate: -50% -50%; }
+  50% { translate: -42% -54%; }
+}
+@keyframes cloud-drift-b {
+  0%, 100% { translate: -50% -50%; }
+  50% { translate: -58% -46%; }
+}
+@keyframes cloud-drift-c {
+  0%, 100% { translate: -50% -50%; }
+  50% { translate: -45% -53%; }
+}
+
+/* Night: the same aircraft in a cold sky. The clouds lose their warm
+   underlighting and most of their brightness, and the plane's white shell is
+   cooled and dimmed to match -- otherwise it stays a daylit cutout pasted on a
+   night page, which is exactly what the toggle is meant to avoid. */
+:root[data-theme="night"] .planefloat-glow {
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(186, 200, 235, 0.16) 0%,
+    rgba(92, 112, 168, 0.12) 38%,
+    transparent 72%
+  );
+}
+/* Written per cloud, not on .planefloat-cloud, because `filter` does not
+   cascade-merge: one rule on the shared class would drop the depth-of-field
+   blur the far and near ones carry. */
+:root[data-theme="night"] .planefloat-cloud-back {
+  filter: blur(3px) brightness(0.62) saturate(0.35) hue-rotate(195deg);
+}
+:root[data-theme="night"] .planefloat-cloud-fore {
+  filter: brightness(0.62) saturate(0.35) hue-rotate(195deg);
+}
+:root[data-theme="night"] .planefloat-cloud-near {
+  filter: blur(1.5px) brightness(0.62) saturate(0.35) hue-rotate(195deg);
+}
+:root[data-theme="night"] .planefloat-plane {
+  filter: brightness(0.72) saturate(0.75) hue-rotate(195deg)
+    drop-shadow(0 18px 26px rgba(4, 5, 10, 0.55));
+}
+
+/* Reduced motion stops the drift and the bob; it does not hide the aircraft.
+   The hero should still have its subject, it just must not move. */
+@media (prefers-reduced-motion: reduce) {
+  .planefloat-plane, .planefloat-cloud { animation: none; }
+}
+

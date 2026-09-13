@@ -135,7 +135,7 @@ export const EN = {
   "news.error": "That didn\u2019t go through. Check the address and try again.",
   "news.privacy": "No spam. Unsubscribe anytime.",
 
-  /* ---- Homepage hero (components/site/HeroGlobe.tsx) ----
+  /* ---- Homepage hero (components/site/HeroStage.tsx) ----
      Counts are passed in from data/ at render, never written into the string,
      so a new destination or vertical updates the copy in every language at
      once. Keep the {placeholders} when translating. */
