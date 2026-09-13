@@ -18,6 +18,11 @@ const QUANTA_ICONS_SHIM = fileURLToPath(
   new URL("./src/lib/quanta-icons.ts", import.meta.url),
 );
 
+// See the `serve`-gated alias below, and src/lib/cloudflare-workers.dev.ts.
+const CLOUDFLARE_WORKERS_DEV_STUB = fileURLToPath(
+  new URL("./src/lib/cloudflare-workers.dev.ts", import.meta.url),
+);
+
 export default defineConfig(({ command, mode }) => {
   const designInspectorEnabled = process.env.HF_DESIGN_INSPECTOR === "1" || mode === "design";
 
@@ -30,7 +35,18 @@ export default defineConfig(({ command, mode }) => {
     },
     resolve: {
       tsconfigPaths: true,
-      alias: [{ find: /^@higgsfield-ai\/icons(\/.*)?$/, replacement: QUANTA_ICONS_SHIM }],
+      alias: [
+        { find: /^@higgsfield-ai\/icons(\/.*)?$/, replacement: QUANTA_ICONS_SHIM },
+        // DEV ONLY. `cloudflare:workers` is a workerd built-in and `vite dev`
+        // runs SSR in Node, so without this the import in lib/bindings.server
+        // .ts resolves to nothing and EVERY page renders as the Vite error
+        // overlay -- `bun run dev` could not serve the site at all. Gated on
+        // `serve`: the build keeps it external (see ssr.external below) and
+        // the deployed Worker gets the real runtime module.
+        ...(command === "serve"
+          ? [{ find: /^cloudflare:workers$/, replacement: CLOUDFLARE_WORKERS_DEV_STUB }]
+          : []),
+      ],
     },
     // The server bundle runs as a Cloudflare Worker — there is no node_modules
     // at runtime. Vite's default SSR build leaves npm deps as bare external
@@ -64,7 +80,9 @@ export default defineConfig(({ command, mode }) => {
       // `cloudflare:workers` is a workerd runtime built-in that exposes the Worker
       // env / bindings (D1 `DB`, R2 `STORAGE`). Like node: builtins it must NOT be
       // bundled; the runtime provides it. (`ssr.external` is typed string[].)
-      external: ["cloudflare:workers"],
+      // Build only -- in dev the resolve.alias above points it at a stub, and
+      // listing it here as well would send Node looking for the real module.
+      external: command === "build" ? ["cloudflare:workers"] : [],
     },
     build: {
       // Keep `cloudflare:*` external in the SSR rollup pass too — `noExternal`
