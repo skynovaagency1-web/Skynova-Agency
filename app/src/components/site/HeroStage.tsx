@@ -67,14 +67,23 @@ const GLOBE_POSITIONS = {
     { top: "26%", left: "78%", scale: 0.9 },
     { top: "50%", left: "50%", scale: 1.8 },
   ],
-  /* Under 640px there is no "beside the copy" -- a 375px column is all copy,
-     and the wide layout shrunk down puts the globe straight through the
-     headline. So it gets its own places: below the copy on the opening
-     section, where the space under the buttons is otherwise dead; behind it on
-     the other two, marked backdrop so it drops to the faint opacity at a scale
-     that would otherwise read as a companion. */
+  /* Under 640px the wide layout shrunk down puts the globe straight through
+     the headline, so the opening section gets its own anchor. It sits in the
+     band between the nav and the eyebrow, to the RIGHT of the copy -- the same
+     relationship the desktop has, in the only place a 375px column has room
+     for it. An earlier pass parked it below the buttons instead, which read as
+     the globe being under the headline rather than beside it.
+
+     112px at 375px wide: it clears the eyebrow, which ends around x=168, and
+     it has to fit between a 65px nav and a headline that starts around 270.
+     Bigger than this and it collides with one or the other at 560px tall,
+     which is what an iPhone 8 actually gives a page.
+
+     The other two stay behind the copy and are marked backdrop, so they drop
+     to the faint opacity at a scale that would otherwise read as a
+     companion. */
   narrowPositions: [
-    { top: "86%", left: "52%", scale: 1.1, role: "companion" as const },
+    { top: "22%", left: "80%", scale: 0.75, role: "companion" as const },
     { top: "50%", left: "50%", scale: 1.3, role: "backdrop" as const },
     { top: "52%", left: "50%", scale: 1.6, role: "backdrop" as const },
   ],

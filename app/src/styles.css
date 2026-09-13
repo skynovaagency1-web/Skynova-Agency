@@ -5984,6 +5984,18 @@ html.lenis body { height: auto; }
   inset-inline-end: clamp(0.9rem, 3vw, 2rem);
   z-index: 6;
 }
+/* Under 640px the globe takes the top-right corner -- the only place a 375px
+   column has room for it beside the headline rather than under it -- so the
+   toggle moves to the opposite corner. Measured at 375x560 they were fully
+   on top of each other: the globe spans x 244-356 and the toggle sat at
+   292-360. The old fly-in hero made the same move for the same reason when
+   the info card took that corner. */
+@media (max-width: 639px) {
+  .herostage-daynight {
+    inset-inline-start: clamp(0.9rem, 3vw, 2rem);
+    inset-inline-end: auto;
+  }
+}
 
 .scrollstage { position: relative; }
 
@@ -6192,6 +6204,28 @@ html.lenis body { height: auto; }
   font-weight: 500;
   letter-spacing: 0.04em;
   color: rgba(245, 240, 230, 0.62);
+}
+
+/* ---- Keeping the left-aligned copy clear of the globe ----
+   The globe sits at 76vw with a 350px diameter, so its left edge is
+   (76vw - 175px). The headline's own 16ch cap knows nothing about that, and
+   between roughly 640px and 1100px 16ch is wider than the space available:
+   measured at 768px the headline ran to x=466 while the globe began at x=409,
+   straight through each other. Capping against the globe's actual left edge,
+   with a gutter, fixes every width at once instead of at a breakpoint.
+
+   Above ~1100px the 16ch and 46ch caps are the smaller of the two and win, so
+   the desktop composition is untouched. Only the title and the lede are
+   capped, never the copy block: the features grid below them is two columns of
+   its own and sits well clear of the globe's anchor. */
+@media (min-width: 640px) {
+  .scrollstage-section:not(.is-center):not(.is-right) .scrollstage-title,
+  .scrollstage-section:not(.is-center):not(.is-right) .scrollstage-title-sm {
+    max-width: min(16ch, calc(76vw - 15rem));
+  }
+  .scrollstage-section:not(.is-center):not(.is-right) .scrollstage-lede {
+    max-width: min(46ch, calc(76vw - 15rem));
+  }
 }
 
 .scrollstage-lede {
