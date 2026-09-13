@@ -28,6 +28,7 @@ export function VerticalPage({
   heroVideo,
   heroReveal,
   heroIntro,
+  heroSlot,
   bullets,
   ctaHref,
   ctaLabel,
@@ -58,6 +59,13 @@ export function VerticalPage({
   /** Keyhole variant only: floats over the wall at the start and fades as
    * the camera pushes in -- the page's glass cards (e.g. HotelHeroCards). */
   heroIntro?: ReactNode;
+  /** A hero rendered whole by the caller, in place of everything above --
+   * for a hero that is not a picture behind the standard copy block at all.
+   * /flights uses it for the scroll fly-in (FlightHeroScroll). It receives no
+   * copy props, so anything passed here owns its own eyebrow, title,
+   * description and CTA; the page still passes them as well, because the
+   * breadcrumb, the <h1> contract and the FAQ schema below all read them. */
+  heroSlot?: ReactNode;
   bullets: Bullet[];
   ctaHref: string;
   ctaLabel: string;
@@ -107,7 +115,9 @@ export function VerticalPage({
       <StructuredData json={structuredData} />
       <Nav />
       <main>
-        {heroVideo && heroReveal === "keyhole" ? (
+        {heroSlot ? (
+          heroSlot
+        ) : heroVideo && heroReveal === "keyhole" ? (
           <KeyholeHero videoSrc={heroVideo.videoSrc} posterSrc={heroVideo.posterSrc} intro={heroIntro}>
             {heroCopy}
           </KeyholeHero>

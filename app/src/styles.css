@@ -5935,3 +5935,412 @@ html.lenis body { height: auto; }
 @media (prefers-reduced-motion: reduce) {
   .flyin-plane { transition: none; }
 }
+
+/* ---- Scroll-globe hero (components/ui/globe + ui/landing-page + site/HeroGlobe)
+   ----
+   The homepage's opening act: three full-height sections sharing one globe
+   that moves and rescales between them. The component owns the scroll maths
+   and nothing else; everything visual is here.
+
+   Sized from the small phone up, not down. The reference is a desktop demo
+   that leans on `h-screen` and a 250px globe, and at 375x667 -- an iPhone 8,
+   which is the floor this has to hold -- that lands a 350px sphere across a
+   375px viewport with the headline behind it. So: the stage is `svh` (the
+   height with the browser chrome showing, not the height it briefly reaches
+   mid-scroll, which is what `vh` reports and what makes a phone hero clip at
+   rest); the globe is a clamped layout size the section scales rather than a
+   fixed pixel diameter; and the copy column is a max-width in ch, so it
+   wraps at the same measure at every width. */
+.heroglobe {
+  position: relative;
+  /* The same night stage the fly-in hero used, for the same reason: the
+     floating cards and the globe are both dark-ground objects, and the page's
+     cream would leave the sphere a bright disc on a light wall with no sky
+     between them. */
+  background:
+    radial-gradient(120% 78% at 50% 12%, #2a251c 0%, transparent 64%),
+    linear-gradient(180deg, #16130d 0%, #221d15 62%, #16130d 100%);
+  color: #f5f0e6;
+}
+:root[data-theme="night"] .heroglobe {
+  background:
+    radial-gradient(120% 78% at 50% 12%, #191b26 0%, transparent 64%),
+    linear-gradient(180deg, #0a0b11 0%, #131521 62%, #0a0b11 100%);
+}
+.heroglobe-daynight {
+  position: absolute;
+  /* Below the sticky nav, above the first headline. */
+  inset-block-start: clamp(4.6rem, 9vh, 6rem);
+  inset-inline-end: clamp(0.9rem, 3vw, 2rem);
+  z-index: 6;
+}
+
+.scrollglobe { position: relative; }
+
+/* Runs over the nav's top edge, which is the one strip of the viewport that
+   is always visible and never has content in it. Fixed rather than sticky so
+   it cannot be pushed around by the sections under it; mounted only while the
+   hero is on screen, so it is not a permanent line across the site. */
+.scrollglobe-progress {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  height: 2px;
+  z-index: 45;
+  background: rgba(245, 240, 230, 0.12);
+  pointer-events: none;
+}
+.scrollglobe-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--sky-coral), #f3e6b8);
+  transform-origin: left center;
+  transition: transform 0.15s ease-out;
+}
+:root[dir="rtl"] .scrollglobe-progress-bar { transform-origin: right center; }
+@media (prefers-reduced-motion: reduce) {
+  .scrollglobe-progress-bar { transition: none; }
+}
+
+/* ---- Section dot nav ----
+   Hidden below 640px. Not a tidying-up: at 375px the rail and its label eat a
+   third of the width the headline needs, and the three sections are one swipe
+   apart anyway -- the dots are a desktop convenience for a distance a phone
+   does not have. */
+.scrollglobe-nav { display: none; }
+@media (min-width: 640px) {
+  .scrollglobe-nav {
+    display: flex;
+    position: fixed;
+    inset-block-start: 50%;
+    inset-inline-end: clamp(0.75rem, 2.2vw, 2rem);
+    transform: translateY(-50%);
+    z-index: 30;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(0.9rem, 2vh, 1.5rem);
+  }
+}
+.scrollglobe-nav-item { position: relative; display: flex; align-items: center; }
+.scrollglobe-nav-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 2px solid rgba(245, 240, 230, 0.38);
+  background: transparent;
+  transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+  cursor: pointer;
+}
+.scrollglobe-nav-dot:hover { border-color: var(--sky-coral); transform: scale(1.25); }
+.scrollglobe-nav-dot.is-active {
+  background: var(--sky-coral);
+  border-color: var(--sky-coral);
+  box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.18);
+}
+@media (prefers-reduced-motion: reduce) {
+  .scrollglobe-nav-dot { transition: none; }
+  .scrollglobe-nav-dot:hover { transform: none; }
+}
+
+/* The label shows itself when its section arrives, then withdraws -- the
+   reference's `animate-fadeOut`, which it never defined a keyframe for. */
+.scrollglobe-nav-label {
+  position: absolute;
+  inset-inline-end: 1.5rem;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 8px;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #f5f0e6;
+  background: rgba(28, 26, 20, 0.72);
+  border: 1px solid rgba(245, 240, 230, 0.16);
+  -webkit-backdrop-filter: blur(var(--sky-glass-blur));
+  backdrop-filter: blur(var(--sky-glass-blur));
+  opacity: 0;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.scrollglobe-nav-label.is-active { animation: scrollglobe-label-out 2.8s ease forwards; }
+.scrollglobe-nav-pip {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--sky-coral);
+}
+@keyframes scrollglobe-label-out {
+  0% { opacity: 0; transform: translate(0.4rem, -50%) scale(0.96); }
+  12%, 70% { opacity: 1; transform: translate(0, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(0.5rem, -50%) scale(0.95); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scrollglobe-nav-label.is-active { animation: none; opacity: 1; }
+}
+
+/* ---- The globe layer ----
+   `fixed` is what lets one sphere travel between three sections instead of
+   three spheres appearing in turn. The transform is written by the component
+   from the active section's position; the transition is the whole effect, so
+   it is long and heavily eased. */
+.scrollglobe-globe {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  z-index: 10;
+  pointer-events: none;
+  will-change: transform, opacity;
+  transition: transform 1400ms cubic-bezier(0.23, 1, 0.32, 1), opacity 1400ms ease;
+  /* Phone first, and much fainter than the desktop values. At 375px there is
+     no "beside the copy" to put a sphere in -- every position overlaps the
+     headline, so on a phone the globe is weather behind the words rather than
+     an object next to them. Measured on an iPhone 8: at the desktop's 0.85
+     the second section's lede sat on the Pacific at roughly 2.4:1. */
+  opacity: 0.34;
+}
+.scrollglobe-globe[data-role="backdrop"] { opacity: 0.26; }
+@media (min-width: 640px) {
+  .scrollglobe-globe { opacity: 0.85; }
+  .scrollglobe-globe[data-role="backdrop"] { opacity: 0.4; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scrollglobe-globe { transition: none; }
+}
+
+/* ---- Sections ----
+   `svh`, not `vh`: on iOS the URL bar is showing when the page is at rest, so
+   `100vh` is taller than what the visitor can see and the bottom of every
+   section -- the CTA on section one, the third feature on section two -- sits
+   under the chrome until they scroll. */
+.scrollglobe-section {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100svh;
+  /* The first section clears the sticky nav; all three keep the copy off the
+     foot so a section never looks bottom-heavy on a short screen. */
+  padding-block: clamp(5.5rem, 12vh, 8rem) clamp(2.5rem, 8vh, 5rem);
+  padding-inline: 1.5rem;
+}
+@media (min-width: 768px) {
+  .scrollglobe-section { padding-inline: 2.5rem; }
+}
+.scrollglobe-section.is-center { align-items: center; text-align: center; }
+.scrollglobe-section.is-right { align-items: flex-end; text-align: end; }
+
+.scrollglobe-copy {
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+}
+/* Centre and right alignment size the copy to the text rather than to the
+   container, so the block sits where the alignment says it does. */
+.is-center .scrollglobe-copy,
+.is-right .scrollglobe-copy { max-width: 62ch; }
+
+.scrollglobe-copy .site-eyebrow {
+  color: #f3e6b8;
+  border-left-color: #e3c569;
+  background: linear-gradient(rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.14)) padding-box;
+  box-shadow: none;
+}
+
+.scrollglobe-title,
+.scrollglobe-title-sm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+  color: #f5f0e6;
+  max-width: 16ch;
+  /* Every value clamped rather than stepped at a breakpoint: the headline has
+     to survive 320px (an iPhone SE in landscape split view) as well as 375,
+     and a step leaves one of those two wrong. */
+  font-size: clamp(2.1rem, 8.5vw, 5rem);
+  line-height: 1.05;
+}
+.scrollglobe-title-sm { font-size: clamp(1.8rem, 7vw, 3.75rem); }
+.is-center .scrollglobe-title,
+.is-center .scrollglobe-title-sm { margin-inline: auto; }
+.scrollglobe-subtitle {
+  font-size: 0.62em;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(245, 240, 230, 0.62);
+}
+
+.scrollglobe-lede {
+  margin-block-start: 1.1rem;
+  max-width: 46ch;
+  font-size: clamp(0.95rem, 3.6vw, 1.125rem);
+  line-height: 1.6;
+  color: rgba(245, 240, 230, 0.78);
+}
+.is-center .scrollglobe-lede { margin-inline: auto; }
+
+/* Below 640px the copy and the globe share the same pixels -- see the globe's
+   opacity note. The faint globe does most of the work; this is the rest of it,
+   and only on the sizes that need it, because a shadow under every headline on
+   a desktop would just look soft. */
+@media (max-width: 639px) {
+  .scrollglobe-title,
+  .scrollglobe-title-sm,
+  .scrollglobe-lede { text-shadow: 0 1px 12px rgba(10, 9, 6, 0.75); }
+}
+
+/* Short viewports, which is most phones once the browser chrome is counted --
+   an iPhone 8 is 375x667 as a device but about 375x560 in Safari. The sections
+   are min-height, so nothing is ever cut off; this is about the rhythm, so a
+   section still reads as one screenful instead of spilling a card over the
+   fold. Height, not width: a 375x812 iPhone X needs none of it. */
+@media (max-height: 700px) {
+  .scrollglobe-section { padding-block: 4.6rem 1.25rem; }
+  /* Only the first section is ever aligned to the top of the viewport with
+     the sticky nav over it, so only the first needs to clear it. The others
+     scroll past it, and on a 560px-tall screen that 4.6rem was the difference
+     between a section that fits and one that does not. */
+  .scrollglobe-section + .scrollglobe-section { padding-block-start: 2.6rem; }
+  .scrollglobe-copy .site-eyebrow { margin-block-end: 0.6rem; padding-block: 0.3rem; }
+  .scrollglobe-title-sm { font-size: clamp(1.6rem, 6vw, 3.75rem); }
+  .scrollglobe-lede { margin-block-start: 0.7rem; font-size: 0.92rem; line-height: 1.45; }
+  .scrollglobe-actions { margin-block-start: 1.3rem; }
+  .scrollglobe-features { margin-block-start: 1.1rem; gap: 0.5rem; }
+  .scrollglobe-feature { padding: 0.7rem 0.85rem; gap: 0.6rem; }
+  .scrollglobe-feature-pip { margin-block-start: 0.4rem; }
+  .scrollglobe-feature-title { font-size: 0.95rem; }
+  .scrollglobe-feature-body { margin-block-start: 0.2rem; font-size: 0.83rem; line-height: 1.4; }
+}
+
+.scrollglobe-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.1rem;
+  margin-block-start: 1.9rem;
+}
+.is-center .scrollglobe-actions { justify-content: center; }
+.is-right .scrollglobe-actions { justify-content: flex-end; }
+.scrollglobe-actions .btn-ghost-link { color: rgba(245, 240, 230, 0.86); }
+/* Full-width primary on the narrowest phones -- a pill that wraps onto its
+   own line reads as a stray chip next to a text link. */
+@media (max-width: 380px) {
+  .scrollglobe-actions { gap: 0.9rem; }
+  .scrollglobe-actions .btn-hero-pill { width: 100%; justify-content: center; }
+}
+
+/* ---- Features ----
+   One column to 640, two above. Never three: at 1240px three of these across
+   leaves each one a 28ch measure, which is narrower than the lede above it. */
+.scrollglobe-features {
+  display: grid;
+  gap: 0.8rem;
+  margin-block-start: 1.9rem;
+  max-width: 62ch;
+}
+@media (min-width: 640px) {
+  .scrollglobe-features { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 74ch; }
+}
+.scrollglobe-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: clamp(0.9rem, 3.2vw, 1.25rem);
+  border-radius: var(--sky-radius-md);
+  border: 1px solid rgba(245, 240, 230, 0.14);
+  background: rgba(245, 240, 230, 0.06);
+  -webkit-backdrop-filter: blur(var(--sky-glass-blur));
+  backdrop-filter: blur(var(--sky-glass-blur));
+  text-align: start;
+  transition: transform 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+}
+.scrollglobe-feature:hover {
+  transform: translateY(-2px);
+  border-color: rgba(201, 162, 39, 0.5);
+  background: rgba(245, 240, 230, 0.1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .scrollglobe-feature { transition: none; }
+  .scrollglobe-feature:hover { transform: none; }
+}
+.scrollglobe-feature-pip {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  margin-block-start: 0.5rem;
+  border-radius: 999px;
+  background: var(--sky-coral);
+}
+.scrollglobe-feature-title {
+  font-weight: 600;
+  font-size: clamp(0.95rem, 3.6vw, 1.05rem);
+  color: #f5f0e6;
+}
+.scrollglobe-feature-body {
+  margin-block-start: 0.3rem;
+  font-size: clamp(0.85rem, 3.3vw, 0.95rem);
+  line-height: 1.55;
+  color: rgba(245, 240, 230, 0.72);
+}
+
+/* ---- Globe ----
+   A layout size, not a transform: scaling a 250px sphere down to phone size
+   with `scale()` blurs the texture and the inset shadow rim together, and the
+   rim is the only thing making a flat map read as a ball. The section's own
+   scale still rides on top of this, which is how the same sphere can be a
+   companion on one section and a backdrop on the next. */
+.globe {
+  --globe-size: clamp(150px, 40vw, 250px);
+  position: relative;
+  width: var(--globe-size);
+  height: var(--globe-size);
+}
+.globe-sphere {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: left center;
+  /* The reference's shading, kept whole -- the rim light, the terminator and
+     the shadowed limb are what make this a sphere and not a circular crop.
+     The last two offsets are px against its fixed 250px, so they are
+     proportional here instead. */
+  box-shadow:
+    0 0 20px rgba(255, 255, 255, 0.2),
+    -5px 0 8px #c3f4ff inset,
+    15px 2px 25px #000 inset,
+    -24px -2px 34px #c3f4ff99 inset,
+    calc(var(--globe-size) * 1) 0 44px #00000066 inset,
+    calc(var(--globe-size) * 0.6) 0 38px #000000aa inset;
+  animation: globe-rotate 30s linear infinite;
+}
+/* The texture is 2:1 equirectangular, so one full turn is exactly its own
+   rendered width -- which is twice the sphere's, at background-size: cover. */
+@keyframes globe-rotate {
+  from { background-position: 0 center; }
+  to { background-position: calc(var(--globe-size) * 2) center; }
+}
+.globe-star {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: #fff;
+  animation-name: globe-twinkle;
+  animation-iteration-count: infinite;
+}
+@keyframes globe-twinkle {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 1; }
+}
+/* Reduced motion stops the spin and the twinkle; it does not hide the globe.
+   The hero should still have its subject, it just must not move. */
+@media (prefers-reduced-motion: reduce) {
+  .globe-sphere, .globe-star { animation: none; }
+  .globe-star { opacity: 0.75; }
+}

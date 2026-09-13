@@ -135,6 +135,32 @@ export const EN = {
   "news.error": "That didn\u2019t go through. Check the address and try again.",
   "news.privacy": "No spam. Unsubscribe anytime.",
 
+  /* ---- Homepage hero (components/site/HeroGlobe.tsx) ----
+     Counts are passed in from data/ at render, never written into the string,
+     so a new destination or vertical updates the copy in every language at
+     once. Keep the {placeholders} when translating. */
+  "hero.badge": "Skynova Agency",
+  "hero.title": "Every trip.",
+  "hero.subtitle": "One place.",
+  "hero.lede":
+    "Flights, stays, cars, connectivity, tickets and tours -- compared in one place, booked with trusted travel partners at no extra cost.",
+  "hero.howItWorks": "See how it works",
+  "hero.reachBadge": "The reach",
+  "hero.reachTitle": "Everywhere you were already going.",
+  "hero.reachLede":
+    "One search sits over the partners who actually fulfil the booking, across {regions} regions -- so the comparison is real and the checkout is theirs.",
+  "hero.f1Title": "{count} kinds of booking",
+  "hero.f1Body": "Compared in a single flow, each routed straight to the partner who fulfils it.",
+  "hero.f2Title": "{count} destinations routed",
+  "hero.f2Body": "Written up across {regions} regions, each with the booking links that match the route.",
+  "hero.f3Title": "No markup, ever",
+  "hero.f3Body": "Checkout happens on the partner's own site, at the partner's own price.",
+  "hero.beginBadge": "Begin",
+  "hero.beginTitle": "Where do you want to wake up?",
+  "hero.beginLede":
+    "Start with a destination, a date, or nothing at all -- the search below takes any of the three.",
+  "hero.beginCta": "Plan your trip",
+
   "home.introAlt": "Atmospheric night sky plate",
   "home.flightsHeading": "Real fares, compared in one search.",
   "home.flightsCopy":
@@ -961,6 +987,28 @@ const FR: Dict = {
   "news.privacy": "Pas de spam. D\u00e9sinscription \u00e0 tout moment.",
 
   "home.introAlt": "Ciel nocturne",
+  "hero.badge": "Skynova Agency",
+  "hero.title": "Chaque voyage.",
+  "hero.subtitle": "Un seul endroit.",
+  "hero.lede":
+    "Vols, h\u00e9bergements, voitures, connectivit\u00e9, billets et excursions \u2014 compar\u00e9s au m\u00eame endroit, r\u00e9serv\u00e9s aupr\u00e8s de partenaires de confiance, sans frais suppl\u00e9mentaires.",
+  "hero.howItWorks": "Voir comment \u00e7a marche",
+  "hero.reachBadge": "La port\u00e9e",
+  "hero.reachTitle": "Partout o\u00f9 vous alliez d\u00e9j\u00e0.",
+  "hero.reachLede":
+    "Une seule recherche au-dessus des partenaires qui assurent r\u00e9ellement la r\u00e9servation, sur {regions} r\u00e9gions \u2014 la comparaison est r\u00e9elle, le paiement reste chez eux.",
+  "hero.f1Title": "{count} types de r\u00e9servation",
+  "hero.f1Body": "Compar\u00e9s en un seul parcours, chacun dirig\u00e9 vers le partenaire qui l\u2019assure.",
+  "hero.f2Title": "{count} destinations couvertes",
+  "hero.f2Body": "R\u00e9dig\u00e9es sur {regions} r\u00e9gions, avec les liens de r\u00e9servation correspondant \u00e0 l\u2019itin\u00e9raire.",
+  "hero.f3Title": "Jamais de majoration",
+  "hero.f3Body": "Le paiement se fait sur le site du partenaire, au prix du partenaire.",
+  "hero.beginBadge": "Commencer",
+  "hero.beginTitle": "O\u00f9 voulez-vous vous r\u00e9veiller ?",
+  "hero.beginLede":
+    "Commencez par une destination, une date, ou rien du tout \u2014 la recherche ci-dessous accepte les trois.",
+  "hero.beginCta": "Planifiez votre voyage",
+
   "home.flightsHeading": "De vrais tarifs, compar\u00e9s en une seule recherche.",
   "home.flightsCopy":
     "Comparez les compagnies via la recherche Aviasales et bloquez un tarif avant qu\u2019il ne bouge.",

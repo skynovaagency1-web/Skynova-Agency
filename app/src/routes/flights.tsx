@@ -6,6 +6,7 @@ import { FlightRoutesSection } from "@/components/site/FlightRoutes";
 import { CategoryGridSection } from "@/components/site/CategoryGrid";
 import { WeekendInspirationSection } from "@/components/site/WeekendInspiration";
 import { FlightGuidesSection } from "@/components/site/FlightGuides";
+import { FlightHeroScroll } from "@/components/site/FlightHeroScroll";
 import { flightsLink } from "@/lib/affiliate";
 import { useT } from "@/lib/i18n-strings";
 
@@ -30,10 +31,18 @@ function FlightsPage() {
       eyebrow={t("service.flights")}
       title={t("home.flightsHeading")}
       description={t("home.flightsCopy")}
-      heroVideo={{ videoSrc: "/assets/hero/flight-resort.mp4" }}
       heroAlt={t("flights.heroAlt")}
       ctaHref={flightsLink()}
       ctaLabel={t("home.compareFlights")}
+      heroSlot={
+        <FlightHeroScroll
+          eyebrow={t("service.flights")}
+          title={t("home.flightsHeading")}
+          description={t("home.flightsCopy")}
+          ctaHref={flightsLink()}
+          ctaLabel={t("home.compareFlights")}
+        />
+      }
       bullets={[
         { title: t("flights.b1Title"), body: t("flights.b1Body") },
         { title: t("flights.b2Title"), body: t("flights.b2Body") },
