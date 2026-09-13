@@ -5866,7 +5866,21 @@ html.lenis body { height: auto; }
     padding: 12px;
     scroll-snap-align: center;
   }
-  .heroflyin-cards .hero-card-note { display: block; }
+  /* Two cards on a phone, not four -- the same call the old hero made at
+     this width. The info card carries what the site is, the stat carries
+     the scale; the two notes are secondary links that the page repeats
+     further down. With only two left they share the row and nothing has to
+     be scrolled to be found. */
+  .heroflyin-cards .hero-card-note { display: none; }
+  /* Not an even split: the info card carries three lines of copy and the
+     stat carries a number, so an equal share made the pair TALLER than the
+     four-card strip it replaced (267px against 191px) purely from wrapping. */
+  .heroflyin-cards .hero-card-info { flex: 1.9 1 0; min-width: 0; }
+  .heroflyin-cards .hero-card-stat { flex: 1 1 0; min-width: 0; }
+  /* The thumbnail is decoration, and it was costing the copy 44px of width
+     on the narrowest column on the page. */
+  .heroflyin-cards .hero-card-thumb { display: none; }
+  .heroflyin-cards .hero-cards { overflow-x: visible; scroll-snap-type: none; }
   .heroflyin-cards .hero-card-title { font-size: 13.5px; }
   .heroflyin-cards .hero-card-subtitle { font-size: 12.5px; }
   .heroflyin-cards .hero-card-text { font-size: 11.5px; line-height: 1.45; margin-top: 6px; }
