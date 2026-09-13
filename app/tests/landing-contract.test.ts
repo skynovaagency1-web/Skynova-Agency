@@ -24,12 +24,18 @@ describe("scroll-scrub website landing contract", () => {
     const landingRoute = readFileSync(new URL("../src/routes/index.tsx", import.meta.url), "utf8");
     const appRoute = readFileSync(new URL("../src/routes/app.tsx", import.meta.url), "utf8");
 
-    // "/" is the Skynova travel homepage -- the scroll-scrubbed Hero
-    // (components/site/Hero.tsx) that replaced the template's ScrollScrub
-    // journey -- and must never pull in the app workspace. The template's
-    // check named a component the rebuilt homepage no longer has, so it
-    // guarded nothing; these guard the split the test is actually about.
-    expect(landingRoute).toContain("<Hero />");
+    // "/" is the Skynova travel homepage -- currently the scroll fly-in hero
+    // (components/site/HeroScroll.tsx), which replaced the scroll-scrubbed
+    // Hero (components/site/Hero.tsx, still in the tree as the alternate) --
+    // and must never pull in the app workspace. The template's check named a
+    // component the rebuilt homepage no longer has, so it guarded nothing;
+    // these guard the split the test is actually about.
+    //
+    // This line names whichever component is the homepage's hero, so it has
+    // to move whenever the hero does. It has now gone stale twice for that
+    // reason: once when the template's name was left behind, and once when
+    // the hero was swapped without this suite being run.
+    expect(landingRoute).toContain("<HeroScroll />");
     expect(landingRoute).not.toContain("PromptBox");
     expect(landingRoute).not.toContain("UserGenerations");
     expect(appRoute).toContain('createFileRoute("/app")');

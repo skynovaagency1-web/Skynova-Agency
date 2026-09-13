@@ -5743,7 +5743,6 @@ html.lenis body { height: auto; }
   min-height: 0;
 }
 .flyin-plane {
-  --fly: 0;
   position: absolute;
   inset: 0;
   z-index: 1;
@@ -5761,15 +5760,11 @@ html.lenis body { height: auto; }
      rather than as depth. */
   padding-block-start: clamp(1rem, 5vh, 4rem);
   pointer-events: none;
-  /* Centred at --fly 0.5. 210vw each way rather than the reference's much
-     larger throw: the wider the arc, the smaller the slice of scroll in
-     which the plane is actually on screen. */
-  transform: translate3d(calc((var(--fly) - 0.5) * 210vw), 0, 0);
-  /* A trapezoid -- in as it arrives, held, out as it leaves. min() of two
-     ramps rather than keyframes, so it stays tied to scroll position. */
-  /* Tops out below 1: the plane is the atmosphere behind the copy, not a
-     competitor to it, so wherever they do overlap the words stay dominant. */
-  opacity: clamp(0, min(calc((var(--fly) - 0.06) * 8), calc((0.94 - var(--fly)) * 8)), 0.85);
+  /* Transform and opacity are framer-motion's now -- it writes them inline
+     from scroll progress, and a CSS declaration here would be a second
+     source of truth for the same two properties. The travel is -105vw to
+     +105vw, which is a screen and a bit each way: the wider the arc, the
+     smaller the slice of scroll in which the plane is actually on screen. */
   will-change: transform, opacity;
 }
 .flyin-plane-img { width: clamp(240px, 36vw, 540px); height: auto; max-width: none; }
