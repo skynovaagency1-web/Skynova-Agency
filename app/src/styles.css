@@ -5745,29 +5745,21 @@ html.lenis body { height: auto; }
 .flyin-plane {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  /* Over the copy, not behind it -- the reference puts the plane at z-20
+     against the text's z-10, and the plane passing in FRONT is the whole
+     effect. An earlier pass here flew it small, high and dimmed behind the
+     headline to protect legibility, which removed the thing the hero is for.
+     The pass is brief, and the copy is back the moment it clears. */
+  z-index: 3;
   display: flex;
-  /* Flies through the band ABOVE the copy, not across the middle of it.
-     Centred vertically -- which is what the reference does -- the flight
-     line runs straight through the headline, the lede and the buttons: at
-     mid-flight the nose sat on "connectivity" and the wings crossed the
-     call to action. It read as a collision rather than as depth, and the
-     space it wanted was sitting empty under the nav the whole time. */
-  align-items: flex-start;
-  /* High and clear of the eyebrow. At 15vh the fuselage sat behind the
-     SKYNOVA AGENCY chip with the wings across the headline -- better than
-     flying through the middle of the copy, but still reading as an accident
-     rather than as depth. */
-  padding-block-start: clamp(1rem, 5vh, 4rem);
+  align-items: center;
   pointer-events: none;
-  /* Transform and opacity are framer-motion's now -- it writes them inline
-     from scroll progress, and a CSS declaration here would be a second
-     source of truth for the same two properties. The travel is -105vw to
-     +105vw, which is a screen and a bit each way: the wider the arc, the
-     smaller the slice of scroll in which the plane is actually on screen. */
+  /* Transform and opacity are framer-motion's -- it writes them inline from
+     scroll progress, and a CSS declaration here would be a second source of
+     truth for the same two properties. */
   will-change: transform, opacity;
 }
-.flyin-plane-img { width: clamp(240px, 36vw, 540px); height: auto; max-width: none; }
+.flyin-plane-img { width: min(96vw, 1040px); height: auto; max-width: none; }
 
 /* Copy takes the slack between the nav and the cards, and centres in it. */
 .heroflyin-copy {
@@ -5817,11 +5809,10 @@ html.lenis body { height: auto; }
      the plane two screens, so it crossed and was gone inside half a flick. */
   .flyin { height: 190vh; }
   .flyin-sticky { padding-block: max(4.75rem, 8vh) 0.9rem; }
-  .flyin-plane-img { width: clamp(190px, 58vw, 330px); }
+  .flyin-plane-img { width: min(155vw, 600px); }
   .heroflyin-copy .site-h2 { max-width: 13ch; }
   /* Clears the day/night toggle, which sits top-right at this width. */
   .heroflyin-copy { padding-block-start: 2.4rem; }
-  .flyin-plane { padding-block-start: clamp(0.5rem, 3vh, 2rem); }
   /* All four panels, as a snap strip rather than a stack. Stacked they
      cover the stage completely, which is why the old hero simply hid two of
      them below 900px; a strip keeps every one reachable and the hero visible

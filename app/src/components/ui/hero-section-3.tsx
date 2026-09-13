@@ -61,13 +61,13 @@ const ScrollFlyIn = React.forwardRef<HTMLDivElement, ScrollFlyInProps>(
     });
 
     const x = useTransform(scrollYProgress, [0, 1], ["-105vw", "105vw"]);
-    // Tops out below 1: the plane is the atmosphere behind the copy, not a
-    // competitor to it, so wherever they overlap the words stay dominant.
-    const opacity = useTransform(scrollYProgress, [0.06, 0.17, 0.83, 0.94], [0, 0.85, 0.85, 0]);
+    // Full opacity: the plane crosses in front of the copy, as the reference
+    // has it, rather than sitting behind it as atmosphere.
+    const opacity = useTransform(scrollYProgress, [0.04, 0.15, 0.85, 0.96], [0, 1, 1, 0]);
 
     // Reduced motion parks the image mid-flight rather than hiding it: the
     // hero should still have its subject, it just must not move.
-    const style = reduceMotion ? { x: 0, opacity: 0.85 } : { x, opacity };
+    const style = reduceMotion ? { x: 0, opacity: 1 } : { x, opacity };
 
     return (
       <div ref={setRefs} className={cn("flyin", className)} {...props}>
