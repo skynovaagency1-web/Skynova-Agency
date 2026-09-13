@@ -2,7 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { Nav } from "@/components/site/Nav";
-import { Hero } from "@/components/site/Hero";
+// Hero.tsx stays in the tree, unused: it holds the 102-frame scrubbed
+// boarding sequence, and swapping this one import is the whole switch in
+// either direction.
+import { HeroScroll } from "@/components/site/HeroScroll";
 import { TripSearch } from "@/components/site/TripSearch";
 import { TrustSection } from "@/components/site/Sections2";
 import {
@@ -76,7 +79,7 @@ function Index() {
       <StructuredData json={HOME_SCHEMA} />
       <Nav />
       <main>
-        <Hero />
+        <HeroScroll />
         <TripSearch />
         <div ref={afterglowRef} className="hero-afterglow">
           <TrustLineSection />

@@ -5681,3 +5681,183 @@ html.lenis body { height: auto; }
   .vcard { transition: none; }
   .vcard:hover, .vcard:focus-visible { transform: none; }
 }
+
+/* ---- Scroll fly-in hero (components/ui/hero-section-3 + site/HeroScroll) ----
+   Copy held still on a sticky stage while the plane crosses it. The motion is
+   one custom property, --fly (0 -> 1 across the stage's own travel), written
+   to the plane element by the component; everything below is derived from it
+   in CSS, so nothing touches layout per frame.
+
+   The stage is a COLUMN, not a centred box with things absolutely pinned to
+   it. The first attempt centred the copy and pinned the cards to the bottom
+   edge, which works only while the viewport is tall enough for both -- at
+   1280x900 the cards printed straight through the headline, and on a phone
+   the card strip covered it entirely. Laying the stage out as
+   copy-then-cards, with the copy taking the slack, means the two can never
+   claim the same space at any height. */
+.flyin { position: relative; height: 210vh; }
+.flyin-sticky {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100svh;
+  min-height: 560px;
+  /* Clears the sticky nav at the top; the foot holds the cards off the edge. */
+  padding-block: max(5.5rem, 10vh) clamp(0.9rem, 2.5vh, 1.6rem);
+  /* The reference drops overflow:hidden here to avoid clipping the plane.
+     That is what lets it clip: translating an element two screens sideways
+     with nothing to contain it gives the whole document a horizontal
+     scrollbar. The stage is the frame the plane flies through, so it clips. */
+  overflow: hidden;
+  /* A dark stage, not the page's cream. The floating cards are translucent
+     dark chrome designed to sit on a photograph -- on a light ground they
+     read as muddy grey boxes with white text on pale grey. The old hero gave
+     them a full-bleed film frame; this one gives them a night sky, which the
+     plane cutout also needs to read against. */
+  background:
+    radial-gradient(120% 78% at 50% 16%, #2a251c 0%, transparent 64%),
+    linear-gradient(180deg, #16130d 0%, #221d15 100%);
+  color: #f5f0e6;
+}
+/* Copy was authored for the light page; on this stage it takes the same
+   treatment the old hero used over its dark cabin frames. */
+.heroflyin-copy .site-h2 { color: #f5f0e6; }
+.heroflyin-copy .heroflyin-lede { color: rgba(245, 240, 230, 0.78); }
+.heroflyin-copy .site-eyebrow {
+  color: #f3e6b8;
+  border-left-color: #e3c569;
+  background: linear-gradient(rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.14)) padding-box;
+  box-shadow: none;
+}
+.heroflyin-copy .btn-ghost-link { color: rgba(245, 240, 230, 0.86); }
+.flyin-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 0;
+}
+.flyin-plane {
+  --fly: 0;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  /* Flies through the band ABOVE the copy, not across the middle of it.
+     Centred vertically -- which is what the reference does -- the flight
+     line runs straight through the headline, the lede and the buttons: at
+     mid-flight the nose sat on "connectivity" and the wings crossed the
+     call to action. It read as a collision rather than as depth, and the
+     space it wanted was sitting empty under the nav the whole time. */
+  align-items: flex-start;
+  /* High and clear of the eyebrow. At 15vh the fuselage sat behind the
+     SKYNOVA AGENCY chip with the wings across the headline -- better than
+     flying through the middle of the copy, but still reading as an accident
+     rather than as depth. */
+  padding-block-start: clamp(1rem, 5vh, 4rem);
+  pointer-events: none;
+  /* Centred at --fly 0.5. 210vw each way rather than the reference's much
+     larger throw: the wider the arc, the smaller the slice of scroll in
+     which the plane is actually on screen. */
+  transform: translate3d(calc((var(--fly) - 0.5) * 210vw), 0, 0);
+  /* A trapezoid -- in as it arrives, held, out as it leaves. min() of two
+     ramps rather than keyframes, so it stays tied to scroll position. */
+  /* Tops out below 1: the plane is the atmosphere behind the copy, not a
+     competitor to it, so wherever they do overlap the words stay dominant. */
+  opacity: clamp(0, min(calc((var(--fly) - 0.06) * 8), calc((0.94 - var(--fly)) * 8)), 0.85);
+  will-change: transform, opacity;
+}
+.flyin-plane-img { width: clamp(240px, 36vw, 540px); height: auto; max-width: none; }
+
+/* Copy takes the slack between the nav and the cards, and centres in it. */
+.heroflyin-copy {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+  text-align: center;
+}
+.heroflyin-copy .site-eyebrow { align-self: center; }
+.heroflyin-copy .site-h2 { margin-inline: auto; max-width: 18ch; }
+.heroflyin-lede { margin-inline: auto; max-width: 46ch; }
+.heroflyin-daynight { position: absolute; inset-block-start: 1.15rem; inset-inline-end: 1.15rem; z-index: 5; }
+
+/* The cards keep their own chrome (.hero-card* is untouched) and are only
+   re-laid-out: in the old hero they were absolutely placed against a
+   full-bleed photograph, and this stage has no photograph to place them on. */
+.heroflyin-cards { flex: 0 0 auto; width: 100%; z-index: 3; padding-top: clamp(1rem, 3vh, 2rem); }
+.heroflyin-cards .hero-cards {
+  position: static;
+  inset: auto;
+  height: auto;
+  opacity: 1;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0.7rem;
+  padding: 0 1rem;
+}
+.heroflyin-cards .hero-card-info { position: static; width: min(340px, 90vw); top: auto; right: auto; }
+.heroflyin-cards .hero-cards-bottom {
+  position: static;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7rem;
+}
+
+@media (max-width: 768px) {
+  /* More travel, not less. At 150vh the stage had ~420px of scroll to move
+     the plane two screens, so it crossed and was gone inside half a flick. */
+  .flyin { height: 190vh; }
+  .flyin-sticky { padding-block: max(4.75rem, 8vh) 0.9rem; }
+  .flyin-plane-img { width: clamp(190px, 58vw, 330px); }
+  .heroflyin-copy .site-h2 { max-width: 13ch; }
+  /* Clears the day/night toggle, which sits top-right at this width. */
+  .heroflyin-copy { padding-block-start: 2.4rem; }
+  .flyin-plane { padding-block-start: clamp(0.5rem, 3vh, 2rem); }
+  /* All four panels, as a snap strip rather than a stack. Stacked they
+     cover the stage completely, which is why the old hero simply hid two of
+     them below 900px; a strip keeps every one reachable and the hero visible
+     behind it. */
+  .heroflyin-cards { padding-top: clamp(0.75rem, 2vh, 1.25rem); }
+  .heroflyin-cards .hero-cards {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 0.55rem;
+    padding: 0 1rem 0.35rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .heroflyin-cards .hero-cards::-webkit-scrollbar { display: none; }
+  /* Lets the three lower panels join the same strip as the info card
+     instead of scrolling as one welded block. */
+  .heroflyin-cards .hero-cards-bottom { display: contents; }
+  .heroflyin-cards .hero-card-info,
+  .heroflyin-cards .hero-card-note,
+  .heroflyin-cards .hero-card-stat {
+    flex: 0 0 68vw;
+    width: auto;
+    scroll-snap-align: center;
+  }
+  /* Undoes the old hero's phone rule, which hid these two outright. */
+  .heroflyin-cards .hero-card-note { display: block; }
+  .heroflyin-daynight { inset-block-start: 4.4rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flyin-plane { transition: none; }
+}
