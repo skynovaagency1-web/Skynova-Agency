@@ -5778,31 +5778,41 @@ html.lenis body { height: auto; }
 /* The cards keep their own chrome (.hero-card* is untouched) and are only
    re-laid-out: in the old hero they were absolutely placed against a
    full-bleed photograph, and this stage has no photograph to place them on. */
-.heroflyin-cards { flex: 0 0 auto; width: 100%; z-index: 3; padding-top: clamp(1rem, 3vh, 2rem); }
+/* Placed as the reference has them: the info card pinned top-right, and the
+   other three along the foot -- note, stat, note -- rather than gathered into
+   a row at the bottom of the stage. This is the arrangement HeroCards was
+   built for; moving it into the fly-in stage is what flattened it. */
+.heroflyin-cards { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
 .heroflyin-cards .hero-cards {
-  position: static;
-  inset: auto;
+  position: absolute;
+  inset: 0;
   height: auto;
   opacity: 1;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: stretch;
-  justify-content: center;
-  gap: 0.7rem;
-  padding: 0 1rem;
+  display: block;
+  padding: 0;
 }
-.heroflyin-cards .hero-card-info { position: static; width: min(340px, 90vw); top: auto; right: auto; }
-.heroflyin-cards .hero-cards-bottom {
-  position: static;
+.heroflyin-cards .hero-card-info {
+  position: absolute;
+  top: clamp(5.5rem, 13vh, 9rem);
+  right: clamp(1rem, 3vw, 2.5rem);
   left: auto;
-  right: auto;
-  bottom: auto;
+  width: min(360px, 34vw);
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.7rem;
+  gap: 12px;
 }
+.heroflyin-cards .hero-cards-bottom {
+  position: absolute;
+  left: clamp(1rem, 3vw, 2.5rem);
+  right: clamp(1rem, 3vw, 2.5rem);
+  bottom: clamp(1.25rem, 4vh, 2.5rem);
+  top: auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(12px, 2vw, 28px);
+}
+/* The toggle lived top-right, which is now the info card's corner. */
+.heroflyin-daynight { inset-inline-start: 1.15rem; inset-inline-end: auto; }
 
 @media (max-width: 768px) {
   /* More travel, not less. At 150vh the stage had ~420px of scroll to move
@@ -5817,31 +5827,40 @@ html.lenis body { height: auto; }
      cover the stage completely, which is why the old hero simply hid two of
      them below 900px; a strip keeps every one reachable and the hero visible
      behind it. */
-  .heroflyin-cards { padding-top: clamp(0.75rem, 2vh, 1.25rem); }
+  /* width:100% matters: .flyin-content centres its children, so a block
+     child sizes to max-content -- the strip came out 1119px wide inside a
+     390px viewport, clipped by the stage and impossible to scroll. */
+  .heroflyin-cards {
+    position: static;
+    inset: auto;
+    width: 100%;
+    max-width: 100%;
+    padding-top: clamp(0.75rem, 2vh, 1.25rem);
+  }
+  .heroflyin-cards .hero-cards { position: static; inset: auto; display: flex; }
+  .heroflyin-cards .hero-card-info,
+  .heroflyin-cards .hero-cards-bottom { position: static; inset: auto; width: auto; }
   .heroflyin-cards .hero-cards {
-    flex-wrap: nowrap;
+    /* Explicit: the old hero's max-width:900px rule sets column on
+       .hero-cards, and without this the strip stacked instead of scrolling. */
+    flex-direction: row;
+    width: 100%;
+    max-width: 100%;
     justify-content: flex-start;
     gap: 0.55rem;
     padding: 0 1rem 0.35rem;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
   }
   .heroflyin-cards .hero-cards::-webkit-scrollbar { display: none; }
-  /* Lets the three lower panels join the same strip as the info card
-     instead of scrolling as one welded block. */
   .heroflyin-cards .hero-cards-bottom { display: contents; }
   .heroflyin-cards .hero-card-info,
   .heroflyin-cards .hero-card-note,
-  .heroflyin-cards .hero-card-stat {
-    flex: 0 0 68vw;
-    width: auto;
-    scroll-snap-align: center;
-  }
-  /* Undoes the old hero's phone rule, which hid these two outright. */
+  .heroflyin-cards .hero-card-stat { flex: 0 0 68vw; width: auto; scroll-snap-align: center; }
   .heroflyin-cards .hero-card-note { display: block; }
-  .heroflyin-daynight { inset-block-start: 4.4rem; }
+  /* No info card in this corner at phone width, so the toggle returns to it. */
+  .heroflyin-daynight { inset-block-start: 4.4rem; inset-inline-end: 1.15rem; inset-inline-start: auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {
