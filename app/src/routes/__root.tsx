@@ -18,6 +18,7 @@ import { Analytics, GoogleAnalytics } from "@/lib/analytics";
 import { AuthModal } from "@/components/site/AuthModal";
 import { CookieConsent } from "@/components/site/CookieConsent";
 import { FlightRail } from "@/components/site/FlightRail";
+import { CardTilt } from "@/components/site/CardTilt";
 import { OutboundClickTracker } from "@/components/site/OutboundClickTracker";
 import { PageViewTracker } from "@/components/site/PageViewTracker";
 import { NotFound } from "@/components/site/NotFound";
@@ -246,6 +247,7 @@ function RootComponent() {
         {/* Site-wide, not just the homepage. It anchors to #how-it-works
             where that exists and otherwise starts at the top of the page. */}
         <FlightRail />
+        <CardTilt />
         <OutboundClickTracker />
         <PageViewTracker />
         <Outlet />

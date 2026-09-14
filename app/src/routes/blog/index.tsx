@@ -126,7 +126,7 @@ function BlogPage() {
                 // stay as plain cards rather than pointing at an empty page.
                 const readable = hasArticle(post.slug);
                 return (
-                  <article key={post.slug}>
+                  <article key={post.slug} className="blog-post-card">
                     <div className="blog-card-media">
                       {readable ? (
                         <Link to="/blog/$slug" params={{ slug: post.slug }} className="blog-media-link">

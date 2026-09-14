@@ -6759,3 +6759,34 @@ html.lenis body { height: auto; }
   .skewcard-action { transition: none; animation: none; }
   .skewcard-action:hover { transform: none; }
 }
+
+/* ---- Site-wide card tilt (components/site/CardTilt.tsx) ----
+   The transform itself is written by that component from the pointer's
+   position; this is only what the transform needs to look right.
+
+   A short transition, not the 0.25-0.3s these cards carried for their old
+   hover lift: on a transform rewritten every pointer move, a long ease reads
+   as the card lagging behind the cursor rather than following it. Long enough
+   to smooth the steps between frames, short enough to feel attached.
+
+   Cards that had a hover lift keep their transition declaration for the
+   properties they animate besides transform (border, shadow, background) --
+   this only overrides the transform's timing. */
+.vcard,
+.dest-mini-card,
+.route-card,
+.site-panel,
+.benefit-tile,
+.blog-post-card {
+  transition-property: transform, border-color, box-shadow, background-color, color;
+  transition-duration: 0.14s, 0.25s, 0.25s, 0.25s, 0.25s;
+  transition-timing-function: ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .vcard,
+  .dest-mini-card,
+  .route-card,
+  .site-panel,
+  .benefit-tile,
+  .blog-post-card { transition: none; }
+}
