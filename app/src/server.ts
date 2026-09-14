@@ -96,6 +96,33 @@ const LEGACY_REDIRECTS: Record<string, string> = {
   "/cookies-policy": "/privacy",
   "/services": "/",
   "/services-5": "/",
+
+  /* Misspellings of the site's own paths, 301'd rather than left to 404.
+   *
+   * Not hypothetical: /distinations was reached by the owner typing it, and a
+   * visitor who fumbles a word is more likely to leave than to notice their
+   * own typo and retry. "destinations" is the word most worth catching -- it
+   * is the busiest page after the homepage, it is eleven letters long, and the
+   * e/i swap in the second syllable is the mistake people actually make.
+   *
+   * A curated list rather than fuzzy matching. Edit-distance matching against
+   * every known route would catch more, but it also guesses: /tours and /torus
+   * are one edit apart, and so are a dozen destination slugs. A wrong redirect
+   * is worse than an honest 404, because the visitor never learns they typed
+   * something else. These are only spellings with one obvious target. */
+  "/distinations": "/destinations",
+  "/destinatons": "/destinations",
+  "/desinations": "/destinations",
+  "/destinatios": "/destinations",
+  "/destination": "/destinations",
+  "/colections": "/collections",
+  "/collectons": "/collections",
+  "/flight": "/flights",
+  "/hotel": "/hotels",
+  "/car-rental": "/car-rentals",
+  "/tour": "/tours",
+  "/insurance": "/travel-insurance",
+  "/compensation": "/flight-compensation",
 };
 
 /** 301s for the legacy set above. Null when the request is not one of them. */
