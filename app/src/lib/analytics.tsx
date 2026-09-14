@@ -53,7 +53,12 @@ export const ANALYTICS_ENABLED = CF_BEACON_TOKEN.length > 0;
  * google-analytics.com is already covered by the wildcard `https:` on
  * connect-src and img-src, so that one host is all GA needed.
  */
-const GA_MEASUREMENT_ID = "G-FWTV0XG4LP";
+/* Replaced 14 Sep 2026. The previous property (G-FWTV0XG4LP) carried the
+ * traffic of the site that stood at this domain before this one, so its
+ * reports mixed two different websites and no date range could separate them
+ * cleanly. This is a fresh GA4 property, whose web stream is registered to
+ * https://skynovaagency.com/ -- so everything in it is this site only. */
+const GA_MEASUREMENT_ID = "G-5BR7XN5C72";
 
 /** Marks the injected loader so a re-render, or a decline-then-accept, can
  * never append a second copy and double-count every page view. */
