@@ -58,6 +58,13 @@ const VERTICALS: { to: string; labelKey: TKey }[] = [
   { to: "/esim", labelKey: "service.esim" },
   { to: "/tours", labelKey: "service.tours" },
   { to: "/bike-rentals", labelKey: "service.bikeRentals" },
+  // Travel protection and charter. Not in data/verticals.ts -- they are not
+  // bookings and the homepage counts that array -- so the footer is where they
+  // get a permanent, crawlable link from every page on the site. Without this
+  // they would be reachable only from the sitemap.
+  { to: "/flight-compensation", labelKey: "protect.compEyebrow" },
+  { to: "/travel-insurance", labelKey: "protect.insEyebrow" },
+  { to: "/yacht-charter", labelKey: "protect.yachtEyebrow" },
 ];
 
 const COMPANY_LINKS: { to: string; labelKey: TKey }[] = [

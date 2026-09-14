@@ -42,7 +42,15 @@ export function applySecurityHeaders(response: Response): Response {
       // banner). Its own beacon call to google-analytics.com is covered by
       // the wildcard https: already open on connect-src below, so this is
       // the only host GA actually needs added here.
-      "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://www.googletagmanager.com https://tpscr.com https://tp.media https://static.localrent.com https://widgets.tiqets.com https://tpo.gg https://tpemb.com https://cdn.klook.com https://*.travelpayouts.com; " +
+      // emrldco.com serves Travelpayouts' link-monetisation script
+      // (components/site/TravelpayoutsLink.tsx), which rewrites outbound
+      // partner links at click time so they carry this account's marker. Its
+      // loader pulls a second chunk from the same origin, so the host covers
+      // both. Listed explicitly rather than left to the *.travelpayouts.com
+      // wildcard because it is not a travelpayouts.com domain at all -- it is
+      // the host their dashboard hands out, and a reader should not have to
+      // guess that the two are the same company.
+      "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://www.googletagmanager.com https://tpscr.com https://tp.media https://static.localrent.com https://widgets.tiqets.com https://tpo.gg https://tpemb.com https://cdn.klook.com https://*.travelpayouts.com https://emrldco.com; " +
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
       // `data:` is required, not optional. Vite inlines any asset under its
       // 4 KB threshold, and the three IBM Plex Mono subsets (--font-mono)

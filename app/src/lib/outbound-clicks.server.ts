@@ -26,6 +26,12 @@ const VERTICALS = new Set([
   "esim",
   "transfers",
   "bikes",
+  // Travel protection. These are not bookings, so they are counted apart
+  // rather than folded into an existing vertical -- and they have to be listed
+  // HERE as well as in PARTNER_VERTICALS below: this set is an allowlist, and
+  // a click whose vertical is missing from it is dropped without a trace.
+  "compensation",
+  "insurance",
 ]);
 
 /** Partner hosts we knowingly link to, mapped to the vertical they serve.
@@ -36,10 +42,24 @@ export const PARTNER_VERTICALS: Record<string, string> = {
   "aviasales.com": "flights",
   "search.hotellook.com": "hotels",
   "hotellook.com": "hotels",
+  // GetRentacar replaced Rentalcars as the car partner (see carRentalLink in
+  // lib/affiliate.ts). The tpm.li short link redirects here, and this map is
+  // keyed on the host a click actually lands on -- so without these two the
+  // whole vertical stopped appearing in outbound stats. The old hosts stay:
+  // links already shared elsewhere still resolve, and mapping them costs
+  // nothing.
+  "getrentacar.com": "cars",
+  "www.getrentacar.com": "cars",
   "www.rentalcars.com": "cars",
   "rentalcars.com": "cars",
   "www.discovercars.com": "cars",
   "discovercars.com": "cars",
+  // Travel protection -- not bookings, so they get their own buckets rather
+  // than being folded into an existing vertical's numbers.
+  "compensair.com": "compensation",
+  "www.compensair.com": "compensation",
+  "ektatraveling.com": "insurance",
+  "www.ektatraveling.com": "insurance",
   "gettransfer.com": "transfers",
   "www.tiqets.com": "events",
   "tiqets.com": "events",

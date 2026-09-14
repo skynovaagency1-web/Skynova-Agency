@@ -149,7 +149,7 @@ function DestinationPage() {
       vertical: "/car-rentals",
       copy: t("dest.copyCars", { name }),
       partners: [
-        { label: "Rentalcars", href: carRentalLink() },
+        { label: "GetRentacar", href: carRentalLink() },
         ...(discoverCars ? [{ label: "Discover Cars", href: discoverCars }] : []),
       ],
     },

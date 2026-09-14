@@ -15,6 +15,7 @@ import appMetaJson from "../app-meta.json";
 import { THEME_COLOR } from "@/lib/theme";
 import { AuthProvider } from "@/lib/auth-context";
 import { Analytics, GoogleAnalytics } from "@/lib/analytics";
+import { TravelpayoutsLink } from "@/components/site/TravelpayoutsLink";
 import { AuthModal } from "@/components/site/AuthModal";
 import { CookieConsent } from "@/components/site/CookieConsent";
 import { FlightRail } from "@/components/site/FlightRail";
@@ -171,6 +172,7 @@ function RootShell({ children }: { children: ReactNode }) {
         {children}
         <Analytics />
         <GoogleAnalytics />
+        <TravelpayoutsLink />
         <CookieConsent />
         <Scripts />
       </body>

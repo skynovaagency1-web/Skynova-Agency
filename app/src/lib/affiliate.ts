@@ -64,38 +64,97 @@ export function hotelsLink(destinationName?: string, dates?: { checkIn?: string;
   return `https://search.hotellook.com/?${params.toString()}`;
 }
 
-// Car rentals: Rentalcars' real search needs a specific pickup-location ID,
-// not a free-text place name -- there's no valid way to pre-fill it from a
-// destination name. This opens their live search tool.
+/**
+ * Car rentals: GetRentacar, through the tracking link Travelpayouts issued for
+ * this account.
+ *
+ * This replaces `rentalcars.com/?affiliateCode=720297`, which earned nothing.
+ * 720297 is a TRAVELPAYOUTS marker, and `affiliateCode` is RentalCars' own id
+ * namespace -- the two are unrelated, so that link sent RentalCars free traffic
+ * with no attribution. It is precisely the mistake the DISCOVER_CARS_AID note
+ * below describes and refuses to make.
+ *
+ * Resolving this short link shows what a correctly tracked click looks like:
+ *
+ *   getrentacar.com/en-US/car-rental
+ *     ?track_id=b389a54924874771ac8fb4e35-720297
+ *     &utm_source=travelpayouts&utm_medium=partner_cpa
+ *
+ * The partner's parameter is `track_id`, and the marker is only a SUFFIX
+ * inside a longer id the redirector mints per click -- it came back different
+ * on every hop of the same chain. So the short link is the thing to publish:
+ * expanding it and hard-coding the result would hand every visitor on the site
+ * one shared click id, which is a different way of earning nothing.
+ *
+ * The cost is that it cannot be deep-linked to a destination. No loss here:
+ * the link it replaces was a bare homepage too, because RentalCars' search
+ * needs a pickup-location ID we do not have.
+ */
 export function carRentalLink(): string {
-  return `https://www.rentalcars.com/?affiliateCode=${TP_MARKER}`;
+  return "https://getrentacar.tpm.li/kSJDKj1G";
 }
 
-// Airport services: routed to GetTransfer, a real working transfer-booking
-// site (the placeholder used earlier, airporttransfer.com, was a dead
-// domain and is no longer used).
+/**
+ * Airport services: GetTransfer, through this account's tracking link.
+ *
+ * Replaces `gettransfer.com/?marker=720297`. `marker` is Travelpayouts' own
+ * parameter name and GetTransfer is not a Travelpayouts-owned site, so it
+ * meant nothing to them -- the resolved link shows the parameter they
+ * actually read:
+ *
+ *   gettransfer.com/en?sub_id=cfa051e941b740bfb79fc10c2-720297
+ *     &utm_source=travelpayouts&utm_medium=cpa
+ */
 export function airportServicesLink(): string {
-  return `https://gettransfer.com/?marker=${TP_MARKER}`;
+  return "https://gettransfer.tpm.li/bi7xLTDZ";
 }
 
-// Events & tickets: Tiqets has no public free-text search URL (their
-// listing pages need a real numeric location ID we don't have -- an
-// invalid one silently falls back to a generic page instead of a 404,
-// which is worse). This opens their real homepage search instead.
+/**
+ * Events & tickets: Tiqets, through this account's tracking link.
+ *
+ * Replaces `tiqets.com/en/?partner=720297`, which put a Travelpayouts marker
+ * into Tiqets' own `partner` field. Their real link carries three parameters,
+ * and `partner` is not an id at all -- it names the network:
+ *
+ *   tiqets.com/en/?partner=travelpayouts.com
+ *     &tq_campaign=6e51565b90b34ef59f2e66b7e-720297
+ *     &tq_click_id=6e51565b90b34ef59f2e66b7e-720297
+ *
+ * Still their homepage rather than a search: Tiqets' listing pages need a
+ * numeric location id we do not have, and an invalid one silently lands on a
+ * generic page instead of erroring. That constraint has not changed; only the
+ * attribution has.
+ */
 export function eventsLink(): string {
-  return `https://www.tiqets.com/en/?partner=${TP_MARKER}`;
+  return "https://tiqets.tpm.li/riu4Kn7I";
 }
 
-// eSIM: Airalo publishes a real per-country product page at
-// airalo.com/{country-slug}-esim (verified against their live site) --
-// since our destination slugs are already kebab-case country names, this
-// goes straight to that destination's eSIM product page.
-export function esimLink(destinationSlug?: string): string {
-  const params = new URLSearchParams({ ref: TP_MARKER });
-  if (destinationSlug) {
-    return `https://www.airalo.com/${destinationSlug}-esim?${params.toString()}`;
-  }
-  return `https://www.airalo.com/?${params.toString()}`;
+/**
+ * eSIM: Airalo, through this account's tracking link.
+ *
+ * THIS TRADES A DEEP LINK FOR ATTRIBUTION, knowingly. The previous version
+ * built `airalo.com/{country-slug}-esim?ref=720297`, which landed on exactly
+ * the right per-country product page -- genuinely better for the visitor. But
+ * `ref` is not a parameter Airalo reads, so every one of those clicks was
+ * unattributed, and a deep link that earns nothing is worth less than a
+ * homepage link that earns. The short link cannot carry a destination.
+ *
+ * Airalo is also the one partner here whose link does not contain the marker
+ * at all. It routes through Impact rather than Travelpayouts' own redirector:
+ *
+ *   airalo.com/?irclickid=1wb3pqTx9xyZU5vyl239Azo5Ukr25OxRkVDlTI0
+ *     &utm_source=impact&utm_campaign=Travelspark%20Limited
+ *
+ * `irclickid` is Impact's per-click id and is how the click is tracked, so
+ * this is expected rather than broken -- but it is the reason a search for
+ * "720297" in the outbound URL comes up empty for this one partner, and worth
+ * knowing before anyone concludes it is misconfigured.
+ *
+ * The destinationSlug parameter is kept so callers need not change; it is
+ * accepted and ignored.
+ */
+export function esimLink(_destinationSlug?: string): string {
+  return "https://airalo.tpm.li/eW0hFF6F";
 }
 
 // Tours & activities: GetYourGuide's search page takes a free-text query
@@ -172,4 +231,59 @@ export function discoverCarsLink(destinationSlug?: string): string | null {
       ? `/${destinationSlug}`
       : "";
   return `https://www.discovercars.com${path}?${params.toString()}`;
+}
+
+/* ---------------------------------------------------------------------------
+ * Travel protection.
+ *
+ * Neither of these is a booking, which is why they are not in data/verticals.ts
+ * and do not appear in the "kinds of booking" count the homepage reads off it.
+ * They are things that pay out when a trip goes wrong.
+ *
+ * Both are Travelpayouts short links rather than composed URLs, and that is
+ * deliberate. Resolving one shows why:
+ *
+ *   ektatraveling.com/?sub_id=822d723c493e4da1a19f0a893-720297
+ *
+ * The partner's parameter is `sub_id`, and the marker is only a SUFFIX inside
+ * an id the redirector mints fresh on every request -- it came back different
+ * on each resolution of the same link. Expanding these and hard-coding the
+ * result would give every visitor on the site one shared click id.
+ * ------------------------------------------------------------------------- */
+
+/** Compensation for a delayed, cancelled or overbooked flight. Compensair take
+ *  a percentage of whatever they recover, which the page says plainly -- a
+ *  visitor should not have to find that out from the partner. */
+export function flightCompensationLink(): string {
+  return "https://compensair.tpm.li/Bpj6H2xG";
+}
+
+/** Travel and medical cover, through Ekta.
+ *
+ *  Note for anyone testing this by hand: a HEAD request to the resolved URL
+ *  answers 404 and a GET answers 200. The link is fine; their origin simply
+ *  does not serve HEAD. Checking with `curl -I` will tell you it is broken. */
+export function travelInsuranceLink(): string {
+  return "https://ektatraveling.tpm.li/n0UXWrFZ";
+}
+
+/**
+ * Yacht and small-ship cruise charter, through Searadar.
+ *
+ * ⚠ THIS LINK SHOWS NO ATTRIBUTION AND MAY EARN NOTHING. Every other partner
+ * link on this page resolves carrying the marker inside the partner's own
+ * tracking parameter -- `sub_id`, `track_id`, `tq_click_id`, `aff_sub`. This
+ * one does a single 302 to a bare homepage:
+ *
+ *   https://searadar.tpm.li/A8ZHWPiU  ->  302  ->  https://searadar.com/
+ *
+ * No query string, and no Set-Cookie anywhere in the chain, so there is no
+ * visible mechanism by which a booking would be traced back to this account.
+ * It is shipped because a page with no link is worth less than a page with an
+ * unproven one, and because the failure is invisible either way -- but it
+ * should be regenerated from the Travelpayouts dashboard, or confirmed against
+ * a real click in their stats, before anyone counts on income from it.
+ */
+export function yachtCharterLink(): string {
+  return "https://searadar.tpm.li/A8ZHWPiU";
 }

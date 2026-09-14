@@ -54,7 +54,7 @@ function PrivacyPage() {
                 <p>
                   Skynova Agency ("Skynova," "we," "us") is a travel search and referral site. We
                   don't sell flights, hotel rooms, cars, or tickets ourselves -- we route your
-                  search to established travel partners (Aviasales, Hotellook, Rentalcars,
+                  search to established travel partners (Aviasales, Hotellook, GetRentacar,
                   GetYourGuide, Airalo, Tiqets, and others), and any booking you complete happens
                   on that partner's own site, under their own terms. This policy covers what we
                   collect on skynovaagency.com itself.

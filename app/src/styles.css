@@ -6790,3 +6790,63 @@ html.lenis body { height: auto; }
   .benefit-tile,
   .blog-post-card { transition: none; }
 }
+
+/* ---- Typographic hero for the pages with no photography
+   (components/site/PlainHero.tsx) ----
+   Flight compensation, travel insurance and yacht charter have no honest
+   stock image, so their heroes are built from type and the site's own gold
+   instead of a borrowed photograph. Shorter than the photo heroes: there is
+   no image to give room to, and a full-bleed block of empty colour would just
+   look like an image that failed to load. */
+.plainhero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: min(62svh, 520px);
+  padding-block: clamp(4.5rem, 12vh, 7rem) clamp(2.5rem, 7vh, 4rem);
+  background:
+    radial-gradient(120% 86% at 12% 0%, rgba(201, 162, 39, 0.16), transparent 62%),
+    radial-gradient(90% 70% at 100% 10%, rgba(201, 162, 39, 0.1), transparent 58%),
+    linear-gradient(180deg, #16130d 0%, #221d15 100%);
+  color: #f5f0e6;
+  overflow: hidden;
+}
+/* A single hairline of gold along the foot, so the block ends on a drawn edge
+   rather than just stopping. */
+.plainhero::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--sky-coral), transparent);
+  opacity: 0.55;
+}
+.plainhero-inner { position: relative; z-index: 1; }
+.plainhero-title {
+  max-width: 18ch;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  line-height: 1.06;
+  color: #f5f0e6;
+}
+.plainhero-lede {
+  margin-block-start: 1.1rem;
+  max-width: 52ch;
+  font-size: clamp(0.98rem, 3.4vw, 1.15rem);
+  line-height: 1.6;
+  color: rgba(245, 240, 230, 0.8);
+}
+.plainhero-actions { margin-block-start: 1.9rem; }
+.plainhero-note {
+  margin-block-start: 1.1rem;
+  max-width: 54ch;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: rgba(245, 240, 230, 0.62);
+}
+.plainhero .site-eyebrow {
+  color: #f3e6b8;
+  border-left-color: #e3c569;
+  background: linear-gradient(rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.14)) padding-box;
+  box-shadow: none;
+}

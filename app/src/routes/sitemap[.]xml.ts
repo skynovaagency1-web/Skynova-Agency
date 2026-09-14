@@ -16,6 +16,13 @@ const STATIC_PAGES: { path: string; priority: string; changefreq: string }[] = [
   { path: "/tours", priority: "0.8", changefreq: "weekly" },
   { path: "/events", priority: "0.8", changefreq: "weekly" },
   { path: "/bike-rentals", priority: "0.7", changefreq: "weekly" },
+  // Travel protection and charter. Not in data/verticals.ts (they are not
+  // bookings, and the homepage counts that array), so nothing adds them here
+  // automatically -- without these three lines they are real, indexable pages
+  // that the sitemap never mentions.
+  { path: "/flight-compensation", priority: "0.7", changefreq: "monthly" },
+  { path: "/travel-insurance", priority: "0.7", changefreq: "monthly" },
+  { path: "/yacht-charter", priority: "0.7", changefreq: "monthly" },
   { path: "/destinations", priority: "0.8", changefreq: "weekly" },
   { path: "/collections", priority: "0.8", changefreq: "weekly" },
   { path: "/blog", priority: "0.6", changefreq: "weekly" },

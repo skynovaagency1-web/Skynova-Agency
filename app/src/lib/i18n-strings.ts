@@ -139,6 +139,81 @@ export const EN = {
      Counts are passed in from data/ at render, never written into the string,
      so a new destination or vertical updates the copy in every language at
      once. Keep the {placeholders} when translating. */
+  /* ---- Travel protection and charter (routes/flight-compensation.tsx,
+     routes/travel-insurance.tsx, routes/yacht-charter.tsx) ----
+     None of these is a booking, so they are not in data/verticals.ts and are
+     not counted in the "kinds of booking" figure the homepage reads off it.
+     The copy states who takes a cut and what is not covered, because a
+     visitor should learn that here rather than at the partner's checkout. */
+  "protect.compEyebrow": "Flight compensation",
+  "protect.compTitle": "A delayed flight can be worth money back.",
+  "protect.compCopy":
+    "If a flight was delayed, cancelled or overbooked, you may be owed compensation under EU261 and similar rules -- often up to 600 EUR per passenger, on tickets bought years ago. Compensair checks a claim for free and handles the airline for you.",
+  "protect.compCta": "Check a flight claim",
+  "protect.compNote":
+    "Compensair works on a no-win-no-fee basis and keeps a percentage of whatever they recover. Checking costs nothing; the fee only applies if a claim pays out.",
+  "protect.compB1Title": "Up to three years back",
+  "protect.compB1Body": "Most European claims stay valid long after the trip, so an old boarding pass may still be worth checking.",
+  "protect.compB2Title": "You don't deal with the airline",
+  "protect.compB2Body": "They file the claim, chase it, and escalate it if the airline refuses.",
+  "protect.compB3Title": "Nothing to pay up front",
+  "protect.compB3Body": "The check is free and the fee comes out of a successful payout, not your pocket.",
+  "protect.compQ1": "Which flights qualify?",
+  "protect.compA1":
+    "Broadly: flights leaving an EU airport, or arriving in the EU on an EU airline, delayed over three hours, cancelled at short notice, or overbooked. Their free check is the reliable answer for a specific flight.",
+  "protect.compQ2": "How far back can I claim?",
+  "protect.compA2":
+    "It varies by country -- commonly two to three years, and longer in a few. An old trip is worth checking rather than assuming.",
+  "protect.compQ3": "What does it cost?",
+  "protect.compA3":
+    "Nothing to check. If a claim succeeds they keep a percentage of the payout, and if it fails you pay nothing.",
+
+  "protect.insEyebrow": "Travel insurance",
+  "protect.insTitle": "Medical cover that travels with you.",
+  "protect.insCopy":
+    "Emergency treatment abroad is the cost that turns a bad trip into a bad year. Ekta covers medical care, hospital stays and evacuation, with policies you can buy for a single trip or a whole year, and for a trip you have already started.",
+  "protect.insCta": "Get a quote",
+  "protect.insNote":
+    "Cover, limits and exclusions vary by policy and country of residence. Read the certificate before buying -- pre-existing conditions and some sports are commonly excluded.",
+  "protect.insB1Title": "Medical and evacuation",
+  "protect.insB1Body": "Treatment, hospital stays and repatriation, which is the part that gets genuinely expensive.",
+  "protect.insB2Title": "Buy mid-trip",
+  "protect.insB2Body": "Cover can start while you are already abroad, which most insurers will not do.",
+  "protect.insB3Title": "Single trip or annual",
+  "protect.insB3Body": "One journey, or a year of them, priced by where you are going and for how long.",
+  "protect.insQ1": "Does it cover me if I've already left?",
+  "protect.insA1":
+    "Yes -- policies can be bought after departure, which is unusual. Anything that happened before the policy starts is not covered.",
+  "protect.insQ2": "Are pre-existing conditions covered?",
+  "protect.insA2":
+    "Usually not by default, and this is the most common reason a claim is refused. Check the certificate for your own policy rather than assuming.",
+  "protect.insQ3": "Is this a substitute for an EHIC or GHIC card?",
+  "protect.insA3":
+    "No. Those cover state treatment in participating countries and nothing else -- no repatriation, no private care, no cover outside the scheme.",
+
+  "protect.yachtEyebrow": "Yachts and small cruises",
+  "protect.yachtTitle": "Charter a boat, with or without a skipper.",
+  "protect.yachtCopy":
+    "Sailing yachts, catamarans and motor boats across the Mediterranean, the Caribbean and further out -- by the week, bareboat if you are qualified, or with a skipper if you are not. Searadar lists real operators and verifies the boats.",
+  "protect.yachtCta": "Browse boats",
+  "protect.yachtNote":
+    "Bareboat charter needs a recognised sailing licence in most countries. Without one, book the same boat with a skipper -- it is a line item, not a different holiday.",
+  "protect.yachtB1Title": "Bareboat or skippered",
+  "protect.yachtB1Body": "Sail it yourself with the right licence, or take a skipper who knows the coast.",
+  "protect.yachtB2Title": "Checked boats",
+  "protect.yachtB2Body": "Listings are verified rather than taken on the operator's word.",
+  "protect.yachtB3Title": "A week is the unit",
+  "protect.yachtB3Body": "Charters run Saturday to Saturday in most of the Mediterranean, which shapes the whole trip.",
+  "protect.yachtQ1": "Do I need a licence?",
+  "protect.yachtA1":
+    "For bareboat, yes -- and which licence counts depends on the flag state. With a skipper you need nothing at all.",
+  "protect.yachtQ2": "What is not in the price?",
+  "protect.yachtA2":
+    "Usually fuel, the end cleaning, marina fees away from the home port, and the skipper's food if you take one. Ask before booking; it adds up.",
+  "protect.yachtQ3": "When should I book?",
+  "protect.yachtA3":
+    "Early for July and August in the Mediterranean -- the good boats in the popular bases go months ahead.",
+
   "hero.badge": "Skynova Agency",
   "hero.title": "Every trip.",
   "hero.subtitle": "One place.",
@@ -397,7 +472,7 @@ export const EN = {
   "cars.faqHeading": "Car rental questions, answered.",
   "cars.q1": "Do I need an international driving license?",
   "cars.a1":
-    "It depends on the country -- Rentalcars' own listing for each car states what's accepted at pickup.",
+    "It depends on the country -- GetRentacar's own listing for each car states what's accepted at pickup.",
   "cars.q2": "Is insurance included in the price?",
   "cars.a2":
     "Basic cover is usually included; excess and upgrade options are shown before you confirm the booking.",
@@ -990,6 +1065,27 @@ const FR: Dict = {
   "news.privacy": "Pas de spam. D\u00e9sinscription \u00e0 tout moment.",
 
   "home.introAlt": "Ciel nocturne",
+  "protect.compEyebrow": "Indemnisation de vol",
+  "protect.compTitle": "Un vol retard\u00e9 peut valoir de l\u2019argent.",
+  "protect.compCopy":
+    "Vol retard\u00e9, annul\u00e9 ou surr\u00e9serv\u00e9 : vous avez peut-\u00eatre droit \u00e0 une indemnisation au titre du r\u00e8glement EU261 \u2014 souvent jusqu\u2019\u00e0 600 EUR par passager, m\u00eame pour des billets achet\u00e9s il y a des ann\u00e9es. Compensair v\u00e9rifie gratuitement et s\u2019occupe de la compagnie.",
+  "protect.compCta": "V\u00e9rifier un vol",
+  "protect.compNote":
+    "Compensair fonctionne sans frais en cas d\u2019\u00e9chec et conserve un pourcentage de la somme obtenue. La v\u00e9rification est gratuite ; les frais ne s\u2019appliquent qu\u2019en cas de succ\u00e8s.",
+  "protect.insEyebrow": "Assurance voyage",
+  "protect.insTitle": "Une couverture m\u00e9dicale qui vous suit.",
+  "protect.insCopy":
+    "Les soins d\u2019urgence \u00e0 l\u2019\u00e9tranger transforment un mauvais voyage en mauvaise ann\u00e9e. Ekta couvre soins, hospitalisation et rapatriement, au voyage ou \u00e0 l\u2019ann\u00e9e, et m\u00eame pour un voyage d\u00e9j\u00e0 commenc\u00e9.",
+  "protect.insCta": "Obtenir un devis",
+  "protect.insNote":
+    "Garanties, plafonds et exclusions varient selon le contrat et le pays de r\u00e9sidence. Lisez le certificat avant d\u2019acheter : les affections pr\u00e9existantes et certains sports sont souvent exclus.",
+  "protect.yachtEyebrow": "Yachts et mini-croisi\u00e8res",
+  "protect.yachtTitle": "Louez un bateau, avec ou sans skipper.",
+  "protect.yachtCopy":
+    "Voiliers, catamarans et bateaux \u00e0 moteur en M\u00e9diterran\u00e9e, aux Cara\u00efbes et au-del\u00e0 \u2014 \u00e0 la semaine, sans skipper si vous \u00eates qualifi\u00e9, avec skipper sinon. Searadar r\u00e9f\u00e9rence de vrais loueurs et v\u00e9rifie les bateaux.",
+  "protect.yachtCta": "Voir les bateaux",
+  "protect.yachtNote":
+    "La location sans skipper exige un permis reconnu dans la plupart des pays. \u00c0 d\u00e9faut, prenez le m\u00eame bateau avec skipper : c\u2019est une ligne de facture, pas un autre voyage.",
   "hero.badge": "Skynova Agency",
   "hero.title": "Chaque voyage.",
   "hero.subtitle": "Un seul endroit.",
@@ -1250,7 +1346,7 @@ const FR: Dict = {
   "cars.faqHeading": "Location de voitures : vos questions, nos r\u00e9ponses.",
   "cars.q1": "Ai-je besoin d\u2019un permis de conduire international ?",
   "cars.a1":
-    "Cela d\u00e9pend du pays -- la fiche de chaque v\u00e9hicule chez Rentalcars indique ce qui est accept\u00e9 au comptoir.",
+    "Cela d\u00e9pend du pays -- la fiche de chaque v\u00e9hicule chez GetRentacar indique ce qui est accept\u00e9 au comptoir.",
   "cars.q2": "L\u2019assurance est-elle incluse dans le prix ?",
   "cars.a2":
     "Une couverture de base est g\u00e9n\u00e9ralement incluse ; la franchise et les options figurent avant la confirmation.",

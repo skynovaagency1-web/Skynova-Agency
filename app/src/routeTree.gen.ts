@@ -9,7 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as YachtCharterRouteImport } from './routes/yacht-charter'
 import { Route as WishlistRouteImport } from './routes/wishlist'
+import { Route as TravelInsuranceRouteImport } from './routes/travel-insurance'
 import { Route as ToursRouteImport } from './routes/tours'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -22,6 +24,7 @@ import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as HotelsRouteImport } from './routes/hotels'
 import { Route as GiftRouteImport } from './routes/gift'
 import { Route as FlightsRouteImport } from './routes/flights'
+import { Route as FlightCompensationRouteImport } from './routes/flight-compensation'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as EsimRouteImport } from './routes/esim'
@@ -40,9 +43,19 @@ import { Route as DestinationsSlugRouteImport } from './routes/destinations/$slu
 import { Route as CollectionsSlugRouteImport } from './routes/collections/$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 
+const YachtCharterRoute = YachtCharterRouteImport.update({
+  id: '/yacht-charter',
+  path: '/yacht-charter',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WishlistRoute = WishlistRouteImport.update({
   id: '/wishlist',
   path: '/wishlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TravelInsuranceRoute = TravelInsuranceRouteImport.update({
+  id: '/travel-insurance',
+  path: '/travel-insurance',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToursRoute = ToursRouteImport.update({
@@ -103,6 +116,11 @@ const GiftRoute = GiftRouteImport.update({
 const FlightsRoute = FlightsRouteImport.update({
   id: '/flights',
   path: '/flights',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FlightCompensationRoute = FlightCompensationRouteImport.update({
+  id: '/flight-compensation',
+  path: '/flight-compensation',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqRoute = FaqRouteImport.update({
@@ -203,6 +221,7 @@ export interface FileRoutesByFullPath {
   '/esim': typeof EsimRoute
   '/events': typeof EventsRoute
   '/faq': typeof FaqRoute
+  '/flight-compensation': typeof FlightCompensationRoute
   '/flights': typeof FlightsRoute
   '/gift': typeof GiftRoute
   '/hotels': typeof HotelsRoute
@@ -215,7 +234,9 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/tours': typeof ToursRoute
+  '/travel-insurance': typeof TravelInsuranceRoute
   '/wishlist': typeof WishlistRoute
+  '/yacht-charter': typeof YachtCharterRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/collections/$slug': typeof CollectionsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
@@ -235,6 +256,7 @@ export interface FileRoutesByTo {
   '/esim': typeof EsimRoute
   '/events': typeof EventsRoute
   '/faq': typeof FaqRoute
+  '/flight-compensation': typeof FlightCompensationRoute
   '/flights': typeof FlightsRoute
   '/gift': typeof GiftRoute
   '/hotels': typeof HotelsRoute
@@ -247,7 +269,9 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/tours': typeof ToursRoute
+  '/travel-insurance': typeof TravelInsuranceRoute
   '/wishlist': typeof WishlistRoute
+  '/yacht-charter': typeof YachtCharterRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/collections/$slug': typeof CollectionsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
@@ -268,6 +292,7 @@ export interface FileRoutesById {
   '/esim': typeof EsimRoute
   '/events': typeof EventsRoute
   '/faq': typeof FaqRoute
+  '/flight-compensation': typeof FlightCompensationRoute
   '/flights': typeof FlightsRoute
   '/gift': typeof GiftRoute
   '/hotels': typeof HotelsRoute
@@ -280,7 +305,9 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/tours': typeof ToursRoute
+  '/travel-insurance': typeof TravelInsuranceRoute
   '/wishlist': typeof WishlistRoute
+  '/yacht-charter': typeof YachtCharterRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/collections/$slug': typeof CollectionsSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
@@ -302,6 +329,7 @@ export interface FileRouteTypes {
     | '/esim'
     | '/events'
     | '/faq'
+    | '/flight-compensation'
     | '/flights'
     | '/gift'
     | '/hotels'
@@ -314,7 +342,9 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/terms'
     | '/tours'
+    | '/travel-insurance'
     | '/wishlist'
+    | '/yacht-charter'
     | '/blog/$slug'
     | '/collections/$slug'
     | '/destinations/$slug'
@@ -334,6 +364,7 @@ export interface FileRouteTypes {
     | '/esim'
     | '/events'
     | '/faq'
+    | '/flight-compensation'
     | '/flights'
     | '/gift'
     | '/hotels'
@@ -346,7 +377,9 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/terms'
     | '/tours'
+    | '/travel-insurance'
     | '/wishlist'
+    | '/yacht-charter'
     | '/blog/$slug'
     | '/collections/$slug'
     | '/destinations/$slug'
@@ -366,6 +399,7 @@ export interface FileRouteTypes {
     | '/esim'
     | '/events'
     | '/faq'
+    | '/flight-compensation'
     | '/flights'
     | '/gift'
     | '/hotels'
@@ -378,7 +412,9 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/terms'
     | '/tours'
+    | '/travel-insurance'
     | '/wishlist'
+    | '/yacht-charter'
     | '/blog/$slug'
     | '/collections/$slug'
     | '/destinations/$slug'
@@ -399,6 +435,7 @@ export interface RootRouteChildren {
   EsimRoute: typeof EsimRoute
   EventsRoute: typeof EventsRoute
   FaqRoute: typeof FaqRoute
+  FlightCompensationRoute: typeof FlightCompensationRoute
   FlightsRoute: typeof FlightsRoute
   GiftRoute: typeof GiftRoute
   HotelsRoute: typeof HotelsRoute
@@ -411,7 +448,9 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
   ToursRoute: typeof ToursRoute
+  TravelInsuranceRoute: typeof TravelInsuranceRoute
   WishlistRoute: typeof WishlistRoute
+  YachtCharterRoute: typeof YachtCharterRoute
   BlogSlugRoute: typeof BlogSlugRoute
   CollectionsSlugRoute: typeof CollectionsSlugRoute
   DestinationsSlugRoute: typeof DestinationsSlugRoute
@@ -422,11 +461,25 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/yacht-charter': {
+      id: '/yacht-charter'
+      path: '/yacht-charter'
+      fullPath: '/yacht-charter'
+      preLoaderRoute: typeof YachtCharterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/wishlist': {
       id: '/wishlist'
       path: '/wishlist'
       fullPath: '/wishlist'
       preLoaderRoute: typeof WishlistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/travel-insurance': {
+      id: '/travel-insurance'
+      path: '/travel-insurance'
+      fullPath: '/travel-insurance'
+      preLoaderRoute: typeof TravelInsuranceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tours': {
@@ -511,6 +564,13 @@ declare module '@tanstack/react-router' {
       path: '/flights'
       fullPath: '/flights'
       preLoaderRoute: typeof FlightsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/flight-compensation': {
+      id: '/flight-compensation'
+      path: '/flight-compensation'
+      fullPath: '/flight-compensation'
+      preLoaderRoute: typeof FlightCompensationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faq': {
@@ -647,6 +707,7 @@ const rootRouteChildren: RootRouteChildren = {
   EsimRoute: EsimRoute,
   EventsRoute: EventsRoute,
   FaqRoute: FaqRoute,
+  FlightCompensationRoute: FlightCompensationRoute,
   FlightsRoute: FlightsRoute,
   GiftRoute: GiftRoute,
   HotelsRoute: HotelsRoute,
@@ -659,7 +720,9 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
   ToursRoute: ToursRoute,
+  TravelInsuranceRoute: TravelInsuranceRoute,
   WishlistRoute: WishlistRoute,
+  YachtCharterRoute: YachtCharterRoute,
   BlogSlugRoute: BlogSlugRoute,
   CollectionsSlugRoute: CollectionsSlugRoute,
   DestinationsSlugRoute: DestinationsSlugRoute,
