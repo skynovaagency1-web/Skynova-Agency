@@ -155,6 +155,9 @@ export const EN = {
   "hero.f2Body": "Written up across {regions} regions, each with the booking links that match the route.",
   "hero.f3Title": "No markup, ever",
   "hero.f3Body": "Checkout happens on the partner's own site, at the partner's own price.",
+  "hero.cardExplore": "Browse destinations",
+  "hero.cardCollections": "See collections",
+  "hero.cardHowItWorks": "How it works",
   "hero.beginBadge": "Begin",
   "hero.beginTitle": "Where do you want to wake up?",
   "hero.beginLede":
@@ -1003,6 +1006,9 @@ const FR: Dict = {
   "hero.f2Body": "R\u00e9dig\u00e9es sur {regions} r\u00e9gions, avec les liens de r\u00e9servation correspondant \u00e0 l\u2019itin\u00e9raire.",
   "hero.f3Title": "Jamais de majoration",
   "hero.f3Body": "Le paiement se fait sur le site du partenaire, au prix du partenaire.",
+  "hero.cardExplore": "Voir les destinations",
+  "hero.cardCollections": "Voir les collections",
+  "hero.cardHowItWorks": "Comment \u00e7a marche",
   "hero.beginBadge": "Commencer",
   "hero.beginTitle": "O\u00f9 voulez-vous vous r\u00e9veiller ?",
   "hero.beginLede":

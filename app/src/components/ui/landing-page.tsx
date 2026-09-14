@@ -70,6 +70,9 @@ export interface ScrollStageSection {
   align?: "left" | "center" | "right";
   features?: { title: string; description: string }[];
   actions?: { label: string; href?: string; external?: boolean; variant: "primary" | "secondary" }[];
+  /** Rendered in place of `features`, for a section whose body is not a plain
+   *  list -- the homepage's reach section hands over its gradient cards. */
+  body?: React.ReactNode;
 }
 
 export interface StagePosition {
@@ -82,6 +85,16 @@ export interface StagePosition {
    *  there -- but a narrow viewport needs to say so at any scale, because on a
    *  phone every position is behind the copy. */
   role?: "companion" | "backdrop";
+  /** A selector, resolved inside this section, whose vertical centre the
+   *  subject should sit level with -- instead of the fixed `top` above.
+   *
+   *  A percentage of the viewport cannot do this. The copy is centred in a
+   *  min-height section, so the headline's position moves with the viewport
+   *  height on a curve that is not proportional to it: measured level at
+   *  375x560, the same fixed 38% left the globe 93px above the headline at
+   *  375x667. Reading the element is exact at every height, and costs one
+   *  getBoundingClientRect on a pass that is already measuring three. */
+  alignTo?: string;
 }
 
 export interface ScrollStageProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -189,6 +202,9 @@ export function ScrollStage({
    *  target: {left, top} in viewport units, plus the scale and how faint it
    *  has gone. Null means "use the active section's own position". */
   const [transit, setTransit] = React.useState<TransitState | null>(null);
+  /** Viewport-unit top for the active section, when its position asks to be
+   *  aligned to an element rather than to a fixed fraction. */
+  const [alignedTop, setAlignedTop] = React.useState<number | null>(null);
   const docked = React.useRef(false);
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const sectionRefs = React.useRef<(HTMLElement | null)[]>([]);
@@ -203,6 +219,7 @@ export function ScrollStage({
         left: parsePercent(p.left),
         scale: p.scale,
         role: p.role ?? (p.scale >= 1.8 ? "backdrop" : "companion"),
+        alignTo: p.alignTo,
       })),
     [source],
   );
@@ -238,6 +255,17 @@ export function ScrollStage({
       }
     });
     setActiveSection(nearest);
+
+    // Level with an element, when the position asks for it.
+    const wanted = positionFor(nearest).alignTo;
+    const host = sectionRefs.current[nearest];
+    const anchor = wanted && host ? host.querySelector<HTMLElement>(wanted) : null;
+    if (anchor) {
+      const box = anchor.getBoundingClientRect();
+      setAlignedTop(((box.top + box.height / 2) / window.innerHeight) * 100);
+    } else {
+      setAlignedTop(null);
+    }
 
     // ---- The journey past the last section, to the dock target ----
     if (!dockTo) return;
@@ -343,7 +371,9 @@ export function ScrollStage({
   // In transit the journey owns the subject; on the stage, the active section
   // does. Same transform either way, so there is no seam where one hands to
   // the other -- transit starts at exactly the last section's anchor.
-  const place = transit ?? current;
+  // Transit owns the subject outright; on the stage, an aligned top overrides
+  // the section's fixed fraction.
+  const place = transit ?? (alignedTop !== null ? { ...current, top: alignedTop } : current);
   const subjectTransform =
     `translate3d(${place.left}vw, ${place.top}vh, 0) translate3d(-50%, -50%, 0) ` +
     `scale3d(${place.scale}, ${place.scale}, 1)`;
@@ -434,6 +464,8 @@ export function ScrollStage({
             </h1>
 
             <p className="scrollstage-lede">{section.description}</p>
+
+            {section.body}
 
             {section.features && (
               <div className="scrollstage-features">

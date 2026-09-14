@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 import { ScrollStage, type ScrollStageSection } from "@/components/ui/landing-page";
+import { GradientCardShowcase } from "@/components/ui/gradient-card-showcase";
 import { DayNightToggle } from "@/components/site/DayNightToggle";
 import { DESTINATIONS, REGION_ORDER } from "@/data/destinations";
 import { VERTICALS } from "@/data/verticals";
@@ -74,16 +75,23 @@ const GLOBE_POSITIONS = {
      for it. An earlier pass parked it below the buttons instead, which read as
      the globe being under the headline rather than beside it.
 
-     112px at 375px wide: it clears the eyebrow, which ends around x=168, and
-     it has to fit between a 65px nav and a headline that starts around 270.
-     Bigger than this and it collides with one or the other at 560px tall,
-     which is what an iPhone 8 actually gives a page.
+     112px at 375px wide, level with the headline rather than above it: the
+     owner asked for the two at the same height, which is what the desktop
+     does. The headline is capped in CSS to leave the column (see the
+     max-width note on .scrollstage-title), and 38% rather than a true 50%
+     because the globe must bracket the HEADLINE and clear the lede under it
+     -- at 44% its lower edge ran across the lede's first line.
+
+     The 38% is only the fallback. alignTo reads the headline's own box each
+     pass and sits level with it, because the copy is centred in a min-height
+     section and a fixed fraction tracks it at one viewport height and no
+     other: 38% was level at 375x560 and 93px high at 375x667.
 
      The other two stay behind the copy and are marked backdrop, so they drop
      to the faint opacity at a scale that would otherwise read as a
      companion. */
   narrowPositions: [
-    { top: "22%", left: "80%", scale: 0.75, role: "companion" as const },
+    { top: "38%", left: "80%", scale: 0.75, role: "companion" as const, alignTo: ".scrollstage-title" },
     { top: "50%", left: "50%", scale: 1.3, role: "backdrop" as const },
     { top: "52%", left: "50%", scale: 1.6, role: "backdrop" as const },
   ],
@@ -141,17 +149,36 @@ export function HeroStage() {
       title: t("hero.reachTitle"),
       description: t("hero.reachLede", { regions: REGION_COUNT }),
       align: "left",
-      features: [
-        {
-          title: t("hero.f1Title", { count: VERTICAL_COUNT }),
-          description: t("hero.f1Body"),
-        },
-        {
-          title: t("hero.f2Title", { count: DESTINATION_COUNT }),
-          description: t("hero.f2Body", { regions: REGION_COUNT }),
-        },
-        { title: t("hero.f3Title"), description: t("hero.f3Body") },
-      ],
+      body: (
+        <GradientCardShowcase
+          cards={[
+            {
+              title: t("hero.f1Title", { count: VERTICAL_COUNT }),
+              description: t("hero.f1Body"),
+              to: "/destinations",
+              actionLabel: t("hero.cardExplore"),
+              gradientFrom: "#ffcf4d",
+              gradientTo: "#583714",
+            },
+            {
+              title: t("hero.f2Title", { count: DESTINATION_COUNT }),
+              description: t("hero.f2Body", { regions: REGION_COUNT }),
+              to: "/collections",
+              actionLabel: t("hero.cardCollections"),
+              gradientFrom: "#f3e6b8",
+              gradientTo: "#c9a227",
+            },
+            {
+              title: t("hero.f3Title"),
+              description: t("hero.f3Body"),
+              href: "/#how-it-works",
+              actionLabel: t("hero.cardHowItWorks"),
+              gradientFrom: "#ffd964",
+              gradientTo: "#93711d",
+            },
+          ]}
+        />
+      ),
     },
     {
       id: "begin",

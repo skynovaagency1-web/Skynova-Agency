@@ -4645,29 +4645,67 @@ html.lenis body { height: auto; }
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: clamp(14px, 2vw, 22px);
 }
+/* ---- The 3D tilt card (components/ui/3d-card.tsx) ----
+   The stage holds the perspective and is the grid item; the card is what
+   turns inside it. */
+/* container-type lives HERE, not on the card, and that placement is load-
+   bearing. Containment forces `transform-style: flat` on the element carrying
+   it, so `container-type: inline-size` on the card silently collapsed every
+   translateZ inside it -- and with the card flattened, the absolutely
+   positioned glass pseudo-element simply painted over the photographs, which
+   is what it looked like: six frosted grey boxes. The stage is the same inline
+   width as the card, so `cqi` units resolve exactly as before. */
+.card3d-stage { display: grid; container-type: inline-size; }
+.card3d {
+  height: 100%;
+  transform-style: preserve-3d;
+  /* Short. The reference uses 300ms, which on a transform rewritten every
+     pointer move reads as the card lagging behind the cursor; this is enough
+     to smooth the steps without the card trailing the pointer. */
+  transition: transform 0.12s ease-out;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .card3d { transition: none; }
+}
+
 .dest-atlas-card {
   position: relative;
   display: flex;
   flex-direction: column;
   padding: 14px;
   border-radius: 26px;
-  container-type: inline-size;
+}
+/* THE GLASS IS ON A PSEUDO-ELEMENT, not on the card itself, and that is not a
+   tidying-up. `backdrop-filter` is a grouping property, and per css-transforms
+   a grouping property forces `transform-style: flat` on the element carrying
+   it -- so with the blur on .dest-atlas-card every translateZ inside it would
+   collapse to zero and the card would rotate as a flat picture with no depth
+   at all. Nothing would look broken; the effect would simply be absent, which
+   is the hardest kind of bug to notice. On a child, the flattening applies to
+   that child alone and the card keeps its depth. */
+.dest-atlas-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
   background: rgba(255, 255, 255, 0.055);
   border: 1px solid rgba(255, 255, 255, 0.12);
   -webkit-backdrop-filter: blur(18px) saturate(130%);
   backdrop-filter: blur(18px) saturate(130%);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 26px 60px -34px rgba(0, 0, 0, 0.85);
-  transition: transform 0.25s ease, border-color 0.25s ease;
+  transition: border-color 0.25s ease;
 }
+/* No hover lift any more -- the tilt is the hover response, and an inline
+   transform from the component would override a translateY here anyway. */
 @media (hover: hover) and (pointer: fine) {
-  .dest-atlas-card:hover {
-    transform: translateY(-3px);
+  .card3d:hover .dest-atlas-card::before,
+  .dest-atlas-card:hover::before {
     border-color: color-mix(in srgb, var(--sky-coral) 55%, transparent);
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .dest-atlas-card { transition: none; }
-  .dest-atlas-card:hover { transform: none; }
+  .dest-atlas-card::before { transition: none; }
 }
 /* Ornament centred on the top edge, as on every card in the reference --
    a thin ring around a small gold star. Replaces the numbered badge I had
@@ -6185,9 +6223,13 @@ html.lenis body { height: auto; }
 
 .scrollstage-title,
 .scrollstage-title-sm {
-  display: flex;
-  flex-direction: column;
-  gap: 0.1em;
+  /* Block, not a flex column. The subtitle is the only reason to stack
+     anything here, and a margin does that just as well -- whereas in a flex
+     column the headline text becomes an anonymous flex item, which keeps
+     min-width:auto and so refuses to wrap below its max-content width. That
+     is not theoretical: with a max-width set for the globe to sit beside it,
+     "Every trip." ignored the cap entirely and ran straight under the globe. */
+  display: block;
   color: #f5f0e6;
   max-width: 16ch;
   /* Every value clamped rather than stepped at a breakpoint: the headline has
@@ -6200,6 +6242,8 @@ html.lenis body { height: auto; }
 .is-center .scrollstage-title,
 .is-center .scrollstage-title-sm { margin-inline: auto; }
 .scrollstage-subtitle {
+  display: block;
+  margin-block-start: 0.1em;
   font-size: 0.62em;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -6218,6 +6262,23 @@ html.lenis body { height: auto; }
    the desktop composition is untouched. Only the title and the lede are
    capped, never the copy block: the features grid below them is two columns of
    its own and sits well clear of the globe's anchor. */
+/* Under 640px the same collision exists in miniature, and the same fix
+   applies -- but only to the headline, never the lede. The globe sits level
+   with the headline and is only as tall as it is, so the lede passes under it
+   and can keep the full column; capping that too would leave a 200px measure
+   running seven lines deep.
+
+   The globe's left edge: it is anchored at 80vw and its radius is 0.75 of half
+   of clamp(150px, 40vw, 250px), which is 15vw while the clamp is in its vw
+   range. 80 - 15 = 65vw, less a gutter and the section's own inline padding.
+   62vw rather than 65 keeps it honest below 375px, where the clamp floors at
+   150px and the radius stops shrinking with the viewport. */
+@media (max-width: 639px) {
+  .scrollstage-section:not(.is-center):not(.is-right) .scrollstage-title {
+    max-width: calc(62vw - 2.5rem);
+  }
+}
+
 @media (min-width: 640px) {
   .scrollstage-section:not(.is-center):not(.is-right) .scrollstage-title,
   .scrollstage-section:not(.is-center):not(.is-right) .scrollstage-title-sm {
@@ -6547,3 +6608,154 @@ html.lenis body { height: auto; }
   .planefloat-plane, .planefloat-cloud { animation: none; }
 }
 
+
+/* ---- Skewed gradient cards (components/ui/gradient-card-showcase.tsx) ----
+   After the 21st.dev reference: a colour panel at an angle behind a glass
+   plate, both straightening and spreading on hover, with two blobs drifting
+   in at the corners.
+
+   Fluid, not the reference's fixed 320x400 with 30px side margins -- that
+   overflows a 375px viewport before the first card is done. Every offset the
+   reference gives in pixels is a percentage here, so the geometry survives the
+   card being whatever width its column is.
+
+   The resting state is the one that matters most: there is no hover on a
+   phone, so the skewed panel is all a touch visitor ever sees. */
+.skewcards {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+  width: 100%;
+  margin-block-start: 1.9rem;
+}
+@media (min-width: 900px) {
+  .skewcards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+.skewcard {
+  position: relative;
+  /* Taller than its copy on purpose -- the angled panel showing above and
+     below the glass plate is the effect. Shorter on a phone, where three of
+     these stack: at 300px each the section ran past 900px of scroll for three
+     sentences. */
+  min-height: 210px;
+  display: flex;
+  align-items: center;
+  isolation: isolate;
+}
+@media (min-width: 900px) {
+  .skewcard { min-height: 300px; }
+}
+
+/* The angled colour panel, and a blurred copy of it doing the bloom. */
+.skewcard-panel {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 16%;
+  width: 50%;
+  border-radius: var(--sky-radius-md);
+  transform: skewX(15deg);
+  transition: transform 0.5s ease, inset-inline-start 0.5s ease, width 0.5s ease;
+}
+.skewcard-panel-glow { filter: blur(28px); opacity: 0.55; }
+
+.skewcard:hover .skewcard-panel,
+.skewcard:focus-within .skewcard-panel {
+  transform: skewX(0deg);
+  inset-inline-start: 6%;
+  width: 88%;
+}
+
+/* Corner blobs. Hidden until hover, which is why the resting state above has
+   to stand on its own. */
+.skewcard-blobs { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.skewcard-blob {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-radius: var(--sky-radius-md);
+  opacity: 0;
+  background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.5s ease;
+  animation: skewcard-blob 2s ease-in-out infinite;
+}
+.skewcard-blob-a { inset-block-start: 0; inset-inline-start: 0; }
+.skewcard-blob-b { inset-block-end: 0; inset-inline-end: 0; animation-delay: -1s; }
+.skewcard:hover .skewcard-blob-a,
+.skewcard:focus-within .skewcard-blob-a {
+  inset-block-start: -14%;
+  inset-inline-start: 16%;
+  width: 92px;
+  height: 92px;
+  opacity: 1;
+}
+.skewcard:hover .skewcard-blob-b,
+.skewcard:focus-within .skewcard-blob-b {
+  inset-block-end: -14%;
+  inset-inline-end: 16%;
+  width: 92px;
+  height: 92px;
+  opacity: 1;
+}
+@keyframes skewcard-blob {
+  0%, 100% { transform: translateY(10px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* The glass plate the copy sits on. */
+.skewcard-body {
+  position: relative;
+  z-index: 2;
+  inset-inline-start: 0;
+  width: 100%;
+  padding: clamp(1.1rem, 3.5vw, 1.5rem) clamp(1.4rem, 4.5vw, 2.25rem);
+  border-radius: var(--sky-radius-md);
+  border: 1px solid rgba(245, 240, 230, 0.14);
+  background: rgba(245, 240, 230, 0.07);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--sky-shadow-md);
+  color: #f5f0e6;
+  transition: inset-inline-start 0.5s ease, padding 0.5s ease;
+}
+.skewcard:hover .skewcard-body,
+.skewcard:focus-within .skewcard-body {
+  inset-inline-start: -6%;
+  padding-block: clamp(2rem, 6vw, 3.25rem);
+}
+
+.skewcard-title {
+  font-size: clamp(1.05rem, 3.8vw, 1.25rem);
+  font-weight: 600;
+  margin-block-end: 0.5rem;
+}
+.skewcard-text {
+  font-size: clamp(0.88rem, 3.4vw, 0.98rem);
+  line-height: 1.55;
+  color: rgba(245, 240, 230, 0.78);
+}
+.skewcard-action {
+  display: inline-block;
+  margin-block-start: 0.9rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sky-coral-ink);
+  background: linear-gradient(180deg, #ffd964, var(--sky-coral));
+  box-shadow: var(--sky-shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.skewcard-action:hover { transform: translateY(-1px); box-shadow: var(--sky-shadow-md); }
+
+@media (prefers-reduced-motion: reduce) {
+  .skewcard-panel,
+  .skewcard-body,
+  .skewcard-blob,
+  .skewcard-action { transition: none; animation: none; }
+  .skewcard-action:hover { transform: none; }
+}

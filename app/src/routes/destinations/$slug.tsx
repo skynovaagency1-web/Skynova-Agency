@@ -21,6 +21,7 @@ import { DESTINATION_DETAILS } from "@/data/destination-details";
 import { POSTS } from "@/data/blog-posts";
 import { ARTICLE_SLUGS } from "@/data/blog-articles";
 import { ATTRACTION_IMAGES, FOOD_IMAGES } from "@/data/place-images";
+import { Card3D, Card3DLayer } from "@/components/ui/3d-card";
 import {
   flightsLink,
   hotelsLink,
@@ -357,12 +358,18 @@ function DestinationPage() {
           </div>
         </section>
 
-        {/* 4. Top 6 attractions -- dark "atlas" treatment, after the reference:
-               glass cards on a ground tinted by this destination's accent, each
-               with an inset photo and a numbered marker. The reference pairs
-               these with a pinned map; there are no coordinates in the data for
-               ~250 attractions, and inventing them would put confident pins in
-               wrong places, so the number stands in for the pin. */}
+        {/* 4. Top 6 attractions -- the dark "atlas" treatment, rebuilt on the
+               21st.dev 3d-card: each card now tilts toward the pointer and its
+               crest, name, photograph and note separate on the Z axis as it
+               turns. The reference pairs a section like this with a pinned map;
+               there are no coordinates in the data for ~250 attractions, and
+               inventing them would put confident pins in wrong places, so the
+               crest stands in for the pin.
+
+               The ground, the accent tint and the serif place names are
+               unchanged -- that treatment is the destination pages' own, and
+               the rebuild is the card's interaction, not the section's
+               identity. */}
         <section className="dest-atlas">
           <div className="site-container">
             <p className="site-eyebrow dest-atlas-eyebrow mb-3">{t("dest.seeAndDo")}</p>
@@ -373,16 +380,22 @@ function DestinationPage() {
               {detail.attractions.map((a, i) => {
                 const photo = ATTRACTION_IMAGES[`${destination.slug}|${a.name}`];
                 return (
-                  <article key={a.name} className="dest-atlas-card">
-                    {/* Card order follows the reference exactly: crest, then the
-                        name in serif, then the photograph, then icon rows. */}
-                    <span className="dest-atlas-crest" aria-hidden="true">
+                  <Card3D key={a.name} className="dest-atlas-card">
+                    {/* Card order is unchanged: crest, name in serif, the
+                        photograph, then the note. What is new is the depth --
+                        each layer is lifted a different amount, so the
+                        photograph leads and the note trails as the card turns.
+                        The photograph is furthest forward because it is the
+                        thing worth looking at. */}
+                    <Card3DLayer depth={20} className="dest-atlas-crest" aria-hidden="true">
                       <svg viewBox="0 0 16 16" fill="currentColor">
                         <path d="M8 0c.5 4 3.5 7 8 8-4.5 1-7.5 4-8 8-.5-4-3.5-7-8-8 4.5-1 7.5-4 8-8Z" />
                       </svg>
-                    </span>
-                    <h3 className="dest-atlas-name">{a.name}</h3>
-                    <div className="dest-atlas-media">
+                    </Card3DLayer>
+                    <Card3DLayer depth={45}>
+                      <h3 className="dest-atlas-name">{a.name}</h3>
+                    </Card3DLayer>
+                    <Card3DLayer depth={70} className="dest-atlas-media">
                       {photo ? (
                         <img src={photo} alt={a.name} loading="lazy" decoding="async" />
                       ) : (
@@ -390,14 +403,14 @@ function DestinationPage() {
                           <span>{ATTRACTION_ICONS[i % ATTRACTION_ICONS.length]}</span>
                         </div>
                       )}
-                    </div>
-                    <div className="dest-atlas-row">
+                    </Card3DLayer>
+                    <Card3DLayer depth={30} className="dest-atlas-row">
                       <span className="dest-atlas-row-icon" aria-hidden="true">
                         {ATTRACTION_ICONS[i % ATTRACTION_ICONS.length]}
                       </span>
                       <span className="dest-atlas-row-text">{a.description}</span>
-                    </div>
-                  </article>
+                    </Card3DLayer>
+                  </Card3D>
                 );
               })}
             </div>
