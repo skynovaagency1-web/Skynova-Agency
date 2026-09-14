@@ -222,6 +222,35 @@ const DISCOVER_CARS_NO_COUNTRY_PAGE = new Set([
   "samoa",
 ]);
 
+/**
+ * Second partners, added once real tracking links existed for them.
+ *
+ * ONE alternate per vertical, not every link available. Three more eSIM
+ * providers were on offer (Yesim and Drimsim alongside Saily); a page offering
+ * four near-identical eSIM sellers helps nobody choose, and the point of the
+ * second partner is resilience and a genuine choice, not a longer list. Those
+ * two are deliberately unused rather than forgotten.
+ *
+ * Go City is the exception that is not really an alternate at all: it sells
+ * multi-attraction passes where Tiqets sells single tickets, so the two answer
+ * different questions in the same vertical.
+ */
+
+/** eSIM, second to Airalo. */
+export function esimAltLink(): string {
+  return "https://saily.tpm.li/oyqP3Ceg";
+}
+
+/** City attraction passes, beside Tiqets' single tickets. */
+export function cityPassLink(): string {
+  return "https://gocity.tpm.li/ACmthcS2";
+}
+
+/** Airport transfers, second to GetTransfer. */
+export function transfersAltLink(): string {
+  return "https://tpm.li/iHI3oFXX";
+}
+
 /** Null until DISCOVER_CARS_AID is set, so callers can simply omit the link. */
 export function discoverCarsLink(destinationSlug?: string): string | null {
   if (!DISCOVER_CARS_AID) return null;

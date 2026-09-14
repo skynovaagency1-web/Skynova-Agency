@@ -31,6 +31,9 @@ import {
   eventsLink,
   attractionsLink,
   esimLink,
+  esimAltLink,
+  cityPassLink,
+  transfersAltLink,
   airportServicesLink,
   bikeRentalLink,
 } from "@/lib/affiliate";
@@ -165,6 +168,7 @@ function DestinationPage() {
       copy: t("dest.copyEvents", { name }),
       partners: [
         { label: "Tiqets", href: eventsLink() },
+        { label: "Go City", href: cityPassLink() },
         { label: "GetYourGuide", href: attractionsLink(name) },
       ],
     },
@@ -172,7 +176,10 @@ function DestinationPage() {
       title: t("dest.bookAirport"),
       vertical: "/airport-services",
       copy: t("dest.copyAirport", { name }),
-      partners: [{ label: "GetTransfer", href: airportServicesLink() }],
+      partners: [
+        { label: "GetTransfer", href: airportServicesLink() },
+        { label: "Welcome Pickups", href: transfersAltLink() },
+      ],
     },
     {
       title: t("service.bikeRentals"),
@@ -184,7 +191,10 @@ function DestinationPage() {
       title: t("dest.bookEsim"),
       vertical: "/esim",
       copy: t("dest.copyEsim", { name }),
-      partners: [{ label: "Airalo", href: esimLink(destination.slug) }],
+      partners: [
+        { label: "Airalo", href: esimLink(destination.slug) },
+        { label: "Saily", href: esimAltLink() },
+      ],
     },
   ];
   const path = `/destinations/${destination.slug}`;
