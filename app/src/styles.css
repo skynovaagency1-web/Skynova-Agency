@@ -6850,3 +6850,31 @@ html.lenis body { height: auto; }
   background: linear-gradient(rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.14)) padding-box;
   box-shadow: none;
 }
+
+/* ---- "from £89" on a destination card (components/site/FarePill.tsx) ----
+   Quiet on purpose. The card's job is still the place and the photograph; the
+   fare is a qualifier under them, not the headline. It is also an
+   approximation -- a cached aggregate, not a bookable quote -- and typography
+   that shouted would be making a promise the number cannot keep. */
+.fare-pill {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  margin-block-start: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: var(--sky-coral-deep);
+}
+.fare-pill-label {
+  text-transform: uppercase;
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  opacity: 0.75;
+}
+.fare-pill-value { font-weight: 600; font-size: 0.82rem; }
+
+/* On the dark featured cards the deep gold is unreadable, so the pill takes
+   the same light treatment the rest of that card's copy does. */
+.dest-card .fare-pill { color: #f3e6b8; }
+:root[data-theme="night"] .fare-pill { color: #f3e6b8; }

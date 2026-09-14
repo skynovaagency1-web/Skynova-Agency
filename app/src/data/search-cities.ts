@@ -380,3 +380,26 @@ export function resolvePlace(raw: string): ResolvedPlace | null {
   }
   return { destination: null, hotelsQuery: text, toursQuery: text, label: text };
 }
+
+/**
+ * The airport a destination's price is quoted to.
+ *
+ * The first city in each list that carries a code -- which is the country's
+ * main international gateway in every case, because CITIES is written
+ * biggest-first. A destination whose cities are all code-less (48 of the 179
+ * cities have none) is absent here, and a card for it simply shows no price,
+ * which is the same posture resolvePlace already takes.
+ *
+ * Used by lib/prices.server.ts to turn "cheapest fare to DBV" into "cheapest
+ * fare to Croatia".
+ */
+export const DESTINATION_IATA: Record<string, string> = Object.fromEntries(
+  Object.entries(CITIES)
+    .map(([slug, cities]) => {
+      const coded = cities.find(
+        (c): c is { city: string; iata: string } => typeof c !== "string" && Boolean(c.iata),
+      );
+      return coded ? [slug, coded.iata] : null;
+    })
+    .filter((entry): entry is [string, string] => entry !== null),
+);

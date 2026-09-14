@@ -7,6 +7,8 @@ import { SmoothScroll } from "@/components/site/SmoothScroll";
 import { Footer } from "@/components/site/Footer";
 import { Newsletter } from "@/components/site/Newsletter";
 import { TiltCard } from "@/components/site/TiltCard";
+import { FarePill } from "@/components/site/FarePill";
+import { getVisitorFares } from "@/lib/api/prices.functions";
 import { CardActions } from "@/components/site/CardActions";
 import { GlassToggle } from "@/components/site/GlassToggle";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
@@ -52,6 +54,12 @@ export const Route = createFileRoute("/destinations/")({
       },
     ],
   }),
+  /* Fares are loaded here, once, for every card on the page. The server
+     function behind this makes ONE upstream call for all 42 destinations and
+     answers from cache on almost every request -- see lib/prices.server.ts.
+     It cannot reject: an empty map is the failure mode, so a slow or missing
+     price API can never stop this route rendering. */
+  loader: () => getVisitorFares(),
   component: DestinationsIndex,
 });
 
@@ -70,6 +78,7 @@ function findAll(slugs: string[]) {
 
 function DestinationsIndex() {
   const t = useT();
+  const { bySlug: fares } = Route.useLoaderData();
   const { region } = Route.useSearch();
   const trending = findAll(TRENDING_SLUGS);
   const featured = findAll(FEATURED_SLUGS);
@@ -144,6 +153,7 @@ function DestinationsIndex() {
                       <div className="dest-card-copy">
                         <p className="dest-card-flag">{d.flag}</p>
                         <p className="font-semibold">{d.name}</p>
+                        <FarePill fare={fares[d.slug]} />
                       </div>
                     </TiltCard>
                   </Link>
@@ -197,6 +207,7 @@ function DestinationsIndex() {
                       <p className="dest-card-flag">{d.flag}</p>
                       <p className="mt-2 font-semibold">{d.name}</p>
                       <p className="site-ink-muted mt-1 text-xs leading-relaxed">{d.hook}</p>
+                      <FarePill fare={fares[d.slug]} />
                     </Link>
                     <CardActions slug={d.slug} name={d.name} />
                   </div>
@@ -216,6 +227,7 @@ function DestinationsIndex() {
                           <p className="dest-card-flag">{d.flag}</p>
                           <p className="mt-2 font-semibold">{d.name}</p>
                           <p className="site-ink-muted mt-1 text-xs leading-relaxed">{d.hook}</p>
+                          <FarePill fare={fares[d.slug]} />
                         </Link>
                         <CardActions slug={d.slug} name={d.name} />
                       </div>
