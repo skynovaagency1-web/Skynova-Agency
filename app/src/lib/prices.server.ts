@@ -115,24 +115,44 @@ interface RawDirection {
   price?: number;
   value?: number;
   depart_date?: string;
+  departure_at?: string;
+  /** Present on the array shape (prices/latest), absent on the map shape. */
+  destination?: string;
 }
 
 function reduceResponse(raw: unknown, currency: string): FareMap {
   const out: FareMap = {};
-  const data = (raw as { data?: Record<string, RawDirection> })?.data;
+  const data = (raw as { data?: unknown })?.data;
   if (!data || typeof data !== "object") return out;
 
-  for (const [destination, entry] of Object.entries(data)) {
+  /* Two shapes, one reducer. city-directions returns a MAP keyed by
+   * destination; prices/latest returns an ARRAY whose entries carry their own
+   * `destination`. Normalising here means the endpoint can be swapped without
+   * touching anything downstream -- which is exactly what happened once. */
+  const entries: [string, RawDirection][] = Array.isArray(data)
+    ? (data as RawDirection[])
+        .filter((e) => typeof e?.destination === "string")
+        .map((e) => [e.destination as string, e])
+    : Object.entries(data as Record<string, RawDirection>);
+
+  for (const [destination, entry] of entries) {
     // The endpoint has used both `price` and `value` across versions; take
     // whichever is present rather than pinning to one and silently getting
     // zero prices if they change it again.
     const value = entry?.price ?? entry?.value;
     if (typeof value !== "number" || !Number.isFinite(value) || value <= 0) continue;
     if (!/^[A-Z]{3}$/.test(destination)) continue;
+    const existing = out[destination];
+    if (existing && existing.value <= Math.round(value)) continue;
     out[destination] = {
       value: Math.round(value),
       currency,
-      departDate: typeof entry?.depart_date === "string" ? entry.depart_date : null,
+      departDate:
+        typeof entry?.depart_date === "string"
+          ? entry.depart_date
+          : typeof entry?.departure_at === "string"
+            ? entry.departure_at.slice(0, 10)
+            : null,
     };
   }
   return out;
@@ -180,7 +200,20 @@ async function fetchFromApi(origin: string, currency: string): Promise<FareMap |
   const { TRAVELPAYOUTS_TOKEN } = bindings();
   if (!TRAVELPAYOUTS_TOKEN) return null;
 
-  const url = `${API_BASE}/v1/city-directions?origin=${origin}&currency=${currency}`;
+  /* v2/prices/latest, NOT v1/city-directions.
+   *
+   * city-directions answers "where is cheap from here" and returns about
+   * thirty budget routes. Measured from Paris it gave Algiers, Marrakesh and
+   * the like -- and this site's destinations are Zanzibar, Samoa, Namibia,
+   * the Bahamas. The intersection was exactly zero, so every card rendered
+   * without a price while the API reported a perfectly healthy 200.
+   *
+   * latest answers "what have fares been on routes from here", takes the same
+   * single request, and returns up to a thousand of them -- which is wide
+   * enough to actually contain the places we sell. */
+  const url =
+    `${API_BASE}/v2/prices/latest?origin=${origin}&currency=${currency}` +
+    `&limit=1000&one_way=false&show_to_affiliates=true&period_type=year`;
 
   // A HARD CEILING ON THE RENDER PATH. The destinations route awaits this in
   // its loader, so without a timeout an upstream having a slow day becomes our
@@ -223,7 +256,7 @@ export async function getFaresForVisitor(): Promise<{ fares: FareMap; origin: st
   const { origin, currency } = resolveOrigin();
   if (!origin) return { fares: {}, origin: null };
 
-  const cacheKey = `${origin}:${currency}`;
+  const cacheKey = `v3:${origin}:${currency}`;
   const edgeUrl = `https://prices.internal/${encodeURIComponent(cacheKey)}`;
 
   // 1. Edge, per-colo and fastest.
