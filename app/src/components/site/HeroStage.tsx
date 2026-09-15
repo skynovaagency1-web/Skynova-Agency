@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { ScrollStage, type ScrollStageSection } from "@/components/ui/landing-page";
-import { GradientCardShowcase } from "@/components/ui/gradient-card-showcase";
+import { GOLD_GRADIENTS, GradientCardShowcase } from "@/components/ui/gradient-card-showcase";
 import { DayNightToggle } from "@/components/site/DayNightToggle";
 import { DESTINATIONS, REGION_ORDER } from "@/data/destinations";
 import { VERTICALS } from "@/data/verticals";
@@ -157,24 +157,21 @@ export function HeroStage() {
               description: t("hero.f1Body"),
               to: "/destinations",
               actionLabel: t("hero.cardExplore"),
-              gradientFrom: "#ffcf4d",
-              gradientTo: "#583714",
+              ...GOLD_GRADIENTS[0],
             },
             {
               title: t("hero.f2Title", { count: DESTINATION_COUNT }),
               description: t("hero.f2Body", { regions: REGION_COUNT }),
               to: "/collections",
               actionLabel: t("hero.cardCollections"),
-              gradientFrom: "#f3e6b8",
-              gradientTo: "#c9a227",
+              ...GOLD_GRADIENTS[1],
             },
             {
               title: t("hero.f3Title"),
               description: t("hero.f3Body"),
               href: "/#how-it-works",
               actionLabel: t("hero.cardHowItWorks"),
-              gradientFrom: "#ffd964",
-              gradientTo: "#93711d",
+              ...GOLD_GRADIENTS[2],
             },
           ]}
         />

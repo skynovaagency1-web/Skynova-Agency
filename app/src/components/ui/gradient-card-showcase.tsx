@@ -53,11 +53,31 @@ export interface GradientCard {
 
 export interface GradientCardShowcaseProps extends React.HTMLAttributes<HTMLDivElement> {
   cards: GradientCard[];
+  /** The grid element, so a caller can hand it to useReveal -- whose contract
+   *  is "point me at a container and I stagger its direct children", and the
+   *  direct children of a .skewcards grid are the cards. React 19 passes ref
+   *  as an ordinary prop, so no forwardRef wrapper is needed. */
+  ref?: React.Ref<HTMLDivElement>;
 }
 
-export function GradientCardShowcase({ cards, className, ...props }: GradientCardShowcaseProps) {
+/**
+ * The card's three gold depths, in the order they are meant to be used.
+ *
+ * Exported because two places render this component now -- the homepage reach
+ * section and the protection/charter pages -- and "the same cards" has to
+ * survive someone editing one of them. Three stops rather than one so the
+ * cards in a row stay distinguishable; all three inside the site's gold so
+ * none of them reads as a second colour system.
+ */
+export const GOLD_GRADIENTS: ReadonlyArray<{ gradientFrom: string; gradientTo: string }> = [
+  { gradientFrom: "#ffcf4d", gradientTo: "#583714" },
+  { gradientFrom: "#f3e6b8", gradientTo: "#c9a227" },
+  { gradientFrom: "#ffd964", gradientTo: "#93711d" },
+];
+
+export function GradientCardShowcase({ cards, className, ref, ...props }: GradientCardShowcaseProps) {
   return (
-    <div className={cn("skewcards", className)} {...props}>
+    <div ref={ref} className={cn("skewcards", className)} {...props}>
       {cards.map((card) => (
         <article key={card.title} className="skewcard">
           <span

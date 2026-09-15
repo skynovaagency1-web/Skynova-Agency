@@ -7,6 +7,7 @@ import { FaqSection } from "./FaqSection";
 import { Newsletter } from "./Newsletter";
 import { CardActions } from "./CardActions";
 import { KeyholeHero } from "./KeyholeHero";
+import { GOLD_GRADIENTS, GradientCardShowcase } from "@/components/ui/gradient-card-showcase";
 import { DESTINATIONS } from "@/data/destinations";
 import { useReveal } from "@/hooks/use-reveal";
 import { StructuredData } from "@/components/StructuredData";
@@ -30,6 +31,7 @@ export function VerticalPage({
   heroIntro,
   heroSlot,
   bullets,
+  bulletVariant = "panel",
   ctaHref,
   ctaLabel,
   destinationSlugs = [],
@@ -67,6 +69,19 @@ export function VerticalPage({
    * breadcrumb, the <h1> contract and the FAQ schema below all read them. */
   heroSlot?: ReactNode;
   bullets: Bullet[];
+  /** How the three supporting points are drawn.
+   *
+   *  "panel" -- the site's glass cards on the cream page. What every vertical
+   *  with a photographic hero uses, because the page above them is a
+   *  photograph and a second dark block under it would fight with it.
+   *
+   *  "gradient" -- the homepage reach section's skewed gold cards, on a dark
+   *  band continuing the hero's own ground. Only for the pages whose hero is
+   *  PlainHero: those are already dark and have no photograph, so the band
+   *  reads as the hero carrying on rather than as a stripe dropped into a
+   *  light page, and the cards give the section something to look at where
+   *  the other verticals have an image. */
+  bulletVariant?: "panel" | "gradient";
   ctaHref: string;
   ctaLabel: string;
   destinationSlugs?: string[];
@@ -150,16 +165,36 @@ export function VerticalPage({
           </section>
         )}
 
-        <section className="site-section">
-          <div ref={gridRef} className="site-container grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {bullets.map((b) => (
-              <div key={b.title} className="site-panel p-7">
-                <p className="site-eyebrow mb-3">{b.title}</p>
-                <p className="text-base leading-relaxed">{b.body}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+        {bulletVariant === "gradient" ? (
+          <section className="site-section vertical-cardstage">
+            <div className="site-container">
+              <GradientCardShowcase
+                ref={gridRef}
+                className="vertical-cardstage-cards"
+                cards={bullets.map((b, i) => ({
+                  title: b.title,
+                  description: b.body,
+                  // No `to` or `href`: these are statements about the service,
+                  // not three more places to go. The card renders no action
+                  // when given no destination, which is the point of that
+                  // branch -- the page has one CTA and it is in the hero.
+                  ...GOLD_GRADIENTS[i % GOLD_GRADIENTS.length],
+                }))}
+              />
+            </div>
+          </section>
+        ) : (
+          <section className="site-section">
+            <div ref={gridRef} className="site-container grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {bullets.map((b) => (
+                <div key={b.title} className="site-panel p-7">
+                  <p className="site-eyebrow mb-3">{b.title}</p>
+                  <p className="text-base leading-relaxed">{b.body}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {children}
 

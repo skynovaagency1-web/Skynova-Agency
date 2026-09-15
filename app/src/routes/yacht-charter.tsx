@@ -60,6 +60,7 @@ function YachtCharterPage() {
           note={t("protect.yachtNote")}
         />
       }
+      bulletVariant="gradient"
       bullets={[
         { title: t("protect.yachtB1Title"), body: t("protect.yachtB1Body") },
         { title: t("protect.yachtB2Title"), body: t("protect.yachtB2Body") },

@@ -55,6 +55,7 @@ function TravelInsurancePage() {
           note={t("protect.insNote")}
         />
       }
+      bulletVariant="gradient"
       bullets={[
         { title: t("protect.insB1Title"), body: t("protect.insB1Body") },
         { title: t("protect.insB2Title"), body: t("protect.insB2Body") },

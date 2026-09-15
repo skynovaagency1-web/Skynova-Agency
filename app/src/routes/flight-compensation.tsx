@@ -59,6 +59,7 @@ function FlightCompensationPage() {
           note={t("protect.compNote")}
         />
       }
+      bulletVariant="gradient"
       bullets={[
         { title: t("protect.compB1Title"), body: t("protect.compB1Body") },
         { title: t("protect.compB2Title"), body: t("protect.compB2Body") },

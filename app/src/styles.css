@@ -6713,9 +6713,26 @@ html.lenis body { height: auto; }
   padding: clamp(1.1rem, 3.5vw, 1.5rem) clamp(1.4rem, 4.5vw, 2.25rem);
   border-radius: var(--sky-radius-md);
   border: 1px solid rgba(245, 240, 230, 0.14);
-  background: rgba(245, 240, 230, 0.07);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  /* SMOKED, not clear. The reference plate is a 7% WHITE wash over blur(10px),
+     which lets 93% of whatever is behind it through -- and what is behind it
+     here is the bright end of a gold gradient. Measured on the rendered page,
+     body text over that streak came out at 1.04:1 against its own background,
+     i.e. invisible, in all three cards. A white wash cannot fix that at any
+     alpha short of opaque.
+
+     So the darkening happens in the BACKDROP FILTER rather than in a layer on
+     top of it: brightness() dims what is behind the glass while keeping its
+     hue and its shape, so the panel still reads as gold glowing through --
+     just through smoked glass instead of clear. The panel above and below the
+     plate, which is the effect the card is built around, is untouched.
+
+     0.28 is the value that clears 4.5:1 against the WORST backdrop the card
+     can produce (its palest stop, #f3e6b8): 0.28 of that is L 0.055, against
+     body text at L 0.49. Lowering it further only darkens an already-passing
+     card. */
+  background: rgba(18, 15, 10, 0.12);
+  -webkit-backdrop-filter: blur(14px) brightness(0.28) saturate(115%);
+  backdrop-filter: blur(14px) brightness(0.28) saturate(115%);
   box-shadow: var(--sky-shadow-md);
   color: #f5f0e6;
   transition: inset-inline-start 0.5s ease, padding 0.5s ease;
@@ -6734,7 +6751,9 @@ html.lenis body { height: auto; }
 .skewcard-text {
   font-size: clamp(0.88rem, 3.4vw, 0.98rem);
   line-height: 1.55;
-  color: rgba(245, 240, 230, 0.78);
+  /* 0.78 in the reference. Body copy at this size needs the margin more than
+     the title does, and the plate it sits on is now dark enough to give it. */
+  color: rgba(245, 240, 230, 0.88);
 }
 .skewcard-action {
   display: inline-block;
@@ -6759,6 +6778,49 @@ html.lenis body { height: auto; }
   .skewcard-action { transition: none; animation: none; }
   .skewcard-action:hover { transform: none; }
 }
+
+/* ---- Gradient-card band on the protection/charter pages ----
+   (VerticalPage bulletVariant="gradient")
+
+   The skewed gold cards were built for the homepage reach section, which sits
+   on the hero's night stage. Their glass plate is a 7% white wash carrying
+   #f5f0e6 text -- on the site's cream page that is light type on white, i.e.
+   nothing. So rather than re-tinting the cards for a light ground and ending
+   up with something that is no longer the same card, the GROUND moves: this
+   band continues the dark gradient that PlainHero already ends on, so the
+   hero and the cards under it are one block.
+
+   Only these three pages qualify. Every other vertical opens on a
+   photograph, and a dark stripe under a photo hero is a seam, not a
+   continuation -- which is why this is opt-in rather than the default.
+
+   Deliberately NOT in the CardTilt selector list. These cards already own
+   their hover (the panel straightening, the blobs drifting in); a tilt on top
+   would be two animations arguing, and .skewcard-body's backdrop-filter
+   flattens transform-style anyway, so the depth would not survive. */
+.vertical-cardstage {
+  position: relative;
+  /* Picks up where .plainhero leaves off (#221d15) and settles back to the
+     darker end, so the seam between them is invisible. */
+  background: linear-gradient(180deg, #221d15 0%, #16130d 100%);
+  color: #f5f0e6;
+}
+/* The hero's gold hairline marks the foot of the dark region. With this band
+   attached the region does not end there any more, so the line moves down to
+   where it does. */
+.plainhero:has(+ .vertical-cardstage)::after { opacity: 0; }
+.vertical-cardstage::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--sky-coral), transparent);
+  opacity: 0.55;
+}
+/* The grid's own top margin exists for the reach section, where cards follow
+   a headline. Here the section padding is the space. */
+.vertical-cardstage-cards { margin-block-start: 0; }
 
 /* ---- Site-wide card tilt (components/site/CardTilt.tsx) ----
    The transform itself is written by that component from the pointer's
