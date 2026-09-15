@@ -6623,26 +6623,43 @@ html.lenis body { height: auto; }
    phone, so the skewed panel is all a touch visitor ever sees. */
 .skewcards {
   display: grid;
-  gap: clamp(1.5rem, 4vw, 2.5rem);
+  /* TWO UP ON A PHONE, four across on a wide screen. Four cards stacked one
+     per row put the last of them most of a screen's scroll below the first,
+     which on the homepage means the section's own point arrives after the
+     reader has given up on it. Two up keeps the set legible as a set.
+
+     The 4-up breakpoint is 1100px rather than the 900px the 3-up used,
+     because four cards inside a 1240px container are 283px each and inside a
+     900px one they are 186px -- narrower than the copy can take. Between the
+     two widths the cards stay two up and simply get wider. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* Rows need more air than columns do: each card's angled panel hangs below
+     its own plate, so a row gap matched to the column gap leaves one row's
+     panel almost touching the next row's. */
+  gap: 1.6rem 0.7rem;
   width: 100%;
   margin-block-start: 1.9rem;
 }
-@media (min-width: 900px) {
-  .skewcards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (min-width: 640px) {
+  .skewcards { gap: clamp(1rem, 3vw, 2rem); }
+}
+
+@media (min-width: 1100px) {
+  .skewcards { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.25rem; }
 }
 
 .skewcard {
   position: relative;
   /* Taller than its copy on purpose -- the angled panel showing above and
-     below the glass plate is the effect. Shorter on a phone, where three of
-     these stack: at 300px each the section ran past 900px of scroll for three
-     sentences. */
-  min-height: 210px;
+     below the glass plate is the effect. Shorter on a phone, where the cards
+     are half-width: at 300px each a 2x2 grid ran past 600px of scroll for
+     four sentences. */
+  min-height: 200px;
   display: flex;
   align-items: center;
   isolation: isolate;
 }
-@media (min-width: 900px) {
+@media (min-width: 1100px) {
   .skewcard { min-height: 300px; }
 }
 
@@ -6710,7 +6727,11 @@ html.lenis body { height: auto; }
   z-index: 2;
   inset-inline-start: 0;
   width: 100%;
-  padding: clamp(1.1rem, 3.5vw, 1.5rem) clamp(1.4rem, 4.5vw, 2.25rem);
+  /* A phone card is now ~160px wide, so the reference's 1.4rem floor on the
+     side padding was eating a quarter of it. The floor drops and the ceiling
+     comes down too, because four cards share a row on a wide screen where
+     three used to. */
+  padding: clamp(0.85rem, 3.5vw, 1.5rem) clamp(0.95rem, 4.5vw, 1.75rem);
   border-radius: var(--sky-radius-md);
   border: 1px solid rgba(245, 240, 230, 0.14);
   /* SMOKED, not clear. The reference plate is a 7% WHITE wash over blur(10px),
@@ -6744,25 +6765,39 @@ html.lenis body { height: auto; }
 }
 
 .skewcard-title {
-  font-size: clamp(1.05rem, 3.8vw, 1.25rem);
+  /* The floors, not the ceilings, are what changed with the 2-up phone grid:
+     a title set at 1.05rem in a 130px column breaks after two words. */
+  font-size: clamp(0.92rem, 3.8vw, 1.25rem);
   font-weight: 600;
-  margin-block-end: 0.5rem;
+  line-height: 1.25;
+  margin-block-end: 0.4rem;
 }
 .skewcard-text {
-  font-size: clamp(0.88rem, 3.4vw, 0.98rem);
-  line-height: 1.55;
+  font-size: clamp(0.78rem, 3.4vw, 0.98rem);
+  line-height: 1.45;
   /* 0.78 in the reference. Body copy at this size needs the margin more than
      the title does, and the plate it sits on is now dark enough to give it. */
   color: rgba(245, 240, 230, 0.88);
 }
 .skewcard-action {
   display: inline-block;
-  margin-block-start: 0.9rem;
-  padding: 0.45rem 0.85rem;
+  margin-block-start: 0.75rem;
+  /* Measured against the longest label the site actually uses, "BROWSE
+     DESTINATIONS", in the narrowest card the grid can produce (a 320px
+     viewport, two up). Uppercase mono at the old 0.76rem/0.08em overran that
+     column; this fits it on one line, and text-wrap is left alone as the
+     safety valve for a longer label in another language. */
+  padding: 0.38rem 0.6rem;
   border-radius: 8px;
   font-family: var(--font-mono);
-  font-size: 0.76rem;
-  letter-spacing: 0.08em;
+  font-size: clamp(0.6rem, 2.4vw, 0.76rem);
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+  /* A label too long for a half-width phone card wraps rather than overruns
+     it -- "BROWSE DESTINATIONS" does at 375px, and its French translation is
+     longer still. Centred so the wrapped state reads as a two-line button
+     instead of a ragged one. */
+  text-align: center;
   text-transform: uppercase;
   color: var(--sky-coral-ink);
   background: linear-gradient(180deg, #ffd964, var(--sky-coral));

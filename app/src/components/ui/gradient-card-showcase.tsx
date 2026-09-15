@@ -65,14 +65,15 @@ export interface GradientCardShowcaseProps extends React.HTMLAttributes<HTMLDivE
  *
  * Exported because two places render this component now -- the homepage reach
  * section and the protection/charter pages -- and "the same cards" has to
- * survive someone editing one of them. Three stops rather than one so the
- * cards in a row stay distinguishable; all three inside the site's gold so
- * none of them reads as a second colour system.
+ * survive someone editing one of them. Four distinct depths rather than one
+ * so the cards in a row stay apart from each other; all four inside the
+ * site's gold so none of them reads as a second colour system.
  */
 export const GOLD_GRADIENTS: ReadonlyArray<{ gradientFrom: string; gradientTo: string }> = [
   { gradientFrom: "#ffcf4d", gradientTo: "#583714" },
   { gradientFrom: "#f3e6b8", gradientTo: "#c9a227" },
   { gradientFrom: "#ffd964", gradientTo: "#93711d" },
+  { gradientFrom: "#e0b84a", gradientTo: "#6b4a12" },
 ];
 
 export function GradientCardShowcase({ cards, className, ref, ...props }: GradientCardShowcaseProps) {

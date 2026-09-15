@@ -64,6 +64,7 @@ function FlightCompensationPage() {
         { title: t("protect.compB1Title"), body: t("protect.compB1Body") },
         { title: t("protect.compB2Title"), body: t("protect.compB2Body") },
         { title: t("protect.compB3Title"), body: t("protect.compB3Body") },
+        { title: t("protect.compB4Title"), body: t("protect.compB4Body") },
       ]}
       faqs={[
         { q: t("protect.compQ1"), a: t("protect.compA1") },

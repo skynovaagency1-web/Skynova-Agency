@@ -60,6 +60,7 @@ function TravelInsurancePage() {
         { title: t("protect.insB1Title"), body: t("protect.insB1Body") },
         { title: t("protect.insB2Title"), body: t("protect.insB2Body") },
         { title: t("protect.insB3Title"), body: t("protect.insB3Body") },
+        { title: t("protect.insB4Title"), body: t("protect.insB4Body") },
       ]}
       faqs={[
         { q: t("protect.insQ1"), a: t("protect.insA1") },

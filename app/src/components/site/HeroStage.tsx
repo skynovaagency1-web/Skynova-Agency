@@ -4,6 +4,7 @@ import { ScrollStage, type ScrollStageSection } from "@/components/ui/landing-pa
 import { GOLD_GRADIENTS, GradientCardShowcase } from "@/components/ui/gradient-card-showcase";
 import { DayNightToggle } from "@/components/site/DayNightToggle";
 import { DESTINATIONS, REGION_ORDER } from "@/data/destinations";
+import { POSTS } from "@/data/blog-posts";
 import { VERTICALS } from "@/data/verticals";
 import { setDocked, setStagePresent } from "@/lib/globe-handoff";
 import { applyThemeMode, getThemeMode, DEFAULT_THEME } from "@/lib/theme-mode";
@@ -52,6 +53,9 @@ import { useT } from "@/lib/i18n-strings";
 const DESTINATION_COUNT = DESTINATIONS.length;
 const REGION_COUNT = REGION_ORDER.length;
 const VERTICAL_COUNT = VERTICALS.length;
+// Every post in this array has a written article behind it (blog-articles.ts
+// holds one for each), so the figure is guides you can actually read.
+const GUIDE_COUNT = POSTS.length;
 
 /** Where the aircraft sits for each section, in viewport units. Section 0 keeps
  *  it clear of the left-aligned copy; section 1 lifts it out of the way of a
@@ -172,6 +176,13 @@ export function HeroStage() {
               href: "/#how-it-works",
               actionLabel: t("hero.cardHowItWorks"),
               ...GOLD_GRADIENTS[2],
+            },
+            {
+              title: t("hero.f4Title", { count: GUIDE_COUNT }),
+              description: t("hero.f4Body"),
+              to: "/blog",
+              actionLabel: t("hero.cardGuides"),
+              ...GOLD_GRADIENTS[3],
             },
           ]}
         />

@@ -65,6 +65,7 @@ function YachtCharterPage() {
         { title: t("protect.yachtB1Title"), body: t("protect.yachtB1Body") },
         { title: t("protect.yachtB2Title"), body: t("protect.yachtB2Body") },
         { title: t("protect.yachtB3Title"), body: t("protect.yachtB3Body") },
+        { title: t("protect.yachtB4Title"), body: t("protect.yachtB4Body") },
       ]}
       faqs={[
         { q: t("protect.yachtQ1"), a: t("protect.yachtA1") },

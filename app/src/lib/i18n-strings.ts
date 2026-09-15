@@ -158,6 +158,8 @@ export const EN = {
   "protect.compB2Body": "They file the claim, chase it, and escalate it if the airline refuses.",
   "protect.compB3Title": "Nothing to pay up front",
   "protect.compB3Body": "The check is free and the fee comes out of a successful payout, not your pocket.",
+  "protect.compB4Title": "A flight number is enough",
+  "protect.compB4Body": "The number and the date are all it takes to find out what a claim is worth.",
   "protect.compQ1": "Which flights qualify?",
   "protect.compA1":
     "Broadly: flights leaving an EU airport, or arriving in the EU on an EU airline, delayed over three hours, cancelled at short notice, or overbooked. Their free check is the reliable answer for a specific flight.",
@@ -181,6 +183,8 @@ export const EN = {
   "protect.insB2Body": "Cover can start while you are already abroad, which most insurers will not do.",
   "protect.insB3Title": "Single trip or annual",
   "protect.insB3Body": "One journey, or a year of them, priced by where you are going and for how long.",
+  "protect.insB4Title": "Certificate by email",
+  "protect.insB4Body": "The policy document arrives at once, which is what a clinic or a border asks to see.",
   "protect.insQ1": "Does it cover me if I've already left?",
   "protect.insA1":
     "Yes -- policies can be bought after departure, which is unusual. Anything that happened before the policy starts is not covered.",
@@ -204,6 +208,8 @@ export const EN = {
   "protect.yachtB2Body": "Listings are verified rather than taken on the operator's word.",
   "protect.yachtB3Title": "A week is the unit",
   "protect.yachtB3Body": "Charters run Saturday to Saturday in most of the Mediterranean, which shapes the whole trip.",
+  "protect.yachtB4Title": "Two seasons, opposite each other",
+  "protect.yachtB4Body": "The Mediterranean in summer, the Caribbean in winter -- a boat somewhere all year.",
   "protect.yachtQ1": "Do I need a licence?",
   "protect.yachtA1":
     "For bareboat, yes -- and which licence counts depends on the flag state. With a skipper you need nothing at all.",
@@ -230,9 +236,12 @@ export const EN = {
   "hero.f2Body": "Written up across {regions} regions, each with the booking links that match the route.",
   "hero.f3Title": "No markup, ever",
   "hero.f3Body": "Checkout happens on the partner's own site, at the partner's own price.",
+  "hero.f4Title": "{count} guides written",
+  "hero.f4Body": "Where to stay, when to go, what a week costs -- written before you book.",
   "hero.cardExplore": "Browse destinations",
   "hero.cardCollections": "See collections",
   "hero.cardHowItWorks": "How it works",
+  "hero.cardGuides": "Read the guides",
   "hero.beginBadge": "Begin",
   "hero.beginTitle": "Where do you want to wake up?",
   "hero.beginLede":
@@ -1102,9 +1111,12 @@ const FR: Dict = {
   "hero.f2Body": "R\u00e9dig\u00e9es sur {regions} r\u00e9gions, avec les liens de r\u00e9servation correspondant \u00e0 l\u2019itin\u00e9raire.",
   "hero.f3Title": "Jamais de majoration",
   "hero.f3Body": "Le paiement se fait sur le site du partenaire, au prix du partenaire.",
+  "hero.f4Title": "{count} guides r\u00e9dig\u00e9s",
+  "hero.f4Body": "O\u00f9 loger, quand partir, ce que co\u00fbte une semaine \u2014 \u00e9crit avant de r\u00e9server.",
   "hero.cardExplore": "Voir les destinations",
   "hero.cardCollections": "Voir les collections",
   "hero.cardHowItWorks": "Comment \u00e7a marche",
+  "hero.cardGuides": "Lire les guides",
   "hero.beginBadge": "Commencer",
   "hero.beginTitle": "O\u00f9 voulez-vous vous r\u00e9veiller ?",
   "hero.beginLede":
