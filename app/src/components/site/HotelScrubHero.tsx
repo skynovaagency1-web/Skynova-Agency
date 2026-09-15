@@ -12,13 +12,17 @@ import { useT } from "@/lib/i18n-strings";
  * switch back, the same way Hero.tsx and HeroScroll.tsx remained swappable
  * when the homepage hero changed.
  *
- * NO FRAME SCRUB, deliberately. The reference drives video.currentTime from
- * scroll; that is only smooth on a clip encoded with dense keyframes, and
- * /assets/hero/hotel-lobby.mp4 carries two across 13.28s -- a seek per frame
- * would decode up to 166 frames to draw one, which on a phone reads as a
- * frozen hero. So the clip plays and everything else here is scroll-driven.
- * The `scrub` prop is the one line that changes once a scrub-encoded source
- * exists; the encode command is in that prop's note.
+ * IT SCRUBS OFF ITS OWN SOURCE, NOT THE PLAYBACK ONE. hotel-lobby.mp4 is
+ * encoded to play: two keyframes across 13.28s, so seeking it per frame would
+ * decode up to 166 frames to draw one and the hero would sit frozen on a
+ * phone. hotel-lobby-scrub.mp4 is the same footage with every frame a
+ * keyframe, at 15fps and 720p tall so that -g 1 costs 6.0MB instead of the
+ * ~25MB a 1080p25 all-keyframe encode would. The frame rate drop is invisible
+ * because scroll position picks the frame, not the clock. The command is in
+ * the `scrub` prop's note.
+ *
+ * The playback encode stays in the tree: it is what `scrub={false}` wants,
+ * and it is 2MB lighter for anything that only needs the clip to run.
  *
  * NO CUTOUT LAYER either: the reference floats a silhouette cut to ITS
  * footage's last frame over the mark. public/assets/hero/window-photo-cutout
@@ -31,8 +35,9 @@ export function HotelScrubHero() {
 
   return (
     <ScrubHero
-      videoSrc="/assets/hero/hotel-lobby.mp4"
+      videoSrc="/assets/hero/hotel-lobby-scrub.mp4"
       posterSrc="/assets/hero/hotel-lobby-poster.webp"
+      scrub
       brandMark={t("hotels.heroMark")}
       scrollHint={t("hotels.heroHint")}
     >

@@ -58,16 +58,19 @@ export interface ScrubHeroProps {
    * OFF BY DEFAULT, AND CHECK THE SOURCE BEFORE TURNING IT ON. Seeking to an
    * arbitrary time makes the decoder start at the previous keyframe and
    * decode forward to it, so a clip with sparse keyframes stalls under a
-   * seek-per-frame -- badly on a phone. /assets/hero/hotel-lobby.mp4 carries
-   * two keyframes across 13.28s (one every 166 frames), which is a normal
-   * encode for a clip meant to PLAY and unusable for one meant to be
-   * scrubbed. A source for this wants every frame a keyframe:
+   * seek-per-frame -- badly on a phone. The ordinary playback encode of the
+   * lobby clip carries two keyframes across 13.28s, one every 166 frames,
+   * and is unusable here. hotel-lobby-scrub.mp4 beside it is the same footage
+   * re-encoded for this, every frame a keyframe:
    *
-   *    ffmpeg -i in.mp4 -an -c:v libx264 -g 1 -crf 26 -movflags +faststart out.mp4
+   *   ffmpeg -i hotel-lobby.mp4 -an -r 15 -vf scale=-2:720 \
+   *     -c:v libx264 -g 1 -crf 27 -preset slow -movflags +faststart out.mp4
    *
-   * Expect the file to grow several times over; that is the trade the effect
-   * costs. With scrub off the clip simply plays, and every other layer here
-   * is still driven by scroll.
+   * The frame rate and height come down to pay for -g 1, which is what keeps
+   * the result at 6.0MB rather than the ~25MB a 1080p25 all-keyframe encode
+   * costs. 15fps is not visible when scroll position picks the frame instead
+   * of the clock. With scrub off the clip simply plays, and every other layer
+   * here is still driven by scroll.
    */
   scrub?: boolean;
   /** Foreground cutout -- transparent but for the subject, pixel-aligned to
@@ -85,7 +88,9 @@ export interface ScrubHeroProps {
   /** Credit line, bottom right. Off unless asked for; see the note above. */
   signature?: { name: string; url: string } | false;
   /** Track length, in svh. The whole run happens inside it -- longer means
-   *  the same run takes more scrolling, not that more happens. */
+   *  the same run takes more scrolling, not that more happens. Defaults
+   *  longer when scrubbing, so each frame gets more pixels of scroll and the
+   *  clip advances smoothly instead of jumping several frames per gesture. */
   trackVh?: number;
   className?: string;
   style?: CSSProperties;
@@ -95,18 +100,18 @@ export interface ScrubHeroProps {
    after it, and the cutout follows a beat later -- that gap is what makes the
    cutout read as standing in front of the mark rather than arriving with it.
 
-   The mark starts at 0.46, not the reference's 0.8. The reference spends
-   0.3 -> 0.8 scrubbing its video, so that stretch carries itself; with scrub
-   off it is half the track with nothing scroll-driven in it, which reads as a
-   hero that stopped responding. Starting the mark where the scrub would have
-   been keeps the run continuous, and the hold from MARK_END to 1 is a beat on
-   the finished frame rather than a hole in the middle of it. */
-const COPY_END = 0.3;
+   TWO SETS, because what fills the middle of the run depends on the mode.
+   Scrubbing, the clip itself carries 0.3 -> 0.78 and the mark arrives after
+   it, which is the reference's pacing. Playing, that stretch has nothing
+   scroll-driven in it at all -- half the track where the hero stops
+   responding to the reader -- so the mark moves into it and the hold at the
+   end becomes a beat on the finished frame rather than a hole in the middle
+   of one. */
 const VIDEO_END = 0.78;
-const MARK_START = 0.46;
-const MARK_END = 0.8;
-const OVERLAY_START = 0.58;
-const OVERLAY_END = 0.9;
+const TIMING = {
+  scrub: { copyEnd: 0.3, markStart: 0.8, markEnd: 0.93, overlayStart: 0.85, overlayEnd: 0.96 },
+  play: { copyEnd: 0.3, markStart: 0.46, markEnd: 0.8, overlayStart: 0.58, overlayEnd: 0.9 },
+} as const;
 
 function clamp01(v: number) {
   return v < 0 ? 0 : v > 1 ? 1 : v;
@@ -121,7 +126,7 @@ export function ScrubHero({
   scrollHint,
   children,
   signature = false,
-  trackVh = 240,
+  trackVh = scrub ? 320 : 240,
   className,
   style,
 }: ScrubHeroProps) {
@@ -179,6 +184,20 @@ export function ScrubHero({
       video.addEventListener("loadeddata", onLoadedData);
     }
 
+    // iOS will not decode a <video> that has never been played, so a scrub on
+    // a fresh page can sit on a black frame until something touches it. One
+    // muted play()/pause() on the first gesture unlocks the decoder; it is
+    // registered `once` and does nothing visible, because the pause lands in
+    // the same tick and the seek loop owns currentTime from then on.
+    const prime = () => {
+      if (!video) return;
+      void video.play().then(() => video.pause()).catch(() => {});
+    };
+    if (video && scrub) {
+      window.addEventListener("touchstart", prime, { once: true, passive: true });
+      window.addEventListener("pointerdown", prime, { once: true, passive: true });
+    }
+
     // One seek in flight at a time. Stacking them is what turns a scrub into
     // a slideshow: each new currentTime cancels the decode the last one
     // started, so nothing ever finishes.
@@ -219,9 +238,11 @@ export function ScrubHero({
       return clamp01((window.scrollY - top) / travel);
     }
 
+    const timing = scrub ? TIMING.scrub : TIMING.play;
+
     function paint(p: number) {
       if (copyRef.current) {
-        const t = 1 - clamp01(p / COPY_END);
+        const t = 1 - clamp01(p / timing.copyEnd);
         copyRef.current.style.opacity = String(t);
         copyRef.current.style.transform = `translateY(${(1 - t) * -24}px) scale(${0.96 + t * 0.04})`;
         copyRef.current.style.filter = `blur(${(1 - t) * 10}px)`;
@@ -231,7 +252,7 @@ export function ScrubHero({
       }
       if (hintRef.current) hintRef.current.style.opacity = started ? "0" : "1";
       if (markRef.current) {
-        const t = clamp01((p - MARK_START) / (MARK_END - MARK_START));
+        const t = clamp01((p - timing.markStart) / (timing.markEnd - timing.markStart));
         markRef.current.style.opacity = String(t);
         markRef.current.style.transform = `translateY(${(1 - t) * 16}px) scale(${0.98 + t * 0.02})`;
         markRef.current.style.filter = `blur(${(1 - t) * 6}px)`;
@@ -239,7 +260,7 @@ export function ScrubHero({
       }
       if (overlayRef.current) {
         overlayRef.current.style.opacity = String(
-          clamp01((p - OVERLAY_START) / (OVERLAY_END - OVERLAY_START)),
+          clamp01((p - timing.overlayStart) / (timing.overlayEnd - timing.overlayStart)),
         );
       }
       if (barRef.current) barRef.current.style.transform = `scaleX(${p})`;
@@ -285,6 +306,8 @@ export function ScrubHero({
       cancelAnimationFrame(raf);
       video?.removeEventListener("loadeddata", onLoadedData);
       video?.removeEventListener("seeked", onSeeked);
+      window.removeEventListener("touchstart", prime);
+      window.removeEventListener("pointerdown", prime);
     };
   }, [scrub]);
 
