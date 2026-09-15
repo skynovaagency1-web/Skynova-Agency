@@ -6814,6 +6814,150 @@ html.lenis body { height: auto; }
   .skewcard-action:hover { transform: none; }
 }
 
+/* ---- Scroll-scrubbed media hero (components/ui/sunset-skyline-hero.tsx) ----
+   A tall track with a sticky stage inside it, which is what makes the hero
+   hold still while the page scrolls past. The component reads its progress
+   off the same geometry, so the two cannot disagree.
+
+   svh, not dvh, for the track: a phone's address bar sliding away mid-scroll
+   changes dvh, which would change the track's length underneath the reader
+   and jump the progress. Same reason .keyhole-hero gives. */
+.scrubhero {
+  position: relative;
+  background: #16130d;
+}
+.scrubhero-stage {
+  position: sticky;
+  /* Exactly under the sticky nav, whose height the component measures and
+     writes here. 65px is that height as measured, for the first paint. */
+  top: var(--scrubhero-top, 65px);
+  height: calc(100dvh - var(--scrubhero-top, 65px));
+  min-height: 480px;
+  overflow: hidden;
+  isolation: isolate;
+  background: #16130d;
+}
+.scrubhero-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.6s ease;
+}
+/* The display mark sits under the cutout, so a cutout's subject reads as
+   standing in front of it. */
+.scrubhero-mark {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8% 14vh;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+}
+.scrubhero-mark span {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(56px, 15vw, 220px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: #f5f0e6;
+  text-shadow: 0 8px 60px rgba(0, 0, 0, 0.45);
+}
+.scrubhero-cutout {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  pointer-events: none;
+}
+.scrubhero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(22, 19, 13, 0.55),
+    rgba(22, 19, 13, 0.1) 32%,
+    rgba(22, 19, 13, 0.2) 68%,
+    rgba(22, 19, 13, 0.72)
+  );
+}
+.scrubhero-copy {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  will-change: opacity, transform, filter;
+}
+.scrubhero-hint {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  bottom: clamp(20px, 6vh, 48px);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(245, 240, 230, 0.75);
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1.4vw, 12px);
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.scrubhero-hint-arrow { animation: scrubhero-bounce 1.6s ease-in-out infinite; }
+@keyframes scrubhero-bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(5px); opacity: 1; }
+}
+.scrubhero-bar {
+  position: absolute;
+  z-index: 5;
+  inset-inline: 0;
+  inset-block-end: 0;
+  height: 2px;
+  background: rgba(245, 240, 230, 0.12);
+}
+.scrubhero-bar-fill {
+  height: 100%;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: linear-gradient(90deg, rgba(245, 240, 230, 0.5), var(--sky-coral));
+}
+:root[dir="rtl"] .scrubhero-bar-fill { transform-origin: right center; }
+.scrubhero-signature {
+  position: absolute;
+  z-index: 5;
+  inset-inline-end: clamp(12px, 2.5vw, 24px);
+  inset-block-end: clamp(10px, 2vw, 18px);
+  font-size: clamp(11px, 1.4vw, 13px);
+  color: rgba(245, 240, 230, 0.6);
+}
+.scrubhero-signature a { color: inherit; }
+
+/* No track to scroll through, so the hero is one screen showing its opening
+   state -- the copy and the clip's poster, with nothing that moves. */
+@media (prefers-reduced-motion: reduce) {
+  .scrubhero { height: auto !important; }
+  .scrubhero-stage { position: relative; top: 0; height: 76svh; min-height: 520px; }
+  .scrubhero-hint, .scrubhero-bar { display: none; }
+  .scrubhero-hint-arrow { animation: none; }
+}
+
 /* ---- Gradient-card band on the protection/charter pages ----
    (VerticalPage bulletVariant="gradient")
 

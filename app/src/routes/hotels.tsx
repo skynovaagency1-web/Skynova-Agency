@@ -2,7 +2,7 @@ import { Gem, Palmtree, UtensilsCrossed } from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { VerticalPage } from "@/components/site/VerticalPage";
-import { HotelHeroCards } from "@/components/site/HotelHeroCards";
+import { HotelScrubHero } from "@/components/site/HotelScrubHero";
 import { HotelCollectionsSection } from "@/components/site/HotelCollections";
 import { CategoryGridSection } from "@/components/site/CategoryGrid";
 import { DestinationPicksSection } from "@/components/site/DestinationPicks";
@@ -47,9 +47,7 @@ function HotelsPage() {
       eyebrow={t("service.hotels")}
       title={t("hotels.title")}
       description={t("home.hotelsCopy")}
-      heroVideo={{ videoSrc: "/assets/hero/hotel-lobby.mp4", posterSrc: "/assets/hero/hotel-lobby-poster.webp" }}
-      heroReveal="keyhole"
-      heroIntro={<HotelHeroCards />}
+      heroSlot={<HotelScrubHero />}
       heroAlt={t("hotels.heroAlt")}
       ctaHref={hotelsLink()}
       ctaLabel={t("home.browseStays")}

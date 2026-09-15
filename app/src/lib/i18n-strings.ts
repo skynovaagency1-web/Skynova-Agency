@@ -429,6 +429,10 @@ export const EN = {
   "flights.cat3Detail": "Carriers rated for service, not just for getting you there.",
 
   "hotels.title": "Stay somewhere unforgettable.",
+  /* The display mark that composes in as the hero's scroll run ends -- one
+     word, set very large, so it wants to be short in every language. */
+  "hotels.heroMark": "Stay.",
+  "hotels.heroHint": "SCROLL",
   "hotels.heroAlt": "A bellhop rolling a luggage cart through a grand hotel lobby",
   "hotels.b1Title": "Boutique to full resort",
   "hotels.b1Body": "Filter by neighborhood, then by star rating and amenities.",
@@ -1306,6 +1310,8 @@ const FR: Dict = {
   "flights.cat3Detail": "Des compagnies jug\u00e9es sur le service, pas seulement sur le trajet.",
 
   "hotels.title": "S\u00e9journez dans un lieu inoubliable.",
+  "hotels.heroMark": "S\u00e9journez.",
+  "hotels.heroHint": "FAITES D\u00c9FILER",
   "hotels.heroAlt": "Un bagagiste poussant un chariot dans un grand hall d\u2019h\u00f4tel",
   "hotels.b1Title": "Du boutique-h\u00f4tel au grand resort",
   "hotels.b1Body": "Filtrez par quartier, puis par nombre d\u2019\u00e9toiles et \u00e9quipements.",
