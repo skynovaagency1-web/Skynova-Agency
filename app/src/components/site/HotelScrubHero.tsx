@@ -12,17 +12,23 @@ import { useT } from "@/lib/i18n-strings";
  * switch back, the same way Hero.tsx and HeroScroll.tsx remained swappable
  * when the homepage hero changed.
  *
- * IT SCRUBS OFF ITS OWN SOURCE, NOT THE PLAYBACK ONE. hotel-lobby.mp4 is
- * encoded to play: two keyframes across 13.28s, so seeking it per frame would
- * decode up to 166 frames to draw one and the hero would sit frozen on a
- * phone. hotel-lobby-scrub.mp4 is the same footage with every frame a
- * keyframe, at 15fps and 720p tall so that -g 1 costs 6.0MB instead of the
- * ~25MB a 1080p25 all-keyframe encode would. The frame rate drop is invisible
- * because scroll position picks the frame, not the clock. The command is in
- * the `scrub` prop's note.
+ * SCRUB IS OFF, AND THE REASON IS THE SERVER, NOT THE FILE. The encode is
+ * ready -- hotel-lobby-scrub.mp4 beside this, every frame a keyframe -- and
+ * the scrub runs correctly against `vite dev`. It does not run in production,
+ * because seeking an MP4 needs HTTP byte ranges and this Worker's asset
+ * handler does not serve them: a `Range: bytes=1000000-1000100` request for
+ * that file answers 200 with the whole 6,335,664 bytes and no accept-ranges
+ * header. The browser can therefore buffer and play the clip but cannot seek
+ * it, so every currentTime assignment is dropped and the hero sits on frame
+ * zero for the whole scroll. Measured on the deployed site, not inferred:
+ * currentTime read 0 at 0/20/40/60/78% of the track while the progress bar
+ * and the mark advanced normally.
  *
- * The playback encode stays in the tree: it is what `scrub={false}` wants,
- * and it is 2MB lighter for anything that only needs the clip to run.
+ * Turning `scrub` back on needs one of:
+ *   - a Worker route for this path that honours Range, or
+ *   - a preloaded frame sequence instead of a video, which is what the
+ *     technique actually wants and needs no ranges at all.
+ * Until then the clip plays and every other layer stays scroll-driven.
  *
  * NO CUTOUT LAYER either: the reference floats a silhouette cut to ITS
  * footage's last frame over the mark. public/assets/hero/window-photo-cutout
@@ -35,9 +41,8 @@ export function HotelScrubHero() {
 
   return (
     <ScrubHero
-      videoSrc="/assets/hero/hotel-lobby-scrub.mp4"
+      videoSrc="/assets/hero/hotel-lobby.mp4"
       posterSrc="/assets/hero/hotel-lobby-poster.webp"
-      scrub
       brandMark={t("hotels.heroMark")}
       scrollHint={t("hotels.heroHint")}
     >
