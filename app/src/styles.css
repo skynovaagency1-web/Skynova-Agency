@@ -2262,6 +2262,23 @@ html {
    HTML height="" presentational attribute) gives it enough room to lay
    its own content out without collision. */
 .affiliate-widget iframe { max-width: 100%; height: 280px; }
+/* AirHelp's widget is one input row, not a card grid, and its loader hard-
+   codes a 265px wrapper INLINE -- so it draws the form across the top and
+   leaves ~200px of its own white underneath, inside the iframe.
+
+   Only !important reaches an inline style, and the id is generated
+   (airhelp_wrapper_trace_id<random>), hence the prefix selector. Both are
+   things I would rather not write; the reason it is acceptable here is the
+   failure mode. If AirHelp renames that wrapper or restructures, this rule
+   stops matching and the widget goes back to its own 265px -- the way it
+   looks today. It cannot break the widget, only stop tidying it.
+
+   The height comes back up on a narrow screen, where the form stacks into
+   three rows; clipping the button off would be the one bad outcome. */
+.affiliate-widget-compact [id^="airhelp_wrapper_"] > div { height: 130px !important; }
+@media (max-width: 720px) {
+  .affiliate-widget-compact [id^="airhelp_wrapper_"] > div { height: 250px !important; }
+}
 
 /* eSIM page -- floating SIM card (see esim.tsx). The cutout image is a
    real transparent PNG (background keyed out), not a boxed photo, so it

@@ -160,6 +160,10 @@ export const EN = {
   "protect.compB3Body": "The check is free and the fee comes out of a successful payout, not your pocket.",
   "protect.compB4Title": "A flight number is enough",
   "protect.compB4Body": "The number and the date are all it takes to find out what a claim is worth.",
+  "protect.compAltEyebrow": "A second opinion",
+  "protect.compAltHeading": "Or check the same flight with AirHelp.",
+  "protect.compAltBody":
+    "Two claims firms, the same rules, different fees and different odds on a given airline. Checking with both costs nothing and tells you who will actually take the case.",
   "protect.compQ1": "Which flights qualify?",
   "protect.compA1":
     "Broadly: flights leaving an EU airport, or arriving in the EU on an EU airline, delayed over three hours, cancelled at short notice, or overbooked. Their free check is the reliable answer for a specific flight.",

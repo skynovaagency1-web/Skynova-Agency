@@ -75,7 +75,12 @@ export function applySecurityHeaders(response: Response): Response {
       // frame-src then blocked what it drew, leaving an empty container that
       // looked exactly like a widget with no inventory. Caught in the console,
       // not by reading the page.
-      "frame-src 'self' https://localrent.com https://*.localrent.com https://www.tiqets.com https://*.tiqets.com https://*.klook.com https://*.travelpayouts.com; " +
+      // AirHelp's brand widget is the same shape as the Tiqets one above:
+      // tpscr.com serves a loader, and the only thing that loader draws is an
+      // IFRAME on static.airhelp.com. Without this host the container renders
+      // and stays empty, which is indistinguishable from a partner with
+      // nothing to show.
+      "frame-src 'self' https://localrent.com https://*.localrent.com https://www.tiqets.com https://*.tiqets.com https://*.klook.com https://*.travelpayouts.com https://static.airhelp.com; " +
       "base-uri 'self'; form-action 'self'",
   );
   headers.set("X-Frame-Options", "SAMEORIGIN");

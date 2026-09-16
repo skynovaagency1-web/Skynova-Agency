@@ -1,9 +1,28 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { VerticalPage } from "@/components/site/VerticalPage";
+import { AffiliateWidget } from "@/components/site/AffiliateWidget";
 import { PlainHero } from "@/components/site/PlainHero";
 import { flightCompensationLink } from "@/lib/affiliate";
 import { useT } from "@/lib/i18n-strings";
+
+/**
+ * AirHelp's brand widget, the second claims firm on this page.
+ *
+ * Same "second partner per vertical" reasoning as lib/affiliate.ts gives for
+ * the others: a vertical that depends on one programme earns nothing the day
+ * that programme suspends the account or declines a market. Here it is also
+ * genuinely better for the reader -- two firms price the same EU261 claim
+ * differently and take different cases, and both check for free.
+ *
+ * The marker rides in `data5` on the iframe this loader draws
+ * (data5=<per-click id>-720297), not in the script URL, which is why the URL
+ * below carries no marker of its own beyond shmarker. static.airhelp.com is
+ * allow-listed in lib/security-headers.server.ts -- without it the loader
+ * runs and the iframe it appends is blocked, leaving an empty box.
+ */
+const AIRHELP_WIDGET_SRC =
+  "https://tpscr.com/content?trs=519959&shmarker=720297&lang=en&powered_by=true&campaign_id=120&promo_id=8679";
 
 export const Route = createFileRoute("/flight-compensation")({
   head: () => ({
@@ -71,6 +90,19 @@ function FlightCompensationPage() {
         { q: t("protect.compQ2"), a: t("protect.compA2") },
         { q: t("protect.compQ3"), a: t("protect.compA3") },
       ]}
-    />
+    >
+      <section className="site-section pt-0">
+        <div className="site-container">
+          <p className="site-eyebrow mb-3">{t("protect.compAltEyebrow")}</p>
+          <h2 className="site-h2 max-w-md text-3xl md:text-4xl">{t("protect.compAltHeading")}</h2>
+          <p className="site-ink-muted mt-4 max-w-xl text-base leading-relaxed">
+            {t("protect.compAltBody")}
+          </p>
+          <div className="site-panel affiliate-widget-frame mt-8">
+            <AffiliateWidget src={AIRHELP_WIDGET_SRC} className="affiliate-widget-compact" />
+          </div>
+        </div>
+      </section>
+    </VerticalPage>
   );
 }

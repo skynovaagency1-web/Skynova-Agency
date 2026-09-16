@@ -28,6 +28,7 @@ test("keeps partner booking widgets framable and preserves the response", async 
     "https://www.tiqets.com",
     "https://*.klook.com",
     "https://*.travelpayouts.com",
+    "https://static.airhelp.com",
   ]) {
     expect(frameSrc).toContain(host);
   }
