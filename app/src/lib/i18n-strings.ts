@@ -563,6 +563,11 @@ export const EN = {
   "airport.b2Body": "A quieter place to wait, at airports that offer it.",
   "airport.b3Title": "Baggage help",
   "airport.b3Body": "Storage and porter service where it is available.",
+  "airport.bagsEyebrow": "Between check-out and take-off",
+  "airport.bagsHeading": "Somewhere to leave the bags.",
+  "airport.bagsBody":
+    "The half-day after a hotel check-out is the part of a trip nobody plans for. Radical Storage holds luggage by the day in shops, cafes and hotels near the stations and centres of most European cities -- one price per bag, however big it is.",
+  "airport.bagsCta": "Find a bag drop",
   "airport.faqHeading": "Airport service questions, answered.",
   "airport.q1": "How far in advance should I book a transfer?",
   "airport.a1":
@@ -1497,6 +1502,11 @@ const FR: Dict = {
   "airport.b2Body": "Un endroit plus calme pour attendre, dans les a\u00e9roports qui en proposent.",
   "airport.b3Title": "Aide bagages",
   "airport.b3Body": "Consigne et service de porteur l\u00e0 o\u00f9 c\u2019est propos\u00e9.",
+  "airport.bagsEyebrow": "Entre le départ de l’hôtel et le décollage",
+  "airport.bagsHeading": "Un endroit pour laisser les bagages.",
+  "airport.bagsBody":
+    "La demi-journée qui suit le départ de l’hôtel est la partie du voyage que personne ne prévoit. Radical Storage garde les bagages à la journée dans des commerces, cafés et hôtels près des gares et des centres-villes de la plupart des villes européennes -- un tarif par bagage, quelle que soit sa taille.",
+  "airport.bagsCta": "Trouver une consigne",
   "airport.faqHeading": "Services a\u00e9roport : vos questions, nos r\u00e9ponses.",
   "airport.q1": "Combien de temps \u00e0 l\u2019avance faut-il r\u00e9server un transfert ?",
   "airport.a1":

@@ -34,6 +34,7 @@ import {
   esimAltLink,
   cityPassLink,
   transfersAltLink,
+  luggageStorageLink,
   carRentalAltLink,
   airportServicesLink,
   bikeRentalLink,
@@ -181,13 +182,14 @@ function DestinationPage() {
       partners: [
         { label: "GetTransfer", href: airportServicesLink() },
         { label: "Welcome Pickups", href: transfersAltLink() },
+        { label: "Radical Storage", href: luggageStorageLink() },
       ],
     },
     {
       title: t("service.bikeRentals"),
       vertical: "/bike-rentals",
       copy: t("dest.copyBikes", { name }),
-      partners: [{ label: "GetYourGuide", href: bikeRentalLink(name) }],
+      partners: [{ label: "BikesBooking", href: bikeRentalLink(name) }],
     },
     {
       title: t("dest.bookEsim"),

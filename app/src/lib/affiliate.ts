@@ -165,14 +165,49 @@ export function toursLink(destinationName?: string): string {
   return `https://www.getyourguide.com/s/?${params.toString()}`;
 }
 
-// Bike rentals: this vertical doesn't have its own dedicated affiliate
-// partner yet -- GetYourGuide lists real bike rentals and cycling tours
-// as a genuine category, so this reuses its free-text search rather than
-// invent a fake partner link.
-export function bikeRentalLink(destinationName?: string): string {
-  const params = new URLSearchParams({ partner_id: TP_MARKER });
-  params.set("q", destinationName ? `bike rental ${destinationName}` : "bike rental");
-  return `https://www.getyourguide.com/s/?${params.toString()}`;
+/**
+ * Bike, scooter and motorbike rentals: BikesBooking, through the tracking
+ * link Travelpayouts issued for this account.
+ *
+ * REPLACES a GetYourGuide free-text search that carried
+ * `partner_id=720297`. 720297 is a TRAVELPAYOUTS marker and `partner_id` is
+ * GetYourGuide's own affiliate id, so that link was attributed to nobody --
+ * the same mistake this file already documents for RentalCars, Tiqets,
+ * GetTransfer and Airalo. Confirmed by omission: the Travelpayouts dashboard
+ * listed nine programmes with clicks against them and GetYourGuide was not
+ * among them.
+ *
+ * Verified 17 Sep 2026: 302s to
+ * bikesbooking.com?sub_id=<per-click id>-720297&utm_source=travelpayouts,
+ * and the sub_id survives their own 301 to /en/.
+ *
+ * DO NOT EXPAND THIS INTO A SEARCH URL. The per-click id is minted by the
+ * short link; a hand-built bikesbooking.com/?sub_id=720297 would put the
+ * marker where an id belongs and earn nothing, which is exactly how the
+ * GetYourGuide version broke. `destinationName` is therefore accepted and
+ * ignored -- kept so the call sites that pass a city do not all have to
+ * change, and so nobody re-adds a query parameter believing it works.
+ */
+export function bikeRentalLink(_destinationName?: string): string {
+  return "https://bikesbooking.tpm.li/xtzNJF9t";
+}
+
+/**
+ * Luggage storage: Radical Storage, a network of shops and hotels that hold
+ * bags by the day.
+ *
+ * Its own service rather than a second partner for an existing vertical: the
+ * gap it fills is the half-day between a hotel checkout and an evening
+ * flight, which nothing else on this site covers. Deliberately NOT added to
+ * data/verticals.ts -- that array drives the nav's mega menu and the homepage
+ * explorer and every entry in it carries a card photograph, and there is no
+ * luggage-storage photography in the repo.
+ *
+ * Verified 17 Sep 2026: 302s to
+ * radicalstorage.com?track_id=<per-click id>-720297&utm_term=travelpayouts.
+ */
+export function luggageStorageLink(): string {
+  return "https://radicalstorage.tpm.li/GND1Qq7B";
 }
 
 /* ---------------------------------------------------------------------------

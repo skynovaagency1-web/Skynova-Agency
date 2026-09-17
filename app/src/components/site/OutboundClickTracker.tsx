@@ -59,6 +59,14 @@ const PARTNER_HOSTS: Record<string, string> = {
   "airalo.com": "esim",
   "www.getyourguide.com": "tours",
   "getyourguide.com": "tours",
+  "bikesbooking.com": "bikes",
+  "www.bikesbooking.com": "bikes",
+  "radicalstorage.com": "storage",
+  "www.radicalstorage.com": "storage",
+  "autoeurope.eu": "cars",
+  "www.autoeurope.eu": "cars",
+  "searadar.com": "charter",
+  "www.searadar.com": "charter",
 };
 
 /** /destinations/<slug> -> <slug>; anything else -> null. */

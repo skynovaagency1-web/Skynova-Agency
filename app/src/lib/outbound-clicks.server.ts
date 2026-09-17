@@ -32,6 +32,12 @@ const VERTICALS = new Set([
   // a click whose vertical is missing from it is dropped without a trace.
   "compensation",
   "insurance",
+  // Luggage storage and yacht charter. "storage" is its own bucket rather
+  // than part of transfers because it answers a different question (where do
+  // the bags go, not how do I get there); "charter" likewise is a booking
+  // but not a car or a hotel.
+  "storage",
+  "charter",
 ]);
 
 /** Partner hosts we knowingly link to, mapped to the vertical they serve.
@@ -73,6 +79,23 @@ export const PARTNER_VERTICALS: Record<string, string> = {
   "airalo.com": "esim",
   "www.getyourguide.com": "tours",
   "getyourguide.com": "tours",
+  // BikesBooking replaced the GetYourGuide free-text search as the bike
+  // partner (see bikeRentalLink in lib/affiliate.ts). Without these the
+  // entire bikes vertical is absent from outbound stats -- the same silent
+  // hole GetRentacar left when it replaced Rentalcars.
+  "bikesbooking.com": "bikes",
+  "www.bikesbooking.com": "bikes",
+  "radicalstorage.com": "storage",
+  "www.radicalstorage.com": "storage",
+  // Auto Europe, second car partner. Added to the site on 17 Sep 2026 and
+  // missed here in that commit, so its clicks were being counted by
+  // Travelpayouts and dropped by us.
+  "autoeurope.eu": "cars",
+  "www.autoeurope.eu": "cars",
+  // Searadar, on /yacht-charter. Never mapped, so every yacht click since
+  // that page shipped has been discarded at this endpoint.
+  "searadar.com": "charter",
+  "www.searadar.com": "charter",
 };
 
 /** Slug-shaped and bounded, so the column cannot be used for free text. */

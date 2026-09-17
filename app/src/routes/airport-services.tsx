@@ -4,7 +4,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { VerticalPage } from "@/components/site/VerticalPage";
 import { CategoryGridSection } from "@/components/site/CategoryGrid";
 import { DestinationPicksSection } from "@/components/site/DestinationPicks";
-import { airportServicesLink } from "@/lib/affiliate";
+import { airportServicesLink, luggageStorageLink } from "@/lib/affiliate";
 
 import { useT, type TKey } from "@/lib/i18n-strings";
 
@@ -50,6 +50,21 @@ function AirportServicesPage() {
         { q: t("airport.q4"), a: t("airport.a4") },
       ]}
     >
+      <section className="site-section pt-0">
+        <div className="site-container">
+          <p className="site-eyebrow mb-3">{t("airport.bagsEyebrow")}</p>
+          <h2 className="site-h2 max-w-md text-3xl md:text-4xl">{t("airport.bagsHeading")}</h2>
+          <p className="site-ink-muted mt-4 max-w-xl text-base leading-relaxed">{t("airport.bagsBody")}</p>
+          <a
+            href={luggageStorageLink()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-framed mt-7 inline-flex"
+          >
+            {t("airport.bagsCta")}
+          </a>
+        </div>
+      </section>
       <CategoryGridSection
         eyebrow={t("airport.categoryEyebrow")}
         heading={t("airport.categoryHeading")}
