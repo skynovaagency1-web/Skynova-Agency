@@ -210,6 +210,26 @@ function CanonicalLink() {
 }
 
 /**
+ * noindex on any locale whose translations do not exist yet.
+ *
+ * The prefixes are routable before the strings land -- /ar/hotels renders
+ * today -- and what it renders is the ENGLISH page wrapped in lang="ar"
+ * dir="rtl". Nothing links to it (the switcher and the sitemap both read
+ * PUBLISHED_LOCALES), but "nothing links to it" is not the same as
+ * "unreachable": a stray backlink or a guessed URL is enough, and a set of
+ * near-identical English pages under foreign prefixes is exactly the shape
+ * of a doorway-page problem.
+ *
+ * Removing the tag is not a separate job -- a locale stops matching this the
+ * moment it is added to PUBLISHED_LOCALES, in the commit that translates it.
+ */
+function LocaleRobots() {
+  const locale = useCurrentLocale();
+  if (PUBLISHED_LOCALES.includes(locale)) return null;
+  return <meta name="robots" content="noindex, follow" />;
+}
+
+/**
  * hreflang alternates.
  *
  * Emitted only once more than one locale is published, and only for locales
@@ -245,6 +265,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <CanonicalLink />
+        <LocaleRobots />
         <AlternateLinks />
         {/* Site-wide, not just the homepage. It anchors to #how-it-works
             where that exists and otherwise starts at the top of the page. */}

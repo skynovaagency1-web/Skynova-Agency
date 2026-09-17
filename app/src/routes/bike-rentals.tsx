@@ -16,6 +16,29 @@ const CYCLING_DESTINATIONS: { name: string; slug: string; detailKey: TKey }[] = 
   { name: "New Zealand", slug: "new-zealand", detailKey: "bikes.pick4Detail" },
 ];
 
+/* BIKESBOOKING IS NOT WIRED HERE, AND bikeRentalLink() STILL EARNS NOTHING.
+ *
+ * The widget for campaign_id=57 (promo_id=5472) was built and measured on
+ * 17 Sep 2026 and then pulled, because what it renders is not shippable:
+ *
+ *   - its own copy reads "Choose and rent the perfect mode of transportation
+ *     on undefined" -- a literal undefined where a location should be;
+ *   - it is a generic "transportation rentals" banner illustrated with a CAR,
+ *     on the bike-rentals page;
+ *   - it fetches http://avsplow.com/a/j over plain HTTP from an HTTPS page,
+ *     which every browser blocks as mixed content regardless of our CSP.
+ *
+ * Two findings worth keeping. It only mounts with async=false on the script
+ * tag (it locates itself via document.currentScript); left async it loads,
+ * throws nothing, logs nothing and renders nothing. And AffiliateWidget now
+ * takes that as a prop.
+ *
+ * What this page actually needs is a BikesBooking TRACKING LINK, not a
+ * widget: bikeRentalLink() below points at a GetYourGuide free-text search
+ * carrying partner_id=720297, which is a Travelpayouts marker in
+ * GetYourGuide's own id field and is not attributed to anyone.
+ */
+
 export const Route = createFileRoute("/bike-rentals")({
   head: () => ({
     meta: [

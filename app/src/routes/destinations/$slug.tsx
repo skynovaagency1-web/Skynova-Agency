@@ -34,6 +34,7 @@ import {
   esimAltLink,
   cityPassLink,
   transfersAltLink,
+  carRentalAltLink,
   airportServicesLink,
   bikeRentalLink,
 } from "@/lib/affiliate";
@@ -153,6 +154,7 @@ function DestinationPage() {
       copy: t("dest.copyCars", { name }),
       partners: [
         { label: "GetRentacar", href: carRentalLink() },
+        { label: "Auto Europe", href: carRentalAltLink() },
         ...(discoverCars ? [{ label: "Discover Cars", href: discoverCars }] : []),
       ],
     },

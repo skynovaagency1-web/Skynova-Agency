@@ -21,13 +21,18 @@ export const DEFAULT_LOCALE: Locale = "en";
 /**
  * Locales with pages a visitor should actually be sent to.
  *
- * The plumbing ships before the translations do, so `fr` is routable (you can
- * open /fr/hotels and it renders) while staying out of the sitemap, the
- * hreflang set and the language switcher until its content exists. Add "fr"
- * here in the same commit that publishes the French pages -- never before, as
+ * The plumbing ships before the translations do, so a locale is routable (you
+ * can open /es/hotels and it renders) while staying out of the sitemap, the
+ * hreflang set and the language switcher until its content exists. Add one
+ * here in the same commit that publishes its pages -- never before, as
  * hreflang pointing at an untranslated copy is a duplicate-content signal.
+ *
+ * fr joined on 17 Sep 2026 at 780/780 strings. es and pt are at 109/780 and
+ * ar at 0/780: every one of their pages is still English under a foreign
+ * prefix, which is why they stay out. /ar/ is the starkest -- it serves
+ * lang="ar" dir="rtl" around entirely English copy.
  */
-export const PUBLISHED_LOCALES: readonly Locale[] = ["en"];
+export const PUBLISHED_LOCALES: readonly Locale[] = ["en", "fr"];
 
 /** Shown in the language switcher, in the language itself -- never "French". */
 export const LOCALE_LABELS: Record<Locale, string> = {

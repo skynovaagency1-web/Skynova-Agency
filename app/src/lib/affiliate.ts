@@ -247,6 +247,24 @@ export function cityPassLink(): string {
 }
 
 /** Airport transfers, second to GetTransfer. */
+/**
+ * Car rentals, second to GetRentacar.
+ *
+ * Verified end to end on 17 Sep 2026: the short link 302s to
+ * autoeurope.eu/luxury.cfm?aff=travelpayoutseu&sub_id=<per-click id>-720297,
+ * and Auto Europe's own 301 then strips the query to a clean URL once the
+ * click is registered -- the same pattern Hotellook uses handing off to
+ * Booking. The bare final address is not a missing parameter.
+ *
+ * NOTE WHERE IT LANDS: the generated link opens their LUXURY rentals page,
+ * not the general search. That is the link as issued; a general one would be
+ * the better default for most of this site's traffic, and is worth
+ * regenerating if the luxury framing converts badly.
+ */
+export function carRentalAltLink(): string {
+  return "https://autoeurope.tpm.li/U2lUWggg";
+}
+
 export function transfersAltLink(): string {
   return "https://tpm.li/iHI3oFXX";
 }

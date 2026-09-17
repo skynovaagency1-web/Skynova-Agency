@@ -1089,6 +1089,27 @@ const FR: Dict = {
   "protect.compCta": "V\u00e9rifier un vol",
   "protect.compNote":
     "Compensair fonctionne sans frais en cas d\u2019\u00e9chec et conserve un pourcentage de la somme obtenue. La v\u00e9rification est gratuite ; les frais ne s\u2019appliquent qu\u2019en cas de succ\u00e8s.",
+  "protect.compB1Title": "Jusqu’à trois ans en arrière",
+  "protect.compB1Body": "La plupart des réclamations européennes restent valables longtemps après le voyage : une ancienne carte d’embarquement vaut encore la peine d’être vérifiée.",
+  "protect.compB2Title": "Vous ne traitez pas avec la compagnie",
+  "protect.compB2Body": "Ils déposent le dossier, le relancent et l’escaladent si la compagnie refuse.",
+  "protect.compB3Title": "Rien à payer d’avance",
+  "protect.compB3Body": "La vérification est gratuite et la commission est prélevée sur l’indemnisation obtenue, pas sur votre poche.",
+  "protect.compB4Title": "Un numéro de vol suffit",
+  "protect.compB4Body": "Le numéro et la date suffisent pour savoir ce que vaut une réclamation.",
+  "protect.compAltEyebrow": "Un deuxième avis",
+  "protect.compAltHeading": "Ou vérifiez le même vol avec AirHelp.",
+  "protect.compAltBody":
+    "Deux sociétés de réclamation, les mêmes règles, des frais et des chances différents selon la compagnie. Vérifier auprès des deux ne coûte rien et vous dit qui acceptera réellement le dossier.",
+  "protect.compQ1": "Quels vols sont éligibles ?",
+  "protect.compA1":
+    "En gros : les vols au départ d’un aéroport de l’UE, ou à destination de l’UE sur une compagnie européenne, retardés de plus de trois heures, annulés tardivement ou surréservés. Leur vérification gratuite reste la réponse fiable pour un vol précis.",
+  "protect.compQ2": "Jusqu’à quand puis-je réclamer ?",
+  "protect.compA2":
+    "Cela varie selon le pays -- souvent deux à trois ans, davantage dans quelques-uns. Mieux vaut vérifier un ancien voyage que de le supposer perdu.",
+  "protect.compQ3": "Combien cela coûte-t-il ?",
+  "protect.compA3":
+    "Rien pour vérifier. Si la réclamation aboutit, ils prélèvent un pourcentage de l’indemnisation ; si elle échoue, vous ne payez rien.",
   "protect.insEyebrow": "Assurance voyage",
   "protect.insTitle": "Une couverture m\u00e9dicale qui vous suit.",
   "protect.insCopy":
@@ -1096,6 +1117,23 @@ const FR: Dict = {
   "protect.insCta": "Obtenir un devis",
   "protect.insNote":
     "Garanties, plafonds et exclusions varient selon le contrat et le pays de r\u00e9sidence. Lisez le certificat avant d\u2019acheter : les affections pr\u00e9existantes et certains sports sont souvent exclus.",
+  "protect.insB1Title": "Soins et rapatriement",
+  "protect.insB1Body": "Traitements, hospitalisation et rapatriement -- la partie qui coûte vraiment cher.",
+  "protect.insB2Title": "Souscrire en cours de voyage",
+  "protect.insB2Body": "La couverture peut commencer alors que vous êtes déjà à l’étranger, ce que la plupart des assureurs refusent.",
+  "protect.insB3Title": "Un voyage ou toute l’année",
+  "protect.insB3Body": "Un seul séjour, ou une année entière, tarifé selon la destination et la durée.",
+  "protect.insB4Title": "Attestation par e-mail",
+  "protect.insB4Body": "Le document arrive immédiatement, et c’est ce qu’une clinique ou un poste-frontière demande à voir.",
+  "protect.insQ1": "Suis-je couvert si je suis déjà parti ?",
+  "protect.insA1":
+    "Oui -- les contrats peuvent être souscrits après le départ, ce qui est rare. Rien de ce qui s’est produit avant le début du contrat n’est couvert.",
+  "protect.insQ2": "Les affections préexistantes sont-elles couvertes ?",
+  "protect.insA2":
+    "Généralement non par défaut, et c’est le motif de refus le plus fréquent. Vérifiez l’attestation de votre propre contrat plutôt que de le supposer.",
+  "protect.insQ3": "Est-ce un substitut à la carte européenne d’assurance maladie ?",
+  "protect.insA3":
+    "Non. Elle couvre les soins publics dans les pays participants et rien d’autre -- pas de rapatriement, pas de soins privés, aucune couverture hors du dispositif.",
   "protect.yachtEyebrow": "Yachts et mini-croisi\u00e8res",
   "protect.yachtTitle": "Louez un bateau, avec ou sans skipper.",
   "protect.yachtCopy":
@@ -1103,6 +1141,23 @@ const FR: Dict = {
   "protect.yachtCta": "Voir les bateaux",
   "protect.yachtNote":
     "La location sans skipper exige un permis reconnu dans la plupart des pays. \u00c0 d\u00e9faut, prenez le m\u00eame bateau avec skipper : c\u2019est une ligne de facture, pas un autre voyage.",
+  "protect.yachtB1Title": "Sans ou avec skipper",
+  "protect.yachtB1Body": "Naviguez vous-même avec le permis requis, ou prenez un skipper qui connaît la côte.",
+  "protect.yachtB2Title": "Bateaux vérifiés",
+  "protect.yachtB2Body": "Les annonces sont vérifiées plutôt que reprises sur parole de l’opérateur.",
+  "protect.yachtB3Title": "La semaine est l’unité",
+  "protect.yachtB3Body": "Les locations vont du samedi au samedi dans la plus grande partie de la Méditerranée, ce qui structure tout le voyage.",
+  "protect.yachtB4Title": "Deux saisons, opposées",
+  "protect.yachtB4Body": "La Méditerranée en été, les Caraïbes en hiver -- un bateau quelque part toute l’année.",
+  "protect.yachtQ1": "Faut-il un permis ?",
+  "protect.yachtA1":
+    "Pour une location sans skipper, oui -- et le permis reconnu dépend de l’État du pavillon. Avec un skipper, vous n’avez besoin de rien.",
+  "protect.yachtQ2": "Qu’est-ce qui n’est pas compris ?",
+  "protect.yachtA2":
+    "En général le carburant, le nettoyage final, les frais de port hors base de départ, et la nourriture du skipper le cas échéant. Demandez avant de réserver ; cela s’accumule.",
+  "protect.yachtQ3": "Quand faut-il réserver ?",
+  "protect.yachtA3":
+    "Tôt pour juillet et août en Méditerranée -- les bons bateaux des bases populaires partent des mois à l’avance.",
   "hero.badge": "Skynova Agency",
   "hero.title": "Chaque voyage.",
   "hero.subtitle": "Un seul endroit.",

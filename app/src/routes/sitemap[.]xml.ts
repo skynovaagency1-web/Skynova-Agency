@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { SITE_URL } from "@/lib/seo";
+import { LOCALE_TAGS, PUBLISHED_LOCALES, DEFAULT_LOCALE, localePath } from "@/lib/i18n";
 
 import { DESTINATIONS } from "@/data/destinations";
 import { ARTICLE_SLUGS } from "@/data/blog-articles";
@@ -72,17 +73,39 @@ export const Route = createFileRoute("/sitemap.xml")({
           })),
         ];
 
+        // Every page, once per PUBLISHED locale, each entry carrying the full
+        // alternate set. Listing only the English URLs -- which is what this
+        // did until 17 Sep 2026 -- left the French site with no way to be
+        // discovered: it was routable, rendered, and 780/780 translated, and
+        // Google was never told it existed.
+        //
+        // PUBLISHED_LOCALES, not LOCALES: es and pt are 109/780 and ar is
+        // 0/780, so their pages are English under a foreign prefix. Listing
+        // those would be asking for a duplicate-content problem, not a
+        // translation signal.
+        const alternates = (path: string) =>
+          [
+            ...PUBLISHED_LOCALES.map(
+              (loc) =>
+                `    <xhtml:link rel="alternate" hreflang="${LOCALE_TAGS[loc]}" href="${origin}${localePath(path, loc)}"/>`,
+            ),
+            `    <xhtml:link rel="alternate" hreflang="x-default" href="${origin}${localePath(path, DEFAULT_LOCALE)}"/>`,
+          ].join("\n");
+
         const xml = [
           '<?xml version="1.0" encoding="UTF-8"?>',
-          '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-          ...urls.flatMap(({ path, priority, changefreq }) => [
-            "  <url>",
-            `    <loc>${origin}${path}</loc>`,
-            `    <lastmod>${today}</lastmod>`,
-            `    <changefreq>${changefreq}</changefreq>`,
-            `    <priority>${priority}</priority>`,
-            "  </url>",
-          ]),
+          '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
+          ...urls.flatMap(({ path, priority, changefreq }) =>
+            PUBLISHED_LOCALES.flatMap((loc) => [
+              "  <url>",
+              `    <loc>${origin}${localePath(path, loc)}</loc>`,
+              alternates(path),
+              `    <lastmod>${today}</lastmod>`,
+              `    <changefreq>${changefreq}</changefreq>`,
+              `    <priority>${priority}</priority>`,
+              "  </url>",
+            ]),
+          ),
           "</urlset>",
         ].join("\n");
         return new Response(xml, {

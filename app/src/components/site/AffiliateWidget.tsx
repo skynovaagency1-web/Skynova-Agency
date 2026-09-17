@@ -8,7 +8,27 @@ import { useEffect, useRef } from "react";
  * this creates a fresh <script> on mount and clears the container on
  * unmount so re-visiting the page doesn't stack duplicate widget instances.
  */
-export function AffiliateWidget({ src, className }: { src: string; className?: string }) {
+export function AffiliateWidget({
+  src,
+  className,
+  async = true,
+}: {
+  src: string;
+  className?: string;
+  /**
+   * Whether the injected <script> carries async.
+   *
+   * Default true, which is what every partner's copy-paste snippet says and
+   * what the widgets on /tours, /events, /car-rentals and /esim have always
+   * used. BikesBooking (campaign_id=57) is the exception and needs FALSE: it
+   * finds its own mount point through document.currentScript, which is only
+   * meaningful while the script is executing in order. Left async it loaded,
+   * threw nothing, logged nothing, and rendered nothing -- the container kept
+   * its 60px min-height with the <script> as its only child. With async off
+   * it mounts its <tp-cascoon> element and draws.
+   */
+  async?: boolean;
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -16,13 +36,13 @@ export function AffiliateWidget({ src, className }: { src: string; className?: s
     if (!container) return;
     const script = document.createElement("script");
     script.src = src;
-    script.async = true;
+    script.async = async;
     script.charset = "utf-8";
     container.appendChild(script);
     return () => {
       container.innerHTML = "";
     };
-  }, [src]);
+  }, [src, async]);
 
   return <div ref={containerRef} className={`affiliate-widget ${className ?? ""}`} />;
 }
