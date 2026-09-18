@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
@@ -8,6 +8,16 @@ import { COLLECTIONS } from "@/data/collections";
 import { POSTS } from "@/data/blog-posts";
 import { ARTICLE_SLUGS } from "@/data/blog-articles";
 import { useT, type TKey } from "@/lib/i18n-strings";
+
+/**
+ * The founder's name, as it should appear under the statement.
+ *
+ * EMPTY UNTIL SUPPLIED, and the signature line falls back to the role alone
+ * rather than printing a placeholder. I am not going to invent a person's
+ * name, and "[Your Name]" reaching production would be worse than no name at
+ * all. Fill this in and the line completes itself.
+ */
+const FOUNDER_NAME = "";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -112,6 +122,36 @@ function AboutPage() {
               <p className="text-base leading-relaxed">
                 {t("about.whyGuidesCopy")}
               </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="site-section pt-0">
+          <div className="site-container founder-note">
+            <figure className="founder-note-portrait">
+              <img
+                src="/assets/brand/founder.webp"
+                alt=""
+                width={720}
+                height={900}
+                loading="lazy"
+                decoding="async"
+              />
+            </figure>
+            <div className="founder-note-body">
+              <p className="site-eyebrow mb-4">{t("about.founderEyebrow")}</p>
+              <blockquote className="founder-note-quote">
+                <p>{t("about.founderP1")}</p>
+                <p>{t("about.founderP2")}</p>
+                <p>{t("about.founderP3")}</p>
+              </blockquote>
+              <p className="founder-note-sign">
+                {FOUNDER_NAME ? <span className="founder-note-name">{FOUNDER_NAME}</span> : null}
+                <span className="founder-note-role">{t("about.founderRole")}</span>
+              </p>
+              <Link to="/destinations" className="btn-framed mt-7 inline-flex">
+                {t("about.founderCta")}
+              </Link>
             </div>
           </div>
         </section>

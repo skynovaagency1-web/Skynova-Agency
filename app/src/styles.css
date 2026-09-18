@@ -6831,6 +6831,82 @@ html.lenis body { height: auto; }
   .skewcard-action:hover { transform: none; }
 }
 
+/* ---- Founder's note (routes/about.tsx) ----
+   A portrait beside a signed statement. The photograph is the point of the
+   section -- it is the only picture of a real person on the site, and the
+   reason the section exists is that a name and a face do something no amount
+   of copy about transparency can.
+
+   Portrait first in the source order, so a phone gets the face before the
+   words rather than after three paragraphs of them. */
+.founder-note {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 3rem);
+  align-items: start;
+}
+@media (min-width: 860px) {
+  /* The portrait is 4:5 and does not want to grow with the text column. */
+  .founder-note { grid-template-columns: minmax(0, 320px) minmax(0, 1fr); }
+}
+.founder-note-portrait {
+  margin: 0;
+  position: relative;
+  border-radius: var(--sky-radius-md);
+  overflow: hidden;
+  /* Caps the portrait on a phone, where a full-width 4:5 image would be most
+     of a screen on its own. */
+  max-width: 320px;
+  box-shadow: var(--sky-shadow-float);
+}
+.founder-note-portrait img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+/* A gold hairline down the lit edge, picking up the light already in the
+   photograph rather than framing it with a border on all four sides. */
+.founder-note-portrait::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, var(--sky-coral), transparent);
+  opacity: 0.7;
+}
+.founder-note-quote {
+  margin: 0;
+  position: relative;
+  padding-inline-start: clamp(1rem, 2.5vw, 1.6rem);
+  border-inline-start: 2px solid var(--sky-coral-wash);
+}
+.founder-note-quote p {
+  font-size: clamp(1rem, 2.2vw, 1.08rem);
+  line-height: 1.7;
+  color: var(--sky-ink);
+}
+.founder-note-quote p + p { margin-block-start: 1.1rem; }
+.founder-note-sign {
+  margin-block-start: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.founder-note-name {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--sky-ink);
+}
+.founder-note-role {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sky-coral-deep);
+}
+
 /* ---- Scroll-scrubbed media hero (components/ui/sunset-skyline-hero.tsx) ----
    A tall track with a sticky stage inside it, which is what makes the hero
    hold still while the page scrolls past. The component reads its progress

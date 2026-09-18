@@ -396,6 +396,14 @@ export const EN = {
   "about.whyGuides": "Why the guides exist",
   "about.whyGuidesCopy":
     "Every destination here has a written guide rather than a stock paragraph, because the useful part of planning a trip is knowing what a place actually costs, when to go, and what the guidebook leaves out.",
+  "about.founderEyebrow": "A note from our founder",
+  "about.founderP1":
+    "As someone who travels a lot, I kept hitting the same wall. Putting one good trip together meant half a dozen open tabs, booking codes scattered across as many inboxes, and never quite knowing whether the price in front of me was the real one. The part that should be exciting kept getting buried under the admin.",
+  "about.founderP2":
+    "I built Skynova Agency to take that part out. Every booking here is fulfilled by an established partner, at the partner\u2019s own price -- we never add a markup, we never take your payment, and we are paid by them rather than by you. That is the whole arrangement, and it is written plainly on this page because it is the thing most travel sites leave vague.",
+  "about.founderP3": "Thank you for trusting us with the next one.",
+  "about.founderRole": "Founder, Skynova Agency",
+  "about.founderCta": "Explore our destinations",
   "about.whatsCovered": "What\u2019s covered",
 
   "vertical.popularDestinations": "Popular destinations",
@@ -1335,6 +1343,14 @@ const FR: Dict = {
   "about.whyGuides": "Pourquoi ces guides existent",
   "about.whyGuidesCopy":
     "Chaque destination ici a un guide r\u00e9dig\u00e9 plut\u00f4t qu\u2019un paragraphe g\u00e9n\u00e9rique, parce que l\u2019utile, quand on pr\u00e9pare un voyage, c\u2019est de savoir ce qu\u2019un endroit co\u00fbte vraiment, quand y aller et ce que le guide touristique passe sous silence.",
+  "about.founderEyebrow": "Un mot du fondateur",
+  "about.founderP1":
+    "Je voyage beaucoup, et je me heurtais toujours au même mur. Organiser un seul beau voyage, c\u2019était une demi-douzaine d\u2019onglets ouverts, des codes de réservation éparpillés dans autant de boîtes mail, et jamais la certitude que le prix affiché était le vrai. Ce qui devrait être excitant finissait enseveli sous l\u2019administratif.",
+  "about.founderP2":
+    "J\u2019ai créé Skynova Agency pour supprimer cette partie-là. Chaque réservation est assurée par un partenaire établi, à son propre prix -- nous n\u2019ajoutons aucune marge, nous ne prenons jamais votre paiement, et c\u2019est le partenaire qui nous rémunère, pas vous. Voilà tout l\u2019arrangement, écrit noir sur blanc sur cette page parce que c\u2019est précisément ce que la plupart des sites de voyage laissent dans le flou.",
+  "about.founderP3": "Merci de nous confier le prochain.",
+  "about.founderRole": "Fondateur, Skynova Agency",
+  "about.founderCta": "Découvrir nos destinations",
   "about.whatsCovered": "Ce qui est couvert",
 
   "vertical.popularDestinations": "Destinations populaires",
