@@ -567,9 +567,54 @@ export function FlightRail() {
       if (disposed) teardown();
     }
 
-    void start();
+    /* DEFERRED, and this is the whole of the site's Speed score.
+     *
+     * This component is mounted in routes/__root.tsx, so it is on every page.
+     * It used to call start() straight out of the effect, which meant an
+     * unconditional import("three") -- a 708KB chunk -- on EVERY page load of
+     * the site, for a decorative aircraft in the left margin. A BlogSEO audit
+     * on 18 Sep 2026 scored the site 94/100 overall with Speed at 53, and
+     * this was it. Globe3D already had this right: it waits for an
+     * IntersectionObserver before importing anything.
+     *
+     * Three gates now, cheapest first:
+     *
+     *  - prefers-reduced-motion. The rail is an animation and nothing else.
+     *    The check existed but sat INSIDE start(), after the import had
+     *    already been paid for.
+     *  - Save-Data, and the 2g/3g effective types. A decorative 708KB is not
+     *    a reasonable thing to send down a metered connection.
+     *  - otherwise requestIdleCallback, so the library is fetched only once
+     *    the browser has nothing better to do. The SVG rail and its smoke are
+     *    already drawn by then; what arrives late is the 3D aircraft on top
+     *    of it, which is exactly the right thing to arrive late.
+     */
+    const reduceMotionEarly =
+      typeof window !== "undefined" &&
+      (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false);
+    const conn = (navigator as Navigator & {
+      connection?: { saveData?: boolean; effectiveType?: string };
+    }).connection;
+    const frugal = Boolean(conn?.saveData) || /2g|3g/.test(conn?.effectiveType ?? "");
+
+    let idleHandle: number | null = null;
+    if (!reduceMotionEarly && !frugal) {
+      const ric = (window as Window & {
+        requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+      }).requestIdleCallback;
+      idleHandle = ric
+        ? ric(() => void start(), { timeout: 4000 })
+        : window.setTimeout(() => void start(), 1500);
+    }
+
     return () => {
       disposed = true;
+      if (idleHandle !== null) {
+        const cic = (window as Window & { cancelIdleCallback?: (h: number) => void })
+          .cancelIdleCallback;
+        if (cic) cic(idleHandle);
+        else window.clearTimeout(idleHandle);
+      }
       setRailPresent(false);
       teardown?.();
     };
