@@ -12,12 +12,12 @@ import { useT, type TKey } from "@/lib/i18n-strings";
 /**
  * The founder's name, as it should appear under the statement.
  *
- * EMPTY UNTIL SUPPLIED, and the signature line falls back to the role alone
- * rather than printing a placeholder. I am not going to invent a person's
- * name, and "[Your Name]" reaching production would be worse than no name at
- * all. Fill this in and the line completes itself.
+ * Spelled and cased exactly as the founder gave it, surname in capitals.
+ * That is a real convention and not a typo to tidy up -- a person's name is
+ * not a style decision. The signature line falls back to the role alone if
+ * this is ever emptied, rather than printing a placeholder.
  */
-const FOUNDER_NAME = "";
+const FOUNDER_NAME = "David MASHINTO";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -131,7 +131,7 @@ function AboutPage() {
             <figure className="founder-note-portrait">
               <img
                 src="/assets/brand/founder.webp"
-                alt=""
+                alt={`${FOUNDER_NAME}, founder of Skynova Agency`}
                 width={720}
                 height={900}
                 loading="lazy"
@@ -180,6 +180,16 @@ function AboutPage() {
               logo: "https://skynovaagency.com/assets/brand/icon-512.png",
               description:
                 "A booking layer over established travel partners -- flights, stays, cars, connectivity, tickets and tours in one place.",
+              // A named human behind the organisation is one of the few
+              // entity signals a young domain can actually supply, and it is
+              // now true rather than aspirational -- the page carries his
+              // statement and his photograph.
+              founder: {
+                "@type": "Person",
+                name: FOUNDER_NAME,
+                jobTitle: "Founder",
+                image: "https://skynovaagency.com/assets/brand/founder.webp",
+              },
               contactPoint: {
                 "@type": "ContactPoint",
                 contactType: "customer support",
