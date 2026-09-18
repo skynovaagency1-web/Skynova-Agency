@@ -914,6 +914,8 @@ export const EN = {
   "blog.viewAllDestinations": "View all destinations",
   "blog.mustRead": "Must read",
   "blog.readGuide": "Read the guide",
+  "blog.disclosure":
+    "This guide links to booking partners through the Travelpayouts affiliate network. If you book through one, they pay us a commission -- the price you pay is theirs and is not changed by it.",
   "blog.author": "Edited by {name}",
   "blog.readArticle": "Read article",
   "blog.explore": "Explore {name}",
@@ -1899,6 +1901,8 @@ const FR: Dict = {
   "blog.viewAllDestinations": "Voir toutes les destinations",
   "blog.mustRead": "\u00c0 lire absolument",
   "blog.readGuide": "Lire le guide",
+  "blog.disclosure":
+    "Ce guide renvoie vers des partenaires de r\u00e9servation via le r\u00e9seau d\u2019affiliation Travelpayouts. Si vous r\u00e9servez par ce biais, ils nous versent une commission -- le prix que vous payez est le leur et n\u2019en est pas modifi\u00e9.",
   "blog.author": "\u00c9dit\u00e9 par {name}",
   "blog.readArticle": "Lire l\u2019article",
   "blog.explore": "Explorer {name}",

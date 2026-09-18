@@ -9,6 +9,7 @@ import { POSTS } from "@/data/blog-posts";
 import { ARTICLE_SLUGS } from "@/data/blog-articles";
 import { useT, type TKey } from "@/lib/i18n-strings";
 import { FOUNDER_NAME } from "@/lib/seo";
+import { GOLD_GRADIENTS, GradientCardShowcase } from "@/components/ui/gradient-card-showcase";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -122,20 +123,22 @@ function AboutPage() {
             400 searches, 11 bookings", going live with two partners -- that
             are invented, and a company history is not something to make up on
             an About page. These four are simply what the site does. */}
-        <section className="site-section pt-0">
+        <section className="site-section cardstage">
           <div className="site-container">
-            <p className="site-eyebrow mb-5">{t("about.stepsEyebrow")}</p>
-            <ol className="about-steps">
-              {[1, 2, 3, 4].map((n) => (
-                <li key={n} className="about-step site-panel p-7">
-                  <span className="about-step-num">{String(n).padStart(2, "0")}</span>
-                  <p className="about-step-title">{t(`about.step${n}Title` as TKey)}</p>
-                  <p className="site-ink-muted mt-2 text-sm leading-relaxed">
-                    {t(`about.step${n}Body` as TKey)}
-                  </p>
-                </li>
-              ))}
-            </ol>
+            <p className="site-eyebrow mb-1">{t("about.stepsEyebrow")}</p>
+            <GradientCardShowcase
+              className="cardstage-cards"
+              cards={[1, 2, 3, 4].map((n) => ({
+                // The step number moves into the card's eyebrow. These four
+                // are a sequence, and the <ol> that carried that is gone --
+                // left to right is the only other cue, and it is not one on a
+                // phone where the grid is 2x2.
+                eyebrow: String(n).padStart(2, "0"),
+                title: t(`about.step${n}Title` as TKey),
+                description: t(`about.step${n}Body` as TKey),
+                ...GOLD_GRADIENTS[(n - 1) % GOLD_GRADIENTS.length],
+              }))}
+            />
           </div>
         </section>
 
@@ -167,8 +170,8 @@ function AboutPage() {
                   src="/assets/brand/founder-signature.webp"
                   alt=""
                   aria-hidden="true"
-                  width={560}
-                  height={691}
+                  width={720}
+                  height={582}
                   loading="lazy"
                   decoding="async"
                 />

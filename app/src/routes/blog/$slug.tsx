@@ -230,6 +230,12 @@ function ArticlePage() {
           </header>
 
           <div className="site-container">
+            {/* BEFORE the body, not at the foot of it. The FTC's position is
+                that a disclosure has to be where a reader meets it before the
+                link, and the footer's line is below a 2,000-word article --
+                which is after. This one is the first thing under the meta. */}
+            <p className="article-disclosure">{t("blog.disclosure")}</p>
+
             <div className="article-body">
               {article.blocks.map((block, i) => (
                 <ArticleBlock key={i} block={block} />

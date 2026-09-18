@@ -39,6 +39,10 @@ import { cn } from "@/lib/utils";
  * of an animation.
  */
 export interface GradientCard {
+  /** Small label above the title. Carries the step number on /about, where
+   *  the cards are an ordered process rather than four statements and the
+   *  sequence has to survive the conversion. */
+  eyebrow?: string;
   title: string;
   description: string;
   /** Internal route for the card's action. Omitted, no action is rendered. */
@@ -98,6 +102,7 @@ export function GradientCardShowcase({ cards, className, ref, ...props }: Gradie
           </span>
 
           <div className="skewcard-body">
+            {card.eyebrow ? <p className="skewcard-eyebrow">{card.eyebrow}</p> : null}
             <h3 className="skewcard-title">{card.title}</h3>
             <p className="skewcard-text">{card.description}</p>
             {card.to ? (

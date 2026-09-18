@@ -6795,6 +6795,13 @@ html.lenis body { height: auto; }
   padding-block: clamp(2rem, 6vw, 3.25rem);
 }
 
+.skewcard-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  color: rgba(245, 240, 230, 0.6);
+  margin-block-end: 0.4rem;
+}
 .skewcard-title {
   /* The floors, not the ceilings, are what changed with the 2-up phone grid:
      a title set at 1.05rem in a 130px column breaks after two words. */
@@ -6893,34 +6900,6 @@ html.lenis body { height: auto; }
   .contact-topic { transition: none; }
 }
 
-/* ---- "How a booking works", four steps (routes/about.tsx) ---- */
-.about-steps {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: clamp(0.75rem, 2vw, 1.25rem);
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-@media (min-width: 960px) {
-  .about-steps { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-}
-.about-step { position: relative; }
-.about-step-num {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.9rem;
-  height: 1.9rem;
-  margin-block-end: 0.9rem;
-  border-radius: 999px;
-  background: var(--sky-coral-wash);
-  color: var(--sky-coral-deep);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 600;
-}
-.about-step-title { font-weight: 600; font-size: 1rem; }
 
 /* ---- Founder's note (routes/about.tsx) ----
    A portrait beside a signed statement. The photograph is the point of the
@@ -6993,7 +6972,10 @@ html.lenis body { height: auto; }
    lines up with the text beneath it. */
 .founder-note-signature {
   display: block;
-  width: clamp(124px, 22vw, 152px);
+  /* Wider than the first pass: the mark was photographed on its side, so that
+     asset was 560x691 and read as a vertical scribble. Upright it is 720x582
+     and can take the width a signature wants. */
+  width: clamp(168px, 30vw, 208px);
   height: auto;
   margin-block-end: 0.5rem;
   margin-inline-start: -0.4rem;
@@ -7155,6 +7137,47 @@ html.lenis body { height: auto; }
   .scrubhero-hint, .scrubhero-bar { display: none; }
   .scrubhero-hint-arrow { animation: none; }
 }
+
+/* ---- Affiliate disclosure above an article (routes/blog/$slug.tsx) ----
+   Quiet but not hidden: a disclosure set so small or so grey that it reads as
+   boilerplate is the thing the rule exists to prevent. Same measure as the
+   body it precedes, with a gold rule to mark it as an aside rather than the
+   article's opening line. */
+.article-disclosure {
+  max-width: 68ch;
+  margin: 0 auto 2rem;
+  padding-inline-start: 1rem;
+  border-inline-start: 2px solid var(--sky-coral-wash);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--sky-ink-muted);
+}
+
+/* ---- Free-standing gradient-card band (routes/about.tsx) ----
+   Same cards, same reason for the dark ground as .vertical-cardstage: the
+   plate carries #f5f0e6 text and cannot sit on cream. The difference is that
+   nothing dark precedes this one, so it opens and closes itself -- a gold
+   hairline top and bottom rather than only at the foot. */
+.cardstage {
+  position: relative;
+  background:
+    radial-gradient(120% 86% at 15% 0%, rgba(201, 162, 39, 0.14), transparent 60%),
+    linear-gradient(180deg, #16130d 0%, #221d15 50%, #16130d 100%);
+  color: #f5f0e6;
+}
+.cardstage::before,
+.cardstage::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--sky-coral), transparent);
+  opacity: 0.55;
+}
+.cardstage::before { inset-block-start: 0; }
+.cardstage::after { inset-block-end: 0; }
+.cardstage .site-eyebrow { color: rgba(245, 240, 230, 0.75); }
+.cardstage-cards { margin-block-start: 1.9rem; }
 
 /* ---- Gradient-card band on the protection/charter pages ----
    (VerticalPage bulletVariant="gradient")
