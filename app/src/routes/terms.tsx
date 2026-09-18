@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
@@ -52,7 +52,7 @@ function TermsPage() {
                 <ul>
                   <li>You need a real, working email address to create an account.</li>
                   <li>You're responsible for keeping your password confidential and for anything done through your account.</li>
-                  <li>Tell us right away at <a href="mailto:hello@skynovaagency.com" className="btn-underline">hello@skynovaagency.com</a> if you think your account's been compromised.</li>
+                  <li>Tell us right away through <Link to="/contact" className="btn-underline">the contact form</Link> if you think your account&rsquo;s been compromised.</li>
                   <li>We can suspend or close an account used to abuse the site (spam signups, abusing the referral program, and similar).</li>
                 </ul>
               </div>
@@ -108,11 +108,16 @@ function TermsPage() {
 
               <div>
                 <h2>Contact</h2>
+                {/* Not a mailto. skynovaagency.com publishes no MX records, so
+                    every message sent to hello@ bounces -- routes/contact.tsx
+                    already says so and dropped its own addresses for that
+                    reason. This link was left behind. The form writes to D1
+                    and works regardless of mail configuration. */}
                 <p>
-                  Questions about these terms go to{" "}
-                  <a href="mailto:hello@skynovaagency.com" className="btn-underline">
-                    hello@skynovaagency.com
-                  </a>
+                  Questions about these terms go through{" "}
+                  <Link to="/contact" className="btn-underline">
+                    the contact form
+                  </Link>
                   .
                 </p>
               </div>

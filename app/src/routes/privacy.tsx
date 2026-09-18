@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
@@ -184,12 +184,16 @@ function PrivacyPage() {
                 <h2>Your choices</h2>
                 <ul>
                   <li>You can remove items from your wishlist at any time from your account.</li>
+                  {/* A privacy policy has to give a route that actually
+                      reaches someone. This one gave a mailto on a domain with
+                      no MX records, so a deletion request bounced -- which is
+                      the one message on the site that must not. */}
                   <li>
-                    To close your account or request deletion of your data, email us at{" "}
-                    <a href="mailto:hello@skynovaagency.com" className="btn-underline">
-                      hello@skynovaagency.com
-                    </a>{" "}
-                    and we'll handle it directly.
+                    To close your account or request deletion of your data, send it through{" "}
+                    <Link to="/contact" className="btn-underline">
+                      the contact form
+                    </Link>{" "}
+                    and we&rsquo;ll handle it directly.
                   </li>
                   <li>You can decline to create an account at all -- browsing and clicking through to partners doesn't require one.</li>
                 </ul>
@@ -212,10 +216,10 @@ function PrivacyPage() {
               <div>
                 <h2>Contact</h2>
                 <p>
-                  Questions about this policy or your data go to{" "}
-                  <a href="mailto:hello@skynovaagency.com" className="btn-underline">
-                    hello@skynovaagency.com
-                  </a>
+                  Questions about this policy or your data go through{" "}
+                  <Link to="/contact" className="btn-underline">
+                    the contact form
+                  </Link>
                   .
                 </p>
               </div>

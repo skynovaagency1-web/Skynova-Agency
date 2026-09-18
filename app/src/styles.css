@@ -6845,6 +6845,83 @@ html.lenis body { height: auto; }
   .skewcard-action:hover { transform: none; }
 }
 
+/* ---- Contact form: topic chips and the booking pair (routes/contact.tsx) ----
+   The topic was a <select>. A select hides its options behind a tap and makes
+   four short choices feel like a form field; as chips they are all visible,
+   and picking one is a single tap that also tells the visitor what this form
+   is prepared to handle. */
+.contact-topics { border: 0; margin: 0; padding: 0; }
+.auth-modal-field-label {
+  display: block;
+  margin-block-end: 0.55rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--sky-ink);
+}
+.contact-topic-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.contact-topic {
+  padding: 0.5rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid var(--sky-line);
+  background: transparent;
+  color: var(--sky-ink-muted);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.contact-topic:hover { color: var(--sky-ink); border-color: var(--sky-coral); }
+.contact-topic.is-active {
+  color: var(--sky-coral-ink);
+  border-color: transparent;
+  background: linear-gradient(180deg, #ffd964, var(--sky-coral));
+  font-weight: 600;
+}
+/* Side by side where there is room, stacked on a phone -- two short fields in
+   one column would read as two unrelated questions. */
+.contact-booking-pair { display: grid; gap: 1.25rem; }
+@media (min-width: 560px) {
+  .contact-booking-pair { grid-template-columns: 1fr 1fr; align-items: start; }
+}
+.contact-field-hint {
+  display: block;
+  margin-block-start: 0.35rem;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--sky-ink-muted);
+}
+@media (prefers-reduced-motion: reduce) {
+  .contact-topic { transition: none; }
+}
+
+/* ---- "How a booking works", four steps (routes/about.tsx) ---- */
+.about-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (min-width: 960px) {
+  .about-steps { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+.about-step { position: relative; }
+.about-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  margin-block-end: 0.9rem;
+  border-radius: 999px;
+  background: var(--sky-coral-wash);
+  color: var(--sky-coral-deep);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+.about-step-title { font-weight: 600; font-size: 1rem; }
+
 /* ---- Founder's note (routes/about.tsx) ----
    A portrait beside a signed statement. The photograph is the point of the
    section -- it is the only picture of a real person on the site, and the

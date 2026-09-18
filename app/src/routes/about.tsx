@@ -117,6 +117,28 @@ function AboutPage() {
           </div>
         </section>
 
+        {/* The four steps, from the mockup. Its MILESTONES timeline is not
+            here: it carried dated claims -- a 2023 founding, "first month:
+            400 searches, 11 bookings", going live with two partners -- that
+            are invented, and a company history is not something to make up on
+            an About page. These four are simply what the site does. */}
+        <section className="site-section pt-0">
+          <div className="site-container">
+            <p className="site-eyebrow mb-5">{t("about.stepsEyebrow")}</p>
+            <ol className="about-steps">
+              {[1, 2, 3, 4].map((n) => (
+                <li key={n} className="about-step site-panel p-7">
+                  <span className="about-step-num">{String(n).padStart(2, "0")}</span>
+                  <p className="about-step-title">{t(`about.step${n}Title` as TKey)}</p>
+                  <p className="site-ink-muted mt-2 text-sm leading-relaxed">
+                    {t(`about.step${n}Body` as TKey)}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
         <section className="site-section pt-0">
           <div className="site-container founder-note">
             <figure className="founder-note-portrait">

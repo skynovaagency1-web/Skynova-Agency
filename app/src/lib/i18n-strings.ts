@@ -355,6 +355,15 @@ export const EN = {
   "contact.thanksAnon": "Thanks for getting in touch -- we have your message and will reply to ",
   "contact.nothingElse":
     "Nothing else is needed from you. If it is urgent and about an existing booking, contact the partner directly in the meantime.",
+  "contact.topicBooking": "Booking help",
+  "contact.topicPartnership": "Partnership",
+  "contact.topicFeedback": "Feedback",
+  "contact.topicOther": "Something else",
+  "contact.reference": "Partner booking reference",
+  "contact.referenceHint": "Optional -- it is on the confirmation the partner emailed you.",
+  "contact.referencePlaceholder": "e.g. AV-88H21K",
+  "contact.whichPartner": "Which partner",
+  "contact.partnerUnsure": "I am not sure",
   "contact.yourName": "Your name",
   "contact.namePlaceholder": "Jamie Rivera",
   "contact.emailPlaceholder": "you@example.com",
@@ -406,6 +415,19 @@ export const EN = {
   "about.whyGuides": "Why the guides exist",
   "about.whyGuidesCopy":
     "Every destination here has a written guide rather than a stock paragraph, because the useful part of planning a trip is knowing what a place actually costs, when to go, and what the guidebook leaves out.",
+  "about.stepsEyebrow": "How a booking works",
+  "about.step1Title": "Search once",
+  "about.step1Body":
+    "One search bar, every vertical, live results from our partner networks -- flights, stays, cars, airport help, eSIM and tours in a single flow.",
+  "about.step2Title": "Compare honestly",
+  "about.step2Body":
+    "Skynova adds no markup and sells no placement. You see the partner's own results, in the partner's own order.",
+  "about.step3Title": "Book with the partner",
+  "about.step3Body":
+    "Checkout happens on the partner's own site, at their price. We earn a commission from them, never a markup from you.",
+  "about.step4Title": "Fly, stay, go",
+  "about.step4Body":
+    "Your booking sits with the partner who fulfils it -- they are the front door, and the route back to a real person if it needs one.",
   "about.founderEyebrow": "A note from our founder",
   "about.founderP1":
     "As someone who travels a lot, I kept hitting the same wall. Putting one good trip together meant half a dozen open tabs, booking codes scattered across as many inboxes, and never quite knowing whether the price in front of me was the real one. The part that should be exciting kept getting buried under the admin.",
@@ -1312,6 +1334,15 @@ const FR: Dict = {
   "contact.thanksAnon": "Merci de nous avoir \u00e9crit -- nous avons bien re\u00e7u votre message et vous r\u00e9pondrons \u00e0 ",
   "contact.nothingElse":
     "Rien d\u2019autre n\u2019est attendu de votre part. Si c\u2019est urgent et que cela concerne une r\u00e9servation existante, contactez le partenaire directement en attendant.",
+  "contact.topicBooking": "Aide \u00e0 la r\u00e9servation",
+  "contact.topicPartnership": "Partenariat",
+  "contact.topicFeedback": "Remarques",
+  "contact.topicOther": "Autre chose",
+  "contact.reference": "R\u00e9f\u00e9rence de r\u00e9servation",
+  "contact.referenceHint": "Facultatif -- elle figure sur la confirmation envoy\u00e9e par le partenaire.",
+  "contact.referencePlaceholder": "ex. AV-88H21K",
+  "contact.whichPartner": "Quel partenaire",
+  "contact.partnerUnsure": "Je ne sais pas",
   "contact.yourName": "Votre nom",
   "contact.namePlaceholder": "Camille Martin",
   "contact.emailPlaceholder": "vous@exemple.com",
@@ -1361,6 +1392,19 @@ const FR: Dict = {
   "about.whyGuides": "Pourquoi ces guides existent",
   "about.whyGuidesCopy":
     "Chaque destination ici a un guide r\u00e9dig\u00e9 plut\u00f4t qu\u2019un paragraphe g\u00e9n\u00e9rique, parce que l\u2019utile, quand on pr\u00e9pare un voyage, c\u2019est de savoir ce qu\u2019un endroit co\u00fbte vraiment, quand y aller et ce que le guide touristique passe sous silence.",
+  "about.stepsEyebrow": "Comment se passe une r\u00e9servation",
+  "about.step1Title": "Une seule recherche",
+  "about.step1Body":
+    "Une barre de recherche, tous les services, des r\u00e9sultats en direct de nos r\u00e9seaux partenaires -- vols, h\u00e9bergements, voitures, services a\u00e9roport, eSIM et activit\u00e9s dans un seul parcours.",
+  "about.step2Title": "Comparer honn\u00eatement",
+  "about.step2Body":
+    "Skynova n\u2019ajoute aucune marge et ne vend aucun placement. Vous voyez les r\u00e9sultats du partenaire, dans son propre ordre.",
+  "about.step3Title": "R\u00e9server chez le partenaire",
+  "about.step3Body":
+    "Le paiement se fait sur le site du partenaire, \u00e0 son prix. Il nous verse une commission ; vous, jamais de majoration.",
+  "about.step4Title": "Partir",
+  "about.step4Body":
+    "Votre r\u00e9servation reste chez le partenaire qui l\u2019assure -- c\u2019est lui votre interlocuteur, et le chemin vers une vraie personne si besoin.",
   "about.founderEyebrow": "Un mot du fondateur",
   "about.founderP1":
     "Je voyage beaucoup, et je me heurtais toujours au même mur. Organiser un seul beau voyage, c\u2019était une demi-douzaine d\u2019onglets ouverts, des codes de réservation éparpillés dans autant de boîtes mail, et jamais la certitude que le prix affiché était le vrai. Ce qui devrait être excitant finissait enseveli sous l\u2019administratif.",
