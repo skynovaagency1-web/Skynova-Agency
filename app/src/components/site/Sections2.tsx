@@ -12,7 +12,7 @@ import { useT } from "@/lib/i18n-strings";
  */
 export function TrustSection() {
   const t = useT();
-  const marks = ["Aviasales", "Hotellook", "GetRentacar", "GetYourGuide", "Airalo", "Tiqets"];
+  const marks = ["Aviasales", "Hotellook", "GetRentacar", "Tiqets", "Airalo", "BikesBooking"];
   const track = [...marks, ...marks];
   return (
     <section className="site-section site-hairline border-t overflow-hidden">

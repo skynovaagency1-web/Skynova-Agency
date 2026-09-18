@@ -157,12 +157,36 @@ export function esimLink(_destinationSlug?: string): string {
   return "https://airalo.tpm.li/eW0hFF6F";
 }
 
-// Tours & activities: GetYourGuide's search page takes a free-text query
-// and returns real results for it.
-export function toursLink(destinationName?: string): string {
-  const params = new URLSearchParams({ partner_id: TP_MARKER });
-  if (destinationName) params.set("q", destinationName);
-  return `https://www.getyourguide.com/s/?${params.toString()}`;
+/**
+ * Tours & activities: Tiqets, the same programme /events already runs on.
+ *
+ * WAS a GetYourGuide free-text search carrying `partner_id=720297` -- a
+ * Travelpayouts marker in GetYourGuide's own affiliate id field, earning
+ * nothing. The dashboard confirmed it by omission: nine programmes with
+ * clicks against them, GetYourGuide absent from all of them.
+ *
+ * WHAT THIS COSTS, STATED PLAINLY. The GetYourGuide version pre-filled the
+ * destination, so it landed on results for the country; this one can only
+ * land on Tiqets' home page. I tried to keep the targeting and it cannot be
+ * done -- appending ?q= is ignored, and ?u=<a Tiqets city URL> is worse than
+ * ignored: it redirects somewhere unrelated (asking for Rome returned Spain,
+ * asking for Paris returned the Dominican Republic) AND drops tq_click_id,
+ * so the click arrives unattributed. Bare short link only. This is the
+ * concrete version of the rule this file states elsewhere: the per-click id
+ * is minted by the short link, so anything appended to it is at best ignored
+ * and at worst breaks the attribution it exists to carry.
+ *
+ * So the trade is targeting for attribution, and the arithmetic settles it:
+ * a perfectly targeted link that pays nothing pays nothing. A GetYourGuide
+ * tracking link would restore the targeting immediately and is the thing
+ * worth asking Travelpayouts for.
+ *
+ * Inventory is also not a perfect match -- Tiqets sells attraction tickets,
+ * where GetYourGuide also sells guided tours and day trips. It covers most
+ * of what this page sends it, not all of it.
+ */
+export function toursLink(_destinationName?: string): string {
+  return "https://tiqets.tpm.li/riu4Kn7I";
 }
 
 /**
@@ -219,15 +243,12 @@ export function luggageStorageLink(): string {
  * the visitor a real choice, which the single-partner version never did.
  * ------------------------------------------------------------------------- */
 
-// Attractions & tickets, second to Tiqets. Uses the SAME GetYourGuide search
-// already proven by toursLink() -- free-text, real results, and unlike Tiqets
-// it can be pre-filled with the destination, so this link lands on results
-// for the country rather than on a homepage.
-export function attractionsLink(destinationName?: string): string {
-  const params = new URLSearchParams({ partner_id: TP_MARKER });
-  params.set("q", destinationName ? `${destinationName} attractions and tickets` : "attractions");
-  return `https://www.getyourguide.com/s/?${params.toString()}`;
-}
+/* attractionsLink() REMOVED. It was a GetYourGuide search sitting directly
+ * beside Tiqets on the same destination row -- and since 720297 is a
+ * Travelpayouts marker in GetYourGuide's id field, it was an unattributed
+ * duplicate of the partner already listed first. Two buttons, one of which
+ * could never pay. Tiqets covers that row through eventsLink().
+ */
 
 /**
  * Discover Cars affiliate id.

@@ -29,7 +29,6 @@ import {
   discoverCarsLink,
   toursLink,
   eventsLink,
-  attractionsLink,
   esimLink,
   esimAltLink,
   cityPassLink,
@@ -163,7 +162,7 @@ function DestinationPage() {
       title: t("service.tours"),
       vertical: "/tours",
       copy: t("dest.copyTours", { name }),
-      partners: [{ label: "GetYourGuide", href: toursLink(name) }],
+      partners: [{ label: "Tiqets", href: toursLink(name) }],
     },
     {
       title: t("service.events"),
@@ -172,7 +171,6 @@ function DestinationPage() {
       partners: [
         { label: "Tiqets", href: eventsLink() },
         { label: "Go City", href: cityPassLink() },
-        { label: "GetYourGuide", href: attractionsLink(name) },
       ],
     },
     {

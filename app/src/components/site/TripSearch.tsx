@@ -21,11 +21,13 @@ import { useT, type TKey } from "@/lib/i18n-strings";
  * window.open() here would earn commission that never showed up in the
  * numbers. An anchor also gives middle-click and cmd-click for free.
  *
- * Honesty about pre-filling: Hotellook, GetYourGuide and Airalo all take a
- * destination in the URL and land on real results. Aviasales and GetRentacar
- * need IATA / location IDs we cannot derive from a country name (see
- * affiliate.ts), so for those two the link opens the partner's own search
- * and the note under the form says so rather than pretending otherwise.
+ * Honesty about pre-filling: Hotellook and Airalo take a destination in the
+ * URL and land on real results. Aviasales and GetRentacar need IATA /
+ * location IDs we cannot derive from a country name, and Tiqets is reached
+ * through a short link that cannot carry a destination at all without losing
+ * its click id (see toursLink in affiliate.ts) -- so for those three the link
+ * opens the partner's own search and the note under the form says so rather
+ * than pretending otherwise.
  */
 
 type Mode = "hotels" | "flights" | "cars" | "tours" | "esim";
@@ -34,7 +36,7 @@ const MODES: { id: Mode; labelKey: TKey; partner: string; prefills: boolean }[] 
   { id: "hotels", labelKey: "search.modeHotels", partner: "Hotellook", prefills: true },
   { id: "flights", labelKey: "search.modeFlights", partner: "Aviasales", prefills: false },
   { id: "cars", labelKey: "search.modeCars", partner: "GetRentacar", prefills: false },
-  { id: "tours", labelKey: "search.modeTours", partner: "GetYourGuide", prefills: true },
+  { id: "tours", labelKey: "search.modeTours", partner: "Tiqets", prefills: false },
   { id: "esim", labelKey: "search.modeEsim", partner: "Airalo", prefills: true },
 ];
 
