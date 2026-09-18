@@ -8,16 +8,7 @@ import { COLLECTIONS } from "@/data/collections";
 import { POSTS } from "@/data/blog-posts";
 import { ARTICLE_SLUGS } from "@/data/blog-articles";
 import { useT, type TKey } from "@/lib/i18n-strings";
-
-/**
- * The founder's name, as it should appear under the statement.
- *
- * Spelled and cased exactly as the founder gave it, surname in capitals.
- * That is a real convention and not a typo to tidy up -- a person's name is
- * not a style decision. The signature line falls back to the role alone if
- * this is ever emptied, rather than printing a placeholder.
- */
-const FOUNDER_NAME = "David MASHINTO";
+import { FOUNDER_NAME } from "@/lib/seo";
 
 export const Route = createFileRoute("/about")({
   head: () => ({

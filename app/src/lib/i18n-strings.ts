@@ -375,6 +375,16 @@ export const EN = {
   "contact.partnershipsCopy":
     "Travel brands and affiliate networks -- choose \u201cPartnership\u201d above and we will route it to the right place.",
 
+  /* Region labels. The data file stores the English name as the key that
+     groups destinations; these are what a reader actually sees. */
+  "region.Europe": "Europe",
+  "region.Asia": "Asia",
+  "region.Americas": "Americas",
+  "region.Caribbean": "Caribbean",
+  "region.Africa": "Africa",
+  "region.Middle East": "Middle East",
+  "region.Oceania": "Oceania",
+  "fare.from": "from",
   "about.eyebrow": "About Skynova Agency",
   "about.heading": "One place for the whole trip.",
   "about.intro":
@@ -882,7 +892,7 @@ export const EN = {
   "blog.viewAllDestinations": "View all destinations",
   "blog.mustRead": "Must read",
   "blog.readGuide": "Read the guide",
-  "blog.author": "By Skynova Agency",
+  "blog.author": "Edited by {name}",
   "blog.readArticle": "Read article",
   "blog.explore": "Explore {name}",
   "blog.allArticles": "All articles",
@@ -1322,6 +1332,14 @@ const FR: Dict = {
   "contact.partnershipsCopy":
     "Marques de voyage et r\u00e9seaux d\u2019affiliation -- choisissez \u00ab Partnership \u00bb ci-dessus et nous transmettrons au bon endroit.",
 
+  "region.Europe": "Europe",
+  "region.Asia": "Asie",
+  "region.Americas": "Am\u00e9riques",
+  "region.Caribbean": "Cara\u00efbes",
+  "region.Africa": "Afrique",
+  "region.Middle East": "Moyen-Orient",
+  "region.Oceania": "Oc\u00e9anie",
+  "fare.from": "\u00e0 partir de",
   "about.eyebrow": "\u00c0 propos de Skynova Agency",
   "about.heading": "Un seul endroit pour tout le voyage.",
   "about.intro":
@@ -1837,7 +1855,7 @@ const FR: Dict = {
   "blog.viewAllDestinations": "Voir toutes les destinations",
   "blog.mustRead": "\u00c0 lire absolument",
   "blog.readGuide": "Lire le guide",
-  "blog.author": "Par Skynova Agency",
+  "blog.author": "\u00c9dit\u00e9 par {name}",
   "blog.readArticle": "Lire l\u2019article",
   "blog.explore": "Explorer {name}",
   "blog.allArticles": "Tous les articles",

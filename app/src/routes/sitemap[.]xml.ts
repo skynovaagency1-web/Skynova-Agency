@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { SITE_URL } from "@/lib/seo";
-import { LOCALE_TAGS, PUBLISHED_LOCALES, DEFAULT_LOCALE, localePath } from "@/lib/i18n";
+import { LOCALE_TAGS, PUBLISHED_LOCALES, DEFAULT_LOCALE, localePath, isTranslatedPath } from "@/lib/i18n";
 
 import { DESTINATIONS } from "@/data/destinations";
 import { ARTICLE_SLUGS } from "@/data/blog-articles";
@@ -83,9 +83,15 @@ export const Route = createFileRoute("/sitemap.xml")({
         // 0/780, so their pages are English under a foreign prefix. Listing
         // those would be asking for a duplicate-content problem, not a
         // translation signal.
+        // Only locales that actually have this page. A hreflang pointing at an
+        // English page under a French prefix says "same page, other language"
+        // about two pages in the same language.
+        const localesFor = (path: string) =>
+          PUBLISHED_LOCALES.filter((loc) => isTranslatedPath(path, loc));
+
         const alternates = (path: string) =>
           [
-            ...PUBLISHED_LOCALES.map(
+            ...localesFor(path).map(
               (loc) =>
                 `    <xhtml:link rel="alternate" hreflang="${LOCALE_TAGS[loc]}" href="${origin}${localePath(path, loc)}"/>`,
             ),
@@ -96,7 +102,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           '<?xml version="1.0" encoding="UTF-8"?>',
           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
           ...urls.flatMap(({ path, priority, changefreq }) =>
-            PUBLISHED_LOCALES.flatMap((loc) => [
+            localesFor(path).flatMap((loc) => [
               "  <url>",
               `    <loc>${origin}${localePath(path, loc)}</loc>`,
               alternates(path),

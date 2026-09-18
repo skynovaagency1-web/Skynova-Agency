@@ -15,7 +15,8 @@ import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { StackedCarousel } from "@/components/site/StackedCarousel";
 import { absUrl, jsonLd } from "@/lib/seo";
 import { REGION_ORDER, getDestinationsByRegion, DESTINATIONS, type Region } from "@/data/destinations";
-import { useT } from "@/lib/i18n-strings";
+import { useT, useLocale, type TKey } from "@/lib/i18n-strings";
+import { DESTINATION_HOOKS_FR } from "@/data/destinations-fr";
 
 // An ItemList of every destination, so the index is understood as a
 // collection page rather than 25 unrelated links. Built once at module
@@ -78,6 +79,15 @@ function findAll(slugs: string[]) {
 
 function DestinationsIndex() {
   const t = useT();
+  const locale = useLocale();
+  // The hook is stored in English on the destination record; French is an
+  // overlay keyed by slug, falling back to the original when a slug has no
+  // entry yet -- so a new destination is never a blank line in French.
+  const hookFor = (d: { slug: string; hook: string }) =>
+    (locale === "fr" ? DESTINATION_HOOKS_FR[d.slug] : undefined) ?? d.hook;
+  // The region name doubles as the grouping key in the data, so the label a
+  // reader sees has to come from the string table rather than the key.
+  const regionLabel = (region: string) => t(`region.${region}` as TKey);
   const { bySlug: fares } = Route.useLoaderData();
   const { region } = Route.useSearch();
   const trending = findAll(TRENDING_SLUGS);
@@ -194,7 +204,7 @@ function DestinationsIndex() {
                   className={`region-filter-btn${activeRegion === region ? " is-active" : ""}`}
                   onClick={() => selectRegion(region)}
                 >
-                  {region}
+                  {regionLabel(region)}
                 </button>
               ))}
             </div>
@@ -206,7 +216,7 @@ function DestinationsIndex() {
                     <Link to="/destinations/$slug" params={{ slug: d.slug }} className="dest-mini-card">
                       <p className="dest-card-flag">{d.flag}</p>
                       <p className="mt-2 font-semibold">{d.name}</p>
-                      <p className="site-ink-muted mt-1 text-xs leading-relaxed">{d.hook}</p>
+                      <p className="site-ink-muted mt-1 text-xs leading-relaxed">{hookFor(d)}</p>
                       <FarePill fare={fares[d.slug]} />
                     </Link>
                     <CardActions slug={d.slug} name={d.name} />
@@ -218,7 +228,7 @@ function DestinationsIndex() {
               {visibleRegions.map(({ region, icon }) => (
                 <div key={region}>
                   <p className="dest-region-heading site-h2 mb-4 text-xl">
-                    <span aria-hidden="true">{icon}</span> {region}
+                    <span aria-hidden="true">{icon}</span> {regionLabel(region)}
                   </p>
                   <div className="dest-directory-grid">
                     {getDestinationsByRegion(region).map((d) => (
@@ -226,7 +236,7 @@ function DestinationsIndex() {
                         <Link to="/destinations/$slug" params={{ slug: d.slug }} className="dest-mini-card">
                           <p className="dest-card-flag">{d.flag}</p>
                           <p className="mt-2 font-semibold">{d.name}</p>
-                          <p className="site-ink-muted mt-1 text-xs leading-relaxed">{d.hook}</p>
+                          <p className="site-ink-muted mt-1 text-xs leading-relaxed">{hookFor(d)}</p>
                           <FarePill fare={fares[d.slug]} />
                         </Link>
                         <CardActions slug={d.slug} name={d.name} />

@@ -1,4 +1,5 @@
 import type { DestinationFare } from "@/lib/api/prices.functions";
+import { useT } from "@/lib/i18n-strings";
 
 /**
  * "from £89" on a destination card.
@@ -15,6 +16,7 @@ import type { DestinationFare } from "@/lib/api/prices.functions";
  * one -- not like a card whose price failed to load.
  */
 export function FarePill({ fare, className }: { fare?: DestinationFare; className?: string }) {
+  const t = useT();
   if (!fare) return null;
 
   // Whole units. These are "from" figures; pence on an approximation is false
@@ -27,7 +29,7 @@ export function FarePill({ fare, className }: { fare?: DestinationFare; classNam
 
   return (
     <span className={className ? `fare-pill ${className}` : "fare-pill"}>
-      <span className="fare-pill-label">from</span>
+      <span className="fare-pill-label">{t("fare.from")}</span>
       <span className="fare-pill-value">{formatted}</span>
     </span>
   );

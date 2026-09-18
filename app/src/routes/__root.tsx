@@ -29,6 +29,7 @@ import {
   LOCALE_DIR,
   LOCALE_TAGS,
   PUBLISHED_LOCALES,
+  isTranslatedPath,
   localePath,
   type Locale,
 } from "@/lib/i18n";
@@ -225,7 +226,12 @@ function CanonicalLink() {
  */
 function LocaleRobots() {
   const locale = useCurrentLocale();
-  if (PUBLISHED_LOCALES.includes(locale)) return null;
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const published = PUBLISHED_LOCALES.includes(locale);
+  // Also covers a PUBLISHED locale on a page whose content it does not have:
+  // /fr/blog/<slug> renders French chrome around an English article, and
+  // asking Google to index 107 of those is how a doorway-page problem starts.
+  if (published && isTranslatedPath(pathname, locale)) return null;
   return <meta name="robots" content="noindex, follow" />;
 }
 
@@ -245,7 +251,7 @@ function AlternateLinks() {
   const clean = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
   return (
     <>
-      {PUBLISHED_LOCALES.map((loc) => (
+      {PUBLISHED_LOCALES.filter((loc) => isTranslatedPath(clean, loc)).map((loc) => (
         <link
           key={loc}
           rel="alternate"

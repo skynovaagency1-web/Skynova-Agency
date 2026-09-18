@@ -34,6 +34,35 @@ export const DEFAULT_LOCALE: Locale = "en";
  */
 export const PUBLISHED_LOCALES: readonly Locale[] = ["en", "fr"];
 
+/**
+ * Route families whose CONTENT lives in src/data, not in the string table.
+ *
+ * This distinction cost a bad launch on 17 Sep 2026. PUBLISHED_LOCALES went
+ * to ["en","fr"] on the evidence that i18n-strings.ts was 780/780 in French,
+ * which is true and beside the point: the destination hooks, the collection
+ * blurbs and all 53 articles are data files, and data files have no French.
+ * The result was 107 of 128 French URLs in the sitemap, each with hreflang,
+ * serving English prose under a French prefix -- the exact duplicate-content
+ * shape the note above uses to justify keeping es, pt and ar out.
+ *
+ * A locale is only offered these paths once its data is translated too.
+ */
+const DATA_DRIVEN_PREFIXES = ["/destinations/", "/blog/", "/collections/"] as const;
+
+/**
+ * Is this path genuinely available in this locale?
+ *
+ * English always. Any other locale gets the pages the string table drives --
+ * the home page, the vertical pages, about, contact, the legal pages -- and
+ * is refused the ones whose words come from src/data until those are
+ * translated. The index pages (/destinations, /blog) pass: their chrome is
+ * the string table's, and what they list is names and prices.
+ */
+export function isTranslatedPath(pathname: string, locale: Locale): boolean {
+  if (locale === DEFAULT_LOCALE) return true;
+  return !DATA_DRIVEN_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+}
+
 /** Shown in the language switcher, in the language itself -- never "French". */
 export const LOCALE_LABELS: Record<Locale, string> = {
   en: "English",

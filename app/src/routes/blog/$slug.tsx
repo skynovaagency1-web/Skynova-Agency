@@ -6,7 +6,7 @@ import { Newsletter } from "@/components/site/Newsletter";
 import { getPostBySlug, POSTS, PHOTO_SLUGS, TAG_CLASSES } from "@/data/blog-posts";
 import { getArticle, hasArticle, type Block } from "@/data/blog-articles";
 import { getDestinationBySlug } from "@/data/destinations";
-import { absUrl, breadcrumbJsonLd, jsonLd } from "@/lib/seo";
+import { absUrl, breadcrumbJsonLd, jsonLd, FOUNDER_NAME } from "@/lib/seo";
 import { useT, useLocale } from "@/lib/i18n-strings";
 import { LOCALE_TAGS } from "@/lib/i18n";
 import {
@@ -167,7 +167,12 @@ function ArticlePage() {
     mainEntityOfPage: { "@type": "WebPage", "@id": articleUrl },
     inLanguage: LOCALE_TAGS[locale],
     ...(hasPhoto ? { image: absUrl(`/assets/destinations/${post.destinationSlug}.webp`) } : {}),
+    // author stays the ORGANISATION and the person is the EDITOR, which is
+    // the accurate split: these guides are the site's, edited by a named
+    // human, and claiming him as sole author would assert first-hand
+    // authorship of 53 destinations that has not been established.
     author: { "@type": "Organization", name: "Skynova Agency" },
+    editor: { "@type": "Person", name: FOUNDER_NAME, url: absUrl("/about") },
     publisher: { "@type": "Organization", name: "Skynova Agency", logo: { "@type": "ImageObject", url: absUrl("/assets/brand/apple-touch-icon.png") } },
     articleSection: post.tag,
   };
@@ -209,7 +214,12 @@ function ArticlePage() {
                 <h1 className="article-title">{post.title}</h1>
                 <p className="article-dek">{article.dek}</p>
                 <div className="article-meta">
-                  <span>{t("blog.author")}</span>
+                  {/* Links to /about, where the name has a face, a statement
+                      and a signature. A byline that goes nowhere is a string;
+                      one that resolves to a person is the point of having it. */}
+                  <Link to="/about" className="article-byline">
+                    {t("blog.author", { name: FOUNDER_NAME })}
+                  </Link>
                   <span aria-hidden="true">·</span>
                   <time dateTime={article.published}>{publishedLabel}</time>
                   <span aria-hidden="true">·</span>

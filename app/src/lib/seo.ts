@@ -1,6 +1,16 @@
 /** Canonical origin. Matches CANONICAL_HOST in server.ts and the <link rel="canonical"> in __root.tsx. */
 export const SITE_URL = "https://skynovaagency.com";
 
+/**
+ * The founder, as named and signed on /about.
+ *
+ * Lives here rather than in the route because three places now say it -- the
+ * founder's note, the byline on every article, and the Person in two blocks
+ * of structured data -- and a name that disagrees with itself across a site
+ * is worse than no name.
+ */
+export const FOUNDER_NAME = "David MASHINTO";
+
 /** Absolute URL for a site-relative path. Schema.org `url`/`@id` values must be absolute. */
 export function absUrl(path: string) {
   return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
