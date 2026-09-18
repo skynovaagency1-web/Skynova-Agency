@@ -146,6 +146,19 @@ function AboutPage() {
                 <p>{t("about.founderP3")}</p>
               </blockquote>
               <p className="founder-note-sign">
+                {/* The signature is decoration for a screen reader -- the name
+                    is right underneath it in text, and reading "signature of
+                    David MASHINTO" before the name itself only repeats it. */}
+                <img
+                  className="founder-note-signature"
+                  src="/assets/brand/founder-signature.webp"
+                  alt=""
+                  aria-hidden="true"
+                  width={560}
+                  height={691}
+                  loading="lazy"
+                  decoding="async"
+                />
                 {FOUNDER_NAME ? <span className="founder-note-name">{FOUNDER_NAME}</span> : null}
                 <span className="founder-note-role">{t("about.founderRole")}</span>
               </p>

@@ -6894,6 +6894,20 @@ html.lenis body { height: auto; }
   flex-direction: column;
   gap: 0.15rem;
 }
+/* The real signature, keyed off the paper it was photographed on and carried
+   in the alpha channel rather than on a white tile -- so it reads as ink on
+   the page. Narrow on purpose: this one is a tall mark, and at any real width
+   it would tower over the two lines of type it belongs to.
+   Nudged left so the stroke's own left edge, not its transparent margin,
+   lines up with the text beneath it. */
+.founder-note-signature {
+  display: block;
+  width: clamp(124px, 22vw, 152px);
+  height: auto;
+  margin-block-end: 0.5rem;
+  margin-inline-start: -0.4rem;
+  opacity: 0.88;
+}
 .founder-note-name {
   font-size: 1.05rem;
   font-weight: 600;
