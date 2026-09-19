@@ -62,7 +62,11 @@ export function Hero() {
   const lastFrameRef = useRef<Record<string, number>>({});
   // Scroll-driven custom properties are written to these elements directly,
   // never to :root -- see the comment on writeVar in the effect below.
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+  // The CONTAINER, not the media element. --hero-descent is written here and
+  // inherited by whichever children are mounted -- the still is always there
+  // and the clip layers over it once it has been asked for, so writing to a
+  // single media element would leave the other one without the parallax.
+  const videoRef = useRef<HTMLDivElement | null>(null);
   const copyRef = useRef<HTMLDivElement | null>(null);
   // The floating hero cards fade out on the inverse of the copy's curve, and
   // custom properties do not travel between siblings, so --hero-grow is
@@ -74,6 +78,55 @@ export function Hero() {
   // unmount it entirely (not just hide it) so it stops decoding/rendering
   // and every section below behaves like a normal page.
   const [showFixedBg, setShowFixedBg] = useState(true);
+
+  // Save-Data (or reduced motion) swaps the 5.8MB cloud clip for the 43KB
+  // still it was already shipping as a poster. Resolved in an effect rather
+  // than during render because navigator is not there on the server, and this
+  // component is prerendered -- the document that ships has to be the one
+  // everyone gets, with the downgrade applied on the client that asked for it.
+  const [lightBackdrop, setLightBackdrop] = useState(false);
+
+  /**
+   * The 5.8MB cloud clip is not requested until the visitor does something.
+   *
+   * It cannot simply be deferred until it is revealed: the window cutout is
+   * alpha-transparent, so this backdrop is visible through the glass from the
+   * very first frame, before any scroll. But it does not have to be the CLIP
+   * that is visible -- cloud-still.webp is a frame of the same footage at
+   * 43KB, so the still holds the glass and the clip layers over it when it
+   * arrives.
+   *
+   * A poster alone does NOT do this, which is the mistake this replaced:
+   * autoPlay makes the browser fetch the whole file regardless of poster, so
+   * every visitor paid 5.8MB -- 82% of the page -- before scrolling a pixel.
+   * Measured on the deploy before this one: 7,264KB total, 5,961KB of it this
+   * one file.
+   *
+   * Scroll or pointer, whichever comes first, because either means the
+   * visitor is engaging rather than bouncing. Someone who lands, looks and
+   * leaves -- most of a social click-through -- never pays for it at all.
+   */
+  const [wantsVideo, setWantsVideo] = useState(false);
+
+  useEffect(() => {
+    const light =
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      Boolean(
+        (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData,
+      );
+    setLightBackdrop(light);
+    if (light) return;
+
+    const arm = () => setWantsVideo(true);
+    window.addEventListener("scroll", arm, { once: true, passive: true });
+    window.addEventListener("pointerdown", arm, { once: true });
+    window.addEventListener("pointermove", arm, { once: true, passive: true });
+    return () => {
+      window.removeEventListener("scroll", arm);
+      window.removeEventListener("pointerdown", arm);
+      window.removeEventListener("pointermove", arm);
+    };
+  }, []);
 
   // Night mode is scoped to this page by mounting, not by a route check: the
   // attribute goes on <html> (so CSS can reach .site-body, which lives on
@@ -128,6 +181,21 @@ export function Hero() {
     }
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    /**
+     * Save-Data is treated exactly like reduced motion: the first frame of
+     * each beat is drawn and the scrub never starts, so the hero costs three
+     * images instead of a hundred and two.
+     *
+     * The header is the visitor explicitly asking every site to send less --
+     * usually on a metered or slow connection -- and a scroll-scrubbed film
+     * is the first thing that should go when they do. Same reasoning as the
+     * deferred three.js load in components/site/FlightRail.tsx.
+     */
+    const saveData = Boolean(
+      (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData,
+    );
+    const skipScrub = reduceMotion || saveData;
+
     // Canvas has no object-fit, so the cover crop is computed by hand:
     // scale by whichever axis needs more, then centre the overflow.
     function drawFrame(scrub: Scrub, index: number) {
@@ -153,19 +221,47 @@ export function Hero() {
       lastFrameRef.current[scrub.key] = index;
     }
 
-    // Frame 1 of each beat is drawn the moment it decodes, so no canvas is
-    // ever blank while the rest of its frames stream in behind it.
+    /**
+     * Frames are requested as the scroll reaches them, not all at once.
+     *
+     * This used to set .src on all 102 Images the moment the effect ran --
+     * 4.1MB fired off in one go, before the visitor had scrolled a pixel. It
+     * does not block first paint (this is an effect, so the document is
+     * already up) but it does take the connection for as long as it lasts,
+     * and a phone on cellular pays for every frame whether or not it ever
+     * scrolls far enough to see one. Most visitors from social never do.
+     *
+     * So: frame 1 of each beat up front, so no canvas is ever blank, then a
+     * sliding window around wherever the scroll currently is. requestFrame
+     * is idempotent, so calling it on every tick costs a Set lookup.
+     */
+    const requested: Record<string, Set<number>> = {};
+
+    function requestFrame(scrub: Scrub, index: number) {
+      if (index < 0 || index >= scrub.count) return;
+      const seen = requested[scrub.key];
+      if (seen.has(index)) return;
+      seen.add(index);
+      imagesRef.current[scrub.key][index].src = frameSrc(scrub, index);
+    }
+
+    /** The window around the current frame: enough ahead that a normal scroll
+     *  never outruns the loader, plus one behind for scrolling back up. */
+    const AHEAD = 6;
+    function requestAround(scrub: Scrub, index: number) {
+      for (let i = index - 1; i <= index + AHEAD; i += 1) requestFrame(scrub, i);
+    }
+
     for (const scrub of SCRUBS) {
       if (imagesRef.current[scrub.key]) continue;
-      imagesRef.current[scrub.key] = Array.from({ length: scrub.count }, (_, i) => {
-        const img = new Image();
-        img.src = frameSrc(scrub, i);
-        return img;
-      });
+      // Created without a src -- nothing is fetched until requestFrame sets one.
+      imagesRef.current[scrub.key] = Array.from({ length: scrub.count }, () => new Image());
+      requested[scrub.key] = new Set();
       lastFrameRef.current[scrub.key] = -1;
+
       const first = imagesRef.current[scrub.key][0];
-      if (first.complete) drawFrame(scrub, 0);
-      else first.addEventListener("load", () => drawFrame(scrub, 0), { once: true });
+      first.addEventListener("load", () => drawFrame(scrub, 0), { once: true });
+      requestFrame(scrub, 0);
     }
 
     function drawFrameForProgress(progress: number) {
@@ -173,6 +269,11 @@ export function Hero() {
         const [from, to] = scrub.range;
         const t = Math.min(Math.max((progress - from) / (to - from), 0), 1);
         const index = Math.round(t * (scrub.count - 1));
+        // Asked for on every tick rather than only when the frame changes:
+        // the beats overlap (window starts at 0.52, inside interior's range),
+        // so a beat still needs its frames pulled in while the one before it
+        // is the beat actually on screen.
+        requestAround(scrub, index);
         if (index === lastFrameRef.current[scrub.key]) continue;
         // A frame still in flight leaves the previous one up rather than
         // flashing a gap; the next scroll tick picks it up once decoded.
@@ -180,7 +281,7 @@ export function Hero() {
       }
     }
 
-    if (reduceMotion) {
+    if (skipScrub) {
       return;
     }
 
@@ -360,16 +461,27 @@ export function Hero() {
           (see showFixedBg above) once scrolled past the glass afterglow
           section so it doesn't paint over the page below. */}
       {showFixedBg ? (
-        <div className="hero-video-fixed" aria-hidden="true">
-          <video
-            ref={videoRef}
+        <div className="hero-video-fixed" aria-hidden="true" ref={videoRef}>
+          {/* Always mounted, and never removed once the clip arrives: the
+              clip layers on top of it, so there is no frame in which the
+              glass has nothing behind it. 43KB. */}
+          <img
             className="hero-video-fixed-el"
-            src="/assets/hero/cloud-video.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
+            src="/assets/hero/cloud-still.webp"
+            alt=""
+            aria-hidden="true"
           />
+          {!lightBackdrop && wantsVideo ? (
+            <video
+              className="hero-video-fixed-el"
+              src="/assets/hero/cloud-video.mp4"
+              poster="/assets/hero/cloud-still.webp"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : null}
         </div>
       ) : null}
       {/* The boarding sequence: runway, cabin, seat, window -- four opaque
