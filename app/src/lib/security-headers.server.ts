@@ -51,7 +51,24 @@ export function applySecurityHeaders(response: Response): Response {
       // the host their dashboard hands out, and a reader should not have to
       // guess that the two are the same company.
       "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://www.googletagmanager.com https://tpscr.com https://tp.media https://static.localrent.com https://widgets.tiqets.com https://tpo.gg https://tpemb.com https://cdn.klook.com https://*.travelpayouts.com https://emrldco.com; " +
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+      // emrldco.com is here for the same reason it is in script-src: the
+      // Travelpayouts monetisation script loads its own stylesheet for the
+      // tooltip it shows on a rewritten link. Blocked, it failed loudly but
+      // invisibly -- "Error installing tooltip: Unable to preload CSS" in the
+      // console, and a link that quietly has no tooltip on the page. Caught by
+      // reading the console on the live site, not by looking at it.
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://emrldco.com; " +
+      // Workers get their own directive because without one they fall back to
+      // script-src, which has no `blob:` -- and the Travelpayouts script builds
+      // its worker from a Blob (one `new Worker`, one createObjectURL in its
+      // chunk). The failure is silent in the way this file's other entries
+      // are: the script keeps running, minus whatever the worker did.
+      //
+      // `blob:` here is narrower than it looks. It permits a worker from a
+      // blob this origin created, which requires script execution that
+      // script-src has already allowed; it does not widen what may be loaded
+      // or from where.
+      "worker-src 'self' blob:; " +
       // `data:` is required, not optional. Vite inlines any asset under its
       // 4 KB threshold, and the three IBM Plex Mono subsets (--font-mono)
       // land just under it, so they ship as data: URIs inside our own
