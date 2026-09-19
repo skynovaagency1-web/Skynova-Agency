@@ -2,11 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { Nav } from "@/components/site/Nav";
-// Two alternates stay in the tree, unused: Hero.tsx holds the 102-frame
-// scrubbed boarding sequence, and HeroScroll.tsx the plane fly-in that used to
-// be here -- that one now also runs on /flights, as FlightHeroScroll. Swapping
-// this one import is still the whole switch, in any direction.
-import { HeroStage } from "@/components/site/HeroStage";
+// Three alternates stay in the tree, unused: Hero.tsx holds the 102-frame
+// scrubbed boarding sequence, HeroScroll.tsx the plane fly-in (which also runs
+// on /flights as FlightHeroScroll), and HeroStage.tsx the scroll stage whose
+// globe flew down the page and landed on the WebGL planet. Swapping this one
+// import is still the whole switch, in any direction.
+import { ParallaxHero } from "@/components/site/ParallaxHero";
 import { TripSearch } from "@/components/site/TripSearch";
 import { TrustSection } from "@/components/site/Sections2";
 import {
@@ -80,7 +81,7 @@ function Index() {
       <StructuredData json={HOME_SCHEMA} />
       <Nav />
       <main>
-        <HeroStage />
+        <ParallaxHero />
         <TripSearch />
         <div ref={afterglowRef} className="hero-afterglow">
           <TrustLineSection />

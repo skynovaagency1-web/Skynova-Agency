@@ -7153,6 +7153,165 @@ html.lenis body { height: auto; }
   color: var(--sky-ink-muted);
 }
 
+/* ---- Parallax homepage hero (components/site/ParallaxHero.tsx,
+        components/ui/parallax-scrolling.tsx) ----
+   The reference ships no CSS at all -- it relies on the stylesheet of the
+   site it was demoed on -- so every rule here is this site's.
+
+   The shape: a tall header whose layers are absolutely stacked and pinned to
+   the same box, so GSAP moving each one's yPercent separates them into
+   depths. The header has to be taller than the viewport or there is no
+   scroll for the timeline to scrub against. */
+.parallaxhero {
+  position: relative;
+  background:
+    radial-gradient(120% 80% at 50% 0%, #2a251c 0%, transparent 62%),
+    linear-gradient(180deg, #16130d 0%, #221d15 58%, #16130d 100%);
+  color: #f5f0e6;
+}
+.parallaxhero-daynight {
+  position: absolute;
+  z-index: 6;
+  inset-block-start: clamp(4.6rem, 9vh, 6rem);
+  inset-inline-end: clamp(0.9rem, 3vw, 2rem);
+}
+.parallax__header {
+  position: relative;
+  /* svh, not vh: a phone's address bar sliding away mid-scroll changes vh,
+     which would resize the scrub track underneath the reader. */
+  height: 150svh;
+  min-height: 640px;
+}
+.parallax__visuals {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+.parallax__layers { position: absolute; inset: 0; }
+.parallax__layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+}
+/* Fades the foot of the stack into the section below rather than ending on a
+   hard edge where the sticky box stops. */
+.parallax__fade {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  height: 28%;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, #16130d);
+}
+
+/* Layer 1 -- the earth, furthest back and travelling most. Both textures are
+   stacked and cross-faded by the day/night toggle, so the swap is a fade and
+   not a reload. */
+.parallaxhero-sky { align-items: flex-start; }
+.parallaxhero-earth {
+  position: absolute;
+  inset-block-start: -18%;
+  inset-inline: -10%;
+  width: 120%;
+  height: auto;
+  object-fit: cover;
+  opacity: 0.34;
+  filter: saturate(0.75) contrast(1.05);
+  transition: opacity 0.6s ease;
+  mask-image: radial-gradient(70% 60% at 50% 35%, #000 40%, transparent 78%);
+  -webkit-mask-image: radial-gradient(70% 60% at 50% 35%, #000 40%, transparent 78%);
+}
+.parallaxhero-earth-night { opacity: 0; }
+:root[data-theme="night"] .parallaxhero-earth-day { opacity: 0; }
+:root[data-theme="night"] .parallaxhero-earth-night { opacity: 0.42; }
+
+/* Layer 2 -- a warm bloom behind the headline, so the type has something to
+   sit on wherever the earth's terminator happens to fall. */
+.parallaxhero-glow span {
+  display: block;
+  width: min(78vw, 820px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201, 162, 39, 0.22), transparent 62%);
+  filter: blur(40px);
+}
+
+/* Layer 3 -- the copy. Its own layer so it parallaxes with the scene instead
+   of being pinned to the viewport while everything moves behind it. */
+.parallaxhero-copy { text-align: left; }
+.parallaxhero-title {
+  font-size: clamp(2.6rem, 9vw, 6rem);
+  line-height: 0.98;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #f5f0e6;
+  text-shadow: 0 6px 40px rgba(0, 0, 0, 0.45);
+}
+.parallaxhero-title span { display: block; color: var(--sky-coral); }
+.parallaxhero-lede {
+  margin-block-start: 1.4rem;
+  max-width: 34rem;
+  font-size: clamp(0.98rem, 2.2vw, 1.12rem);
+  line-height: 1.65;
+  color: rgba(245, 240, 230, 0.82);
+}
+.parallaxhero-actions {
+  margin-block-start: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(0.9rem, 3vw, 1.8rem);
+}
+.parallaxhero-actions .btn-ghost-link { color: rgba(245, 240, 230, 0.86); }
+
+/* Layer 4 -- cloud in front, barely moving, so the scene has a foreground to
+   be behind. Anchored to the foot: a cloud through the middle would sit over
+   the headline. */
+/* Anchored bottom-RIGHT, not centred: the copy runs down the left, and a
+   cloud through the middle at any usable size lands on the call to action --
+   which is exactly what the first pass did. Small, soft and low-contrast, so
+   it reads as atmosphere in front of the scene rather than as a shape on top
+   of the page. */
+.parallaxhero-cloud {
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+.parallaxhero-cloud img {
+  width: min(78%, 900px);
+  height: auto;
+  margin-inline-end: -12%;
+  margin-block-end: -22%;
+  opacity: 0.2;
+  filter: saturate(0.35) brightness(1.15) blur(2px);
+  pointer-events: none;
+}
+
+@media (max-width: 720px) {
+  .parallax__header { height: 128svh; }
+  .parallaxhero-copy { text-align: left; }
+  /* On a phone the copy fills the frame, so the cloud retreats to a wash
+     along the foot rather than a shape beside it. */
+  .parallaxhero-cloud img {
+    width: 150%;
+    margin-inline-end: -25%;
+    margin-block-end: -34%;
+    opacity: 0.14;
+  }
+}
+
+/* No timeline is built under reduced motion (the component returns early), so
+   the layers stay where CSS puts them -- which has to be a finished frame
+   rather than the start of an animation that will never run. */
+@media (prefers-reduced-motion: reduce) {
+  .parallax__header { height: 100svh; min-height: 560px; }
+  .parallax__layer { will-change: auto; }
+  .parallaxhero-earth { transition: none; }
+}
+
 /* ---- Free-standing gradient-card band (routes/about.tsx) ----
    Same cards, same reason for the dark ground as .vertical-cardstage: the
    plate carries #f5f0e6 text and cannot sit on cream. The difference is that
