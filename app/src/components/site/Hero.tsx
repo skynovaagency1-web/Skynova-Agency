@@ -237,12 +237,20 @@ export function Hero() {
      */
     const requested: Record<string, Set<number>> = {};
 
+    let lastProgress = 0;
+
     function requestFrame(scrub: Scrub, index: number) {
       if (index < 0 || index >= scrub.count) return;
       const seen = requested[scrub.key];
       if (seen.has(index)) return;
       seen.add(index);
-      imagesRef.current[scrub.key][index].src = frameSrc(scrub, index);
+      const img = imagesRef.current[scrub.key][index];
+      // Redraw when it lands. Without this a frame that arrives while the
+      // scroll is stationary is never painted -- the draw only ever happened
+      // on a scroll tick, so the canvas sat on an older frame (or, on the
+      // very first paint, on nothing at all) until the next movement.
+      img.addEventListener("load", () => drawFrameForProgress(lastProgress), { once: true });
+      img.src = frameSrc(scrub, index);
     }
 
     /** The window around the current frame: enough ahead that a normal scroll
@@ -252,6 +260,33 @@ export function Hero() {
       for (let i = index - 1; i <= index + AHEAD; i += 1) requestFrame(scrub, i);
     }
 
+    /**
+     * Everything else, once the page is idle.
+     *
+     * The window alone is not enough, and shipping without this is what put
+     * gaps in the sequence on a phone: a flick-scroll crosses a whole beat in
+     * one gesture, lands far past anything requested, and finds nothing
+     * decoded to draw. The window keeps the FIRST scroll smooth; this makes
+     * sure a fast one still has frames to land on.
+     *
+     * Deferred to idle so it costs nothing while the page is still settling,
+     * and one frame per callback so a slow connection is never handed 99
+     * requests at once. requestFrame is idempotent, so anything the window
+     * already pulled is skipped.
+     */
+    let backfillHandle: number | null = null;
+    const idle: (cb: () => void) => number =
+      typeof window.requestIdleCallback === "function"
+        ? (cb) => window.requestIdleCallback(cb, { timeout: 2000 })
+        : (cb) => window.setTimeout(cb, 200);
+
+    function backfill(queue: Array<[Scrub, number]>, i: number) {
+      if (i >= queue.length) return;
+      const [scrub, index] = queue[i];
+      requestFrame(scrub, index);
+      backfillHandle = idle(() => backfill(queue, i + 1));
+    }
+
     for (const scrub of SCRUBS) {
       if (imagesRef.current[scrub.key]) continue;
       // Created without a src -- nothing is fetched until requestFrame sets one.
@@ -259,12 +294,36 @@ export function Hero() {
       requested[scrub.key] = new Set();
       lastFrameRef.current[scrub.key] = -1;
 
-      const first = imagesRef.current[scrub.key][0];
-      first.addEventListener("load", () => drawFrame(scrub, 0), { once: true });
       requestFrame(scrub, 0);
+      // Already decoded (a repeat visit serves it from cache, and the load
+      // event has then already gone) -- draw it now rather than waiting for
+      // an event that will not fire.
+      if (imagesRef.current[scrub.key][0].complete) drawFrame(scrub, 0);
+    }
+
+    // NOTE: the backfill is scheduled AFTER the skipScrub check below, not
+    // here. Scheduling it at this point would hand Save-Data visitors all 102
+    // frames in the background -- the exact cost they asked not to pay.
+
+    /** The loaded frame closest to `index`, or -1 if the beat has none yet.
+     *  Searching outwards means a canvas shows the nearest thing it has
+     *  rather than nothing: slightly behind the scroll reads as a stutter,
+     *  which is survivable; an empty canvas is a hole in the page, which is
+     *  not. */
+    function nearestLoaded(scrub: Scrub, index: number): number {
+      const frames = imagesRef.current[scrub.key];
+      if (frames[index]?.complete && frames[index].naturalWidth) return index;
+      for (let d = 1; d < scrub.count; d += 1) {
+        const back = index - d;
+        if (back >= 0 && frames[back]?.complete && frames[back].naturalWidth) return back;
+        const fwd = index + d;
+        if (fwd < scrub.count && frames[fwd]?.complete && frames[fwd].naturalWidth) return fwd;
+      }
+      return -1;
     }
 
     function drawFrameForProgress(progress: number) {
+      lastProgress = progress;
       for (const scrub of SCRUBS) {
         const [from, to] = scrub.range;
         const t = Math.min(Math.max((progress - from) / (to - from), 0), 1);
@@ -274,16 +333,33 @@ export function Hero() {
         // so a beat still needs its frames pulled in while the one before it
         // is the beat actually on screen.
         requestAround(scrub, index);
-        if (index === lastFrameRef.current[scrub.key]) continue;
-        // A frame still in flight leaves the previous one up rather than
-        // flashing a gap; the next scroll tick picks it up once decoded.
-        if (imagesRef.current[scrub.key][index]?.complete) drawFrame(scrub, index);
+        // Draw the nearest frame that HAS arrived, never nothing. A flick
+        // scroll on a phone crosses a whole beat in one gesture and lands
+        // well past the requested window; drawing only on an exact hit left
+        // the canvas blank, which is the gap this fixes.
+        const drawable = nearestLoaded(scrub, index);
+        if (drawable < 0 || drawable === lastFrameRef.current[scrub.key]) continue;
+        drawFrame(scrub, drawable);
+        // Record the frame the scroll ASKED for, not the substitute, so the
+        // next tick still redraws once the real one lands.
+        lastFrameRef.current[scrub.key] = drawable === index ? index : -1;
       }
     }
 
     if (skipScrub) {
       return;
     }
+
+    // Queued beat by beat in play order, so the sequence fills in the
+    // direction it will be watched rather than three beats at once.
+    backfillHandle = idle(() =>
+      backfill(
+        SCRUBS.flatMap((scrub) =>
+          Array.from({ length: scrub.count }, (_, i) => [scrub, i] as [Scrub, number]),
+        ),
+        0,
+      ),
+    );
 
     let targetMouseX = 0;
     let targetMouseY = 0;
@@ -442,6 +518,15 @@ export function Hero() {
       window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onPointerMove);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      // Otherwise the chain keeps rescheduling itself after the hero has
+      // gone, pulling frames for a page the visitor has already left.
+      if (backfillHandle !== null) {
+        if (typeof window.cancelIdleCallback === "function") {
+          window.cancelIdleCallback(backfillHandle);
+        } else {
+          window.clearTimeout(backfillHandle);
+        }
+      }
     };
   }, []);
 
@@ -480,6 +565,17 @@ export function Hero() {
               muted
               loop
               playsInline
+              // autoPlay alone is not reliable on a phone: muted+playsInline
+              // satisfies the policy, but the attribute is evaluated at mount
+              // and a browser that declines then never retries. This element
+              // only mounts after a scroll or a tap, so by the time it is
+              // here the page has a gesture behind it and play() is allowed.
+              // Rejection is ignored on purpose -- the still underneath is
+              // already the fallback, so a video that will not start costs
+              // the visitor nothing.
+              onLoadedData={(e) => {
+                void e.currentTarget.play().catch(() => {});
+              }}
             />
           ) : null}
         </div>
