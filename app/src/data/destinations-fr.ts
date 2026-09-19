@@ -59,4 +59,7 @@ export const DESTINATION_HOOKS_FR: Record<string, string> = {
   "french-polynesia": "Bungalows sur pilotis, lagons et pics volcaniques sur 118 îles.",
   "new-caledonia": "Le plus grand lagon du monde, des pins colonnaires, et la France dans le Pacifique Sud.",
   samoa: "Trous d’eau, cascades et fales de plage posés sur le sable.",
+  france: "Paris, puis les vignobles, les cols alpins et deux littoraux sur le même billet de train.",
+  "united-kingdom": "Londres comme point d’entrée, avec les Highlands, les sentiers côtiers et quatre capitales à moins d’un train de distance.",
+  singapore: "Une cité-État faite pour une courte escale : hawker centres, jardins, et des correspondances vers toute l’Asie.",
 };

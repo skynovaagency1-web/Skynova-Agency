@@ -318,6 +318,106 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
     ],
   },
 
+  france: {
+    whyChoose:
+      "France is the most visited country on earth for a reason that has nothing to do with Paris alone: a two-hour train from the capital reaches champagne cellars, Atlantic oyster beds, Alpine passes or Mediterranean beaches, and the network makes a multi-region trip cheaper and faster than flying between them.",
+    whyVisit: [
+      { title: "One rail pass, four landscapes", description: "The TGV puts Lyon 2 hours from Paris, Marseille 3, and Bordeaux just over 2 -- mountains, Mediterranean and Atlantic on a single ticket." },
+      { title: "Food as infrastructure", description: "Every region cooks differently, and the good version is the everyday one: a market lunch in Lyon costs less than a mediocre dinner in most capitals." },
+      { title: "Paris is a starting point, not the trip", description: "Three days covers the city's core well. The rest of the week is where France stops feeling like a postcard." },
+      { title: "Shoulder season actually works", description: "May and late September keep the terraces open and the queues short, and prices drop noticeably outside July and August." },
+    ],
+    attractions: [
+      { name: "The Louvre and Musee d'Orsay", description: "Book a timed slot and pick one wing rather than trying to cover either -- the Orsay's impressionist floor rewards a slow hour." },
+      { name: "Mont Saint-Michel", description: "A tidal island abbey off the Normandy coast, best at dusk once the day buses have gone." },
+      { name: "The Loire chateaux", description: "Chambord and Chenonceau within an hour of each other, easiest with a car out of Tours." },
+      { name: "Provence hill villages", description: "Gordes, Roussillon and the lavender plateau above them, at their best mid-June to mid-July." },
+      { name: "Chamonix and the Mont Blanc massif", description: "Cable cars to 3,800m in summer, serious skiing in winter, and a town that works in both seasons." },
+      { name: "Bordeaux and the Medoc", description: "A restored river city with vineyard estates 40 minutes north, most of which take visitors by appointment." },
+    ],
+    foodIntro: "French cooking is regional before it is national -- butter and cream in the north, olive oil in the south, and a market in every town worth planning the morning around.",
+    dishes: [
+      { name: "Steak frites", description: "The everyday standard by which a bistro is judged; order it saignant unless you want it grey." },
+      { name: "Bouillabaisse", description: "Marseille's fish stew, served as two courses -- the broth first, the fish after." },
+      { name: "Galettes and crepes", description: "Brittany's buckwheat galettes are the savoury version, eaten with cider rather than wine." },
+      { name: "Cheese, as a course", description: "Served before dessert, not after dinner -- ask the waiter for three from the region you are in." },
+    ],
+    hotels: [
+      { name: "Paris arrondissement boutiques", description: "Small hotels in the 3rd, 6th and 11th put you in walkable neighbourhoods rather than tourist corridors.", tier: "Boutique" },
+      { name: "Loire and Bordeaux chateaux", description: "Working wine estates and restored manor houses, often cheaper midweek than a city hotel.", tier: "Countryside" },
+      { name: "Riviera sea-view hotels", description: "Nice, Antibes and Menton keep decent mid-range options outside the Cannes festival weeks.", tier: "Coastal" },
+    ],
+    itinerary: [
+      { title: "Day 1-3: Paris", description: "One museum a day, an afternoon in the Marais or Canal Saint-Martin, and a day trip to Versailles or Giverny." },
+      { title: "Day 4: Loire Valley", description: "Train to Tours, pick up a car, and see two chateaux rather than four." },
+      { title: "Day 5-6: Lyon or Bordeaux", description: "Lyon for bouchons and old town, Bordeaux for wine country and the Atlantic coast beyond it." },
+      { title: "Day 7-8: Provence or the Alps", description: "South to lavender, markets and Roman ruins, or east to Chamonix for the high mountains." },
+    ],
+    bestTime: "May-June and September bring warm weather, open terraces and manageable crowds; August empties the cities of locals and fills the coast.",
+    tips: {
+      currency: "Euro (EUR). Cards are accepted almost everywhere, including buses and bakeries.",
+      transport: "TGV between regions -- book weeks ahead for the cheap fares. A car only pays off in the Loire, Provence and Normandy.",
+      safety: "Very safe overall. Pickpocketing is the real risk on the Paris metro and around major monuments.",
+      language: "French. English is common in Paris and tourist areas, less so in small towns -- opening with bonjour genuinely changes the reception.",
+    },
+    faqs: [
+      { q: "How many days do I need in France?", a: "3 days covers Paris; 7-10 lets you add one or two regions without rushing between them." },
+      { q: "Is the TGV worth it over flying?", a: "Almost always -- city centre to city centre, no airport transfer, and cheaper if you book ahead." },
+      { q: "When should I avoid Paris?", a: "August, when many restaurants close for the holidays, and the weeks around fashion week when hotel prices spike." },
+      { q: "Do I need to speak French?", a: "No, but a few words go a long way. Staff switch to English readily once you have greeted them in French." },
+    ],
+  },
+
+  "united-kingdom": {
+    whyChoose:
+      "The United Kingdom packs four countries into a landmass smaller than Oregon, which is why a single trip can hold London, the Scottish Highlands, a Welsh castle coast and Northern Ireland's basalt cliffs -- all reachable by train or a short flight, all speaking the same language.",
+    whyVisit: [
+      { title: "London as a hub, not a destination", description: "Six airports and a rail network that reaches Edinburgh in 4.5 hours make it the easiest base in Europe for onward travel." },
+      { title: "Four capitals, one trip", description: "London, Edinburgh, Cardiff and Belfast each feel distinct, and no two are more than a day apart." },
+      { title: "Free national museums", description: "The British Museum, National Gallery, Tate Modern and dozens more charge nothing for entry -- a rare thing at this scale." },
+      { title: "Walking country", description: "Public footpaths cross private land by law, so coast paths and fell routes are open in a way they are not in most countries." },
+    ],
+    attractions: [
+      { name: "The British Museum", description: "Free, vast, and best treated as two or three targeted visits rather than one exhausting pass." },
+      { name: "The Scottish Highlands", description: "Glencoe, Skye and the road north from Inverness -- the scenery that most people picture when they picture Scotland." },
+      { name: "Edinburgh Old Town", description: "The castle, the Royal Mile and the closes running off it; walk it early before the tour groups arrive." },
+      { name: "Giant's Causeway", description: "Forty thousand basalt columns on the Antrim coast, an hour from Belfast along one of the best coastal drives in Europe." },
+      { name: "Snowdonia and the Welsh castles", description: "Mountain walking in the north, with Caernarfon and Conwy's medieval walls on the coast below." },
+      { name: "The Cotswolds", description: "Honey-coloured villages within two hours of London, best on a weekday when the lanes are quiet." },
+    ],
+    foodIntro: "British food has moved a long way from its reputation: the gastropub does the heavy lifting, the curry houses are a cuisine in their own right, and the produce -- lamb, seafood, cheese -- was always good.",
+    dishes: [
+      { name: "Sunday roast", description: "Served midday to early evening on Sundays only; the Yorkshire pudding is not optional." },
+      { name: "Fish and chips", description: "Best at the coast, where the fish came off a boat that morning -- Whitby, Aldeburgh and the Fife coast all deliver." },
+      { name: "Full breakfast", description: "The regional versions differ and people are serious about it -- black pudding in Scotland, soda bread in Northern Ireland." },
+      { name: "Curry", description: "Birmingham's balti and Brick Lane's Bangladeshi restaurants are part of the national diet, not a novelty." },
+    ],
+    hotels: [
+      { name: "London townhouse hotels", description: "Bloomsbury, Marylebone and South Kensington put you on the tube network without central-London prices.", tier: "Boutique" },
+      { name: "Highland inns and lodges", description: "Former shooting lodges and village inns, often with the best food for thirty miles.", tier: "Countryside" },
+      { name: "Coastal and country pubs with rooms", description: "Cornwall, the Lakes and the Northumberland coast -- book far ahead for summer weekends.", tier: "Inn" },
+    ],
+    itinerary: [
+      { title: "Day 1-3: London", description: "Two free museums, a walk along the South Bank, and a day for Greenwich or Hampstead Heath." },
+      { title: "Day 4: Bath or Oxford", description: "Ninety minutes from London by train, and a genuine change of pace from the capital." },
+      { title: "Day 5-6: Edinburgh", description: "Train up the east coast, then the Old Town, Arthur's Seat and a distillery day trip." },
+      { title: "Day 7-8: The Highlands", description: "Hire a car in Inverness for Skye and Glencoe, or take the West Highland Line if you would rather not drive." },
+    ],
+    bestTime: "May, June and September give the longest usable days and the driest weather; midsummer in Scotland stays light past 10pm but brings midges to the west coast.",
+    tips: {
+      currency: "Pound sterling (GBP). Contactless is near-universal -- many buses and cafes no longer take cash at all.",
+      transport: "Trains between cities, booked in advance for a fraction of the walk-up fare. A car is worth it for the Highlands, Wales and the Lakes, and a liability in London.",
+      safety: "Very safe. Traffic is the main adjustment -- they drive on the left, and pedestrian crossings are not automatic.",
+      language: "English, with accents that vary sharply over short distances. Welsh and Scottish Gaelic appear on signage in their regions.",
+    },
+    faqs: [
+      { q: "Is London enough for a first trip?", a: "It can be, but four or five days is the point of diminishing returns -- adding Edinburgh or Bath makes a week feel much fuller." },
+      { q: "Do I need a car?", a: "Not for the cities, and not in London. For the Highlands, Wales or the Lake District it changes the trip entirely." },
+      { q: "How bad is the weather really?", a: "Rarely extreme, frequently wet. Pack a waterproof layer for any month and plan indoor options rather than sunny days." },
+      { q: "Is Northern Ireland easy to add?", a: "Yes -- an hour's flight from London or a ferry from Scotland, and the Causeway coast is a short drive from Belfast." },
+    ],
+  },
+
   vietnam: {
     whyChoose:
       "Vietnam runs a single, dramatic route from mountains to coast to old quarters -- north to south, with a different landscape and cuisine at every stop.",
@@ -1404,6 +1504,55 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { q: "Do I need a visa?", a: "Many nationalities get visa-on-arrival, but rules change -- check the current requirement for your passport before booking." },
       { q: "Is the water safe to drink?", a: "No. Stick to bottled or filtered water, including for brushing teeth." },
       { q: "How do I get between islands?", a: "Cheap domestic flights for long hops, fast boats for short ones like Bali to the Gilis." },
+    ],
+  },
+
+  singapore: {
+    whyChoose:
+      "Singapore is the rare place that rewards a short stay rather than punishing it: the whole island is smaller than Greater London, the metro reaches almost everything, and Changi connects onward to every capital in Asia -- which makes it as good a three-day stopover as it is a destination.",
+    whyVisit: [
+      { title: "Built for a stopover", description: "Two or three days genuinely covers it, and most long-haul routes through Asia can add the stop without raising the fare." },
+      { title: "Hawker food at street prices", description: "Two Michelin-starred hawker stalls and hundreds of excellent ones, most serving a full plate for a few dollars." },
+      { title: "Four cultures in one city", description: "Chinatown, Little India, Kampong Glam and the colonial core are each a short metro ride apart and genuinely different." },
+      { title: "Everything works", description: "Clean, safe, English-speaking and punctual -- the easiest first stop in Asia for a nervous traveller." },
+    ],
+    attractions: [
+      { name: "Gardens by the Bay", description: "The Supertree grove and two climate-controlled domes; go for the 7.45pm light show, free and better than it sounds." },
+      { name: "Marina Bay Sands SkyPark", description: "The view along the bay at dusk, when the financial district lights up and the Gardens glow below." },
+      { name: "Hawker centres", description: "Maxwell, Old Airport Road and Tiong Bahru -- the last is the locals' pick and the least touristed of the three." },
+      { name: "Kampong Glam", description: "The Sultan Mosque, Arab Street's textile shops, and Haji Lane's bars in the alleys behind." },
+      { name: "Singapore Botanic Gardens", description: "A UNESCO site and free, with a national orchid garden that is worth the small entry fee." },
+      { name: "Sentosa", description: "Beaches, a cable car and Universal Studios -- the family day out, and skippable if you are travelling without children." },
+    ],
+    foodIntro: "Singapore eats Chinese, Malay, Indian and Peranakan food interchangeably, and the best version of nearly all of it is in a hawker centre rather than a restaurant.",
+    dishes: [
+      { name: "Hainanese chicken rice", description: "The national dish -- poached chicken, rice cooked in the stock, chilli and ginger on the side." },
+      { name: "Chilli crab", description: "Messy, sweet-spicy and eaten with fried mantou buns to mop the sauce; a restaurant dish, not a hawker one." },
+      { name: "Laksa", description: "Coconut curry noodle soup; the Katong version is the one people argue about." },
+      { name: "Kaya toast with soft eggs", description: "Coconut-jam toast, two soft-boiled eggs and kopi -- breakfast, and available all day." },
+    ],
+    hotels: [
+      { name: "Marina Bay high-rises", description: "The skyline views and infinity pools, at a price that matches.", tier: "Luxury" },
+      { name: "Shophouse boutiques", description: "Restored heritage shophouses in Chinatown, Tiong Bahru and Kampong Glam -- more character, far better value.", tier: "Boutique" },
+      { name: "Changi transit hotels", description: "For genuinely short layovers, the airport's own hotels and free city tours are worth knowing about.", tier: "Airport" },
+    ],
+    itinerary: [
+      { title: "Day 1: Marina Bay and the colonial core", description: "The Gardens, the SkyPark at dusk, and the light show after dark." },
+      { title: "Day 2: The neighbourhoods", description: "Chinatown in the morning, Little India after lunch, Kampong Glam for the evening." },
+      { title: "Day 3: Gardens and greenery", description: "Botanic Gardens early, then the MacRitchie treetop walk or Sentosa if you want a beach afternoon." },
+    ],
+    bestTime: "Hot and humid year-round, so there is no bad month. February-April is marginally drier; the haze season from June to September varies by year.",
+    tips: {
+      currency: "Singapore dollar (SGD). Cards and contactless work everywhere except some hawker stalls -- carry a little cash for those.",
+      transport: "The MRT reaches nearly everything and is cheap; tap in with a contactless card. Taxis and Grab are affordable for late nights.",
+      safety: "One of the safest cities anywhere. Note that fines are real and enforced -- no eating or drinking on the MRT.",
+      language: "English is an official language and used for all signage and business. Mandarin, Malay and Tamil are the others.",
+    },
+    faqs: [
+      { q: "How many days do I need in Singapore?", a: "Two to three covers the city properly. It works better as a stopover than a week-long stay." },
+      { q: "Is Singapore expensive?", a: "Hotels and alcohol are; food and transport are not. Eating at hawker centres keeps daily costs low." },
+      { q: "Can I do it on a layover?", a: "Yes -- with 8+ hours you can reach Marina Bay and back comfortably, and Changi runs free city tours for longer transits." },
+      { q: "Do I need a visa?", a: "Many nationalities enter visa-free for 30-90 days, but check the current rule for your passport before booking." },
     ],
   },
 

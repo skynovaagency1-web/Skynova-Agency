@@ -109,6 +109,10 @@ export const DESTINATIONS: Destination[] = [
     accent: "#7a1f2b", name: "Italy", region: "Europe", flag: "🇮🇹", hook: "Art cities, coastline, and food worth planning a route around." },
   { slug: "spain",
     accent: "#a8420d", name: "Spain", region: "Europe", flag: "🇪🇸", hook: "Beaches, historic capitals, and some of Europe's busiest flight routes." },
+  { slug: "france",
+    accent: "#1f4a8a", name: "France", region: "Europe", flag: "🇫🇷", hook: "Paris, then vineyards, alpine passes, and two coastlines on the same rail pass." },
+  { slug: "united-kingdom",
+    accent: "#8a2140", name: "United Kingdom", region: "Europe", flag: "🇬🇧", hook: "London as a hub, with highlands, coast paths, and four capitals within a day's train." },
 
   { slug: "vietnam",
     accent: "#1f7a5a", name: "Vietnam", region: "Asia", flag: "🇻🇳", hook: "A north-to-south route through mountains, coast, and old quarters." },
@@ -122,6 +126,8 @@ export const DESTINATIONS: Destination[] = [
     accent: "#96560f", name: "Thailand", region: "Asia", flag: "🇹🇭", hook: "Street food, island beaches, and northern hill temples on one ticket." },
   { slug: "indonesia",
     accent: "#186b52", name: "Indonesia", region: "Asia", flag: "🇮🇩", hook: "Volcanoes, reefs, and rice terraces across thousands of islands." },
+  { slug: "singapore",
+    accent: "#0f6b7a", name: "Singapore", region: "Asia", flag: "🇸🇬", hook: "A city-state built for a short stay -- hawker food, gardens, and onward flights everywhere in Asia." },
 
   { slug: "united-states",
     accent: "#8a4a1c", name: "United States", region: "Americas", flag: "🇺🇸", hook: "National parks, coastal cities, and road trips across every region." },

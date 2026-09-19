@@ -126,6 +126,32 @@ const LEGACY_REDIRECTS: Record<string, string> = {
   "/compensation": "/flight-compensation",
 };
 
+/**
+ * WordPress's misspelled destination pages: /distinations/<slug>.
+ *
+ * Search Console reported these four, and only these four, under "Duplicate,
+ * Google chose different canonical than user" -- crawled 18-25 Aug 2026, while
+ * WordPress still served the domain. They 404 now. Left alone they would
+ * simply reclassify to 404 on the next crawl, which is honest but throws away
+ * whatever links point at them.
+ *
+ * City URLs against a country-shaped site, so the mapping is by hand. Rome is
+ * in Italy, Hawaii is in the United States and Bora Bora is in French
+ * Polynesia -- none of those is a judgement call. Singapore is its own
+ * country and now has its own page.
+ *
+ * Anything else under /distinations/ goes to the index rather than being
+ * guessed at, for the reason the misspelling list above gives: a wrong
+ * redirect is worse than an honest 404, because the visitor never learns they
+ * were sent somewhere else.
+ */
+const LEGACY_DESTINATION_SLUGS: Record<string, string> = {
+  "rome-2": "italy",
+  hawaii: "united-states",
+  "bora-bora": "french-polynesia",
+  singapore: "singapore",
+};
+
 /** 301s for the legacy set above. Null when the request is not one of them. */
 function redirectLegacyUrl(request: Request): Response | null {
   const url = new URL(request.url);
@@ -137,6 +163,13 @@ function redirectLegacyUrl(request: Request): Response | null {
   const target = LEGACY_REDIRECTS[path];
   if (target) {
     return Response.redirect(new URL(target, url.origin).toString(), 301);
+  }
+
+  if (path.startsWith("/distinations/")) {
+    const slug = path.slice("/distinations/".length);
+    const mapped = LEGACY_DESTINATION_SLUGS[slug];
+    const to = mapped ? `/destinations/${mapped}` : "/destinations";
+    return Response.redirect(new URL(to, url.origin).toString(), 301);
   }
 
   // Homepage duplicates: a WordPress param on any path collapses to the path

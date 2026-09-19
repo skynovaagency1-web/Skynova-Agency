@@ -61,6 +61,22 @@ const CITIES: Record<string, readonly CityDef[]> = {
     { city: "Zagreb", iata: "ZAG" },
     "Hvar",
   ],
+  france: [
+    { city: "Paris", iata: "PAR" },
+    { city: "Nice", iata: "NCE" },
+    { city: "Lyon", iata: "LYS" },
+    { city: "Marseille", iata: "MRS" },
+    { city: "Bordeaux", iata: "BOD" },
+    "Chamonix",
+  ],
+  "united-kingdom": [
+    { city: "London", iata: "LON" },
+    { city: "Edinburgh", iata: "EDI" },
+    { city: "Manchester", iata: "MAN" },
+    { city: "Belfast", iata: "BFS" },
+    "Bath",
+    "Isle of Skye",
+  ],
   italy: [
     { city: "Rome", iata: "ROM" },
     { city: "Florence", iata: "FLR" },
@@ -100,6 +116,9 @@ const CITIES: Record<string, readonly CityDef[]> = {
     { city: "Krabi", iata: "KBV" },
     { city: "Koh Samui", iata: "USM" },
   ],
+  // A city-state: the country and the city are the same place, so unlike
+  // every other entry there is nothing else to list under it.
+  singapore: [{ city: "Singapore", iata: "SIN" }, "Sentosa"],
   indonesia: [
     "Bali",
     "Ubud",
