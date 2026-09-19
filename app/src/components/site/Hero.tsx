@@ -202,12 +202,31 @@ export function Hero() {
       const canvas = canvasRefs.current[scrub.key];
       const img = imagesRef.current[scrub.key]?.[index];
       if (!canvas || !img || !img.complete || !img.naturalWidth) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const cssW = canvas.clientWidth;
       const cssH = canvas.clientHeight;
       if (!cssW || !cssH) return;
-      const w = Math.round(cssW * dpr);
-      const h = Math.round(cssH * dpr);
+
+      /**
+       * The backing store is capped at what the SOURCE can actually resolve.
+       *
+       * The frames are 1248x704. A phone canvas is portrait -- 375x812 CSS,
+       * so 750x1624 at DPR 2 -- and the cover crop scales by
+       * max(750/1248, 1624/704) = 2.31. Every frame was being blown up to
+       * 2884x1624 and cropped to a centre strip: 1.2 million pixels drawn per
+       * canvas per tick, three canvases, for detail that is not in the file.
+       * That is the cost that was still showing as gaps on a fast scroll once
+       * the loading was fixed.
+       *
+       * Capping the cover scale at 1 means the canvas never asks for more
+       * pixels than the frame has. It cannot look softer than before, because
+       * the extra pixels were interpolated either way -- they are just no
+       * longer computed on the scroll thread.
+       */
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const wanted = Math.max((cssW * dpr) / img.naturalWidth, (cssH * dpr) / img.naturalHeight);
+      const budget = wanted > 1 ? dpr / wanted : dpr;
+      const w = Math.round(cssW * budget);
+      const h = Math.round(cssH * budget);
       if (canvas.width !== w || canvas.height !== h) {
         canvas.width = w;
         canvas.height = h;
@@ -249,7 +268,23 @@ export function Hero() {
       // scroll is stationary is never painted -- the draw only ever happened
       // on a scroll tick, so the canvas sat on an older frame (or, on the
       // very first paint, on nothing at all) until the next movement.
-      img.addEventListener("load", () => drawFrameForProgress(lastProgress), { once: true });
+      //
+      // decode() first, because `complete` only means DOWNLOADED. Left to
+      // drawImage, the decode happens inline on the scroll thread the first
+      // time each frame is painted -- 102 decodes of a 1248x704 WebP, each
+      // one landing in the middle of a gesture. Decoding off-thread here
+      // means drawImage only ever touches a frame that is already ready.
+      // Failures are ignored: draw on load anyway and let drawImage decide,
+      // which is exactly the old behaviour.
+      img.addEventListener(
+        "load",
+        () => {
+          const paint = () => drawFrameForProgress(lastProgress);
+          if (typeof img.decode === "function") void img.decode().then(paint, paint);
+          else paint();
+        },
+        { once: true },
+      );
       img.src = frameSrc(scrub, index);
     }
 
