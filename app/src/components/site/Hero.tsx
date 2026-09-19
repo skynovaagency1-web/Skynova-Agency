@@ -22,21 +22,35 @@ type Scrub = {
   range: [number, number];
 };
 
-// Frame provenance. All three beats are the site owner's own Dola AI clips,
-// re-cut on 5 Sep 2026 after they supplied watermark-free exports. The
-// previous exports burned a "Dola AI" mark into the bottom-right of every
-// frame; it shipped live on all 36 runway and all 30 window frames. It was
-// never edited out here -- the clips were replaced at source.
+// Frame provenance. Re-cut on 19 Sep 2026 from a single Dola AI take
+// (0919_no_watermark.mp4, 1912x1080, 18.3s) that runs the whole sequence in
+// one shot: runway nose-on, push-in to the cabin doorway, down the aisle to a
+// window seat, then the window onto cloud. All three beats are slices of that
+// one clip rather than three separately sourced ones, which is why the cabin
+// is a private jet where the runway is an airliner -- it is one take, not a
+// mismatch.
 //
-// These frames are the full 1248x704 of the source, not the old 1200x676:
-// that crop existed only to hide the watermark, so it could go. Quality is
-// webp q=80 (the old frames were 13-35KB, visibly over-compressed). 1248 is
-// the hard ceiling of the footage, so on a wide desktop the hero is upscaled
-// ~20%; a sharper hero needs a higher-resolution export, not a re-encode.
+//   runway   0.0 - 7.0s     interior  7.0 - 13.8s     window  13.8 - 17.4s
 //
-// If a beat is ever re-cut, check the bottom-right corner of EVERY frame
-// before shipping, not just one: the watermark survived review the first
-// time because only a single frame was spot-checked.
+// The clip reports 18.34s but stops decoding around 17.5s, so the window beat
+// ends at 17.4 rather than running to the stated duration.
+//
+// 1600x904 at webp q=80. The source is 1912 wide; 1600 was chosen because it
+// clears the upscale on a normal desktop (the previous 1248x704 frames were
+// stretched ~28% on a 1440px viewport) while costing only ~430KB more across
+// all 102 frames. Anything wider buys detail that the resolution cap in
+// drawFrame will not draw anyway.
+//
+// THE WATERMARK IS PRESENT AND THAT IS DELIBERATE. Despite the filename, the
+// export still carries the "Dola AI" mark bottom-right -- measured at 21 of 28
+// frames sampled across the clip, bounding box x 1612-1891, y 990-1069 of
+// 1912x1080. It was raised before these frames were cut and the site owner
+// chose to ship it rather than wait for a clean export. It is not an
+// oversight, and it does not need re-reporting; replacing it needs a genuinely
+// watermark-free export, which a crop or a re-encode cannot produce.
+//
+// If a beat is ever re-cut, check the bottom-right corner of EVERY frame, not
+// just one: that is how the mark shipped unnoticed the first time.
 const SCRUBS: Scrub[] = [
   // Exterior runway, pushing forward into the cabin.
   { key: "runway", count: 36, dir: "runway", prefix: "r", range: [0, 0.26] },
