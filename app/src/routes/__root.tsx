@@ -168,6 +168,20 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang={LOCALE_TAGS[locale]} dir={LOCALE_DIR[locale]} style={{ colorScheme: "light" }}>
       <head>
         <HeadContent />
+        {/* Rendered HERE, inside <head>, rather than in RootComponent below.
+            They used to sit in the body and rely on React 19 hoisting <link>
+            and <meta> up into <head> -- which works, until the head has
+            already been flushed by the time they render, and then the tag is
+            simply not in the document. Not a theory: production was serving
+            /blog with no canonical at all, while /about and / had theirs, and
+            prerendering the same bundle locally (scripts/prerender.mjs) lost
+            them on nearly every page, because the flush lands differently
+            under a different runtime. Emitting them in the head element makes
+            it ordering-independent -- the tags are part of the head chunk, in
+            every runtime, every time. */}
+        <CanonicalLink />
+        <LocaleRobots />
+        <AlternateLinks />
       </head>
       <body className="site-body">
         {children}
@@ -196,10 +210,13 @@ function useCurrentLocale(): Locale {
  * apex and www (server.ts 301s www away), and can also be reached on
  * *.workers.dev, so without this a page has several valid-looking URLs.
  *
- * React 19 hoists <link> out of the tree into <head>, so this can live in a
- * component and read router state -- which the route-level `head()` option
- * cannot do. Search params are deliberately dropped: ?ref= referral links
- * and filter params must not each register as a separate page. */
+ * A component rather than the route-level `head()` option, because it has to
+ * read router state, which `head()` cannot. RootShell renders it directly
+ * inside <head> -- see the note there; relying on React to hoist it out of the
+ * body is what left pages with no canonical at all.
+ *
+ * Search params are deliberately dropped: ?ref= referral links and filter
+ * params must not each register as a separate page. */
 function CanonicalLink() {
   const locale = useCurrentLocale();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -270,9 +287,6 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <CanonicalLink />
-        <LocaleRobots />
-        <AlternateLinks />
         {/* Site-wide, not just the homepage. It anchors to #how-it-works
             where that exists and otherwise starts at the top of the page. */}
         <FlightRail />

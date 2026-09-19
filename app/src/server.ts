@@ -5,6 +5,7 @@ import { renderErrorPage } from "./lib/error-page";
 import { applySecurityHeaders } from "./lib/security-headers.server";
 import { handleOutboundClick } from "./lib/outbound-clicks.server";
 import { handlePageView } from "./lib/page-views.server";
+import { servePrerendered } from "./lib/prerendered.server";
 import { DEFAULT_LOCALE, LOCALES } from "./lib/i18n";
 
 type ServerEntry = {
@@ -218,6 +219,16 @@ export default {
           return applySecurityHeaders(await handlePageView(request));
         }
       }
+
+      // Prerendered HTML, if this URL has any. Deliberately AFTER every
+      // redirect above -- a page that should 301 must still 301, whether or
+      // not a document exists for the URL it is being sent away from -- and
+      // deliberately BEFORE the SSR handler, because avoiding that call is
+      // the entire point. See lib/prerendered.server.ts: the free plan's
+      // ~10ms CPU cannot render these pages at all, and this is what stands
+      // in for rendering them.
+      const prerendered = await servePrerendered(request, env);
+      if (prerendered) return applySecurityHeaders(prerendered);
 
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);

@@ -29,7 +29,21 @@ export const Route = createFileRoute("/robots.txt")({
             },
           });
         }
-        const body = ["User-agent: *", "Allow: /", "", `Sitemap: ${SITE_URL}/sitemap.xml`].join("\n");
+        // /__prerender/ holds the build-time HTML that lib/prerendered.server
+        // .ts serves in place of rendering (see that file for why it exists).
+        // Static assets are matched BEFORE the Worker runs, so those files are
+        // publicly fetchable at their own URLs and no Worker-side guard can
+        // change that -- /__prerender/about.html is a second address for
+        // /about. Each one carries a canonical pointing at the real URL, so
+        // the duplicate collapses even if something does crawl it, but not
+        // spending the crawl budget at all is better than collapsing it after.
+        const body = [
+          "User-agent: *",
+          "Disallow: /__prerender/",
+          "Allow: /",
+          "",
+          `Sitemap: ${SITE_URL}/sitemap.xml`,
+        ].join("\n");
         return new Response(body, {
           headers: {
             "Content-Type": "text/plain; charset=utf-8",

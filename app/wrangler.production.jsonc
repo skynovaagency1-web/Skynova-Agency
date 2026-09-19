@@ -34,7 +34,19 @@
   "assets": {
     "directory": "./dist/client",
     "binding": "ASSETS",
-    "not_found_handling": "none"
+    "not_found_handling": "none",
+
+    // Serve asset paths literally. The default, "auto-trailing-slash", also
+    // rewrites between "/x", "/x/" and "/x.html" -- which is convenient for a
+    // static site and wrong here, because the only HTML in dist/client is
+    // dist/client/__prerender/*.html and lib/prerendered.server.ts asks for
+    // those files by their exact names. Under the default, a request for
+    // /__prerender/about.html is answered with a redirect to /__prerender/about
+    // rather than the document, so every lookup misses and every page falls
+    // back to the SSR render this is meant to replace -- silently, since a
+    // redirect is not an error. Nothing else relies on the rewriting: the rest
+    // of dist/client is hashed JS, CSS and images, requested by exact URL.
+    "html_handling": "none"
   },
 
   // ── D1 ────────────────────────────────────────────────────────────
