@@ -8,8 +8,8 @@ import { applyThemeMode, getThemeMode, DEFAULT_THEME } from "@/lib/theme-mode";
 // scroll rather than played. A looping <video> runs on its own clock, so it
 // keeps moving while the page is still -- it reads as a background loop
 // behind the page instead of part of the sequence. Frames also come out
-// LIGHTER here: 36 runway stills at 1200w WebP are ~870KB against 1.8MB for
-// the same shot as H.264.
+// LIGHTER here: the 36 runway stills at 1276w WebP are ~1.0MB against 1.8MB
+// for the same shot as H.264.
 //
 // Each entry scrubs across its own slice of scroll progress. `range` must
 // stay inside the matching STAGES row below, or a shot would still be
@@ -22,32 +22,33 @@ type Scrub = {
   range: [number, number];
 };
 
-// Frame provenance. Re-cut on 19 Sep 2026 from a single Dola AI take
-// (0919_no_watermark.mp4, 1912x1080, 18.3s) that runs the whole sequence in
-// one shot: runway nose-on, push-in to the cabin doorway, down the aisle to a
-// window seat, then the window onto cloud. All three beats are slices of that
-// one clip rather than three separately sourced ones, which is why the cabin
-// is a private jet where the runway is an airliner -- it is one take, not a
-// mismatch.
+// Frame provenance. Cut on 20 Sep 2026 from `0919(1) (online-video-cutter.com).mp4`
+// (1276x720, 26.37s, 30fps) -- a CLEAN trim of the Dola AI take, with no
+// watermark. It runs the whole sequence in one shot: runway nose-on, push-in to
+// the cabin doorway, down the aisle to a window seat, then the window onto
+// cloud. All three beats are slices of that one clip rather than three
+// separately sourced ones, which is why the cabin is a private jet where the
+// runway is an airliner -- it is one take, not a mismatch.
 //
-//   runway   0.0 - 7.0s     interior  7.0 - 13.8s     window  13.8 - 17.4s
+//   runway  0.0-7.6s (36)   interior  7.8-17.1s (36)   window  17.4-24.0s (30)
 //
-// The clip reports 18.34s but stops decoding around 17.5s, so the window beat
-// ends at 17.4 rather than running to the stated duration.
+// The clip runs to 26.37s but the last ~2.4s is very nearly a static hold on
+// the window, so the window beat stops at 24.0 rather than spending frames on
+// a freeze.
 //
-// 1600x904 at webp q=80. The source is 1912 wide; 1600 was chosen because it
-// clears the upscale on a normal desktop (the previous 1248x704 frames were
-// stretched ~28% on a 1440px viewport) while costing only ~430KB more across
-// all 102 frames. Anything wider buys detail that the resolution cap in
-// drawFrame will not draw anyway.
+// THE WATERMARK IS GONE. An earlier cut of this sequence carried the "Dola AI"
+// mark bottom-right and shipped that way deliberately, waiting on a clean
+// export. This is that export. Every one of the 102 frames was scanned in the
+// watermark box (x 1016-1266, y 610-710 at this size), not sampled: the
+// brightest was 1.1% near-white pixels and inspection showed sunlit fuselage,
+// not an overlay.
 //
-// THE WATERMARK IS PRESENT AND THAT IS DELIBERATE. Despite the filename, the
-// export still carries the "Dola AI" mark bottom-right -- measured at 21 of 28
-// frames sampled across the clip, bounding box x 1612-1891, y 990-1069 of
-// 1912x1080. It was raised before these frames were cut and the site owner
-// chose to ship it rather than wait for a clean export. It is not an
-// oversight, and it does not need re-reporting; replacing it needs a genuinely
-// watermark-free export, which a crop or a re-encode cannot produce.
+// 1276x720 at webp q=80, encoded at NATIVE size. This is the resolution the
+// clean trim is delivered at -- lower than the 1600x904 watermarked cut it
+// replaced, so on a viewport wider than ~1276 the cover crop interpolates.
+// Upscaling the files would not help: the resolution cap in drawFrame refuses
+// to draw more pixels than the source holds. Fixing the softness needs a clean
+// re-export at 1912x1080, not a re-encode of this one.
 //
 // If a beat is ever re-cut, check the bottom-right corner of EVERY frame, not
 // just one: that is how the mark shipped unnoticed the first time.
@@ -223,9 +224,9 @@ export function Hero() {
       /**
        * The backing store is capped at what the SOURCE can actually resolve.
        *
-       * The frames are 1248x704. A phone canvas is portrait -- 375x812 CSS,
+       * The frames are 1276x720. A phone canvas is portrait -- 375x812 CSS,
        * so 750x1624 at DPR 2 -- and the cover crop scales by
-       * max(750/1248, 1624/704) = 2.31. Every frame was being blown up to
+       * max(750/1276, 1624/720) = 2.26. Every frame was being blown up to
        * 2884x1624 and cropped to a centre strip: 1.2 million pixels drawn per
        * canvas per tick, three canvases, for detail that is not in the file.
        * That is the cost that was still showing as gaps on a fast scroll once
@@ -258,7 +259,7 @@ export function Hero() {
      * Frames are requested as the scroll reaches them, not all at once.
      *
      * This used to set .src on all 102 Images the moment the effect ran --
-     * 4.1MB fired off in one go, before the visitor had scrolled a pixel. It
+     * 3.7MB fired off in one go, before the visitor had scrolled a pixel. It
      * does not block first paint (this is an effect, so the document is
      * already up) but it does take the connection for as long as it lasts,
      * and a phone on cellular pays for every frame whether or not it ever
@@ -285,7 +286,7 @@ export function Hero() {
       //
       // decode() first, because `complete` only means DOWNLOADED. Left to
       // drawImage, the decode happens inline on the scroll thread the first
-      // time each frame is painted -- 102 decodes of a 1248x704 WebP, each
+      // time each frame is painted -- 102 decodes of a 1276x720 WebP, each
       // one landing in the middle of a gesture. Decoding off-thread here
       // means drawImage only ever touches a frame that is already ready.
       // Failures are ignored: draw on load anyway and let drawImage decide,
