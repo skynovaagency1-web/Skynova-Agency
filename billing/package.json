@@ -1,0 +1,15 @@
+{
+  "name": "skynova-billing",
+  "private": true,
+  "type": "module",
+  "description": "B2B invoicing for partner placements. Deliberately separate from app/ so the Stripe SDK never enters the website's dependency tree, the Worker bundle, or its CI.",
+  "scripts": {
+    "invoice": "bun invoice.mjs"
+  },
+  "dependencies": {
+    "stripe": "^22.6.2"
+  },
+  "devDependencies": {
+    "@stripe/cli": "^1.51.0"
+  }
+}
