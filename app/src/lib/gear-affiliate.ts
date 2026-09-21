@@ -9,52 +9,65 @@
  * and mixing the two would silently produce links that look attributed and
  * are not.
  *
- * ===================================================================
- * THESE LINKS CURRENTLY EARN NOTHING. That is expected, not a bug.
- * ===================================================================
+ * ATTRIBUTED ON amazon.com ONLY, AND THAT IS THE STATE TO KNOW.
  *
- * TAG is empty because this site has no retail affiliate account yet. With it
- * empty every link below still WORKS -- a visitor reaches the product and can
- * buy it -- there is simply no attribution, so no commission. The page is
- * honest either way: nothing claims a partnership that does not exist.
+ * skynova07-20 is a US Associates id -- the `-20` suffix IS the marketplace.
+ * It earns on amazon.com and is ignored everywhere else. This site routes by
+ * page locale, so English readers are attributed and French, Spanish,
+ * Portuguese and Arabic readers are not: their links work, reach the product
+ * and can be bought from, but generate no commission.
  *
- * To switch attribution on: sign up for Amazon Associates, then put the
- * tracking id in TAG. Nothing else needs to change.
+ * THE MARKETPLACE PROBLEM, because this is where it bites: a tag issued for
+ * amazon.com does NOT work on amazon.fr. The link resolves, the sale
+ * completes, and nothing anywhere reports that the commission was lost --
+ * there is no error, no warning, no failed request. It is invisible unless
+ * somebody already knows to look.
  *
- * THE MARKETPLACE PROBLEM, because it will bite whoever does that:
- *
- * Amazon Associates ids are per-marketplace. A tag issued for amazon.com does
- * NOT work on amazon.fr or amazon.de -- the link resolves, the sale happens,
- * and you earn nothing, with no error anywhere you would notice. This site
- * serves EN and FR and wants customers worldwide, so a single tag would leak
- * commission on most of its traffic.
- *
- * Two ways to handle it, in order of preference:
+ * Two ways out, in order of preference:
  *
  *   1. Amazon OneLink. Amazon redirects each visitor to their own
- *      marketplace and applies the right tag. Set up once in the Associates
- *      dashboard, then a single tag here is genuinely enough. This is the
- *      right answer and the reason TAG is a single string rather than a map.
+ *      marketplace and applies the right id. Configured once in the
+ *      Associates dashboard, after which a single value in TAG covers every
+ *      locale and TAGS_BY_MARKET can go back to empty. This is the fix.
  *
- *   2. Per-market tags. Register in each marketplace and fill TAGS_BY_MARKET
- *      below. More accounts to maintain, more thresholds to clear, and every
- *      marketplace expires its own account for inactivity independently.
+ *   2. Register in each marketplace and add ids to TAGS_BY_MARKET. More
+ *      accounts, more thresholds, and each marketplace closes its own
+ *      account for inactivity independently.
  *
- * Until one of those exists, leave TAG empty rather than inventing a value:
- * a malformed tag is not neutral, it can send the sale to somebody else.
+ * Do not paste a marketplace id into TAG to "cover" the others: an id the
+ * marketplace does not recognise earns no more than none, and can in some
+ * cases credit the sale elsewhere.
  */
 
 import type { Locale } from "@/lib/i18n";
 
-/** Amazon Associates tracking id. Empty = links work, nothing is attributed. */
+/**
+ * A tag that applies to EVERY marketplace. Empty today, and it should stay
+ * empty until OneLink is switched on: a marketplace-specific id put here
+ * would be appended to amazon.fr and amazon.es links where it cannot earn,
+ * which reads in code as though those links are attributed when they are not.
+ */
 const TAG = "";
 
 /**
- * Optional per-marketplace override, for approach 2 above. A market absent
- * here falls back to TAG, which is correct for OneLink and harmless when TAG
- * is empty.
+ * Per-marketplace tags. A market absent here gets TAG, and if that is empty
+ * the link ships unattributed -- which is correct and honest, rather than
+ * carrying an id that marketplace will ignore.
+ *
+ * skynova07-20 is the US id: the `-20` suffix IS the marketplace. It earns on
+ * amazon.com and nowhere else. French, Spanish, Portuguese and Arabic
+ * visitors are routed to their own Amazon by MARKET_BY_LOCALE below, so they
+ * currently generate no commission at all.
+ *
+ * The fix is Amazon OneLink, not more entries here: it redirects each visitor
+ * to their own marketplace and applies the right id, set up once in the
+ * Associates dashboard. Until then this is four-fifths of the locales earning
+ * nothing, and it is deliberate -- an invalid id earns no more than no id,
+ * and can in some cases credit the sale elsewhere.
  */
-const TAGS_BY_MARKET: Partial<Record<string, string>> = {};
+const TAGS_BY_MARKET: Partial<Record<string, string>> = {
+  "www.amazon.com": "skynova07-20",
+};
 
 /**
  * Which Amazon a visitor is sent to, by page locale.
@@ -100,8 +113,16 @@ export function gearLink(query: string, locale: Locale = "en"): string {
   return `https://${market}/s?${params.toString()}`;
 }
 
-/** Whether any attribution is configured at all. The page uses this to avoid
- *  claiming a commercial relationship it does not have. */
-export function gearLinksAreAttributed(): boolean {
-  return TAG !== "" || Object.keys(TAGS_BY_MARKET).length > 0;
+/**
+ * Whether links on THIS locale's page actually earn anything.
+ *
+ * Per-locale, not global, because the answer genuinely differs by locale
+ * while only one marketplace has an id. The English page earns and says so;
+ * the French page does not and must not claim otherwise. A disclosure that
+ * promises a commission the page cannot collect is a small lie told to every
+ * French reader, and it costs nothing to get right.
+ */
+export function gearLinksAreAttributed(locale: Locale = "en"): boolean {
+  const market = MARKET_BY_LOCALE[locale] ?? MARKET_BY_LOCALE.en;
+  return Boolean(TAGS_BY_MARKET[market] ?? (TAG || ""));
 }

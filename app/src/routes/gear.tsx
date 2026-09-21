@@ -67,7 +67,7 @@ function GearPage() {
               and the honest version costs nothing to display.
             */}
             <p className="site-ink-muted mt-6 max-w-2xl rounded-lg border border-white/10 bg-white/5 p-4 text-sm leading-relaxed">
-              {gearLinksAreAttributed() ? t("gear.disclosure") : t("gear.disclosureUnpaid")}
+              {gearLinksAreAttributed(locale) ? t("gear.disclosure") : t("gear.disclosureUnpaid")}
             </p>
 
             <div className="mt-8 flex flex-wrap gap-2">
