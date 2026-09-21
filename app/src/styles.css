@@ -7499,3 +7499,134 @@ html.lenis body { height: auto; }
    the same light treatment the rest of that card's copy does. */
 .dest-card .fare-pill { color: #f3e6b8; }
 :root[data-theme="night"] .fare-pill { color: #f3e6b8; }
+
+/* ---------------------------------------------------------------------------
+   Gear vitrine
+   ---------------------------------------------------------------------------
+   After the reference in "produt structure.jpeg": a single object floating on
+   a thin stand above a glowing amber bar, lit from below, against a soft
+   neutral ground. A museum vitrine rather than a shop grid.
+
+   THE OBJECT IS THE CATEGORY GLYPH, NOT A PRODUCT PHOTOGRAPH, and that is a
+   licensing constraint rather than a design choice. These are real branded
+   products, and their photography belongs to the makers and retailers;
+   Amazon's Associates terms in particular require product images to come
+   through their own API rather than be copied. So the plinth holds the
+   category mark, and data/gear.ts carries an optional `image` field for the
+   day a licensed shot exists -- dropping one in needs no change here.
+
+   The glow is built from the site's own gold, rgba(201,162,39), so the page
+   belongs to the same room as the hero and the buttons. */
+
+.gear-vitrine {
+  display: flex;
+  flex-direction: column;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--sky-bg-raised);
+  border: 1px solid rgba(201, 162, 39, 0.16);
+}
+
+/* The lit half. Height is fixed rather than aspect-driven so every plinth in
+   the grid lines up -- a row of vitrines at different heights reads as a
+   mistake, not a rhythm. */
+.gear-vitrine-stage {
+  position: relative;
+  height: 190px;
+  display: grid;
+  place-items: center;
+  /* DARK IN BOTH THEMES, deliberately. The first pass tinted this with the
+     page's own cream and the glow had nothing to read against -- the bar
+     stopped looking like a light source and started looking like a painted
+     yellow rectangle. A lit display case is dark inside whatever the room
+     around it is doing, and that contrast is the entire effect. Night only
+     deepens it further. */
+  background:
+    radial-gradient(120% 80% at 50% 118%, rgba(201, 162, 39, 0.30), transparent 62%),
+    linear-gradient(180deg, #3b332a, #221d16);
+}
+
+/* The object. Lifted off the bar and given a warm shadow BENEATH it, which is
+   what sells the float -- the reference's jacket is lit from under, not from
+   the front. */
+.gear-vitrine-object {
+  position: relative;
+  z-index: 2;
+  font-size: 2.85rem;
+  line-height: 1;
+  transform: translateY(-16px);
+  filter: drop-shadow(0 12px 16px rgba(201, 162, 39, 0.45));
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gear-vitrine:hover .gear-vitrine-object {
+  transform: translateY(-24px);
+}
+
+/* The stand: a hairline, deliberately. Anything thicker stops reading as
+   glass and starts reading as furniture. */
+.gear-vitrine-stand {
+  position: absolute;
+  z-index: 1;
+  bottom: 26px;
+  width: 2px;
+  height: 46px;
+  background: linear-gradient(180deg, rgba(201, 162, 39, 0.05), rgba(201, 162, 39, 0.55));
+}
+
+/* The light bar. Two layers: the bar itself, and the spill it throws onto the
+   floor around it. */
+.gear-vitrine-bar {
+  position: absolute;
+  bottom: 18px;
+  width: 58%;
+  height: 12px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #ffe9b0, rgba(201, 162, 39, 0.92));
+  box-shadow:
+    0 0 18px 4px rgba(201, 162, 39, 0.55),
+    0 0 46px 12px rgba(201, 162, 39, 0.28);
+}
+
+.gear-vitrine-bar::after {
+  content: "";
+  position: absolute;
+  left: -28%;
+  right: -28%;
+  top: 100%;
+  height: 20px;
+  background: radial-gradient(60% 100% at 50% 0%, rgba(201, 162, 39, 0.35), transparent 72%);
+}
+
+/* The copy panel stays on the page's own surface: the vitrine is the lit box
+   at the top, not the whole card. Making both dark would turn a grid of
+   fourteen into a wall of black slabs in a cream page. */
+.gear-vitrine-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1.25rem 1.4rem 1.5rem;
+}
+
+/* Night deepens the ground so the same glow reads brighter against it. The
+   bar and object are untouched: the light does not change, the room does. */
+:root[data-theme="night"] .gear-vitrine {
+  background: #14100a;
+  border-color: rgba(201, 162, 39, 0.22);
+}
+
+:root[data-theme="night"] .gear-vitrine-stage {
+  background:
+    radial-gradient(120% 80% at 50% 118%, rgba(201, 162, 39, 0.34), transparent 60%),
+    linear-gradient(180deg, #221b10, #0d0a06);
+}
+
+/* The float is decoration. Reduced motion keeps the composition and drops the
+   movement. */
+@media (prefers-reduced-motion: reduce) {
+  .gear-vitrine-object,
+  .gear-vitrine:hover .gear-vitrine-object {
+    transition: none;
+    transform: translateY(-16px);
+  }
+}

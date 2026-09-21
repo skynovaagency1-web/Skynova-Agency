@@ -33,6 +33,15 @@ export type GearItem = {
   query: string;
   /** One honest line on why it earns its place. Not marketing copy. */
   why: { en: string; fr: string };
+  /**
+   * A licensed product shot, if one ever exists. Empty for every item today
+   * and that is deliberate: these are real branded products whose photography
+   * belongs to their makers and retailers, and Amazon's Associates terms want
+   * product images served through their own API rather than copied. Until a
+   * licensed shot exists the vitrine displays the category mark instead --
+   * see the gear-vitrine notes in styles.css.
+   */
+  image?: string;
 };
 
 export const GEAR_CATEGORIES: { id: GearCategory; emoji: string }[] = [

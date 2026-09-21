@@ -88,29 +88,43 @@ function GearPage() {
 
             <ul className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {shown.map((item) => (
-                <li
-                  key={item.slug}
-                  id={item.slug}
-                  className="flex flex-col rounded-xl border border-white/10 bg-white/5 p-6"
-                >
-                  <p className="site-ink-muted text-xs uppercase tracking-wide">{item.maker}</p>
-                  <h2 className="mt-1 text-lg font-semibold">{item.name}</h2>
-                  <p className="site-ink-muted mt-3 flex-1 text-sm leading-relaxed">
-                    {item.why[locale === "fr" ? "fr" : "en"]}
-                  </p>
-                  <a
-                    className="site-btn-secondary mt-5 self-start"
-                    href={gearLink(item.query, locale)}
-                    target="_blank"
-                    // noopener for the obvious reason; nofollow + sponsored
-                    // because these are commercial outbound links and Google
-                    // asks for them to be marked as such. Unmarked affiliate
-                    // links are a manual-action risk, and the tag costs
-                    // nothing when the link earns nothing.
-                    rel="noopener noreferrer nofollow sponsored"
-                  >
-                    {t("gear.check")}
-                  </a>
+                <li key={item.slug} id={item.slug} className="gear-vitrine">
+                  {/* The lit plinth. Decorative in full: the object is the
+                      category mark, and the category is already stated by the
+                      filter chips and readable in the copy below, so a screen
+                      reader gains nothing from any of it. */}
+                  <div className="gear-vitrine-stage" aria-hidden="true">
+                    <div className="gear-vitrine-object">
+                      {item.image ? (
+                        <img src={item.image} alt="" className="h-full w-full object-contain" />
+                      ) : (
+                        categoryEmoji(item.category)
+                      )}
+                    </div>
+                    <span className="gear-vitrine-stand" />
+                    <span className="gear-vitrine-bar" />
+                  </div>
+
+                  <div className="gear-vitrine-copy">
+                    <p className="site-ink-muted text-xs uppercase tracking-wide">{item.maker}</p>
+                    <h2 className="mt-1 text-lg font-semibold">{item.name}</h2>
+                    <p className="site-ink-muted mt-3 flex-1 text-sm leading-relaxed">
+                      {item.why[locale === "fr" ? "fr" : "en"]}
+                    </p>
+                    <a
+                      className="site-btn-secondary mt-5 self-start"
+                      href={gearLink(item.query, locale)}
+                      target="_blank"
+                      // noopener for the obvious reason; nofollow + sponsored
+                      // because these are commercial outbound links and Google
+                      // asks for them to be marked as such. Unmarked affiliate
+                      // links are a manual-action risk, and the tag costs
+                      // nothing when the link earns nothing.
+                      rel="noopener noreferrer nofollow sponsored"
+                    >
+                      {t("gear.check")}
+                    </a>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -125,6 +139,12 @@ function GearPage() {
       <Footer />
     </>
   );
+}
+
+/** The mark that stands on the plinth until a licensed product shot exists.
+ *  See the `image` note in data/gear.ts. */
+function categoryEmoji(category: GearCategory): string {
+  return GEAR_CATEGORIES.find((c) => c.id === category)?.emoji ?? "";
 }
 
 function CategoryChip({
