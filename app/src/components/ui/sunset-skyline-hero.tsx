@@ -46,9 +46,37 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 
  * is not is worse than not asking.
  */
 
+/**
+ * A scroll-scrubbed frame sequence, used INSTEAD of the video.
+ *
+ * This is the fix for the reason `scrub` had to be left off in production.
+ * Seeking an MP4 needs HTTP byte ranges, and this Worker's asset handler does
+ * not serve them -- a Range request for a file under /assets answers 200 with
+ * the whole body and no accept-ranges header, so every currentTime assignment
+ * is silently dropped and the hero sits on frame zero for the entire scroll.
+ * `vite dev` DOES serve ranges, which is why the bug is invisible locally and
+ * only appears once deployed.
+ *
+ * Still images need no ranges at all: each frame is its own request, already
+ * complete when it arrives. The same reason the homepage boarding sequence in
+ * components/site/Hero.tsx is a frame sequence rather than a clip, and the
+ * loading strategy below is lifted from it because it was earned there.
+ */
+export type FrameSequence = {
+  /** Directory under /assets/hero, e.g. "lobby". */
+  dir: string;
+  /** Filename prefix before the two-digit index, e.g. "l" -> l01.webp. */
+  prefix: string;
+  count: number;
+};
+
 export interface ScrubHeroProps {
-  /** Background clip. Served from this origin -- see the CDN note above. */
+  /** Background clip. Served from this origin -- see the CDN note above.
+   *  Ignored when `frames` is given. */
   videoSrc: string;
+  /** Scrub a frame sequence instead of the clip. Implies scrubbing: the
+   *  sequence has no clock of its own, so there is nothing to play. */
+  frames?: FrameSequence;
   /** Shown before the video can paint, and in its place when autoplay is
    *  refused (an iPhone in Low Power Mode). */
   posterSrc?: string;
@@ -119,6 +147,7 @@ function clamp01(v: number) {
 
 export function ScrubHero({
   videoSrc,
+  frames,
   posterSrc,
   scrub = false,
   overlaySrc,
@@ -126,13 +155,18 @@ export function ScrubHero({
   scrollHint,
   children,
   signature = false,
-  trackVh = scrub ? 320 : 240,
+  trackVh = scrub || frames ? 320 : 240,
   className,
   style,
 }: ScrubHeroProps) {
+  // A frame sequence IS a scrub -- it has no clock to play against -- so the
+  // timing table and track length follow `scrub` without the caller having to
+  // pass both and keep them agreeing.
+  const scrubbing = scrub || Boolean(frames);
   const trackRef = useRef<HTMLElement | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const copyRef = useRef<HTMLDivElement | null>(null);
   const hintRef = useRef<HTMLDivElement | null>(null);
   const markRef = useRef<HTMLDivElement | null>(null);
@@ -212,6 +246,110 @@ export function ScrubHero({
     };
     if (video && scrub) video.addEventListener("seeked", onSeeked);
 
+    // ---- Frame sequence -------------------------------------------------
+    // Everything below is inert unless `frames` was given.
+    //
+    // Paired scheduler/canceller at effect scope: the backfill walks the whole
+    // sequence one idle callback at a time, and both the reduced-motion early
+    // return and the normal cleanup have to be able to stop it.
+    const idle: (cb: () => void) => number =
+      typeof window.requestIdleCallback === "function"
+        ? (cb) => window.requestIdleCallback(cb, { timeout: 2000 })
+        : (cb) => window.setTimeout(cb, 200);
+    const cancelIdle = (h: number) => {
+      if (typeof window.cancelIdleCallback === "function") window.cancelIdleCallback(h);
+      else window.clearTimeout(h);
+    };
+    const images: HTMLImageElement[] = frames
+      ? Array.from({ length: frames.count }, () => new Image())
+      : [];
+    const requested = new Set<number>();
+    let lastDrawn = -1;
+    let backfillHandle: number | null = null;
+
+    const frameSrc = (i: number) =>
+      `/assets/hero/${frames!.dir}/${frames!.prefix}${String(i + 1).padStart(2, "0")}.webp`;
+
+    /** The backing store is capped at what the SOURCE can resolve. A cover
+     *  crop on a retina phone otherwise asks for two or three times the
+     *  pixels the file contains, every tick, for detail that is not there. */
+    function drawFrame(i: number) {
+      const canvas = canvasRef.current;
+      const img = images[i];
+      if (!canvas || !img || !img.complete || !img.naturalWidth) return;
+      const cssW = canvas.clientWidth;
+      const cssH = canvas.clientHeight;
+      if (!cssW || !cssH) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const wanted = Math.max((cssW * dpr) / img.naturalWidth, (cssH * dpr) / img.naturalHeight);
+      const budget = wanted > 1 ? dpr / wanted : dpr;
+      const w = Math.round(cssW * budget);
+      const h = Math.round(cssH * budget);
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+      }
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      const scale = Math.max(w / img.naturalWidth, h / img.naturalHeight);
+      const dw = img.naturalWidth * scale;
+      const dh = img.naturalHeight * scale;
+      ctx.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
+      lastDrawn = i;
+    }
+
+    /** The loaded frame nearest `i`, or -1. Drawing something slightly stale
+     *  reads as a stutter; drawing nothing is a hole in the page. */
+    function nearestLoaded(i: number) {
+      for (let d = 0; d < images.length; d += 1) {
+        const a = i - d;
+        const b = i + d;
+        if (a >= 0 && images[a]?.complete && images[a].naturalWidth) return a;
+        if (b < images.length && images[b]?.complete && images[b].naturalWidth) return b;
+      }
+      return -1;
+    }
+
+    function requestFrame(i: number) {
+      if (!frames || i < 0 || i >= frames.count || requested.has(i)) return;
+      requested.add(i);
+      const img = images[i];
+      // decode() first: `complete` only means DOWNLOADED, and leaving the
+      // decode to drawImage puts it on the scroll thread mid-gesture.
+      img.addEventListener(
+        "load",
+        () => {
+          const paintIt = () => {
+            const want = lastWantedFrame;
+            const use = images[want]?.complete ? want : nearestLoaded(want);
+            if (use >= 0) drawFrame(use);
+          };
+          if (typeof img.decode === "function") void img.decode().then(paintIt, paintIt);
+          else paintIt();
+        },
+        { once: true },
+      );
+      img.src = frameSrc(i);
+    }
+
+    let lastWantedFrame = 0;
+
+    if (frames) {
+      setReady(true);
+      requestFrame(0);
+      if (images[0].complete) drawFrame(0);
+      // Everything else once the page is idle, one per callback so a slow
+      // connection is never handed the whole sequence at once. A flick-scroll
+      // crosses the track in one gesture and lands far past any window.
+      const queue = Array.from({ length: frames.count }, (_, i) => i);
+      const step = (n: number) => {
+        if (n >= queue.length) return;
+        requestFrame(queue[n]);
+        backfillHandle = idle(() => step(n + 1));
+      };
+      if (!reduceMotion) backfillHandle = idle(() => step(0));
+    }
+
     function seekTo(t: number) {
       if (!video) return;
       if (seeking) {
@@ -238,7 +376,7 @@ export function ScrubHero({
       return clamp01((window.scrollY - top) / travel);
     }
 
-    const timing = scrub ? TIMING.scrub : TIMING.play;
+    const timing = scrubbing ? TIMING.scrub : TIMING.play;
 
     function paint(p: number) {
       if (copyRef.current) {
@@ -270,6 +408,12 @@ export function ScrubHero({
     // through. The CSS collapses the track to one screen to match.
     if (reduceMotion) {
       if (video) video.removeAttribute("autoplay");
+      // Reduced motion gets the finished frame, not the sequence: request the
+      // last one only, so the cost is one image rather than fifty-six.
+      if (frames) {
+        lastWantedFrame = frames.count - 1;
+        requestFrame(frames.count - 1);
+      }
       paint(1);
       if (copyRef.current) {
         copyRef.current.style.opacity = "1";
@@ -280,12 +424,30 @@ export function ScrubHero({
       if (markRef.current) markRef.current.style.opacity = "0";
       return () => {
         video?.removeEventListener("loadeddata", onLoadedData);
+        if (backfillHandle !== null) cancelIdle(backfillHandle);
       };
     }
 
     function frame() {
       current += (target - current) * 0.18;
-      if (scrub && duration > 0) seekTo(clamp01(current / VIDEO_END) * duration);
+      if (frames) {
+        // Same slice of the track the clip would have occupied, so the mark
+        // and cutout timings below need no separate case.
+        const i = Math.min(
+          frames.count - 1,
+          Math.round(clamp01(current / VIDEO_END) * (frames.count - 1)),
+        );
+        lastWantedFrame = i;
+        // A window around where the scroll actually is, ahead of the idle
+        // backfill, so the first pass down the track never outruns loading.
+        for (let k = i - 1; k <= i + 6; k += 1) requestFrame(k);
+        if (i !== lastDrawn) {
+          const use = images[i]?.complete && images[i].naturalWidth ? i : nearestLoaded(i);
+          if (use >= 0) drawFrame(use);
+        }
+      } else if (scrub && duration > 0) {
+        seekTo(clamp01(current / VIDEO_END) * duration);
+      }
       paint(current);
       raf = requestAnimationFrame(frame);
     }
@@ -304,12 +466,16 @@ export function ScrubHero({
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
       cancelAnimationFrame(raf);
+      if (backfillHandle !== null) cancelIdle(backfillHandle);
+      // Drop any in-flight frame request so a sequence does not keep
+      // downloading after the hero unmounts.
+      for (const img of images) img.src = "";
       video?.removeEventListener("loadeddata", onLoadedData);
       video?.removeEventListener("seeked", onSeeked);
       window.removeEventListener("touchstart", prime);
       window.removeEventListener("pointerdown", prime);
     };
-  }, [scrub]);
+  }, [scrub, frames]);
 
   return (
     <section
@@ -318,21 +484,34 @@ export function ScrubHero({
       style={{ height: `${trackVh}svh`, ...style }}
     >
       <div ref={stageRef} className="scrubhero-stage">
-        <video
-          ref={videoRef}
-          className="scrubhero-media"
-          src={videoSrc}
-          poster={posterSrc}
-          muted
-          playsInline
-          preload="auto"
-          // Only when the clip is meant to play. Under scrub, autoplay and
-          // the seek loop fight each other for currentTime.
-          autoPlay={!scrub}
-          loop={!scrub}
-          aria-hidden="true"
-          style={{ opacity: ready || posterSrc ? 1 : 0 }}
-        />
+        {frames ? (
+          // The poster sits UNDER the canvas rather than being swapped for
+          // it: the canvas is transparent until the first frame decodes, and
+          // a hero that flashes empty on load is the thing the poster exists
+          // to prevent.
+          <>
+            {posterSrc ? (
+              <img className="scrubhero-media" src={posterSrc} alt="" aria-hidden="true" />
+            ) : null}
+            <canvas ref={canvasRef} className="scrubhero-media" aria-hidden="true" />
+          </>
+        ) : (
+          <video
+            ref={videoRef}
+            className="scrubhero-media"
+            src={videoSrc}
+            poster={posterSrc}
+            muted
+            playsInline
+            preload="auto"
+            // Only when the clip is meant to play. Under scrub, autoplay and
+            // the seek loop fight each other for currentTime.
+            autoPlay={!scrub}
+            loop={!scrub}
+            aria-hidden="true"
+            style={{ opacity: ready || posterSrc ? 1 : 0 }}
+          />
+        )}
 
         {/* Below the cutout on purpose, so the cutout's subject reads as
             standing in front of the mark. */}
