@@ -17,6 +17,7 @@ import { SITE_NAME } from "./seo";
  * surface by surface instead of all at once.
  */
 export const EN = {
+  "nav.gear": "Gear",
   "gear.eyebrow": "Gear",
   "gear.title": "Travel gear we actually recommend",
   "gear.intro": "A short list rather than a long one. Everything here earns its place by solving a problem that comes up on real trips, and each entry says plainly who it is not for.",
@@ -1114,6 +1115,7 @@ type Dict = Partial<Record<TKey, string>>;
 /** French. Drafted here so the plumbing has something real to render; it wants
  *  a native read before /fr is ever linked to. */
 const FR: Dict = {
+  "nav.gear": "\u00c9quipement",
   "gear.eyebrow": "\u00c9quipement",
   "gear.title": "L\u2019\u00e9quipement de voyage que nous recommandons vraiment",
   "gear.intro": "Une liste courte plut\u00f4t que longue. Chaque article y figure parce qu\u2019il r\u00e9sout un probl\u00e8me r\u00e9el en voyage, et chaque fiche dit franchement \u00e0 qui il ne convient pas.",

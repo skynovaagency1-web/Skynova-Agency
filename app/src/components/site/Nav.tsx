@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Link } from "@tanstack/react-router";
-import { Home, MessageCircle, Heart, Gift, Share2, ChevronRight, MapPin, Newspaper, User, LogOut, Layers } from "lucide-react";
+import { Home, MessageCircle, Heart, Gift, Share2, ChevronRight, MapPin, Newspaper, User, LogOut, Layers, Backpack } from "lucide-react";
 
 import { useAuth } from "@/lib/auth-context";
 import { signOut } from "@/lib/api/auth.functions";
@@ -15,6 +15,7 @@ const LINKS = [
   { key: "destinations", labelKey: "nav.destinations" as TKey, icon: MapPin, href: "/destinations" },
   { key: "collections", labelKey: "nav.collections" as TKey, icon: Layers, href: "/collections" },
   { key: "blog", labelKey: "nav.blog" as TKey, icon: Newspaper, href: "/blog" },
+  { key: "gear", labelKey: "nav.gear" as TKey, icon: Backpack, href: "/gear" },
 ] as const;
 
 const COMPANY_LINKS = [
@@ -191,6 +192,9 @@ export function Nav() {
           </Link>
           <Link to="/blog" className="site-nav-link text-sm">
             {t("nav.blog")}
+          </Link>
+          <Link to="/gear" className="site-nav-link text-sm">
+            {t("nav.gear")}
           </Link>
           <div className="site-nav-dropdown" onMouseEnter={openCompany} onMouseLeave={scheduleCloseCompany}>
             <button
