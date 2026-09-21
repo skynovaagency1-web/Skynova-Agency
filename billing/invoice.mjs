@@ -132,6 +132,23 @@ async function main() {
         "       with write access to Customers and Invoices, nothing else.",
     );
   }
+  // Check the key LOOKS like a key before spending a round-trip finding out.
+  // The first run of this script was given the literal placeholder from the
+  // instructions ("sk_test_YOUR_KEY"): it printed a correct preview, called
+  // Stripe, and came back "Invalid API Key" — which reads like the key is
+  // wrong rather than absent, and sends you hunting through the Dashboard.
+  // Catching the shape here says the useful thing instead.
+  if (!/^[sr]k_(test|live)_[A-Za-z0-9]{16,}$/.test(key)) {
+    const looksLikePlaceholder = /your|example|xxx|\.\.\./i.test(key);
+    fail(
+      looksLikePlaceholder
+        ? "that is the example placeholder, not a real key. Substitute the one\n" +
+            "       your sandbox printed (it starts sk_test_ or rk_test_)."
+        : `that does not look like a Stripe key (got ${key.length} chars).\n` +
+            "       Expected sk_test_/rk_test_ (or _live_) followed by a long token.\n" +
+            "       Check for a truncated paste or a stray quote.",
+    );
+  }
   if (/^[sr]k_live_/.test(key) && !args.live) {
     fail(
       "that is a LIVE key and would bill a real partner for real money.\n" +
