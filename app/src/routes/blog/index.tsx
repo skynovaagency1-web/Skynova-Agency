@@ -9,20 +9,13 @@ import { POSTS, PHOTO_SLUGS, TAG_CLASSES } from "@/data/blog-posts";
 import { hasArticle } from "@/data/blog-articles";
 import { StructuredData } from "@/components/StructuredData";
 import { breadcrumbJsonLd, itemListJsonLd, jsonLd } from "@/lib/seo";
-import { useT } from "@/lib/i18n-strings";
+import { localeMeta, useT } from "@/lib/i18n-strings";
 
 // The written guides only -- a post card with no article body is not a
 // page, so it is not in the list (same rule as the sitemap).
 export const Route = createFileRoute("/blog/")({
-  head: () => ({
-    meta: [
-      { title: "Blog | Skynova Agency" },
-      {
-        name: "description",
-        content:
-          "Trip ideas, destination guides and booking tips from Skynova Agency -- flights, hotels, eSIM and more.",
-      },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(match.context.locale, "meta.blog.title", "meta.blog.description"),
   }),
   component: BlogPage,
 });

@@ -1,6 +1,10 @@
 /** Canonical origin. Matches CANONICAL_HOST in server.ts and the <link rel="canonical"> in __root.tsx. */
 export const SITE_URL = "https://skynovaagency.com";
 
+/** The brand, as it appears at the end of every page title. Not translated --
+ *  it is a name, and a name that changes by language is two brands. */
+export const SITE_NAME = "Skynova Agency";
+
 /**
  * The founder, as named and signed on /about.
  *

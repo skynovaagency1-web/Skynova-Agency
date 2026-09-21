@@ -3,18 +3,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { VerticalPage } from "@/components/site/VerticalPage";
 import { PlainHero } from "@/components/site/PlainHero";
 import { yachtCharterLink } from "@/lib/affiliate";
-import { useT } from "@/lib/i18n-strings";
+import { localeMeta, useT } from "@/lib/i18n-strings";
 
 export const Route = createFileRoute("/yacht-charter")({
-  head: () => ({
-    meta: [
-      { title: "Yacht charter & small cruises | Skynova Agency" },
-      {
-        name: "description",
-        content:
-          "Sailing yachts, catamarans and motor boats by the week -- bareboat with a licence, or skippered without one. Mediterranean, Caribbean and beyond.",
-      },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(
+      match.context.locale,
+      "meta.yachtCharter.title",
+      "meta.yachtCharter.description",
+    ),
   }),
   component: YachtCharterPage,
 });

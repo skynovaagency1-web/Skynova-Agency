@@ -2,13 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
+import { localeMeta } from "@/lib/i18n-strings";
 
 export const Route = createFileRoute("/terms")({
-  head: () => ({
-    meta: [
-      { title: "Terms of Use | Skynova Agency" },
-      { name: "description", content: "The terms that apply to using Skynova Agency." },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(match.context.locale, "meta.terms.title", "meta.terms.description"),
   }),
   component: TermsPage,
 });

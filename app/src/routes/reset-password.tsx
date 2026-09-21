@@ -5,6 +5,7 @@ import { z } from "zod";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { performPasswordReset } from "@/lib/api/auth.functions";
+import { localeMeta } from "@/lib/i18n-strings";
 
 const SearchSchema = z.object({
   token: z.string().trim().catch(""),
@@ -12,10 +13,9 @@ const SearchSchema = z.object({
 
 export const Route = createFileRoute("/reset-password")({
   validateSearch: SearchSchema,
-  head: () => ({
+  head: ({ match }) => ({
     meta: [
-      { title: "Choose a new password | Skynova Agency" },
-      { name: "description", content: "Set a new password for your Skynova Agency account." },
+      ...localeMeta(match.context.locale, "meta.resetPassword.title", "meta.resetPassword.description"),
       // A reset URL carries a live credential in the query string. It must
       // never be indexed, and it must not leak to any third party through a
       // referrer header when the page links out.

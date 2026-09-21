@@ -34,7 +34,7 @@ const ESIM_WIDGET_SRC =
   "&color_input_text=%231c1a14&color_button_text=%231c1400" +
   "&promo_id=4362&campaign_id=143";
 
-import { useT, type TKey } from "@/lib/i18n-strings";
+import { localeMeta, useT, type TKey } from "@/lib/i18n-strings";
 
 const HOW_STEPS: { n: string; titleKey: TKey; detailKey: TKey }[] = [
   { n: "01", titleKey: "esim.step1Title", detailKey: "esim.step1Detail" },
@@ -50,11 +50,8 @@ const COMPATIBLE_DEVICES: { title: string; bodyKey: TKey }[] = [
 ];
 
 export const Route = createFileRoute("/esim")({
-  head: () => ({
-    meta: [
-      { title: "SIM & eSIM | Skynova Agency" },
-      { name: "description", content: "Instant eSIM activation before you land, or a physical SIM waiting at the airport counter." },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(match.context.locale, "meta.esim.title", "meta.esim.description"),
   }),
   component: EsimPage,
 });

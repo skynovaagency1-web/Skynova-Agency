@@ -4,6 +4,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { resetConsent } from "@/lib/consent";
+import { localeMeta } from "@/lib/i18n-strings";
 
 /** Clears the stored cookie choice, which brings the CookieConsent banner
  * (mounted site-wide in __root.tsx) straight back -- no reload needed,
@@ -28,11 +29,8 @@ function CookiePreferencesLink() {
 }
 
 export const Route = createFileRoute("/privacy")({
-  head: () => ({
-    meta: [
-      { title: "Privacy Policy | Skynova Agency" },
-      { name: "description", content: "How Skynova Agency collects, uses, and protects your information." },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(match.context.locale, "meta.privacy.title", "meta.privacy.description"),
   }),
   component: PrivacyPage,
 });

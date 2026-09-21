@@ -7,7 +7,7 @@ import { DestinationPicksSection } from "@/components/site/DestinationPicks";
 import { TravelGuidesSection } from "@/components/site/TravelGuides";
 import { bikeRentalLink } from "@/lib/affiliate";
 
-import { useT, type TKey } from "@/lib/i18n-strings";
+import { localeMeta, useT, type TKey } from "@/lib/i18n-strings";
 
 const CYCLING_DESTINATIONS: { name: string; slug: string; detailKey: TKey }[] = [
   { name: "Switzerland", slug: "switzerland-cycling", detailKey: "bikes.pick1Detail" },
@@ -32,11 +32,12 @@ const CYCLING_DESTINATIONS: { name: string; slug: string; detailKey: TKey }[] = 
  */
 
 export const Route = createFileRoute("/bike-rentals")({
-  head: () => ({
-    meta: [
-      { title: "Bike Rentals | Skynova Agency" },
-      { name: "description", content: "City bikes, e-bikes and mountain bikes, plus guided rides in the cities you're already visiting." },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(
+      match.context.locale,
+      "meta.bikeRentals.title",
+      "meta.bikeRentals.description",
+    ),
   }),
   component: BikeRentalsPage,
 });

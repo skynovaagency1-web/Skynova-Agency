@@ -4,7 +4,7 @@ import { VerticalPage } from "@/components/site/VerticalPage";
 import { AffiliateWidget } from "@/components/site/AffiliateWidget";
 import { PlainHero } from "@/components/site/PlainHero";
 import { flightCompensationLink } from "@/lib/affiliate";
-import { useT } from "@/lib/i18n-strings";
+import { localeMeta, useT } from "@/lib/i18n-strings";
 
 /**
  * AirHelp's brand widget, the second claims firm on this page.
@@ -25,15 +25,12 @@ const AIRHELP_WIDGET_SRC =
   "https://tpscr.com/content?trs=519959&shmarker=720297&lang=en&powered_by=true&campaign_id=120&promo_id=8679";
 
 export const Route = createFileRoute("/flight-compensation")({
-  head: () => ({
-    meta: [
-      { title: "Flight delay compensation | Skynova Agency" },
-      {
-        name: "description",
-        content:
-          "Delayed, cancelled or overbooked? You may be owed up to 600 EUR per passenger under EU261. Free check, no win no fee.",
-      },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(
+      match.context.locale,
+      "meta.flightCompensation.title",
+      "meta.flightCompensation.description",
+    ),
   }),
   component: FlightCompensationPage,
 });

@@ -1,6 +1,7 @@
 import { useRouter } from "@tanstack/react-router";
 
 import { DEFAULT_LOCALE, type Locale } from "./i18n";
+import { SITE_NAME } from "./seo";
 
 /**
  * Interface strings.
@@ -16,6 +17,20 @@ import { DEFAULT_LOCALE, type Locale } from "./i18n";
  * surface by surface instead of all at once.
  */
 export const EN = {
+  "gear.eyebrow": "Gear",
+  "gear.title": "Travel gear we actually recommend",
+  "gear.intro": "A short list rather than a long one. Everything here earns its place by solving a problem that comes up on real trips, and each entry says plainly who it is not for.",
+  "gear.disclosure": "These are affiliate links: if you buy through one, the retailer pays us a small commission at no extra cost to you. It does not change what appears on this page — nothing here is sponsored, and no maker has paid for placement.",
+  "gear.disclosureUnpaid": "These links go straight to the retailer and we earn nothing from them today. Nothing here is sponsored and no maker has paid for placement. If that ever changes, this notice changes with it.",
+  "gear.all": "Everything",
+  "gear.cat.bags": "Bags",
+  "gear.cat.packing": "Packing",
+  "gear.cat.tech": "Tech",
+  "gear.cat.comfort": "Comfort",
+  "gear.cat.health": "Water & health",
+  "gear.cat.security": "Security",
+  "gear.check": "Check current price",
+  "gear.noPrices": "We do not list prices. They change by country, by currency and by the week, and a price that is out of date is worse than no price at all — so the retailer states it, live, at the moment you look.",
   "nav.explore": "Explore",
   "nav.destinations": "Destinations",
   "nav.collections": "Collections",
@@ -999,6 +1014,96 @@ export const EN = {
   "theme.aria": "Switch between day and night",
   "home.exploreVertical": "Explore by vertical",
   "home.everyTripHeading": "Every trip, one search away.",
+
+  /* Page <title> and <meta name="description">: the two strongest on-page SEO
+   * signals, and the only words a searcher reads before deciding whether to
+   * click. They were hardcoded English inside each route's head() until
+   * 21 Sep 2026, so every prerendered /fr page shipped fully translated body
+   * copy under an English title -- which does not merely read badly, it tells
+   * Google the page is in English and puts it in competition with its own
+   * English original.
+   *
+   * head() is not a component, so there is no useT() here: routes call
+   * localeMeta() with the locale off their match context. See it below.
+   *
+   * Titles carry no brand: localeMeta() appends "| Skynova Agency". Keep each
+   * one to about 43 characters so the brand still fits inside Google's ~60
+   * character display limit. "meta.home.title" is the exception -- it is the
+   * whole title, brand included, because it is the site's own name. */
+  "meta.home.title": "Skynova Agency — Premium Travel Booking",
+  "meta.home.description":
+    "Flights, hotels, car rentals, airport services, events, eSIM and tours — booked with a premium, white-glove touch, all in one place.",
+  "meta.flights.title": "Flights",
+  "meta.flights.description":
+    "Compare fares across airlines and lock in a flight before prices move.",
+  "meta.hotels.title": "Hotels",
+  "meta.hotels.description": "Boutique stays to full resorts, filtered by neighborhood and rating.",
+  "meta.carRentals.title": "Car Rentals",
+  "meta.carRentals.description":
+    "Economy to executive SUVs, picked up at arrivals and dropped off anywhere on the route.",
+  "meta.airportServices.title": "Airport Services",
+  "meta.airportServices.description":
+    "Private transfers, shared shuttles, lounge access and baggage help, booked before you land.",
+  "meta.esim.title": "SIM & eSIM",
+  "meta.esim.description":
+    "Instant eSIM activation before you land, or a physical SIM waiting at the airport counter.",
+  "meta.tours.title": "Tours & Activities",
+  "meta.tours.description":
+    "Skip-the-line tours, day trips and local guides, bookable the moment you land.",
+  "meta.events.title": "Events & Tickets",
+  "meta.events.description":
+    "Concerts, museums, attractions and skip-the-line passes in the cities you are already visiting.",
+  "meta.bikeRentals.title": "Bike Rentals",
+  "meta.bikeRentals.description":
+    "City bikes, e-bikes and mountain bikes, plus guided rides in the cities you're already visiting.",
+  "meta.flightCompensation.title": "Flight delay compensation",
+  "meta.flightCompensation.description":
+    "Delayed, cancelled or overbooked? You may be owed up to 600 EUR per passenger under EU261. Free check, no win no fee.",
+  "meta.travelInsurance.title": "Travel & medical insurance",
+  "meta.travelInsurance.description":
+    "Medical cover, hospital stays and evacuation abroad. Single-trip or annual policies, and cover you can buy after you have already left.",
+  "meta.yachtCharter.title": "Yacht charter & small cruises",
+  "meta.yachtCharter.description":
+    "Sailing yachts, catamarans and motor boats by the week -- bareboat with a licence, or skippered without one. Mediterranean, Caribbean and beyond.",
+  "meta.destinations.title": "Destinations",
+  "meta.destinations.description":
+    "{count} destinations across {regions} regions, each routing straight into flights, stays, cars and tours.",
+  "meta.collections.title": "Travel collections",
+  "meta.collections.description":
+    "{countWord} themed ways into our {destinations} destinations -- from {first} and {second} to {last}, each with seasons and booking links.",
+  "meta.gear.title": "Travel gear we actually recommend",
+  "meta.gear.description":
+    "A short, opinionated list of travel gear worth owning — carry-on backpacks, packing cubes, water purifiers and power banks — with an honest line on who each one is not for.",
+  "meta.blog.title": "Blog",
+  "meta.blog.description":
+    "Trip ideas, destination guides and booking tips from Skynova Agency -- flights, hotels, eSIM and more.",
+  "meta.about.title": "About",
+  "meta.about.description":
+    "Skynova Agency is a booking layer over established travel partners -- flights, stays, cars, connectivity, tickets and tours in one place, across {count} destinations.",
+  "meta.reviews.title": "Reviews",
+  "meta.reviews.description":
+    "Reviews from travellers who booked through Skynova Agency, collected after the trip from completed partner bookings and published unedited.",
+  "meta.contact.title": "Contact",
+  "meta.contact.description":
+    "Questions about a booking, a partnership enquiry, or feedback on the site -- send it here and we'll reply by email.",
+  "meta.faq.title": "FAQ",
+  "meta.faq.description":
+    "Answers to the questions travelers ask most about booking with Skynova Agency.",
+  "meta.gift.title": "Gift a trip",
+  "meta.gift.description": "Send someone a trip idea worth taking.",
+  "meta.share.title": "Share Skynova",
+  "meta.share.description":
+    "Share your Skynova link and see how many friends have joined through it.",
+  "meta.wishlist.title": "Wishlist",
+  "meta.wishlist.description": "Destinations you've saved for your next trip.",
+  "meta.account.title": "Your account",
+  "meta.account.description": "Your saved trips, referral link and account details.",
+  "meta.resetPassword.title": "Choose a new password",
+  "meta.resetPassword.description": "Set a new password for your Skynova Agency account.",
+  "meta.privacy.title": "Privacy Policy",
+  "meta.privacy.description": "How Skynova Agency collects, uses, and protects your information.",
+  "meta.terms.title": "Terms of Use",
+  "meta.terms.description": "The terms that apply to using Skynova Agency.",
 } as const;
 
 export type TKey = keyof typeof EN;
@@ -1009,6 +1114,20 @@ type Dict = Partial<Record<TKey, string>>;
 /** French. Drafted here so the plumbing has something real to render; it wants
  *  a native read before /fr is ever linked to. */
 const FR: Dict = {
+  "gear.eyebrow": "\u00c9quipement",
+  "gear.title": "L\u2019\u00e9quipement de voyage que nous recommandons vraiment",
+  "gear.intro": "Une liste courte plut\u00f4t que longue. Chaque article y figure parce qu\u2019il r\u00e9sout un probl\u00e8me r\u00e9el en voyage, et chaque fiche dit franchement \u00e0 qui il ne convient pas.",
+  "gear.disclosure": "Ces liens sont affili\u00e9s : si vous achetez via l\u2019un d\u2019eux, le marchand nous verse une petite commission, sans surco\u00fbt pour vous. Cela ne change rien \u00e0 cette page \u2014 aucun contenu n\u2019est sponsoris\u00e9 et aucune marque n\u2019a pay\u00e9 pour y figurer.",
+  "gear.disclosureUnpaid": "Ces liens m\u00e8nent directement au marchand et ne nous rapportent rien \u00e0 ce jour. Aucun contenu n\u2019est sponsoris\u00e9 et aucune marque n\u2019a pay\u00e9 pour y figurer. Si cela change, cette mention changera aussi.",
+  "gear.all": "Tout",
+  "gear.cat.bags": "Sacs",
+  "gear.cat.packing": "Rangement",
+  "gear.cat.tech": "Tech",
+  "gear.cat.comfort": "Confort",
+  "gear.cat.health": "Eau et sant\u00e9",
+  "gear.cat.security": "S\u00e9curit\u00e9",
+  "gear.check": "Voir le prix actuel",
+  "gear.noPrices": "Nous n\u2019affichons pas de prix. Ils varient selon le pays, la devise et la semaine, et un prix p\u00e9rim\u00e9 est pire que pas de prix \u2014 c\u2019est donc le marchand qui l\u2019indique, en direct, au moment o\u00f9 vous regardez.",
   "nav.explore": "Explorer",
   "nav.destinations": "Destinations",
   "nav.collections": "Collections",
@@ -1986,6 +2105,86 @@ const FR: Dict = {
   "theme.aria": "Basculer entre jour et nuit",
   "home.exploreVertical": "Explorer par service",
   "home.everyTripHeading": "Chaque voyage, à une recherche près.",
+
+  "meta.home.title": "Skynova Agency — Réservation de voyage premium",
+  "meta.home.description":
+    "Vols, hôtels, location de voitures, services aéroport, billetterie, eSIM et excursions — réservés au même endroit, avec un service premium.",
+  "meta.flights.title": "Vols",
+  "meta.flights.description":
+    "Comparez les tarifs de toutes les compagnies et réservez avant que les prix ne bougent.",
+  "meta.hotels.title": "Hôtels",
+  "meta.hotels.description":
+    "Du boutique-hôtel au resort complet, filtrés par quartier et par note.",
+  "meta.carRentals.title": "Location de voitures",
+  "meta.carRentals.description":
+    "De la citadine au SUV haut de gamme, récupéré aux arrivées et rendu n’importe où sur la route.",
+  "meta.airportServices.title": "Services aéroport",
+  "meta.airportServices.description":
+    "Transferts privés, navettes partagées, accès aux salons et aide bagages, réservés avant l’atterrissage.",
+  "meta.esim.title": "SIM et eSIM",
+  "meta.esim.description":
+    "Activation eSIM instantanée avant d’atterrir, ou une SIM physique qui vous attend au comptoir de l’aéroport.",
+  "meta.tours.title": "Excursions et activités",
+  "meta.tours.description":
+    "Visites coupe-file, excursions à la journée et guides locaux, réservables dès votre arrivée.",
+  "meta.events.title": "Événements et billets",
+  "meta.events.description":
+    "Concerts, musées, attractions et billets coupe-file dans les villes que vous visitez déjà.",
+  "meta.bikeRentals.title": "Location de vélos",
+  "meta.bikeRentals.description":
+    "Vélos de ville, vélos électriques et VTT, plus des sorties guidées dans les villes que vous visitez déjà.",
+  "meta.flightCompensation.title": "Indemnisation vol retardé",
+  "meta.flightCompensation.description":
+    "Vol retardé, annulé ou surréservé ? Le règlement EU261 peut vous donner droit à 600 EUR par passager. Vérification gratuite, sans gain pas de frais.",
+  "meta.travelInsurance.title": "Assurance voyage et santé",
+  "meta.travelInsurance.description":
+    "Frais médicaux, hospitalisation et rapatriement à l’étranger. Contrats au voyage ou à l’année, et une couverture souscrivable même après le départ.",
+  "meta.yachtCharter.title": "Location de yacht et mini-croisières",
+  "meta.yachtCharter.description":
+    "Voiliers, catamarans et bateaux à moteur à la semaine — sans skipper avec un permis, ou avec skipper sans permis. Méditerranée, Caraïbes et au-delà.",
+  "meta.destinations.title": "Destinations",
+  "meta.destinations.description":
+    "{count} destinations réparties sur {regions} régions, chacune menant directement aux vols, hébergements, voitures et activités.",
+  "meta.collections.title": "Collections de voyage",
+  "meta.collections.description":
+    "{count} façons thématiques d’explorer nos {destinations} destinations — de {first} et {second} jusqu’à {last}, avec les saisons et les liens de réservation.",
+  "meta.gear.title": "L’équipement de voyage que nous recommandons",
+  "meta.gear.description":
+    "Une sélection courte et assumée d’équipement de voyage — sacs à dos cabine, cubes de rangement, purificateurs d’eau et batteries externes — avec, pour chacun, à qui il ne convient pas.",
+  "meta.blog.title": "Blog",
+  "meta.blog.description":
+    "Idées de voyage, guides de destination et conseils de réservation par Skynova Agency — vols, hôtels, eSIM et plus encore.",
+  "meta.about.title": "À propos",
+  "meta.about.description":
+    "Skynova Agency est une couche de réservation posée sur des partenaires de voyage établis — vols, hébergements, voitures, connectivité, billetterie et excursions au même endroit, sur {count} destinations.",
+  "meta.reviews.title": "Avis",
+  "meta.reviews.description":
+    "Les avis de voyageurs ayant réservé via Skynova Agency, recueillis après le voyage auprès de réservations partenaires effectuées et publiés sans retouche.",
+  "meta.contact.title": "Contact",
+  "meta.contact.description":
+    "Une question sur une réservation, une demande de partenariat ou un retour sur le site — écrivez-nous ici, nous répondons par e-mail.",
+  "meta.faq.title": "FAQ",
+  "meta.faq.description":
+    "Les réponses aux questions que les voyageurs posent le plus souvent sur la réservation avec Skynova Agency.",
+  "meta.gift.title": "Offrir un voyage",
+  "meta.gift.description": "Offrez à quelqu’un une idée de voyage qui vaut le détour.",
+  "meta.share.title": "Partager Skynova",
+  "meta.share.description":
+    "Partagez votre lien Skynova et voyez combien d’amis nous ont rejoints grâce à lui.",
+  "meta.wishlist.title": "Liste de souhaits",
+  "meta.wishlist.description":
+    "Les destinations que vous avez enregistrées pour votre prochain voyage.",
+  "meta.account.title": "Votre compte",
+  "meta.account.description":
+    "Vos voyages enregistrés, votre lien de parrainage et les détails de votre compte.",
+  "meta.resetPassword.title": "Choisir un nouveau mot de passe",
+  "meta.resetPassword.description":
+    "Définissez un nouveau mot de passe pour votre compte Skynova Agency.",
+  "meta.privacy.title": "Politique de confidentialité",
+  "meta.privacy.description":
+    "Comment Skynova Agency collecte, utilise et protège vos informations.",
+  "meta.terms.title": "Conditions d’utilisation",
+  "meta.terms.description": "Les conditions qui s’appliquent à l’utilisation de Skynova Agency.",
 };
 
 /**
@@ -2248,6 +2447,32 @@ function fill(template: string, vars?: Record<string, string | number>) {
 
 export function translate(key: TKey, locale: Locale, vars?: Record<string, string | number>) {
   return fill(DICTS[locale][key] ?? EN[key], vars);
+}
+
+/**
+ * The title/description pair for a route's `head()`, in the router's locale.
+ *
+ * `head()` is not a component -- it runs while the match is being built, with
+ * no React around it -- so `useT()` is unavailable and the locale has to come
+ * off `match.context`, which is the router context pinned per instance in
+ * router.tsx. Until this existed every route returned a hardcoded English
+ * title, so all ~24 prerendered /fr pages shipped French bodies under English
+ * titles: the one place the translation was guaranteed to be missing was the
+ * one Google reads first.
+ *
+ * Returns the meta array rather than the whole head object, so a route that
+ * needs more -- a robots directive, an og:type -- spreads this and appends.
+ */
+export function localeMeta(
+  locale: Locale,
+  titleKey: TKey,
+  descriptionKey: TKey,
+  vars?: Record<string, string | number>,
+) {
+  return [
+    { title: `${translate(titleKey, locale, vars)} | ${SITE_NAME}` },
+    { name: "description", content: translate(descriptionKey, locale, vars) },
+  ];
 }
 
 /** The locale of the current router. Single source for every component that

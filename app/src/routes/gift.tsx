@@ -5,7 +5,7 @@ import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { getDestinationBySlug } from "@/data/destinations";
 import { submitGiftRequest } from "@/lib/api/gift.functions";
-import { useT } from "@/lib/i18n-strings";
+import { localeMeta, useT } from "@/lib/i18n-strings";
 
 export const Route = createFileRoute("/gift")({
   // Optional ?destination=<slug>, set by the gift button on destination
@@ -17,11 +17,8 @@ export const Route = createFileRoute("/gift")({
       ? { destination: raw }
       : {};
   },
-  head: () => ({
-    meta: [
-      { title: "Gift a trip | Skynova Agency" },
-      { name: "description", content: "Send someone a trip idea worth taking." },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(match.context.locale, "meta.gift.title", "meta.gift.description"),
   }),
   component: GiftPage,
 });

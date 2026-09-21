@@ -9,7 +9,7 @@ import { StructuredData } from "@/components/StructuredData";
 import { breadcrumbJsonLd, itemListJsonLd, jsonLd } from "@/lib/seo";
 import { COLLECTIONS, collectionDestinations } from "@/data/collections";
 import { PHOTO_SLUGS } from "@/data/destinations";
-import { useT, useLocale } from "@/lib/i18n-strings";
+import { localeMeta, useT, useLocale } from "@/lib/i18n-strings";
 
 /** Written out, as the headline always was. */
 function numberWords(n: number): string {
@@ -29,18 +29,36 @@ const capitalise = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
  *  the 42 destinations sits in a collection -- and "destinations", because
  *  Martinique, Guadeloupe and the Pacific territories are not countries. */
 const DESTINATION_COUNT = new Set(COLLECTIONS.flatMap((c) => c.destinationSlugs)).size;
-const COLLECTIONS_DESCRIPTION = `${capitalise(numberWords(COLLECTIONS.length))} themed ways into our ${DESTINATION_COUNT} destinations -- from ${COLLECTIONS[0].name.toLowerCase()} and ${COLLECTIONS[1].name.toLowerCase()} to ${COLLECTIONS[COLLECTIONS.length - 1].name.toLowerCase()}, each with seasons and booking links.`;
+/**
+ * The counts and the sample names the meta description is built from.
+ *
+ * Both spellings of the count are passed because the sentence is now a
+ * template per locale: English spells it out, as this headline always has,
+ * while French takes the numeral -- "Neuf" and "neuf" are different words
+ * and numberWords() only knows English.
+ *
+ * The collection names stay in English. They come from data/collections.ts,
+ * which has no French (see DATA_DRIVEN_PREFIXES in lib/i18n.ts), and the
+ * cards on the page below render those same English names -- a description
+ * that translated them would advertise words the page does not contain.
+ */
+const COLLECTIONS_VARS = {
+  countWord: capitalise(numberWords(COLLECTIONS.length)),
+  count: COLLECTIONS.length,
+  destinations: DESTINATION_COUNT,
+  first: COLLECTIONS[0].name.toLowerCase(),
+  second: COLLECTIONS[1].name.toLowerCase(),
+  last: COLLECTIONS[COLLECTIONS.length - 1].name.toLowerCase(),
+};
 
 export const Route = createFileRoute("/collections/")({
-  head: () => ({
-    meta: [
-      { title: "Travel collections | Skynova Agency" },
-      {
-        name: "description",
-        content:
-          COLLECTIONS_DESCRIPTION,
-      },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(
+      match.context.locale,
+      "meta.collections.title",
+      "meta.collections.description",
+      COLLECTIONS_VARS,
+    ),
   }),
   component: CollectionsIndex,
 });

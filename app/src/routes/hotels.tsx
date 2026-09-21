@@ -9,7 +9,7 @@ import { DestinationPicksSection } from "@/components/site/DestinationPicks";
 import { TravelGuidesSection } from "@/components/site/TravelGuides";
 import { hotelsLink } from "@/lib/affiliate";
 
-import { useT, type TKey } from "@/lib/i18n-strings";
+import { localeMeta, useT, type TKey } from "@/lib/i18n-strings";
 
 /** Place names stay as they are -- they are proper nouns, not copy. Only the
  *  line under each one is translated. */
@@ -28,11 +28,8 @@ const TRAVEL_INSPIRATION: { name: string; slug: string; detailKey: TKey }[] = [
 ];
 
 export const Route = createFileRoute("/hotels")({
-  head: () => ({
-    meta: [
-      { title: "Hotels | Skynova Agency" },
-      { name: "description", content: "Boutique stays to full resorts, filtered by neighborhood and rating." },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(match.context.locale, "meta.hotels.title", "meta.hotels.description"),
   }),
   component: HotelsPage,
 });

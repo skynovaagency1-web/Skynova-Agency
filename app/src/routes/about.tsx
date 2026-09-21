@@ -7,21 +7,18 @@ import { DESTINATIONS, REGION_ORDER } from "@/data/destinations";
 import { COLLECTIONS } from "@/data/collections";
 import { POSTS } from "@/data/blog-posts";
 import { ARTICLE_SLUGS } from "@/data/blog-articles";
-import { useT, type TKey } from "@/lib/i18n-strings";
+import { localeMeta, useT, type TKey } from "@/lib/i18n-strings";
 import { FOUNDER_NAME } from "@/lib/seo";
 import { GOLD_GRADIENTS, GradientCardShowcase } from "@/components/ui/gradient-card-showcase";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({
-    meta: [
-      { title: "About | Skynova Agency" },
-      {
-        name: "description",
-        // Built from the data too -- a hardcoded number here goes stale in
-        // exactly the same way the page body did.
-        content: `Skynova Agency is a booking layer over established travel partners -- flights, stays, cars, connectivity, tickets and tours in one place, across ${DESTINATIONS.length} destinations.`,
-      },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(
+      match.context.locale,
+      "meta.about.title",
+      "meta.about.description",
+      { count: DESTINATIONS.length },
+    ),
   }),
   component: AboutPage,
 });

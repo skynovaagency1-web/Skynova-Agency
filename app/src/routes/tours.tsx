@@ -9,14 +9,11 @@ import { toursLink } from "@/lib/affiliate";
 const TOUR_WIDGET_SRC =
   "https://tpscr.com/content?currency=USD&trs=519959&shmarker=720297&locale=en&city_id=107&category=2&amount=3&powered_by=true&campaign_id=137&promo_id=4497";
 
-import { useT } from "@/lib/i18n-strings";
+import { localeMeta, useT } from "@/lib/i18n-strings";
 
 export const Route = createFileRoute("/tours")({
-  head: () => ({
-    meta: [
-      { title: "Tours & Activities | Skynova Agency" },
-      { name: "description", content: "Skip-the-line tours, day trips and local guides, bookable the moment you land." },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(match.context.locale, "meta.tours.title", "meta.tours.description"),
   }),
   component: ToursPage,
 });

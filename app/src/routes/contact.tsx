@@ -4,18 +4,11 @@ import { useState, type FormEvent } from "react";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { submitContactMessage, CONTACT_TOPICS } from "@/lib/api/contact.functions";
-import { useT, type TKey } from "@/lib/i18n-strings";
+import { localeMeta, useT, type TKey } from "@/lib/i18n-strings";
 
 export const Route = createFileRoute("/contact")({
-  head: () => ({
-    meta: [
-      { title: "Contact | Skynova Agency" },
-      {
-        name: "description",
-        content:
-          "Questions about a booking, a partnership enquiry, or feedback on the site -- send it here and we'll reply by email.",
-      },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(match.context.locale, "meta.contact.title", "meta.contact.description"),
   }),
   component: ContactPage,
 });

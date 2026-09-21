@@ -32,7 +32,7 @@ const EVENTS_WIDGET_SRC =
   "https://tpscr.com/content?currency=USD&trs=519959&shmarker=720297&language=en" +
   "&layout=horizontal&cards=4&powered_by=true&campaign_id=89&promo_id=3947";
 
-import { useT, type TKey } from "@/lib/i18n-strings";
+import { localeMeta, useT, type TKey } from "@/lib/i18n-strings";
 
 const TRENDING_EVENTS: { name: string; slug: string; detailKey: TKey }[] = [
   { name: "Festival season", slug: "event-festival", detailKey: "events.pick1Detail" },
@@ -42,11 +42,8 @@ const TRENDING_EVENTS: { name: string; slug: string; detailKey: TKey }[] = [
 ];
 
 export const Route = createFileRoute("/events")({
-  head: () => ({
-    meta: [
-      { title: "Events & Tickets | Skynova Agency" },
-      { name: "description", content: "Concerts, museums, attractions and skip-the-line passes in the cities you are already visiting." },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(match.context.locale, "meta.events.title", "meta.events.description"),
   }),
   component: EventsPage,
 });

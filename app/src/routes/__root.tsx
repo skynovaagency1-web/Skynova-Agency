@@ -24,6 +24,7 @@ import { OutboundClickTracker } from "@/components/site/OutboundClickTracker";
 import { PageViewTracker } from "@/components/site/PageViewTracker";
 import { NotFound } from "@/components/site/NotFound";
 import { absUrl } from "@/lib/seo";
+import { translate } from "@/lib/i18n-strings";
 import {
   DEFAULT_LOCALE,
   LOCALE_DIR,
@@ -34,9 +35,6 @@ import {
   type Locale,
 } from "@/lib/i18n";
 
-const DEFAULT_TITLE = "Skynova Agency — Premium Travel Booking";
-const DEFAULT_DESCRIPTION =
-  "Flights, hotels, car rentals, airport services, events, eSIM and tours — booked with a premium, white-glove touch, all in one place.";
 
 type AppMeta = {
   og_title?: string | null;
@@ -49,9 +47,24 @@ type AppMeta = {
 
 const appMeta = appMetaJson as AppMeta;
 
-function buildHead(meta: AppMeta) {
-  const title = meta.og_title ?? DEFAULT_TITLE;
-  const description = meta.og_description ?? DEFAULT_DESCRIPTION;
+/**
+ * The site-wide head: the title every route without one of its own falls back
+ * to -- which is the home page -- and the og:/twitter: pair every page
+ * inherits unless it overrides them.
+ *
+ * app-meta.json is the brand override, and it is written in English: it
+ * speaks for the default locale only. Every other locale takes its words from
+ * the string table, which is the only place a translation of them exists.
+ * Reading og_title unconditionally is how the French home page came to be
+ * titled "Skynova Agency — Premium Travel Booking", and how every French page
+ * shared it to Facebook, LinkedIn and WhatsApp with an English og:title under
+ * French body copy.
+ */
+function buildHead(meta: AppMeta, locale: Locale) {
+  const title = (locale === DEFAULT_LOCALE && meta.og_title) || translate("meta.home.title", locale);
+  const description =
+    (locale === DEFAULT_LOCALE && meta.og_description) ||
+    translate("meta.home.description", locale);
   const ogImageRaw = meta.og_image_url ?? "/assets/cover/og.webp";
   // Absolute, always. Facebook, LinkedIn, WhatsApp and X do not resolve a
   // relative og:image against the page URL -- they drop the image entirely,
@@ -155,7 +168,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient; locale: Locale }>()({
-  head: () => buildHead(appMeta),
+  head: ({ match }) => buildHead(appMeta, match.context.locale),
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFound,

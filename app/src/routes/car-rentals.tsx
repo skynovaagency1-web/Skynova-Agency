@@ -28,7 +28,7 @@ const CAR_WIDGET_FORM_SRC =
 const CAR_WIDGET_BANNER_SRC =
   "https://tpscr.com/content?trs=519959&shmarker=720297&locale=en&width=100&height=100&powered_by=true&campaign_id=10&promo_id=2082";
 
-import { useT, type TKey } from "@/lib/i18n-strings";
+import { localeMeta, useT, type TKey } from "@/lib/i18n-strings";
 
 const ROAD_TRIPS: { name: string; slug: string; detailKey: TKey }[] = [
   { name: "Great Ocean Road", slug: "road-great-ocean", detailKey: "cars.road1Detail" },
@@ -38,11 +38,8 @@ const ROAD_TRIPS: { name: string; slug: string; detailKey: TKey }[] = [
 ];
 
 export const Route = createFileRoute("/car-rentals")({
-  head: () => ({
-    meta: [
-      { title: "Car Rentals | Skynova Agency" },
-      { name: "description", content: "Economy to executive SUVs, picked up at arrivals and dropped off anywhere on the route." },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(match.context.locale, "meta.carRentals.title", "meta.carRentals.description"),
   }),
   component: CarRentalsPage,
 });

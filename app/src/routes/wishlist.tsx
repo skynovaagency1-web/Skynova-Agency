@@ -7,13 +7,12 @@ import { WishlistButton } from "@/components/site/WishlistButton";
 import { useAuth } from "@/lib/auth-context";
 import { getWishlist } from "@/lib/api/wishlist.functions";
 import { getDestinationBySlug } from "@/data/destinations";
-import { useT } from "@/lib/i18n-strings";
+import { localeMeta, useT } from "@/lib/i18n-strings";
 
 export const Route = createFileRoute("/wishlist")({
-  head: () => ({
+  head: ({ match }) => ({
     meta: [
-      { title: "Wishlist | Skynova Agency" },
-      { name: "description", content: "Destinations you've saved for your next trip." },
+      ...localeMeta(match.context.locale, "meta.wishlist.title", "meta.wishlist.description"),
       // Personalised, and empty for anyone not signed in -- indexing it adds a
       // thin page and leaks nothing useful into results. Same call as /account.
       { name: "robots", content: "noindex, nofollow" },

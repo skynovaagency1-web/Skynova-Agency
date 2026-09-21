@@ -15,7 +15,7 @@ import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { StackedCarousel } from "@/components/site/StackedCarousel";
 import { absUrl, jsonLd } from "@/lib/seo";
 import { REGION_ORDER, getDestinationsByRegion, DESTINATIONS, type Region } from "@/data/destinations";
-import { useT, useLocale, type TKey } from "@/lib/i18n-strings";
+import { localeMeta, useT, useLocale, type TKey } from "@/lib/i18n-strings";
 import { DESTINATION_HOOKS_FR } from "@/data/destinations-fr";
 
 // An ItemList of every destination, so the index is understood as a
@@ -45,15 +45,13 @@ export const Route = createFileRoute("/destinations/")({
   validateSearch: (search: Record<string, unknown>): DestinationsSearch => ({
     region: REGION_ORDER.some((r) => r.region === search.region) ? (search.region as Region) : undefined,
   }),
-  head: () => ({
-    meta: [
-      { title: "Destinations | Skynova Agency" },
-      {
-        name: "description",
-        content:
-          `${DESTINATIONS.length} destinations across ${REGION_ORDER.length} regions, each routing straight into flights, stays, cars and tours.`,
-      },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(
+      match.context.locale,
+      "meta.destinations.title",
+      "meta.destinations.description",
+      { count: DESTINATIONS.length, regions: REGION_ORDER.length },
+    ),
   }),
   /* Fares are loaded here, once, for every card on the page. The server
      function behind this makes ONE upstream call for all 42 destinations and

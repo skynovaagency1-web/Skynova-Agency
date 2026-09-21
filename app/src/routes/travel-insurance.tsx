@@ -3,18 +3,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { VerticalPage } from "@/components/site/VerticalPage";
 import { PlainHero } from "@/components/site/PlainHero";
 import { travelInsuranceLink } from "@/lib/affiliate";
-import { useT } from "@/lib/i18n-strings";
+import { localeMeta, useT } from "@/lib/i18n-strings";
 
 export const Route = createFileRoute("/travel-insurance")({
-  head: () => ({
-    meta: [
-      { title: "Travel & medical insurance | Skynova Agency" },
-      {
-        name: "description",
-        content:
-          "Medical cover, hospital stays and evacuation abroad. Single-trip or annual policies, and cover you can buy after you have already left.",
-      },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(
+      match.context.locale,
+      "meta.travelInsurance.title",
+      "meta.travelInsurance.description",
+    ),
   }),
   component: TravelInsurancePage,
 });

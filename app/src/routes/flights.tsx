@@ -8,14 +8,11 @@ import { WeekendInspirationSection } from "@/components/site/WeekendInspiration"
 import { FlightGuidesSection } from "@/components/site/FlightGuides";
 import { FlightHeroScroll } from "@/components/site/FlightHeroScroll";
 import { flightsLink } from "@/lib/affiliate";
-import { useT } from "@/lib/i18n-strings";
+import { localeMeta, useT } from "@/lib/i18n-strings";
 
 export const Route = createFileRoute("/flights")({
-  head: () => ({
-    meta: [
-      { title: "Flights | Skynova Agency" },
-      { name: "description", content: "Compare fares across airlines and lock in a flight before prices move." },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(match.context.locale, "meta.flights.title", "meta.flights.description"),
   }),
   component: FlightsPage,
 });

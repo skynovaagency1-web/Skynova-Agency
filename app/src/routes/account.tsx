@@ -9,14 +9,13 @@ import { signOut } from "@/lib/api/auth.functions";
 import { getWishlist } from "@/lib/api/wishlist.functions";
 import { getReferralStats } from "@/lib/api/referral.functions";
 import { getDestinationBySlug } from "@/data/destinations";
-import { useT, useLocale } from "@/lib/i18n-strings";
+import { localeMeta, useT, useLocale } from "@/lib/i18n-strings";
 import { LOCALE_TAGS } from "@/lib/i18n";
 
 export const Route = createFileRoute("/account")({
-  head: () => ({
+  head: ({ match }) => ({
     meta: [
-      { title: "Your account | Skynova Agency" },
-      { name: "description", content: "Your saved trips, referral link and account details." },
+      ...localeMeta(match.context.locale, "meta.account.title", "meta.account.description"),
       // Nothing here is public, so keep it out of the index entirely.
       { name: "robots", content: "noindex, nofollow" },
     ],

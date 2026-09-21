@@ -7,17 +7,11 @@ import { Footer } from "@/components/site/Footer";
 import { StructuredData } from "@/components/StructuredData";
 import { breadcrumbJsonLd, faqJsonLd, jsonLd } from "@/lib/seo";
 
-import { useT } from "@/lib/i18n-strings";
+import { localeMeta, useT } from "@/lib/i18n-strings";
 
 export const Route = createFileRoute("/faq")({
-  head: () => ({
-    meta: [
-      { title: "FAQ | Skynova Agency" },
-      {
-        name: "description",
-        content: "Answers to the questions travelers ask most about booking with Skynova Agency.",
-      },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(match.context.locale, "meta.faq.title", "meta.faq.description"),
   }),
   component: FaqPage,
 });

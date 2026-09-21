@@ -6,7 +6,7 @@ import { CategoryGridSection } from "@/components/site/CategoryGrid";
 import { DestinationPicksSection } from "@/components/site/DestinationPicks";
 import { airportServicesLink, luggageStorageLink } from "@/lib/affiliate";
 
-import { useT, type TKey } from "@/lib/i18n-strings";
+import { localeMeta, useT, type TKey } from "@/lib/i18n-strings";
 
 const POPULAR_AIRPORTS: { name: string; slug: string; detailKey: TKey }[] = [
   { name: "Singapore Changi", slug: "airport-singapore", detailKey: "airport.changiDetail" },
@@ -16,11 +16,12 @@ const POPULAR_AIRPORTS: { name: string; slug: string; detailKey: TKey }[] = [
 ];
 
 export const Route = createFileRoute("/airport-services")({
-  head: () => ({
-    meta: [
-      { title: "Airport Services | Skynova Agency" },
-      { name: "description", content: "Private transfers, shared shuttles, lounge access and baggage help, booked before you land." },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(
+      match.context.locale,
+      "meta.airportServices.title",
+      "meta.airportServices.description",
+    ),
   }),
   component: AirportServicesPage,
 });

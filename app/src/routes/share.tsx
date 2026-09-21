@@ -7,15 +7,12 @@ import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { useAuth } from "@/lib/auth-context";
 import { getReferralStats } from "@/lib/api/referral.functions";
-import { useT, useLocale } from "@/lib/i18n-strings";
+import { localeMeta, useT, useLocale } from "@/lib/i18n-strings";
 import { LOCALE_TAGS } from "@/lib/i18n";
 
 export const Route = createFileRoute("/share")({
-  head: () => ({
-    meta: [
-      { title: "Share Skynova | Skynova Agency" },
-      { name: "description", content: "Share your Skynova link and see how many friends have joined through it." },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(match.context.locale, "meta.share.title", "meta.share.description"),
   }),
   component: SharePage,
 });

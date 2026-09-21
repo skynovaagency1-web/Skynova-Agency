@@ -6,19 +6,12 @@ import { Footer } from "@/components/site/Footer";
 import { Newsletter } from "@/components/site/Newsletter";
 import { DESTINATIONS } from "@/data/destinations";
 import { REVIEWS, REVIEW_CATEGORIES, summarise, starString } from "@/data/reviews";
-import { useT, useLocale } from "@/lib/i18n-strings";
+import { localeMeta, useT, useLocale } from "@/lib/i18n-strings";
 import { LOCALE_TAGS } from "@/lib/i18n";
 
 export const Route = createFileRoute("/reviews")({
-  head: () => ({
-    meta: [
-      { title: "Reviews | Skynova Agency" },
-      {
-        name: "description",
-        content:
-          "Reviews from travellers who booked through Skynova Agency, collected after the trip from completed partner bookings and published unedited.",
-      },
-    ],
+  head: ({ match }) => ({
+    meta: localeMeta(match.context.locale, "meta.reviews.title", "meta.reviews.description"),
   }),
   component: ReviewsPage,
 });
