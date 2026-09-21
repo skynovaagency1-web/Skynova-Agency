@@ -23,6 +23,7 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as HotelsRouteImport } from './routes/hotels'
 import { Route as GiftRouteImport } from './routes/gift'
+import { Route as GearRouteImport } from './routes/gear'
 import { Route as FlightsRouteImport } from './routes/flights'
 import { Route as FlightCompensationRouteImport } from './routes/flight-compensation'
 import { Route as FaqRouteImport } from './routes/faq'
@@ -111,6 +112,11 @@ const HotelsRoute = HotelsRouteImport.update({
 const GiftRoute = GiftRouteImport.update({
   id: '/gift',
   path: '/gift',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GearRoute = GearRouteImport.update({
+  id: '/gear',
+  path: '/gear',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FlightsRoute = FlightsRouteImport.update({
@@ -223,6 +229,7 @@ export interface FileRoutesByFullPath {
   '/faq': typeof FaqRoute
   '/flight-compensation': typeof FlightCompensationRoute
   '/flights': typeof FlightsRoute
+  '/gear': typeof GearRoute
   '/gift': typeof GiftRoute
   '/hotels': typeof HotelsRoute
   '/llms.txt': typeof LlmsDottxtRoute
@@ -258,6 +265,7 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqRoute
   '/flight-compensation': typeof FlightCompensationRoute
   '/flights': typeof FlightsRoute
+  '/gear': typeof GearRoute
   '/gift': typeof GiftRoute
   '/hotels': typeof HotelsRoute
   '/llms.txt': typeof LlmsDottxtRoute
@@ -294,6 +302,7 @@ export interface FileRoutesById {
   '/faq': typeof FaqRoute
   '/flight-compensation': typeof FlightCompensationRoute
   '/flights': typeof FlightsRoute
+  '/gear': typeof GearRoute
   '/gift': typeof GiftRoute
   '/hotels': typeof HotelsRoute
   '/llms.txt': typeof LlmsDottxtRoute
@@ -331,6 +340,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/flight-compensation'
     | '/flights'
+    | '/gear'
     | '/gift'
     | '/hotels'
     | '/llms.txt'
@@ -366,6 +376,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/flight-compensation'
     | '/flights'
+    | '/gear'
     | '/gift'
     | '/hotels'
     | '/llms.txt'
@@ -401,6 +412,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/flight-compensation'
     | '/flights'
+    | '/gear'
     | '/gift'
     | '/hotels'
     | '/llms.txt'
@@ -437,6 +449,7 @@ export interface RootRouteChildren {
   FaqRoute: typeof FaqRoute
   FlightCompensationRoute: typeof FlightCompensationRoute
   FlightsRoute: typeof FlightsRoute
+  GearRoute: typeof GearRoute
   GiftRoute: typeof GiftRoute
   HotelsRoute: typeof HotelsRoute
   LlmsDottxtRoute: typeof LlmsDottxtRoute
@@ -557,6 +570,13 @@ declare module '@tanstack/react-router' {
       path: '/gift'
       fullPath: '/gift'
       preLoaderRoute: typeof GiftRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gear': {
+      id: '/gear'
+      path: '/gear'
+      fullPath: '/gear'
+      preLoaderRoute: typeof GearRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/flights': {
@@ -709,6 +729,7 @@ const rootRouteChildren: RootRouteChildren = {
   FaqRoute: FaqRoute,
   FlightCompensationRoute: FlightCompensationRoute,
   FlightsRoute: FlightsRoute,
+  GearRoute: GearRoute,
   GiftRoute: GiftRoute,
   HotelsRoute: HotelsRoute,
   LlmsDottxtRoute: LlmsDottxtRoute,

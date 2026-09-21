@@ -26,6 +26,7 @@ const STATIC_PAGES: { path: string; priority: string; changefreq: string }[] = [
   { path: "/yacht-charter", priority: "0.7", changefreq: "monthly" },
   { path: "/destinations", priority: "0.8", changefreq: "weekly" },
   { path: "/collections", priority: "0.8", changefreq: "weekly" },
+  { path: "/gear", priority: "0.7", changefreq: "monthly" },
   { path: "/blog", priority: "0.6", changefreq: "weekly" },
   { path: "/about", priority: "0.5", changefreq: "monthly" },
   { path: "/reviews", priority: "0.5", changefreq: "monthly" },
