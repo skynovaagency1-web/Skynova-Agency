@@ -89,6 +89,18 @@ export const GEAR: GearItem[] = [
     },
   },
 
+  {
+    slug: "everki-atlas",
+    name: "Atlas Laptop Backpack",
+    maker: "EVERKI",
+    category: "bags",
+    query: "EVERKI Atlas laptop backpack 17.3",
+    why: {
+      en: "Checkpoint-friendly, so it lies flat and the laptop stays in the bag at security. The compartment adjusts from 13 to 17.3 inches, which means it still fits after you change laptop. A work bag first — far less room for clothes than the Osprey.",
+      fr: "Compatible contrôle de sécurité : le sac s’ouvre à plat et l’ordinateur reste dedans. Le compartiment s’ajuste de 13 à 17,3 pouces, donc il convient encore après un changement d’ordinateur. Avant tout un sac de travail — bien moins de place pour les vêtements que l’Osprey.",
+    },
+  },
+
   // ---- Packing ----------------------------------------------------------
   {
     slug: "eagle-creek-compression-cubes",
