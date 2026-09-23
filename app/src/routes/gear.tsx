@@ -79,7 +79,7 @@ function GearPage() {
               {GEAR_CATEGORIES.map((c) => (
                 <CategoryChip
                   key={c.id}
-                  label={`${c.emoji} ${t(`gear.cat.${c.id}` as Parameters<typeof t>[0])}`}
+                  label={t(`gear.cat.${c.id}` as Parameters<typeof t>[0])}
                   selected={active === c.id}
                   onSelect={() => setActive(c.id)}
                 />
@@ -93,15 +93,18 @@ function GearPage() {
                       category mark, and the category is already stated by the
                       filter chips and readable in the copy below, so a screen
                       reader gains nothing from any of it. */}
-                  <div className="gear-vitrine-stage" aria-hidden="true">
-                    <div className="gear-vitrine-object">
-                      {item.image ? (
-                        <img src={item.image} alt="" />
-                      ) : (
-                        categoryEmoji(item.category)
-                      )}
-                    </div>
-                    <span className="gear-vitrine-stand" />
+                  <div
+                    className={item.image ? "gear-vitrine-stage" : "gear-vitrine-stage is-empty"}
+                    aria-hidden="true"
+                  >
+                    {item.image ? (
+                      <>
+                        <div className="gear-vitrine-object">
+                          <img src={item.image} alt="" />
+                        </div>
+                        <span className="gear-vitrine-stand" />
+                      </>
+                    ) : null}
                     <span className="gear-vitrine-bar" />
                   </div>
 
@@ -139,12 +142,6 @@ function GearPage() {
       <Footer />
     </>
   );
-}
-
-/** The mark that stands on the plinth until a licensed product shot exists.
- *  See the `image` note in data/gear.ts. */
-function categoryEmoji(category: GearCategory): string {
-  return GEAR_CATEGORIES.find((c) => c.id === category)?.emoji ?? "";
 }
 
 function CategoryChip({
