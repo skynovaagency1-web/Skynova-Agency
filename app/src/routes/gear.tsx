@@ -96,7 +96,7 @@ function GearPage() {
                   <div className="gear-vitrine-stage" aria-hidden="true">
                     <div className="gear-vitrine-object">
                       {item.image ? (
-                        <img src={item.image} alt="" className="h-full w-full object-contain" />
+                        <img src={item.image} alt="" />
                       ) : (
                         categoryEmoji(item.category)
                       )}

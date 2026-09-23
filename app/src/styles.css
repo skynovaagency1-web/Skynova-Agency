@@ -7563,6 +7563,19 @@ html.lenis body { height: auto; }
   transform: translateY(-24px);
 }
 
+/* A photograph needs an explicit box. The emoji case is sized by font-size,
+   which gives the container no dimensions of its own -- so an <img> inside it
+   had nothing to resolve a percentage height against and rendered at 380px
+   in a 190px stage, spilling out of the vitrine and over the product name.
+   Caught by pointing a test file at the `image` field, which until then had
+   never been exercised by anything. */
+.gear-vitrine-object img {
+  display: block;
+  width: 104px;
+  height: 104px;
+  object-fit: contain;
+}
+
 /* The stand: a hairline, deliberately. Anything thicker stops reading as
    glass and starts reading as furniture. */
 .gear-vitrine-stand {
