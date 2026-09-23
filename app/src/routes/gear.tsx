@@ -93,20 +93,19 @@ function GearPage() {
                       category mark, and the category is already stated by the
                       filter chips and readable in the copy below, so a screen
                       reader gains nothing from any of it. */}
-                  <div
-                    className={item.image ? "gear-vitrine-stage" : "gear-vitrine-stage is-empty"}
-                    aria-hidden="true"
-                  >
-                    {item.image ? (
-                      <>
-                        <div className="gear-vitrine-object">
-                          <img src={item.image} alt="" />
-                        </div>
-                        <span className="gear-vitrine-stand" />
-                      </>
-                    ) : null}
-                    <span className="gear-vitrine-bar" />
-                  </div>
+                  {/* No photograph, no staging. The lit case exists to present
+                      an object; with nothing to present it was decoration
+                      sitting where a product should be. It returns in full the
+                      moment an item has `image` set. */}
+                  {item.image ? (
+                    <div className="gear-vitrine-stage" aria-hidden="true">
+                      <div className="gear-vitrine-object">
+                        <img src={item.image} alt="" />
+                      </div>
+                      <span className="gear-vitrine-stand" />
+                      <span className="gear-vitrine-bar" />
+                    </div>
+                  ) : null}
 
                   <div className="gear-vitrine-copy">
                     <p className="site-ink-muted text-xs uppercase tracking-wide">{item.maker}</p>

@@ -7563,14 +7563,6 @@ html.lenis body { height: auto; }
   transform: translateY(-24px);
 }
 
-/* With no photograph there is nothing to raise, so the case becomes a lit
-   shelf instead: shorter, no stand, just the bar and its spill. Fifteen
-   full-height display cases standing empty read as fifteen failed image
-   loads, which is the opposite of what the staging is for. */
-.gear-vitrine-stage.is-empty {
-  height: 104px;
-}
-
 /* A photograph needs an explicit box. The emoji case is sized by font-size,
    which gives the container no dimensions of its own -- so an <img> inside it
    had nothing to resolve a percentage height against and rendered at 380px
