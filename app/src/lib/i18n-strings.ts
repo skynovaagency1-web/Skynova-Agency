@@ -1030,8 +1030,15 @@ export const EN = {
    * Titles carry no brand: localeMeta() appends "| Skynova Agency". Keep each
    * one to about 43 characters so the brand still fits inside Google's ~60
    * character display limit. "meta.home.title" is the exception -- it is the
-   * whole title, brand included, because it is the site's own name. */
-  "meta.home.title": "Skynova Agency — Premium Travel Booking",
+   * whole title, brand included, because it is the site's own name.
+   *
+   * KEEP IT BETWEEN 50 AND 60 CHARACTERS. A Sep 2026 audit flagged the old
+   * "Skynova Agency — Premium Travel Booking" at 39: short enough that Google
+   * had room it was not being given, in the single most weighted element on
+   * the page. "Premium Travel Booking" also described a feeling rather than
+   * anything a person types into a search box; the replacement names the four
+   * things the site actually compares. */
+  "meta.home.title": "Skynova Agency — Compare Flights, Hotels, Cars & Tours",
   "meta.home.description":
     "Flights, hotels, car rentals, airport services, events, eSIM and tours — booked with a premium, white-glove touch, all in one place.",
   "meta.flights.title": "Flights",
@@ -2108,7 +2115,7 @@ const FR: Dict = {
   "home.exploreVertical": "Explorer par service",
   "home.everyTripHeading": "Chaque voyage, à une recherche près.",
 
-  "meta.home.title": "Skynova Agency — Réservation de voyage premium",
+  "meta.home.title": "Skynova Agency — Vols, hôtels, voitures et activités",
   "meta.home.description":
     "Vols, hôtels, location de voitures, services aéroport, billetterie, eSIM et excursions — réservés au même endroit, avec un service premium.",
   "meta.flights.title": "Vols",
