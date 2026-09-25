@@ -7707,3 +7707,119 @@ html.lenis body { height: auto; }
     transform: none;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Shader hero layout (components/site/ShaderHero.tsx)
+   ---------------------------------------------------------------------------
+   .hero-cards is an ABSOLUTE FULL-STAGE OVERLAY. That is correct in the
+   boarding hero, where the cards are seen alone and have faded out by the
+   time the copy composes in -- the two never share the stage, which is why
+   neither was ever laid out around the other.
+
+   Pin both visible at once, as the shader hero does, and they collide.
+   Measured at 1440x900 before this block existed: the bottom card strip
+   (y 720-852) sat across .hero-copy (y 612-833), 16,385px of overlap, and
+   the top-right info card (y 173-330) covered the day/night toggle
+   (y 149-189).
+
+   So here the overlay is dismantled and the stage becomes an ordinary flex
+   column: copy in the middle taking the free space, cards as a block at the
+   bottom. This is not a new arrangement -- it is what the max-width:900px
+   rules above already do for phones, promoted to every width, because the
+   reason behind it (no room to stack these on top of each other) is true at
+   every width once both are visible together. */
+
+/* A NAV SHORTER THAN THE VIEWPORT, for the reason .hero-cards already
+   documents: .hero-stage is height:100dvh but begins BELOW the sticky nav
+   (measured y=65), so its bottom edge lands ~65px past the fold. The
+   boarding hero could ignore that -- its cards had faded before anything
+   reached the bottom. This hero cannot: the card strip lives at the bottom
+   permanently. Measured on a 390x844 phone before this line: the stat card
+   sat at y 825-885, clipped by 41px. */
+.shader-hero {
+  height: calc(100dvh - 4.25rem);
+  min-height: 480px;
+}
+
+.shader-hero .hero-shader-layers {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Out of the overlay and into the column. Bottom-anchored no longer: the
+   cards own the bottom now, so the copy takes the space above them. */
+.shader-hero .hero-copy {
+  position: relative;
+  height: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  justify-content: center;
+  /* Top padding is not spacing, it is clearance. .hero-daynight is absolutely
+     placed in the stage's top-right corner and is not in this column, so the
+     centred copy will happily slide underneath it -- measured at 390x844 with
+     no padding: copy at y 160-430 across the toggle at 135-175. The padding
+     pushes the centre of the free space down past it. */
+  padding-top: 6rem;
+  padding-bottom: 1.5rem;
+}
+
+.shader-hero .hero-cards {
+  position: relative;
+  inset: auto;
+  height: auto;
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 0 1rem 1.5rem;
+  /* NO opacity here. An earlier version pinned `opacity: 1`, which was correct
+     while the cards were meant to stay put -- and silently defeated the fade
+     the moment ShaderHero started writing --hero-progress, because this
+     selector outranks the .hero-cards rule that reads it. Measured: progress
+     climbed 0 -> 0.93 while computed opacity sat at 1 the whole way. Leaving
+     opacity unset lets the base rule's
+     clamp(0, 1 - var(--hero-progress) * 3.4, 1) apply, transition included. */
+}
+
+/* The absolutely-placed children come back into flow with their parent. */
+.shader-hero .hero-card-info,
+.shader-hero .hero-cards-bottom {
+  position: static;
+  inset: auto;
+  top: auto;
+  right: auto;
+  left: auto;
+  bottom: auto;
+  width: auto;
+}
+
+.shader-hero .hero-cards-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Short viewports -- landscape phones especially -- have room for the copy or
+   the cards, not both. The copy wins: it carries the heading and the CTA.
+   
+   The stage also stops being a fixed height here. At 844x390 the copy is
+   212px tall and the fixed stage left it 202px to sit in, so it was clipped
+   by 31px with overflow:hidden above it -- content cut off rather than pushed
+   below the fold. height:auto with a min-height lets the stage grow to its
+   content instead, and the reader scrolls a little. The top clearance comes
+   down too: the day/night toggle still needs clearing, but 6rem of it is a
+   sixth of the screen at this height. */
+@media (max-height: 620px) {
+  .shader-hero {
+    height: auto;
+    min-height: calc(100dvh - 4.25rem);
+  }
+  .shader-hero .hero-cards { display: none; }
+  .shader-hero .hero-copy {
+    padding-top: 4.5rem;
+    padding-bottom: 2rem;
+  }
+}
