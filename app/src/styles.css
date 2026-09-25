@@ -670,6 +670,64 @@ html {
 
 .hero-stage { position: sticky; top: 0; z-index: 1; height: 100dvh; min-height: 560px; overflow: hidden; }
 
+/* ---- Orbit hero (see HeroOrbit.tsx) ----
+   The WebGL globe as the hero rather than something scrolled to. No track, no
+   hold: the stage is one screen and the page runs straight into TripSearch. */
+.heroorbit-stage {
+  position: relative;
+  height: 100dvh;
+  min-height: 560px;
+  overflow: hidden;
+  /* The globe is rendered on a transparent canvas, so the ground behind it is
+     this, not the model. Deep enough that the terminator still reads. */
+  background: radial-gradient(120% 90% at 50% 40%, #12161f 0%, #080a0f 60%, #05060a 100%);
+}
+
+/* Globe3D sizes its renderer from mount.clientWidth/clientHeight, so this box
+   IS the resolution it draws at -- a square, because the model is one and a
+   stretched box would waste every pixel outside the sphere. vmin so it fits
+   the short edge on any shape of screen. */
+.heroorbit-globe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(320px, 76vmin, 860px);
+  height: clamp(320px, 76vmin, 860px);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.heroorbit-globe-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* PINNED, and not decoration. .hero-copy computes
+   `opacity: clamp(0, (var(--hero-grow, 0) - .85) * 6.7, 1)`, so the default of
+   0 does not mean dim -- it means the headline is not there. The scrubbed and
+   played heroes both write this variable as they run; this hero has nothing
+   running, so it states the finished value once. Measured twice today on other
+   heroes that forgot to. */
+.heroorbit-copy {
+  --hero-grow: 1;
+  position: relative;
+  z-index: 2;
+}
+
+/* The copy sits over a lit sphere rather than a dark cabin, so it needs its
+   own floor of contrast -- a scrim behind the text column only, not a veil
+   over the whole globe. */
+.heroorbit-stage .heroorbit-copy::before {
+  content: "";
+  position: absolute;
+  inset: -12% -8%;
+  z-index: -1;
+  background: radial-gradient(60% 55% at 28% 50%, rgba(5, 6, 10, 0.82) 0%, rgba(5, 6, 10, 0) 72%);
+  pointer-events: none;
+}
+
+.heroorbit-stage .hero-cards { z-index: 2; }
+
 /* ---- Played hero (see HeroPlay.tsx) ----
    The scrubbed hero needs a 380vh track to scroll a sequence through; this
    one needs none, because the clip advances on its own clock. The stage is

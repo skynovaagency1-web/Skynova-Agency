@@ -2,16 +2,18 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { Nav } from "@/components/site/Nav";
-// The boarding clip PLAYED: runway, cabin, then the window, on its own clock
-// with the page held still until it gets there. Four alternates stay in the
-// tree, unused: Hero.tsx (the same footage scrubbed frame-by-frame from
-// scroll, which this replaced), ParallaxHero.tsx, HeroScroll.tsx the plane
-// fly-in (which also runs on /flights as FlightHeroScroll), and HeroStage.tsx
-// the scroll stage whose globe flew down the page and landed on the WebGL
-// planet. Swapping this one import is still the whole switch, in any
-// direction -- tests/landing-contract.test.ts names whichever one is here and
-// fails if it is not updated with it.
-import { HeroPlay } from "@/components/site/HeroPlay";
+// The WebGL globe, on screen from the first paint. No scroll sequence to
+// reach it and no handoff: Globe3D reports itself docked whenever no
+// travelling stage is mounted, which is exactly this case. Five alternates
+// stay in the tree, unused: HeroPlay.tsx (the boarding clip played, with the
+// page held until it reached the window), Hero.tsx (that same footage
+// scrubbed frame-by-frame from scroll), ParallaxHero.tsx, HeroScroll.tsx the
+// plane fly-in (which also runs on /flights as FlightHeroScroll), and
+// HeroStage.tsx the scroll stage whose cheap globe flew down five screens to
+// hand over to the real planet. Swapping this one import is still the whole
+// switch, in any direction -- tests/landing-contract.test.ts names whichever
+// one is here and fails if it is not updated with it.
+import { HeroOrbit } from "@/components/site/HeroOrbit";
 import { TripSearch } from "@/components/site/TripSearch";
 import { TrustSection } from "@/components/site/Sections2";
 import {
@@ -85,7 +87,7 @@ function Index() {
       <StructuredData json={HOME_SCHEMA} />
       <Nav />
       <main>
-        <HeroPlay />
+        <HeroOrbit />
         <TripSearch />
         <div ref={afterglowRef} className="hero-afterglow">
           <TrustLineSection />
