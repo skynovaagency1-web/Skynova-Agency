@@ -94,7 +94,7 @@ export function Hero() {
   // and every section below behaves like a normal page.
   const [showFixedBg, setShowFixedBg] = useState(true);
 
-  // Save-Data (or reduced motion) swaps the 5.8MB cloud clip for the 43KB
+  // Save-Data (or reduced motion) swaps the 3.6MB backdrop clip for the 99KB
   // still it was already shipping as a poster. Resolved in an effect rather
   // than during render because navigator is not there on the server, and this
   // component is prerendered -- the document that ships has to be the one
@@ -102,14 +102,21 @@ export function Hero() {
   const [lightBackdrop, setLightBackdrop] = useState(false);
 
   /**
-   * The 5.8MB cloud clip is not requested until the visitor does something.
+   * The 3.6MB backdrop clip is not requested until the visitor does something.
    *
    * It cannot simply be deferred until it is revealed: the window cutout is
    * alpha-transparent, so this backdrop is visible through the glass from the
    * very first frame, before any scroll. But it does not have to be the CLIP
-   * that is visible -- cloud-still.webp is a frame of the same footage at
-   * 43KB, so the still holds the glass and the clip layers over it when it
-   * arrives.
+   * that is visible -- hero-backdrop-still.jpg is a frame of the same footage
+   * at 99KB, so the still holds the glass and the clip layers over it when it
+   * arrives. The still has to be a frame of WHATEVER clip is set below: a
+   * mismatched one is visible through the cutout until the video paints,
+   * which is why the portrait cut has a still of its own and both follow
+   * the same flag.
+   *
+   * JPEG rather than WebP only because this machine has no WebP encoder --
+   * no cwebp, no ffmpeg, and ImageIO on macOS 12 decodes WebP but will not
+   * write it. Re-encoding it to WebP would save roughly half of the 99KB.
    *
    * A poster alone does NOT do this, which is the mistake this replaced:
    * autoPlay makes the browser fetch the whole file regardless of poster, so
@@ -123,6 +130,30 @@ export function Hero() {
    */
   const [wantsVideo, setWantsVideo] = useState(false);
 
+  /**
+   * Which cut of the backdrop to serve.
+   *
+   * The clip is 1280x720 and the backdrop box is the whole viewport under
+   * `object-fit: cover`, so on a portrait screen the sides are thrown away:
+   * measured on the live page, a 390x844 phone showed 26% of the frame width
+   * -- a 3.8x zoom into the middle of a shot that was composed wide. The
+   * 404x720 cut is the same footage centre-cropped once, at export, where the
+   * pixels that survive stay at full resolution instead of being scaled up
+   * from a sliver. Centre is right for this footage rather than a guess: the
+   * aircraft is nose-on and centred, the cabin looks down the aisle, and the
+   * window sits mid-frame.
+   *
+   * Resolved from matchMedia after mount for the same reason lightBackdrop is
+   * -- the component is prerendered, so the document that ships has to be the
+   * one everyone gets. Landscape is the served default, so a browser that
+   * never runs this gets the full-width cut rather than a crop.
+   *
+   * It does NOT follow a resize. Swapping src mid-visit restarts the clip
+   * from frame one, which is far more noticeable than a crop that is only
+   * wrong for someone who rotated their phone mid-scroll.
+   */
+  const [portraitBackdrop, setPortraitBackdrop] = useState(false);
+
   useEffect(() => {
     const light =
       window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
@@ -130,6 +161,9 @@ export function Hero() {
         (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData,
       );
     setLightBackdrop(light);
+    // Taller than wide. Covers phones in portrait and tablets, and leaves
+    // every desktop and landscape phone on the wide cut.
+    setPortraitBackdrop(window.matchMedia("(max-aspect-ratio: 1/1)").matches);
     if (light) return;
 
     const arm = () => setWantsVideo(true);
@@ -449,7 +483,7 @@ export function Hero() {
     // Crossfades hold the OUTGOING layer at full opacity and fade the
     // incoming one in over the top, rather than fading both. Two layers at
     // 0.5 don't compose to opaque -- coverage is 1-(0.5*0.5), so a quarter
-    // of the cloud video behind them showed straight through mid-transition.
+    // of the backdrop behind them showed straight through mid-transition.
     // Holding the outgoing layer means something is always fully opaque, so
     // nothing behind can bleed. Each layer then snaps off once the next has
     // fully covered it, which is invisible precisely because it's covered.
@@ -458,7 +492,7 @@ export function Hero() {
     // Each stage's fade-IN overlaps the previous stage's fade-OUT, and the
     // outgoing layer is held fully opaque until the incoming one has covered
     // it -- two layers at 0.5 compose to 0.75, not 1, which would let the
-    // cloud video behind show through mid-transition.
+    // backdrop behind show through mid-transition.
     const STAGES: Array<[number, number, number, number]> = [
       [0.0, 0.0, 0.26, 0.27], // runway (scrubbed)
       [0.18, 0.26, 0.56, 0.57], // interior reveal (scrubbed)
@@ -523,11 +557,17 @@ export function Hero() {
         if (afterglow) {
           const ar = afterglow.getBoundingClientRect(); // one layout read, used twice
           setShowFixedBg(ar.bottom > 0);
-          // Descent: once the portal is open and you're out in the cloud,
-          // keep scrolling and the camera sinks through the deck rather than
-          // the shot sitting still behind the sections. Runs 0 -> 1 across
-          // the afterglow, which is exactly the stretch the cloud video is
-          // still visible behind, so it finishes right as the video unmounts.
+          // Descent: once the portal is open, keep scrolling and the camera
+          // sinks rather than the shot sitting still behind the sections.
+          // Runs 0 -> 1 across the afterglow, which is exactly the stretch
+          // the backdrop is still visible behind, so it finishes right as
+          // the clip unmounts.
+          //
+          // The move was designed against a cloud deck, where sinking read
+          // as passing through weather. It is a translate plus a scale, so
+          // it still works on any footage -- but it no longer MEANS
+          // anything, and if the backdrop stays non-cloud it is worth
+          // deciding whether the descent still earns its place.
           const descent = ar.height > 0 ? Math.min(Math.max(-ar.top / ar.height, 0), 1) : 0;
           writeVar(videoRef.current, "--hero-descent", descent.toFixed(4));
         }
@@ -587,7 +627,7 @@ export function Hero() {
           static, the hero copy paints above it (fading/pulling back as the
           window grows, see .hero-copy), and the window photo paints highest
           of all -- it's a real alpha-transparent cutout (opaque cabin,
-          transparent glass), so the cloud video is visible through the
+          transparent glass), so the backdrop is visible through the
           glass from the very first frame, before any scroll happens. As
           --hero-grow increases it scales up (see .hero-video-window-overlay)
           and pushes its own opaque cabin edges off-screen, revealing more
@@ -599,18 +639,30 @@ export function Hero() {
         <div className="hero-video-fixed" aria-hidden="true" ref={videoRef}>
           {/* Always mounted, and never removed once the clip arrives: the
               clip layers on top of it, so there is no frame in which the
-              glass has nothing behind it. 43KB. */}
+              glass has nothing behind it. 99KB. */}
           <img
             className="hero-video-fixed-el"
-            src="/assets/hero/cloud-still.webp"
+            src={
+              portraitBackdrop
+                ? "/assets/hero/hero-backdrop-portrait-still.jpg"
+                : "/assets/hero/hero-backdrop-still.jpg"
+            }
             alt=""
             aria-hidden="true"
           />
           {!lightBackdrop && wantsVideo ? (
             <video
               className="hero-video-fixed-el"
-              src="/assets/hero/cloud-video.mp4"
-              poster="/assets/hero/cloud-still.webp"
+              src={
+                portraitBackdrop
+                  ? "/assets/hero/hero-backdrop-portrait.mp4"
+                  : "/assets/hero/hero-backdrop.mp4"
+              }
+              poster={
+                portraitBackdrop
+                  ? "/assets/hero/hero-backdrop-portrait-still.jpg"
+                  : "/assets/hero/hero-backdrop-still.jpg"
+              }
               autoPlay
               muted
               loop
@@ -631,9 +683,9 @@ export function Hero() {
         </div>
       ) : null}
       {/* The boarding sequence: runway, cabin, seat, window -- four opaque
-          full-bleed layers stacked over the cloud video and crossfaded by
-          scroll (--seq-1..4, set in the effect above). They cover the cloud
-          video entirely until the window opens at the end and reveals it,
+          full-bleed layers stacked over the backdrop clip and crossfaded by
+          scroll (--seq-1..4, set in the effect above). They cover the
+          backdrop entirely until the window opens at the end and reveals it,
           which is what makes the reveal land: you never see where you're
           going until the portal is open. */}
       {showFixedBg ? (

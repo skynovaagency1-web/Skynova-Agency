@@ -589,9 +589,8 @@ html {
   overflow: hidden;
 }
 /* --hero-descent (0 -> 1 across the afterglow, set in Hero.tsx) sinks the
-   camera through the cloud deck once the portal is open. The cloud moves
-   UP the frame because that's what passing scenery does when you descend
-   through it, and the scale creeps in so it reads as sinking into the deck
+   camera down once the portal is open. The shot moves UP the frame because
+   that is what passing scenery does when you descend through it, and the scale creeps in so it reads as sinking into the deck
    rather than the whole shot sliding. Scale outruns the translate on
    purpose -- 1.14 leaves 7% of overflow each side, comfortably more than
    the 6% shift, so no edge of the video is ever exposed. */
@@ -610,7 +609,7 @@ html {
 }
 
 /* ---- Boarding sequence (see Hero.tsx) ----
-   Four opaque full-bleed layers sitting between the cloud video (z-index 0)
+   Four opaque full-bleed layers sitting between the backdrop clip (z-index 0)
    and the hero copy, crossfaded by --seq-1..4 which the scroll handler
    sets. Stacked in DOM order, each one painting over the last, so a
    crossfade is just the incoming layer's opacity rising -- no z-index
@@ -631,7 +630,7 @@ html {
   will-change: opacity;
 }
 /* A warm base under the runway canvas: until the first frame decodes the
-   canvas is transparent, and without this the cloud video would flash
+   canvas is transparent, and without this the backdrop clip would flash
    through it on first paint. Only stage 1 needs it -- the later stages are
    opaque images, and the window stage must stay clear so its glass works. */
 .hero-seq-1 {
@@ -653,13 +652,13 @@ html {
 
 /* The window beat also does the opening: it scales toward the viewer as
    --hero-grow ramps, so the porthole grows past the edges of the screen
-   while the photo fades, uncovering the cloud video underneath. The origin
+   while the photo fades, uncovering the backdrop clip underneath. The origin
    is the window's own centre in that photograph (~48%/50%), not the centre
    of the frame -- scaling from the wrong point makes the opening drift
    sideways and strand a band of cabin wall on the far side. */
 /* Also a scrubbed canvas, so it carries the same warm base as stage 1 --
    a canvas is transparent until its first frame decodes, and without this
-   the cloud video would flash through. The base fades out with the layer,
+   the backdrop clip would flash through. The base fades out with the layer,
    since opacity applies to the background too. */
 .hero-seq-3 {
   opacity: var(--seq-3, 0);
@@ -704,7 +703,7 @@ html {
   transform: translate3d(calc(var(--hero-mx, 0) * 16px), calc(var(--hero-my, 0) * 10px - var(--hero-grow, 0) * 22px), 0)
     scale(calc(1 - var(--hero-grow, 0) * 0.1));
   /* Stays fully invisible until the window has almost completely opened
-     (--hero-grow near 1, cloud video fully revealed), then fades in over
+     (--hero-grow near 1, backdrop clip fully revealed), then fades in over
      the last sliver of scroll -- not readable while the portal is still
      mid-transition. */
   opacity: clamp(0, calc((var(--hero-grow, 0) - 0.85) * 6.7), 1);
