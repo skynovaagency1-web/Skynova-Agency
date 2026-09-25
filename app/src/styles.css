@@ -7643,3 +7643,67 @@ html.lenis body { height: auto; }
     transform: translateY(-16px);
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Animated shader hero (components/ui/animated-shader-hero.tsx)
+   ---------------------------------------------------------------------------
+   These were a `<style jsx>` block inside the component as it was given to us.
+   styled-jsx is a Next.js feature and is not installed here -- this is Vite
+   with TanStack Start -- so that block would have emitted a <style> tag with a
+   stray `jsx` attribute and no animation would have run at all. Nothing would
+   have errored; the hero would simply have appeared without its entrance.
+
+   Prefixed `shader-hero-` rather than the original's generic
+   `.animate-fade-in-up` / `.animation-delay-200`, which are broad enough to
+   collide with anything else on a page that reaches for the same obvious
+   names. */
+
+@keyframes shader-hero-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shader-hero-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.shader-hero-in-down {
+  animation: shader-hero-in-down 0.8s ease-out forwards;
+}
+
+/* Starts hidden: without opacity 0 the text paints in place first and then
+   animates from nothing, which reads as a flicker rather than an entrance. */
+.shader-hero-in-up {
+  opacity: 0;
+  animation: shader-hero-in-up 0.8s ease-out forwards;
+}
+
+.shader-hero-delay-200 { animation-delay: 0.2s; }
+.shader-hero-delay-400 { animation-delay: 0.4s; }
+.shader-hero-delay-600 { animation-delay: 0.6s; }
+.shader-hero-delay-800 { animation-delay: 0.8s; }
+
+/* The staggered entrance is decoration. Reduced motion keeps the copy -- and
+   critically keeps it VISIBLE, since the up-animation starts at opacity 0 and
+   would otherwise leave the headline invisible forever. */
+@media (prefers-reduced-motion: reduce) {
+  .shader-hero-in-down,
+  .shader-hero-in-up {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

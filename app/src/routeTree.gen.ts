@@ -22,6 +22,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as HotelsRouteImport } from './routes/hotels'
+import { Route as HeroPreviewRouteImport } from './routes/hero-preview'
 import { Route as GiftRouteImport } from './routes/gift'
 import { Route as GearRouteImport } from './routes/gear'
 import { Route as FlightsRouteImport } from './routes/flights'
@@ -107,6 +108,11 @@ const LlmsDottxtRoute = LlmsDottxtRouteImport.update({
 const HotelsRoute = HotelsRouteImport.update({
   id: '/hotels',
   path: '/hotels',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HeroPreviewRoute = HeroPreviewRouteImport.update({
+  id: '/hero-preview',
+  path: '/hero-preview',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GiftRoute = GiftRouteImport.update({
@@ -231,6 +237,7 @@ export interface FileRoutesByFullPath {
   '/flights': typeof FlightsRoute
   '/gear': typeof GearRoute
   '/gift': typeof GiftRoute
+  '/hero-preview': typeof HeroPreviewRoute
   '/hotels': typeof HotelsRoute
   '/llms.txt': typeof LlmsDottxtRoute
   '/privacy': typeof PrivacyRoute
@@ -267,6 +274,7 @@ export interface FileRoutesByTo {
   '/flights': typeof FlightsRoute
   '/gear': typeof GearRoute
   '/gift': typeof GiftRoute
+  '/hero-preview': typeof HeroPreviewRoute
   '/hotels': typeof HotelsRoute
   '/llms.txt': typeof LlmsDottxtRoute
   '/privacy': typeof PrivacyRoute
@@ -304,6 +312,7 @@ export interface FileRoutesById {
   '/flights': typeof FlightsRoute
   '/gear': typeof GearRoute
   '/gift': typeof GiftRoute
+  '/hero-preview': typeof HeroPreviewRoute
   '/hotels': typeof HotelsRoute
   '/llms.txt': typeof LlmsDottxtRoute
   '/privacy': typeof PrivacyRoute
@@ -342,6 +351,7 @@ export interface FileRouteTypes {
     | '/flights'
     | '/gear'
     | '/gift'
+    | '/hero-preview'
     | '/hotels'
     | '/llms.txt'
     | '/privacy'
@@ -378,6 +388,7 @@ export interface FileRouteTypes {
     | '/flights'
     | '/gear'
     | '/gift'
+    | '/hero-preview'
     | '/hotels'
     | '/llms.txt'
     | '/privacy'
@@ -414,6 +425,7 @@ export interface FileRouteTypes {
     | '/flights'
     | '/gear'
     | '/gift'
+    | '/hero-preview'
     | '/hotels'
     | '/llms.txt'
     | '/privacy'
@@ -451,6 +463,7 @@ export interface RootRouteChildren {
   FlightsRoute: typeof FlightsRoute
   GearRoute: typeof GearRoute
   GiftRoute: typeof GiftRoute
+  HeroPreviewRoute: typeof HeroPreviewRoute
   HotelsRoute: typeof HotelsRoute
   LlmsDottxtRoute: typeof LlmsDottxtRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -563,6 +576,13 @@ declare module '@tanstack/react-router' {
       path: '/hotels'
       fullPath: '/hotels'
       preLoaderRoute: typeof HotelsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hero-preview': {
+      id: '/hero-preview'
+      path: '/hero-preview'
+      fullPath: '/hero-preview'
+      preLoaderRoute: typeof HeroPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gift': {
@@ -731,6 +751,7 @@ const rootRouteChildren: RootRouteChildren = {
   FlightsRoute: FlightsRoute,
   GearRoute: GearRoute,
   GiftRoute: GiftRoute,
+  HeroPreviewRoute: HeroPreviewRoute,
   HotelsRoute: HotelsRoute,
   LlmsDottxtRoute: LlmsDottxtRoute,
   PrivacyRoute: PrivacyRoute,
