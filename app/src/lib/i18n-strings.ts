@@ -134,7 +134,7 @@ export const EN = {
   "search.noteResults": "Opens {partner} results for {place}.",
   "search.notePartner": "Opens {partner}. Add a destination to land straight on results.",
   "search.noteNoPrefill":
-    "Opens {partner}\u2019 own search \u2014 they need airport and pickup codes, so we don\u2019t guess them for you.",
+    "Opens {partner} \u2014 this one cannot be pre-filled, so choose your destination there.",
   "search.guideLink": "Read the {name} guide first",
 
   "lang.label": "Language",
@@ -1239,7 +1239,7 @@ const FR: Dict = {
   "search.noteResults": "Ouvre les r\u00e9sultats {partner} pour {place}.",
   "search.notePartner": "Ouvre {partner}. Ajoutez une destination pour arriver directement sur les r\u00e9sultats.",
   "search.noteNoPrefill":
-    "Ouvre la recherche de {partner} \u2014 il leur faut des codes d\u2019a\u00e9roport et de prise en charge, que nous ne devinons pas \u00e0 votre place.",
+    "Ouvre {partner} \u2014 impossible de le pr\u00e9remplir, choisissez donc votre destination sur leur site.",
   "search.guideLink": "Lisez d\u2019abord le guide {name}",
 
   "lang.label": "Langue",
@@ -2304,7 +2304,7 @@ const ES: Dict = {
   "search.noteResults": "Abre los resultados de {partner} para {place}.",
   "search.notePartner": "Abre {partner}. Añade un destino para llegar directamente a los resultados.",
   "search.noteNoPrefill":
-    "Abre la búsqueda de {partner} — necesitan códigos de aeropuerto y de recogida, así que no los adivinamos por ti.",
+    "Abre {partner} — no se puede rellenar por adelantado, así que elige tu destino allí.",
   "search.guideLink": "Lee antes la guía de {name}",
   "news.eyebrow": "Skynova Travel Club",
   "news.heading": "Únete al Skynova Travel Club",
@@ -2421,7 +2421,7 @@ const PT: Dict = {
   "search.noteResults": "Abre os resultados da {partner} para {place}.",
   "search.notePartner": "Abre a {partner}. Adicione um destino para cair direto nos resultados.",
   "search.noteNoPrefill":
-    "Abre a busca da {partner} — eles precisam de códigos de aeroporto e de retirada, então não os adivinhamos para você.",
+    "Abre {partner} — não dá para preencher antes, então escolha seu destino por lá.",
   "search.guideLink": "Leia antes o guia de {name}",
   "news.eyebrow": "Skynova Travel Club",
   "news.heading": "Entre para o Skynova Travel Club",

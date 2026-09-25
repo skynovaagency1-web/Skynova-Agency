@@ -1,4 +1,5 @@
 import { bindings } from "./bindings.server";
+import { COUNTED_EXACT_PATHS } from "./counted-paths";
 import { DESTINATIONS } from "@/data/destinations";
 import { COLLECTION_SLUGS } from "@/data/collections";
 import { getPostBySlug } from "@/data/blog-posts";
@@ -12,33 +13,13 @@ import { getPostBySlug } from "@/data/blog-posts";
  * `^/[\w/-]*$` would happily accept ten thousand invented paths and turn the
  * table into whatever a bot felt like writing. Only paths that correspond to
  * a real page are counted.
+ *
+ * The allowlist itself lives in counted-paths.ts, which imports nothing, so
+ * tests/page-view-paths.test.ts can read it and fail when a route is added
+ * without being listed. It had silently drifted from src/routes/ by five
+ * pages before that test existed.
  */
 
-/** Routes with no parameter. Kept in step with src/routes/. */
-const EXACT_PATHS = new Set([
-  "/",
-  "/about",
-  "/account",
-  "/airport-services",
-  "/app",
-  "/bike-rentals",
-  "/blog",
-  "/car-rentals",
-  "/collections",
-  "/contact",
-  "/destinations",
-  "/esim",
-  "/events",
-  "/faq",
-  "/flights",
-  "/gift",
-  "/hotels",
-  "/privacy",
-  "/share",
-  "/terms",
-  "/tours",
-  "/wishlist",
-]);
 
 /**
  * The three parameterised routes, checked against the REAL slugs.
@@ -54,7 +35,7 @@ const DESTINATION_SLUGS: ReadonlySet<string> = new Set(DESTINATIONS.map((d) => d
 const COLLECTION_SLUG_SET: ReadonlySet<string> = new Set(COLLECTION_SLUGS);
 
 function isRealPath(path: string): boolean {
-  if (EXACT_PATHS.has(path)) return true;
+  if (COUNTED_EXACT_PATHS.has(path)) return true;
   if (path.startsWith("/destinations/")) {
     return DESTINATION_SLUGS.has(path.slice("/destinations/".length));
   }

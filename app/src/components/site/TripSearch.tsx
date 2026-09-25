@@ -21,13 +21,24 @@ import { useT, type TKey } from "@/lib/i18n-strings";
  * window.open() here would earn commission that never showed up in the
  * numbers. An anchor also gives middle-click and cmd-click for free.
  *
- * Honesty about pre-filling: Hotellook and Airalo take a destination in the
- * URL and land on real results. Aviasales and GetRentacar need IATA /
- * location IDs we cannot derive from a country name, and Tiqets is reached
- * through a short link that cannot carry a destination at all without losing
- * its click id (see toursLink in affiliate.ts) -- so for those three the link
- * opens the partner's own search and the note under the form says so rather
- * than pretending otherwise.
+ * Honesty about pre-filling, and it has to be checked against affiliate.ts
+ * rather than remembered. Hotellook takes a destination in the URL and lands
+ * on real results; Aviasales does when the place resolves to an IATA code.
+ * The other three cannot: Aviasales without a code and GetRentacar need IDs
+ * we cannot derive from a country name, and Tiqets and Airalo are reached
+ * through short links that mint a per-click id, so anything appended is
+ * ignored at best and drops the attribution at worst.
+ *
+ * `prefills` below said `true` for Airalo and was wrong for months. Airalo
+ * USED to take a country slug; that deep link was traded away for a tracking
+ * link that earns (see esimLink in affiliate.ts), and this table was not
+ * updated with it. The visible result was the site lying to the visitor:
+ * typing "Portugal" and choosing eSIM produced the note "Opens Airalo results
+ * for Portugal" above a link to Airalo's home page. Measured on the live site
+ * before the fix, not inferred.
+ *
+ * So: a mode prefills only if the link function it calls actually reads the
+ * destination. Nothing else is evidence.
  */
 
 type Mode = "hotels" | "flights" | "cars" | "tours" | "esim";
@@ -37,7 +48,7 @@ const MODES: { id: Mode; labelKey: TKey; partner: string; prefills: boolean }[] 
   { id: "flights", labelKey: "search.modeFlights", partner: "Aviasales", prefills: false },
   { id: "cars", labelKey: "search.modeCars", partner: "GetRentacar", prefills: false },
   { id: "tours", labelKey: "search.modeTours", partner: "Tiqets", prefills: false },
-  { id: "esim", labelKey: "search.modeEsim", partner: "Airalo", prefills: true },
+  { id: "esim", labelKey: "search.modeEsim", partner: "Airalo", prefills: false },
 ];
 
 /** YYYY-MM-DD, `days` from today. */
@@ -70,7 +81,10 @@ export function TripSearch() {
       case "tours":
         return toursLink(resolved?.toursQuery || undefined);
       case "esim":
-        return esimLink(match?.slug);
+        // No argument: esimLink accepts a slug for callers that predate the
+        // short link and ignores it. Passing one here would read as targeting
+        // that does not happen.
+        return esimLink();
       case "flights":
         return flightsLink(resolved?.iata);
       case "cars":
@@ -78,9 +92,10 @@ export function TripSearch() {
     }
   }, [mode, resolved, checkIn, checkOut, match]);
 
-  // eSIMs are sold per country, so that note names the country even when a
-  // city was typed; the others name exactly what gets searched.
-  const noteLabel = mode === "esim" ? match?.name : resolved?.label;
+  // Names exactly what gets searched. Only the modes that really do pre-fill
+  // reach this, so there is no longer an eSIM special case naming a country
+  // the link never receives.
+  const noteLabel = resolved?.label;
   // Flights pre-fill only when the resolved place has an airport code, so the
   // note has to follow the link rather than the mode.
   const prefills = active.prefills || (mode === "flights" && Boolean(resolved?.iata));
