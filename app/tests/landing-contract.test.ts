@@ -24,22 +24,25 @@ describe("scroll-scrub website landing contract", () => {
     const landingRoute = readFileSync(new URL("../src/routes/index.tsx", import.meta.url), "utf8");
     const appRoute = readFileSync(new URL("../src/routes/app.tsx", import.meta.url), "utf8");
 
-    // "/" is the Skynova travel homepage -- currently the scroll-scrubbed
-    // boarding sequence (components/site/Hero.tsx: runway, cabin, window,
-    // 102 frames), restored after the layered parallax hero
-    // (ParallaxHero.tsx), which replaced the scroll-stage hero
+    // "/" is the Skynova travel homepage -- currently the PLAYED boarding
+    // clip (components/site/HeroPlay.tsx: the shot runs on its own clock and
+    // the page is held until it reaches the window), which replaced the
+    // scroll-scrubbed version of the same footage (Hero.tsx, 102 frames
+    // advanced by scroll position), which had been restored after the layered
+    // parallax hero (ParallaxHero.tsx), which replaced the scroll-stage hero
     // (HeroStage.tsx), which replaced the scroll fly-in
     // (components/site/HeroScroll.tsx, now running on /flights as
-    // FlightHeroScroll), which had replaced this same Hero -- and must never
-    // pull in the app workspace. The template's check named a
-    // component the rebuilt homepage no longer has, so it guarded nothing;
-    // these guard the split the test is actually about.
+    // FlightHeroScroll), which had replaced Hero -- and must never pull in
+    // the app workspace. The template's check named a component the rebuilt
+    // homepage no longer has, so it guarded nothing; these guard the split
+    // the test is actually about.
     //
     // This line names whichever component is the homepage's hero, so it has
-    // to move whenever the hero does. It has now gone stale twice for that
-    // reason: once when the template's name was left behind, and once when
-    // the hero was swapped without this suite being run.
-    expect(landingRoute).toContain("<Hero />");
+    // to move whenever the hero does. It has gone stale twice for that
+    // reason -- once when the template's name was left behind, once when the
+    // hero was swapped without this suite being run -- and caught the swap
+    // cleanly the third time.
+    expect(landingRoute).toContain("<HeroPlay />");
     expect(landingRoute).not.toContain("PromptBox");
     expect(landingRoute).not.toContain("UserGenerations");
     expect(appRoute).toContain('createFileRoute("/app")');

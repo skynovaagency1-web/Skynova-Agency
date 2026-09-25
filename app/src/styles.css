@@ -669,6 +669,52 @@ html {
 }
 
 .hero-stage { position: sticky; top: 0; z-index: 1; height: 100dvh; min-height: 560px; overflow: hidden; }
+
+/* ---- Played hero (see HeroPlay.tsx) ----
+   The scrubbed hero needs a 380vh track to scroll a sequence through; this
+   one needs none, because the clip advances on its own clock. The stage is
+   one screen and the page continues straight into TripSearch below it.
+
+   It is NOT sticky here: sticky inside a one-screen wrapper pins nothing, and
+   leaving it sticky made the stage sit over the section that follows. */
+.heroplay-stage {
+  position: relative;
+  height: 100dvh;
+  min-height: 560px;
+}
+
+/* Copy and cards are driven by --hero-grow, which HeroPlay writes from the
+   clip's currentTime rather than from scroll. The rules that read it are the
+   shared .hero-copy / .hero-cards ones -- nothing here needs to restate them,
+   only to make sure nothing is interactive before it is visible. */
+.heroplay-stage:not(.is-open) .hero-copy {
+  pointer-events: none;
+}
+
+/* The hint doubles as the only explanation of why the page is not moving, so
+   it sits where the scroll cue always sat and simply changes its words. */
+.heroplay-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 1.75rem;
+  transform: translateX(-50%);
+  z-index: 3;
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(245, 240, 230, 0.72);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.55);
+  transition: opacity 0.5s ease;
+}
+/* Once the page is free to move the hint is just a scroll cue again, and a
+   quiet one. */
+.heroplay-stage.is-open .heroplay-hint {
+  opacity: 0.55;
+}
+@media (prefers-reduced-motion: reduce) {
+  .heroplay-hint { transition: none; }
+}
 /* .hero-copy's text was designed against a light-photo hero -- these
    dark-ground overrides keep it readable over the window photo's dark cabin. */
 .hero-stage-portal .hero-copy {
