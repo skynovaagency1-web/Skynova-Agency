@@ -7823,3 +7823,88 @@ html.lenis body { height: auto; }
     padding-bottom: 2rem;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Compact language switcher + nav auth button
+   ---------------------------------------------------------------------------
+   The inline .lang-switch row stays exactly as it was for the footer and the
+   mobile menu. This is the nav's version: one button carrying the current
+   locale code, with the full names behind it. "English Français" sitting
+   permanently in the bar was most of what the switcher cost, and none of it
+   worked until somebody wanted to change language. */
+
+.lang-compact {
+  position: relative;
+  display: inline-flex;
+}
+
+.lang-compact-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.lang-compact-trigger:hover {
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  border-color: color-mix(in srgb, currentColor 30%, transparent);
+}
+
+.lang-compact-menu {
+  position: absolute;
+  top: calc(100% + 0.45rem);
+  right: 0;
+  z-index: 60;
+  min-width: 10rem;
+  padding: 0.3rem;
+  border-radius: 12px;
+  border: 1px solid var(--sky-line, rgba(0, 0, 0, 0.1));
+  background: var(--sky-bg-raised, #fff);
+  box-shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.5);
+}
+
+.lang-compact-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: var(--sky-ink);
+  text-decoration: none;
+}
+
+.lang-compact-item:hover {
+  background: color-mix(in srgb, var(--sky-ink) 7%, transparent);
+}
+
+.lang-compact-item.is-current {
+  font-weight: 600;
+}
+
+/* Quieter than the old "Start your trip" pill it replaces. That was the
+   primary action in the bar; logging in is not -- the primary action is the
+   search on the page itself, and a second loud pill up here competed with it. */
+.site-nav-auth {
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+/* Below this the bar belongs to the logo and the menu button. The switcher and
+   the log-in both live in the mobile menu, which already carries them. */
+@media (max-width: 720px) {
+  .site-nav-lang.lang-compact,
+  .site-nav-auth {
+    display: none;
+  }
+}

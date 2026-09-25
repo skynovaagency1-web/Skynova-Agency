@@ -243,22 +243,25 @@ export function Nav() {
                 </div>
               ) : null}
             </div>
-          ) : (
+          ) : null}
+        </div>
+        {/* Right cluster. "Start your trip" used to sit here; it duplicated the
+            hero's own CTA and the Destinations link beside it, and it was the
+            widest thing in the bar. The language switcher and an explicit
+            log-in take that room instead -- both are things a reader looks for
+            in a nav and could not previously find without hunting for an
+            unlabelled icon. */}
+        <div className="flex shrink-0 items-center gap-2">
+          <LanguageSwitcher className="site-nav-lang" variant="compact" />
+          {user ? null : (
             <button
               type="button"
-              className="site-nav-account-icon"
-              aria-label={t("nav.logInOrSignUp")}
+              className="btn-nav-pill site-nav-auth"
               onClick={() => openAuthModal("sign-in")}
             >
-              <User size={18} />
+              <span>{t("nav.logInSignUp")}</span>
             </button>
           )}
-          <LanguageSwitcher className="site-nav-lang" />
-        </div>
-        <div className="flex shrink-0 items-center gap-3">
-          <Link to="/destinations" className="btn-nav-pill site-nav-cta">
-            <span>{t("nav.startTrip")}</span>
-          </Link>
           <button
             type="button"
             className={`site-menu-btn${open ? " is-open" : ""}`}
