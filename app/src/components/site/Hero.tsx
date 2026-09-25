@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 import { HeroCards } from "@/components/site/HeroCards";
 import { DayNightToggle } from "@/components/site/DayNightToggle";
@@ -64,6 +64,54 @@ const SCRUBS: Scrub[] = [
   { key: "window", count: 30, dir: "window", prefix: "w", range: [0.52, 0.78] },
 ];
 
+/**
+ * The two client-only backdrop decisions, read through useSyncExternalStore
+ * rather than mirrored into state from an effect.
+ *
+ * Both used to be useState written from inside the mount effect, which is
+ * what `setState synchronously within an effect` flags: it costs a render, an
+ * effect, and a second render before the first correct value is on screen.
+ * Reading them during render gets the right answer on the first paint after
+ * hydration instead, and the server snapshot keeps the prerendered document
+ * identical for everyone.
+ */
+
+/** Save-Data or reduced motion: no clip, the still carries the backdrop. */
+function subscribeReducedMotion(onChange: () => void) {
+  const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
+  mql.addEventListener("change", onChange);
+  return () => mql.removeEventListener("change", onChange);
+}
+
+function readLightBackdrop(): boolean {
+  return (
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+    Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData)
+  );
+}
+
+/**
+ * Taller than wide -- phones in portrait and tablets -- gets the 404x720 cut.
+ *
+ * DECIDED ONCE PER PAGE LOAD, hence the cache and the subscribe that never
+ * fires. Following a resize would swap the <video> src mid-visit and restart
+ * the clip from frame one, which is far more noticeable than a crop that is
+ * only wrong for someone who rotated their phone mid-scroll. The cache also
+ * makes the snapshot referentially stable, which useSyncExternalStore
+ * requires: recomputing it on every render would let an unrelated re-render
+ * after a rotation pick the change up anyway.
+ */
+let portraitSnapshot: boolean | null = null;
+
+function readPortraitBackdrop(): boolean {
+  if (portraitSnapshot === null) {
+    portraitSnapshot = window.matchMedia("(max-aspect-ratio: 1/1)").matches;
+  }
+  return portraitSnapshot;
+}
+
+const neverChanges = () => () => {};
+
 const frameSrc = (s: Scrub, i: number) =>
   `/assets/hero/${s.dir}/${s.prefix}${String(i + 1).padStart(2, "0")}.webp`;
 
@@ -95,11 +143,15 @@ export function Hero() {
   const [showFixedBg, setShowFixedBg] = useState(true);
 
   // Save-Data (or reduced motion) swaps the 3.6MB backdrop clip for the 99KB
-  // still it was already shipping as a poster. Resolved in an effect rather
-  // than during render because navigator is not there on the server, and this
+  // still it was already shipping as a poster. Read from the client rather
+  // than rendered in, because navigator is not there on the server and this
   // component is prerendered -- the document that ships has to be the one
   // everyone gets, with the downgrade applied on the client that asked for it.
-  const [lightBackdrop, setLightBackdrop] = useState(false);
+  const lightBackdrop = useSyncExternalStore(
+    subscribeReducedMotion,
+    readLightBackdrop,
+    () => false,
+  );
 
   /**
    * The 3.6MB backdrop clip is not requested until the visitor does something.
@@ -143,29 +195,26 @@ export function Hero() {
    * aircraft is nose-on and centred, the cabin looks down the aisle, and the
    * window sits mid-frame.
    *
-   * Resolved from matchMedia after mount for the same reason lightBackdrop is
-   * -- the component is prerendered, so the document that ships has to be the
-   * one everyone gets. Landscape is the served default, so a browser that
-   * never runs this gets the full-width cut rather than a crop.
+   * Resolved from matchMedia on the client for the same reason lightBackdrop
+   * is -- the component is prerendered, so the document that ships has to be
+   * the one everyone gets. Landscape is the server snapshot, so a browser
+   * that never runs this gets the full-width cut rather than a crop.
    *
-   * It does NOT follow a resize. Swapping src mid-visit restarts the clip
-   * from frame one, which is far more noticeable than a crop that is only
-   * wrong for someone who rotated their phone mid-scroll.
+   * It does NOT follow a resize; see readPortraitBackdrop above for why.
    */
-  const [portraitBackdrop, setPortraitBackdrop] = useState(false);
+  const portraitBackdrop = useSyncExternalStore(
+    neverChanges,
+    readPortraitBackdrop,
+    () => false,
+  );
 
   useEffect(() => {
-    const light =
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-      Boolean(
-        (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData,
-      );
-    setLightBackdrop(light);
-    // Taller than wide. Covers phones in portrait and tablets, and leaves
-    // every desktop and landscape phone on the wide cut.
-    setPortraitBackdrop(window.matchMedia("(max-aspect-ratio: 1/1)").matches);
-    if (light) return;
+    // Nothing to fetch for a visitor who is getting the still anyway.
+    if (lightBackdrop) return;
 
+    // setWantsVideo fires from a listener rather than from the effect body,
+    // which is the difference the lint rule is drawing: reacting to something
+    // the visitor did is what effects are for.
     const arm = () => setWantsVideo(true);
     window.addEventListener("scroll", arm, { once: true, passive: true });
     window.addEventListener("pointerdown", arm, { once: true });
@@ -175,7 +224,7 @@ export function Hero() {
       window.removeEventListener("pointerdown", arm);
       window.removeEventListener("pointermove", arm);
     };
-  }, []);
+  }, [lightBackdrop]);
 
   // Night mode is scoped to this page by mounting, not by a route check: the
   // attribute goes on <html> (so CSS can reach .site-body, which lives on

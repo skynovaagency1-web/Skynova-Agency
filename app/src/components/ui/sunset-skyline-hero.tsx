@@ -172,7 +172,19 @@ export function ScrubHero({
   const markRef = useRef<HTMLDivElement | null>(null);
   const overlayRef = useRef<HTMLImageElement | null>(null);
   const barRef = useRef<HTMLDivElement | null>(null);
-  const [ready, setReady] = useState(false);
+  /**
+   * `ready` uncovers the hero once there is something to show.
+   *
+   * Only the CLIP has a waiting state -- it has to reach
+   * HAVE_CURRENT_DATA before a seek paints anything. A frame sequence has no
+   * such handshake: the first image is requested on mount and the canvas is
+   * already the thing on screen, so that path is ready the moment it renders.
+   * It used to say so with a setReady(true) in the effect body, which is a
+   * render, an effect and a second render to express something known during
+   * the first one.
+   */
+  const [clipReady, setClipReady] = useState(false);
+  const ready = Boolean(frames) || clipReady;
 
   // The stage sits exactly under the sticky nav, so the hero is never partly
   // behind it. Measured rather than assumed -- the nav's height changes with
@@ -209,7 +221,7 @@ export function ScrubHero({
 
     const onLoadedData = () => {
       duration = video?.duration ?? 0;
-      setReady(true);
+      setClipReady(true);
     };
     // A clip restored from the back/forward cache fires nothing; readyState
     // already past HAVE_CURRENT_DATA means the frame is there to show.
@@ -335,7 +347,8 @@ export function ScrubHero({
     let lastWantedFrame = 0;
 
     if (frames) {
-      setReady(true);
+      // No setReady here: `ready` is already true for this path, derived at
+      // the top from `frames` itself.
       requestFrame(0);
       if (images[0].complete) drawFrame(0);
       // Everything else once the page is idle, one per callback so a slow
@@ -475,7 +488,11 @@ export function ScrubHero({
       window.removeEventListener("touchstart", prime);
       window.removeEventListener("pointerdown", prime);
     };
-  }, [scrub, frames]);
+    // `scrubbing` is `scrub || Boolean(frames)`, so it cannot change without
+    // one of the other two changing -- but the rule cannot see that, and an
+    // ignore comment here would also silence a genuinely missing dependency
+    // the next time this effect grows.
+  }, [scrub, frames, scrubbing]);
 
   return (
     <section

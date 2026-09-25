@@ -80,17 +80,6 @@ export function DestinationSlider() {
     };
   }, []);
 
-  // Auto-advance instead of prev/next buttons -- pauses while the pointer
-  // is over the slider so a card can actually be read, and is skipped
-  // entirely for reduced-motion users.
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const id = setInterval(() => {
-      if (!pausedRef.current) move(1);
-    }, 3500);
-    return () => clearInterval(id);
-  }, []);
-
   function move(dir: 1 | -1) {
     activeRef.current += dir;
     const track = trackRef.current;
@@ -104,6 +93,17 @@ export function DestinationSlider() {
     track.style.transform = `translate3d(${-step * activeRef.current}px, 0, 0)`;
     cardRefs.current.forEach((el, i) => el?.classList.toggle("is-active", i === activeRef.current));
   }
+
+  // Auto-advance instead of prev/next buttons -- pauses while the pointer
+  // is over the slider so a card can actually be read, and is skipped
+  // entirely for reduced-motion users.
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = setInterval(() => {
+      if (!pausedRef.current) move(1);
+    }, 3500);
+    return () => clearInterval(id);
+  }, []);
 
   return (
     <section className="site-section site-hairline border-t" aria-label="Popular destinations slider">

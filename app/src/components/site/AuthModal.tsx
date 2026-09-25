@@ -61,9 +61,28 @@ function PerkRow({ perk }: { perk: Perk }) {
 // does this, and deliberately so -- authentication here is email and
 // password against D1, and a button that looks like sign-in but does
 // nothing is worse than no button.
+/**
+ * The modal stayed mounted while closed and wiped its own fields from an
+ * effect every time it opened -- six setState calls in an effect body, which
+ * is what the lint rule is pointing at, and a real behaviour too: the form
+ * briefly rendered the PREVIOUS visitor's email before the effect cleared it.
+ *
+ * Mounting is the reset now. This gate renders nothing while the modal is
+ * closed, so opening builds the dialog fresh with the right initial state,
+ * and `key` on the requested mode covers the case where it is already open
+ * and something asks for a different one.
+ */
 export function AuthModal() {
-  const { authModalOpen, authModalMode, closeAuthModal, refetchUser } = useAuth();
-  const [mode, setMode] = useState<Mode>(authModalMode);
+  const { authModalOpen, authModalMode } = useAuth();
+  if (!authModalOpen) return null;
+  return <AuthModalDialog key={authModalMode} initialMode={authModalMode} />;
+}
+
+function AuthModalDialog({ initialMode }: { initialMode: Mode }) {
+  const { closeAuthModal, refetchUser } = useAuth();
+  // Seeded once, then owned here: switchMode below moves between sign-in,
+  // sign-up and forgot without the dialog remounting.
+  const [mode, setMode] = useState<Mode>(initialMode);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -71,26 +90,14 @@ export function AuthModal() {
   const [resetSent, setResetSent] = useState(false);
   const t = useT();
 
+  // No open check: this component only exists while the modal is open.
   useEffect(() => {
-    if (authModalOpen) {
-      setMode(authModalMode);
-      setEmail("");
-      setPassword("");
-      setError(null);
-      setResetSent(false);
-    }
-  }, [authModalOpen, authModalMode]);
-
-  useEffect(() => {
-    if (!authModalOpen) return;
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") closeAuthModal();
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [authModalOpen, closeAuthModal]);
-
-  if (!authModalOpen) return null;
+  }, [closeAuthModal]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();

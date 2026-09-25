@@ -56,14 +56,47 @@ function Carousel({
     },
     plugins
   )
-  const [canScrollPrev, setCanScrollPrev] = React.useState(false)
-  const [canScrollNext, setCanScrollNext] = React.useState(false)
+  /**
+   * Whether either arrow can move, read from embla rather than mirrored into
+   * state.
+   *
+   * The generated version kept two useState and an effect that called
+   * onSelect(api) in its body to seed them, because embla's events only fire
+   * on a CHANGE and the first correct value would otherwise never arrive.
+   * That seeding is the `setState synchronously within an effect` error:
+   * render, effect, render again, with both buttons wrongly disabled in
+   * between. Reading during render gets it right the first time.
+   *
+   * Two stores rather than one object: useSyncExternalStore compares
+   * snapshots by identity, and a fresh { prev, next } on every read would
+   * loop forever. Booleans compare by value.
+   *
+   * The old cleanup also leaked -- it registered "reInit" and "select" and
+   * removed only "select". Both come off here.
+   */
+  const subscribeToApi = React.useCallback(
+    (onChange: () => void) => {
+      if (!api) return () => {}
+      api.on("reInit", onChange)
+      api.on("select", onChange)
+      return () => {
+        api.off("reInit", onChange)
+        api.off("select", onChange)
+      }
+    },
+    [api]
+  )
 
-  const onSelect = React.useCallback((api: CarouselApi) => {
-    if (!api) return
-    setCanScrollPrev(api.canScrollPrev())
-    setCanScrollNext(api.canScrollNext())
-  }, [])
+  const canScrollPrev = React.useSyncExternalStore(
+    subscribeToApi,
+    () => api?.canScrollPrev() ?? false,
+    () => false
+  )
+  const canScrollNext = React.useSyncExternalStore(
+    subscribeToApi,
+    () => api?.canScrollNext() ?? false,
+    () => false
+  )
 
   const scrollPrev = React.useCallback(() => {
     api?.scrollPrev()
@@ -91,16 +124,6 @@ function Carousel({
     setApi(api)
   }, [api, setApi])
 
-  React.useEffect(() => {
-    if (!api) return
-    onSelect(api)
-    api.on("reInit", onSelect)
-    api.on("select", onSelect)
-
-    return () => {
-      api?.off("select", onSelect)
-    }
-  }, [api, onSelect])
 
   return (
     <CarouselContext.Provider

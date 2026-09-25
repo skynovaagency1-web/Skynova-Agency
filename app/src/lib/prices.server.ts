@@ -91,7 +91,10 @@ const DEFAULT_CURRENCY = "eur";
 /** The visitor's departure hub and currency, from Cloudflare's country header.
  *  Null origin when we do not have a hub for their country. */
 export function resolveOrigin(): { origin: string | null; currency: string } {
-  let country: string | null = null;
+  // Declared without an initialiser: the try assigns it before anything reads
+  // it and the catch returns, so a starting null was a value no code path
+  // could ever observe.
+  let country: string | null;
   try {
     // Cloudflare sets this on every request that reaches the Worker.
     country = (getRequestHeader("cf-ipcountry") || "").toUpperCase() || null;
