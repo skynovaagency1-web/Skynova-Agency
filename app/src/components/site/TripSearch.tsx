@@ -90,7 +90,9 @@ export function TripSearch() {
       case "cars":
         return carRentalLink();
     }
-  }, [mode, resolved, checkIn, checkOut, match]);
+    // `match` is deliberately absent: it was here only for the eSIM branch,
+    // which no longer passes a destination to a link that ignored it.
+  }, [mode, resolved, checkIn, checkOut]);
 
   // Names exactly what gets searched. Only the modes that really do pre-fill
   // reach this, so there is no longer an eSIM special case naming a country
