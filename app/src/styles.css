@@ -237,6 +237,10 @@
     0 44px 84px -44px rgba(28, 26, 20, 0.16);
   --sky-glass-bg: rgba(255, 255, 255, 0.46);
   --sky-glass-bg-strong: rgba(255, 255, 255, 0.74);
+  /* The orbit chips need more than the standard glass: they are the only
+     glass on the site that sits over a lit sphere rather than over the page.
+     See .orbit-item-chip. */
+  --sky-orbit-chip-bg: rgba(255, 255, 255, 0.94);
   /* 14px, not 30px. Blur cost scales with the radius and this token feeds
      every glass surface on the site, so the radius is the cheapest lever
      there is: measured 18% faster scrolling on /flights, against a 5%
@@ -2203,9 +2207,26 @@ html {
   padding: 0.4rem 0.8rem;
   border-radius: 999px;
   font-size: 0.78rem;
-  color: var(--sky-ink-muted);
+  color: var(--sky-ink);
   border: 1px solid transparent;
-  background: linear-gradient(var(--sky-glass-bg-strong), var(--sky-glass-bg-strong)) padding-box, var(--sky-glass-edge) border-box;
+  background: linear-gradient(var(--sky-orbit-chip-bg), var(--sky-orbit-chip-bg)) padding-box, var(--sky-glass-edge) border-box;
+  /* THE SCRIM. These chips sit on top of the globe on purpose -- canvas text
+     is invisible to search engines, so they stay real DOM links and the globe
+     paints behind them. Since the globe now lands at 0.9 of the stage instead
+     of 0.699, far-side chips project to about 186px from centre against a
+     306px radius, so most of them are over the sphere rather than beside it,
+     and a 74% white pill over a lit surface loses its edge.
+     Two layers, because one does not do it: a more opaque fill so the label
+     never competes with what is behind it, and a soft dark halo that
+     separates the pill from the globe without drawing a ring around it. The
+     tight shadow underneath keeps it sitting ON the globe rather than
+     floating unattached.
+     NO backdrop-filter, deliberately: these live inside a preserve-3d
+     transform, and a filter there forces the stacking context flat and takes
+     the orbit's depth with it. */
+  box-shadow:
+    0 1px 3px rgba(10, 12, 18, 0.32),
+    0 0 14px 6px rgba(10, 12, 18, 0.24);
   transition: border-color 0.2s ease, color 0.2s ease;
 }
 .orbit-item-chip:hover { border-color: var(--sky-coral); color: var(--sky-ink); }
@@ -6538,6 +6559,15 @@ html.lenis body { height: auto; }
 .is-center .scrollstage-actions { justify-content: center; }
 .is-right .scrollstage-actions { justify-content: flex-end; }
 .scrollstage-actions .btn-ghost-link { color: rgba(245, 240, 230, 0.86); }
+/* Smaller than the site-wide pill, and scoped here rather than changed at
+   source: .btn-hero-pill is used by ten components -- the trip search, the
+   nav, the auth modal and six other heroes -- and shrinking it at the
+   definition would move all of them. The stage's globe is now 463px at rest,
+   so the button no longer needs to hold the composition on its own. */
+.scrollstage-actions .btn-hero-pill {
+  font-size: 0.84rem;
+  padding: 0.68rem 1.4rem;
+}
 /* Full-width primary on the narrowest phones -- a pill that wraps onto its
    own line reads as a stray chip next to a text link. */
 @media (max-width: 380px) {
