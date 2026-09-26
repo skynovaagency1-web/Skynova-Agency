@@ -2,21 +2,21 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { Nav } from "@/components/site/Nav";
-// The scroll stage: Skynova's opening carried across four screens, with a
-// globe that travels between them and docks onto the "Fly anywhere" stage
-// further down, where the WebGL globe crossfades in underneath it
-// (lib/globe-handoff.ts). Built on components/ui/landing-page.tsx +
-// components/ui/globe.tsx.
+// The flight: a pinned track down which the camera falls from orbit to Paris,
+// the city centring as it arrives and a marker lighting on it. Scroll-driven
+// throughout -- the reader's scroll IS the camera, and the page resumes the
+// moment the track ends.
 //
-// Five alternates stay in the tree, unused: HeroOrbit.tsx (the WebGL planet
-// standing still in the hero), HeroPlay.tsx (the boarding clip played, with
-// the page held until it reached the window), Hero.tsx (that same footage
-// scrubbed frame-by-frame from scroll), ParallaxHero.tsx, and HeroScroll.tsx
-// the plane fly-in (which also runs on /flights as FlightHeroScroll).
-// Swapping this one import is still the whole switch, in any direction --
+// Six alternates stay in the tree, unused: HeroStage.tsx (the scroll stage
+// whose globe travelled down the page and docked onto "Fly anywhere"),
+// HeroOrbit.tsx (the WebGL planet standing still), HeroPlay.tsx (the boarding
+// clip played, the page held until it reached the window), Hero.tsx (that
+// same footage scrubbed from scroll), ParallaxHero.tsx, and HeroScroll.tsx
+// the plane fly-in (also running on /flights as FlightHeroScroll). Swapping
+// this one import is still the whole switch, in any direction --
 // tests/landing-contract.test.ts names whichever one is here and fails if it
 // is not updated with it.
-import { HeroStage } from "@/components/site/HeroStage";
+import { HeroGlobeFlight } from "@/components/site/HeroGlobeFlight";
 import { TripSearch } from "@/components/site/TripSearch";
 import { TrustSection } from "@/components/site/Sections2";
 import {
@@ -90,7 +90,7 @@ function Index() {
       <StructuredData json={HOME_SCHEMA} />
       <Nav />
       <main>
-        <HeroStage />
+        <HeroGlobeFlight />
         {/* The hero's night ground, carried on.
             The hero is dark and the page under it was cream, so the surface
             changed the instant the globe left the stage. This run keeps the

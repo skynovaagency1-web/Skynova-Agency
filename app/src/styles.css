@@ -6460,6 +6460,54 @@ html.lenis body { height: auto; }
    rest); the globe is a clamped layout size the section scales rather than a
    fixed pixel diameter; and the copy column is a max-width in ch, so it
    wraps at the same measure at every width. */
+/* ---- Flight hero (see HeroGlobeFlight.tsx) ----
+   A tall track with a sticky stage in it. The track's extra height IS the
+   animation's length: 220vh gives roughly two screens of scrolling for the
+   whole journey, and because the stage is sticky rather than fixed, the page
+   resumes by itself the moment the track runs out -- nothing has to un-pin
+   anything. */
+.globeflight-track {
+  position: relative;
+  height: 220vh;
+  background:
+    radial-gradient(120% 78% at 50% 12%, #2a251c 0%, transparent 64%),
+    linear-gradient(180deg, #16130d 0%, #221d15 62%, #16130d 100%);
+}
+.globeflight-stage {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  min-height: 560px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  color: #f5f0e6;
+}
+.globeflight-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.globeflight-canvas canvas { display: block; }
+.globeflight-copy {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  /* Faded from the scroll handler, not by a transition: the value is computed
+     per frame and an easing on top would make it lag the scroll. */
+  will-change: opacity;
+}
+.globeflight-daynight {
+  position: absolute;
+  inset-block-start: clamp(4.6rem, 9vh, 6rem);
+  inset-inline-end: clamp(0.9rem, 3vw, 2rem);
+  z-index: 6;
+}
+@media (prefers-reduced-motion: reduce) {
+  /* No flight to scroll through, so the track has no reason to be tall. */
+  .globeflight-track { height: 100dvh; }
+}
+
 /* ---- The night run (see routes/index.tsx) ----
    The hero's ground, carried from the trip search down to "Popular Right
    Now". The same background value as .herostage, deliberately: both the hero
