@@ -8,8 +8,6 @@ import { VERTICALS } from "@/data/verticals";
 // instead, behind a lazy wrapper so three/fiber/drei stay out of the
 // homepage's entry chunk. The type import is erased at build time, so it
 // costs nothing here.
-import { OrbitMarkerGlobe } from "@/components/site/OrbitMarkerGlobe";
-import type { GlobeMarker } from "@/components/ui/3d-globe";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import { useT, type TKey } from "@/lib/i18n-strings";
 
@@ -265,23 +263,6 @@ export function LiveStatsBarSection() {
 
 const ORBIT_DESTINATIONS = ORBIT_SLUGS.map(getDestinationBySlug).filter((d): d is Destination => Boolean(d));
 
-/**
- * The same eight, as pins marking where they are.
- *
- * NO PHOTO BUBBLES. The pin is the point: it says where the place is, and the
- * ring of links beside it already says what each one is called and takes you
- * there. A photo floating above every pin would repeat the destination
- * imagery that the slider further down the page is already carrying, and it
- * would do it at eight pixels wide.
- *
- * `label` still rides along -- nothing renders it today, but it is what
- * onMarkerHover reports, so a tooltip later needs no data change.
- */
-const ORBIT_MARKERS: GlobeMarker[] = ORBIT_PLACES.flatMap((place) => {
-  const destination = getDestinationBySlug(place.slug);
-  if (!destination) return [];
-  return [{ lat: place.lat, lng: place.lng, label: destination.name }];
-});
 
 export function FlyAnywhereSection() {
   const t = useT();
@@ -299,7 +280,15 @@ export function FlyAnywhereSection() {
           </Link>
         </div>
         <div className="orbit-stage">
-          <OrbitMarkerGlobe className="orbit-marker-globe" markers={ORBIT_MARKERS} />
+          {/* No globe of its own. The hero's travels down the page and lands
+              here, so this stage holds the ring of destination links and the
+              globe that arrives on it -- one globe on the page, which is the
+              whole point of lib/globe-handoff.ts and was never quite true
+              while this section rendered a second one.
+              components/site/OrbitMarkerGlobe.tsx and ui/3d-globe.tsx both
+              stay in the tree unused, the way the five heroes do. Putting one
+              back needs its markers rebuilt from ORBIT_PLACES as well -- see
+              the commit that removed them. */}
           <div className="orbit-ring">
             {ORBIT_DESTINATIONS.map((d, i) => (
               <div key={d.slug} className="orbit-item" style={{ "--angle": `${(360 / ORBIT_DESTINATIONS.length) * i}deg` } as CSSProperties}>

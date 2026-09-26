@@ -123,6 +123,17 @@ export interface ScrollStageProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Fires true when the subject has arrived on `dockTo`, false when it leaves
    *  again. The caller hands over to the real thing on true. */
   onDock?: (docked: boolean) => void;
+  /** Whether the subject fades out as it lands.
+   *
+   *  True -- the default, and the original behaviour -- assumes something
+   *  else lives on the target and fades in underneath, so the traveller
+   *  disappears and the two read as one object swapping renderers.
+   *
+   *  FALSE when nothing lives there. The subject lands and STAYS, becoming
+   *  the thing on the target rather than handing over to it. Without this the
+   *  fade runs to exactly zero at t >= 1 and the globe flies the length of
+   *  the page only to vanish into an empty ring. */
+  handoffOnDock?: boolean;
   /** The subject's own rendered width at scale 1, in px. The dock target's
    *  width is divided by this to get the scale at which the two are the same
    *  size. Defaults to the stage's own globe. */
@@ -188,6 +199,7 @@ export function ScrollStage({
   subject = <Globe />,
   dockTo,
   onDock,
+  handoffOnDock = true,
   subjectBasePx = DEFAULT_SUBJECT_BASE_PX,
   dockFill = 1,
   className,
@@ -335,7 +347,7 @@ export function ScrollStage({
       scale:
         mix(last.scale, (targetRect.width * dockFill) / subjectBasePx, converge) *
         (0.22 + 0.78 * presence),
-      fade: (0.08 + 0.92 * presence) * (1 - handoff),
+      fade: (0.08 + 0.92 * presence) * (handoffOnDock ? 1 - handoff : 1),
       docked: arrived,
     });
 
@@ -343,7 +355,7 @@ export function ScrollStage({
       docked.current = arrived;
       onDock?.(arrived);
     }
-  }, [dockTo, dockFill, onDock, positionFor, subjectBasePx]);
+  }, [dockTo, dockFill, onDock, handoffOnDock, positionFor, subjectBasePx]);
 
   React.useEffect(() => {
     let ticking = false;

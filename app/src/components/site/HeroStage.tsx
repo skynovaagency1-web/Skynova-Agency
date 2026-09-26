@@ -206,6 +206,12 @@ export function HeroStage() {
         dockTo={DOCK_TARGET}
         dockFill={DOCK_FILL}
         onDock={setDocked}
+        // Nothing lives on the target any more -- the Fly-anywhere section
+        // has no globe of its own, so there is nothing to hand over to. This
+        // globe lands on that stage and stays as the globe that lives there.
+        // Left at the default it would fade to exactly zero on arrival,
+        // having flown the length of the page to vanish into an empty ring.
+        handoffOnDock={false}
       />
       <DayNightToggle className="herostage-daynight" />
     </div>
