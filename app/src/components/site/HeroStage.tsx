@@ -139,12 +139,11 @@ const DOCK_TARGET = ".orbit-stage";
  *  planet is gone: this globe IS the one that lives on the stage now, so
  *  there is nothing left to match and nothing left holding it small.
  *
- *  0.9 is set by the ring instead, which is the only real constraint. The
- *  destination chips orbit at translateZ(clamp(200px, 46vw, 390px)) -- 390px
- *  on a desktop -- and 0.9 of the 680px stage is a 612px globe, radius 306px.
- *  That clears the chips by 84px. Past about 0.95 the globe starts reaching
- *  the near-side chips as they swing across it. */
-const DOCK_FILL = 0.9;
+ *  1.0 -- the globe fills the stage. The ring was what held it back, and the
+ *  ring moved with it: --orbit-r goes up in styles.css so the chips clear the
+ *  bigger globe instead of crossing its face. The two have to change
+ *  together, which is why this comment names the other one. */
+const DOCK_FILL = 1.0;
 
 export function HeroStage() {
   const t = useT();

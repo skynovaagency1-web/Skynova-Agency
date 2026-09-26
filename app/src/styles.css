@@ -2427,6 +2427,10 @@ html {
   transform-style: preserve-3d;
   animation: orbit-spin-3d 100s linear infinite;
 }
+/* The orbit radius moved out with the globe. HeroStage's DOCK_FILL is 1.0
+   now -- the globe fills the stage -- so a ring at the old 390px would have
+   had every chip crossing its face instead of circling it. These two are one
+   setting in two files; changing either alone breaks the gap. */
 .orbit-item {
   position: absolute;
   top: 50%;
@@ -2434,7 +2438,7 @@ html {
   width: 0;
   height: 0;
   transform-style: preserve-3d;
-  transform: rotateY(var(--angle)) translateZ(var(--orbit-r, clamp(200px, 46vw, 390px)));
+  transform: rotateY(var(--angle)) translateZ(var(--orbit-r, clamp(250px, 58vw, 500px)));
 }
 .orbit-item-chip {
   display: inline-flex;
@@ -6889,26 +6893,57 @@ html.lenis body { height: auto; }
   inset: 0;
   border-radius: 999px;
   overflow: hidden;
-  background-size: cover;
-  background-position: left center;
+
   /* The reference's shading, kept whole -- the rim light, the terminator and
      the shadowed limb are what make this a sphere and not a circular crop.
      The last two offsets are px against its fixed 250px, so they are
      proportional here instead. */
+  /* Only the OUTER glow lives on the element itself. */
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+/* The shading, lifted onto its own layer above the texture.
+   Inset box-shadows paint above an element's background but BELOW its
+   children -- so the moment the texture became a child instead of a
+   background, it covered the rim light, the terminator and the shadowed limb,
+   and the sphere rendered as a flat circular crop of a map. Caught by looking
+   at it, not by any check that passes. These are the reference's own values,
+   unchanged; the last two are px against its fixed 250px, so they stay
+   proportional here. */
+.globe-sphere::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
   box-shadow:
-    0 0 20px rgba(255, 255, 255, 0.2),
     -5px 0 8px #c3f4ff inset,
     15px 2px 25px #000 inset,
     -24px -2px 34px #c3f4ff99 inset,
     calc(var(--globe-size) * 1) 0 44px #00000066 inset,
     calc(var(--globe-size) * 0.6) 0 38px #000000aa inset;
+}
+
+/* The turning texture, and the reason it is a separate element.
+   400% wide with each copy at 50% of that, so a copy is exactly twice the
+   sphere's width -- the same scale background-size: cover gave -- and two
+   copies sit side by side. Sliding by 50% moves exactly one copy, so the loop
+   is seamless, and because it is a transform the whole thing composites
+   instead of repainting the shadowed circle sixty times a second. */
+.globe-texture {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 400%;
+  background-size: 50% 100%;
+  background-repeat: repeat-x;
+  background-position: left center;
+  will-change: transform;
   animation: globe-rotate 30s linear infinite;
 }
-/* The texture is 2:1 equirectangular, so one full turn is exactly its own
-   rendered width -- which is twice the sphere's, at background-size: cover. */
 @keyframes globe-rotate {
-  from { background-position: 0 center; }
-  to { background-position: calc(var(--globe-size) * 2) center; }
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
 }
 .globe-star {
   position: absolute;
@@ -6924,7 +6959,7 @@ html.lenis body { height: auto; }
   50% { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .globe-sphere, .globe-star { animation: none; }
+  .globe-texture, .globe-star { animation: none; }
   .globe-star { opacity: 0.75; }
 }
 

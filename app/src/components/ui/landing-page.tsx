@@ -206,17 +206,39 @@ export function ScrollStage({
   ...props
 }: ScrollStageProps) {
   const [activeSection, setActiveSection] = React.useState(0);
-  const [scrollProgress, setScrollProgress] = React.useState(0);
+
+  /**
+   * THE PER-FRAME VALUES ARE WRITTEN TO THE DOM, NOT HELD IN STATE.
+   *
+   * This component used to call setTransit(), setScrollProgress() and
+   * setAlignedTop() from inside its scroll rAF. setTransit built a fresh
+   * object every frame, so React could never bail out: the whole stage --
+   * four sections, their features, their buttons and the dot nav -- re-rendered
+   * sixty times a second, and the globe it was trying to move smoothly was the
+   * thing that paid for it.
+   *
+   * Measured on the live page, scrolling through the dock: 26.8ms median
+   * frame, 40.1ms at p90, 70.2ms worst, and 23 of 70 frames over 32ms. A
+   * third of the journey was dropping frames, which is exactly the "moves a
+   * lot, not smooth" this was reported as.
+   *
+   * Hero.tsx already learned this and says so: the same writes against a leaf
+   * node cost 0.06ms where going through React cost 33ms. So the transform,
+   * the opacity and the progress bar go straight to their own nodes, and
+   * React state now only carries what changes rarely -- which section is
+   * active, and whether the subject is mounted at all.
+   */
+  const subjectRef = React.useRef<HTMLDivElement | null>(null);
+  const progressRef = React.useRef<HTMLDivElement | null>(null);
+  const transitRef = React.useRef<TransitState | null>(null);
+  const alignedTopRef = React.useRef<number | null>(null);
   // Starts true: this renders at the top of the page, so the honest first
   // paint has the globe in it -- and SSR has no viewport to measure against.
   const [inView, setInView] = React.useState(true);
-  /** Set only while the subject is between the last section and the dock
-   *  target: {left, top} in viewport units, plus the scale and how faint it
-   *  has gone. Null means "use the active section's own position". */
-  const [transit, setTransit] = React.useState<TransitState | null>(null);
-  /** Viewport-unit top for the active section, when its position asks to be
-   *  aligned to an element rather than to a fixed fraction. */
-  const [alignedTop, setAlignedTop] = React.useState<number | null>(null);
+  /** Whether the subject is between the last section and the dock target.
+   *  A boolean, so it only re-renders on the two frames it actually flips --
+   *  the values themselves live in transitRef above. */
+  const [inTransit, setInTransit] = React.useState(false);
   const docked = React.useRef(false);
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const sectionRefs = React.useRef<(HTMLElement | null)[]>([]);
@@ -243,6 +265,33 @@ export function ScrollStage({
     [positions],
   );
 
+  /**
+   * Put a frame on the subject.
+   *
+   * Everything the scroll loop produces lands here and goes straight to the
+   * node. `fade` is null while the sections own the subject -- the inline
+   * opacity and transition are cleared so the CSS role rules take back over --
+   * and a number in transit, where the 1400ms section easing must not apply or
+   * the globe lags the scrollbar by most of a second.
+   */
+  const writeSubject = React.useCallback(
+    (place: { left: number; top: number; scale: number }, fade: number | null) => {
+      const el = subjectRef.current;
+      if (!el) return;
+      el.style.transform =
+        `translate3d(${place.left}vw, ${place.top}vh, 0) translate3d(-50%, -50%, 0) ` +
+        `scale3d(${place.scale}, ${place.scale}, 1)`;
+      if (fade === null) {
+        el.style.removeProperty("opacity");
+        el.style.removeProperty("transition");
+      } else {
+        el.style.opacity = String(fade);
+        el.style.transition = "none";
+      }
+    },
+    [],
+  );
+
   const update = React.useCallback(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -251,7 +300,9 @@ export function ScrollStage({
     const rect = container.getBoundingClientRect();
     const travel = rect.height - window.innerHeight;
     const progress = travel > 0 ? Math.min(Math.max(-rect.top / travel, 0), 1) : 0;
-    setScrollProgress(progress);
+    // Straight to the bar. A state update here re-rendered the stage on every
+    // frame of the entire page, for one scaleX.
+    if (progressRef.current) progressRef.current.style.transform = `scaleX(${progress})`;
     setInView(rect.bottom > 0 && rect.top < window.innerHeight);
 
     const viewportCenter = window.innerHeight / 2;
@@ -274,20 +325,38 @@ export function ScrollStage({
     const anchor = wanted && host ? host.querySelector<HTMLElement>(wanted) : null;
     if (anchor) {
       const box = anchor.getBoundingClientRect();
-      setAlignedTop(((box.top + box.height / 2) / window.innerHeight) * 100);
+      alignedTopRef.current = ((box.top + box.height / 2) / window.innerHeight) * 100;
     } else {
-      setAlignedTop(null);
+      alignedTopRef.current = null;
     }
 
+    /** The subject's resting place when the sections own it. */
+    const onStage = () => {
+      const base = positionFor(nearest);
+      return alignedTopRef.current !== null ? { ...base, top: alignedTopRef.current } : base;
+    };
+
     // ---- The journey past the last section, to the dock target ----
-    if (!dockTo) return;
+    if (!dockTo) {
+      transitRef.current = null;
+      setInTransit(false);
+      writeSubject(onStage(), null);
+      return;
+    }
     const target = document.querySelector<HTMLElement>(dockTo);
-    if (!target) return;
+    if (!target) {
+      transitRef.current = null;
+      setInTransit(false);
+      writeSubject(onStage(), null);
+      return;
+    }
     const targetRect = target.getBoundingClientRect();
 
     if (rect.bottom > 0) {
       // Still on the stage: the sections own the subject.
-      setTransit(null);
+      transitRef.current = null;
+      setInTransit(false);
+      writeSubject(onStage(), null);
       if (docked.current) {
         docked.current = false;
         onDock?.(false);
@@ -336,7 +405,7 @@ export function ScrollStage({
     const arrived = t >= 0.94;
 
     const last = positionFor(sectionRefs.current.length - 1);
-    setTransit({
+    const next: TransitState = {
       left: mix(last.left, ((targetRect.left + targetRect.width / 2) / window.innerWidth) * 100, converge),
       top: mix(last.top, ((targetRect.top + targetRect.height / 2) / window.innerHeight) * 100, converge),
       // Ends at the target's own size: the dock element's width against the
@@ -349,13 +418,16 @@ export function ScrollStage({
         (0.22 + 0.78 * presence),
       fade: (0.08 + 0.92 * presence) * (handoffOnDock ? 1 - handoff : 1),
       docked: arrived,
-    });
+    };
+    transitRef.current = next;
+    setInTransit(true);
+    writeSubject(next, next.fade);
 
     if (arrived !== docked.current) {
       docked.current = arrived;
       onDock?.(arrived);
     }
-  }, [dockTo, dockFill, onDock, handoffOnDock, positionFor, subjectBasePx]);
+  }, [dockTo, dockFill, onDock, handoffOnDock, positionFor, subjectBasePx, writeSubject]);
 
   React.useEffect(() => {
     let ticking = false;
@@ -380,18 +452,16 @@ export function ScrollStage({
   }, [update]);
 
   const current = positionFor(activeSection);
-  // In transit the journey owns the subject; on the stage, the active section
-  // does. Same transform either way, so there is no seam where one hands to
-  // the other -- transit starts at exactly the last section's anchor.
-  // Transit owns the subject outright; on the stage, an aligned top overrides
-  // the section's fixed fraction.
-  const place = transit ?? (alignedTop !== null ? { ...current, top: alignedTop } : current);
-  const subjectTransform =
-    `translate3d(${place.left}vw, ${place.top}vh, 0) translate3d(-50%, -50%, 0) ` +
-    `scale3d(${place.scale}, ${place.scale}, 1)`;
+  /* The FIRST PAINT only. Every frame after this is written straight to the
+     node by writeSubject, so this exists for the prerendered document and for
+     the moment before the first scroll tick -- section zero's own anchor,
+     which is where the subject belongs before anyone has scrolled. */
+  const initialTransform =
+    `translate3d(${current.left}vw, ${current.top}vh, 0) translate3d(-50%, -50%, 0) ` +
+    `scale3d(${current.scale}, ${current.scale}, 1)`;
   // The fixed layer must survive past the stage, or the subject would unmount
   // the instant it set off on the longest part of its journey.
-  const subjectMounted = inView || transit !== null;
+  const subjectMounted = inView || inTransit;
 
   return (
     <div ref={containerRef} className={cn("scrollstage", className)} {...props}>
@@ -402,7 +472,11 @@ export function ScrollStage({
       {inView && (
         <>
           <div className="scrollstage-progress" aria-hidden="true">
-            <div className="scrollstage-progress-bar" style={{ transform: `scaleX(${scrollProgress})` }} />
+            <div
+              ref={progressRef}
+              className="scrollstage-progress-bar"
+              style={{ transform: "scaleX(0)" }}
+            />
           </div>
 
           <nav className="scrollstage-nav" aria-label="Hero sections">
@@ -440,13 +514,13 @@ export function ScrollStage({
       {subjectMounted && (
         <div
           className="scrollstage-subject"
-          data-role={transit ? "transit" : current.role}
+          ref={subjectRef}
+          data-role={inTransit ? "transit" : current.role}
           style={{
-            transform: subjectTransform,
-            // In transit the fade is computed per frame and must not also be
-            // eased by the CSS transition, or the subject lags the scroll by
-            // most of a second on the way down.
-            ...(transit ? { opacity: transit.fade, transition: "none" } : {}),
+            /* First paint only -- writeSubject owns this node from the first
+               scroll tick, including the opacity and the transition, which is
+               why neither is set here any more. */
+            transform: initialTransform,
           }}
         >
           {subject}

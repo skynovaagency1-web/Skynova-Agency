@@ -76,7 +76,17 @@ export const Globe = React.forwardRef<HTMLDivElement, GlobeProps>(function Globe
       aria-hidden="true"
       {...props}
     >
-      <div className="globe-sphere" style={{ backgroundImage: `url('${textureUrl}')` }} />
+      {/* The texture is its own element so the ROTATION CAN BE A TRANSFORM.
+          It used to be a background-position animation on .globe-sphere
+          itself, which is a paint property -- so every frame repainted a
+          circle carrying a border-radius, an overflow clip and six inset
+          box-shadows with 20-44px blurs, forever, whether or not anything was
+          scrolling. That is survivable at 250px and not at the 680px this
+          globe now reaches when it docks. Transform animations composite on
+          the GPU: the shadows are painted once and the texture just slides. */}
+      <div className="globe-sphere">
+        <div className="globe-texture" style={{ backgroundImage: `url('${textureUrl}')` }} />
+      </div>
       {STARS.map(([left, top, duration]) => (
         <span
           key={`${left}:${top}`}
