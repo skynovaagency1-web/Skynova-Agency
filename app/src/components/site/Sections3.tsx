@@ -3,12 +3,41 @@ import { Link } from "@tanstack/react-router";
 
 import { getDestinationBySlug, type Destination, DESTINATIONS } from "@/data/destinations";
 import { VERTICALS } from "@/data/verticals";
-import { Globe3D } from "@/components/site/Globe3D";
+// The hero runs components/site/Globe3D -- a glTF earth with an aircraft
+// orbiting it. This section runs the textured-sphere globe with position pins
+// instead, behind a lazy wrapper so three/fiber/drei stay out of the
+// homepage's entry chunk. The type import is erased at build time, so it
+// costs nothing here.
+import { OrbitMarkerGlobe } from "@/components/site/OrbitMarkerGlobe";
+import type { GlobeMarker } from "@/components/ui/3d-globe";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import { useT, type TKey } from "@/lib/i18n-strings";
 
 // Back to a curated 8 -- 25 chips around the globe read as cluttered.
-const ORBIT_SLUGS = ["portugal", "italy", "vietnam", "new-zealand", "switzerland", "peru", "kenya", "jordan"];
+/**
+ * The eight destinations on the globe, with where they are.
+ *
+ * ONE LIST, because two would drift. The ring of DOM links and the pins on
+ * the globe are the same eight places, so the slugs are derived from this
+ * rather than written twice -- add a row here and both follow.
+ *
+ * Coordinates are country centroids, near enough for a pin on a 2-unit
+ * sphere and not pretending to be a capital city. Every slug here has a photo
+ * at /assets/destinations/<slug>.webp, which is what the pin shows; checked
+ * for all eight rather than assumed.
+ */
+const ORBIT_PLACES: { slug: string; lat: number; lng: number }[] = [
+  { slug: "portugal", lat: 39.4, lng: -8.2 },
+  { slug: "italy", lat: 42.8, lng: 12.6 },
+  { slug: "vietnam", lat: 14.1, lng: 108.3 },
+  { slug: "new-zealand", lat: -41.5, lng: 172.8 },
+  { slug: "switzerland", lat: 46.8, lng: 8.2 },
+  { slug: "peru", lat: -9.2, lng: -75.0 },
+  { slug: "kenya", lat: 0.0, lng: 37.9 },
+  { slug: "jordan", lat: 31.0, lng: 36.2 },
+];
+
+const ORBIT_SLUGS = ORBIT_PLACES.map((p) => p.slug);
 
 /**
  * Counted from the data, never typed by hand.
@@ -236,6 +265,24 @@ export function LiveStatsBarSection() {
 
 const ORBIT_DESTINATIONS = ORBIT_SLUGS.map(getDestinationBySlug).filter((d): d is Destination => Boolean(d));
 
+/**
+ * The same eight, as pins marking where they are.
+ *
+ * NO PHOTO BUBBLES. The pin is the point: it says where the place is, and the
+ * ring of links beside it already says what each one is called and takes you
+ * there. A photo floating above every pin would repeat the destination
+ * imagery that the slider further down the page is already carrying, and it
+ * would do it at eight pixels wide.
+ *
+ * `label` still rides along -- nothing renders it today, but it is what
+ * onMarkerHover reports, so a tooltip later needs no data change.
+ */
+const ORBIT_MARKERS: GlobeMarker[] = ORBIT_PLACES.flatMap((place) => {
+  const destination = getDestinationBySlug(place.slug);
+  if (!destination) return [];
+  return [{ lat: place.lat, lng: place.lng, label: destination.name }];
+});
+
 export function FlyAnywhereSection() {
   const t = useT();
   return (
@@ -252,7 +299,7 @@ export function FlyAnywhereSection() {
           </Link>
         </div>
         <div className="orbit-stage">
-          <Globe3D className="orbit-globe-3d" />
+          <OrbitMarkerGlobe className="orbit-marker-globe" markers={ORBIT_MARKERS} />
           <div className="orbit-ring">
             {ORBIT_DESTINATIONS.map((d, i) => (
               <div key={d.slug} className="orbit-item" style={{ "--angle": `${(360 / ORBIT_DESTINATIONS.length) * i}deg` } as CSSProperties}>

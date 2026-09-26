@@ -2108,6 +2108,23 @@ html {
   transition: opacity 600ms ease;
 }
 .orbit-globe-3d[data-docked="true"] { opacity: 1; }
+
+/* The marker globe (components/site/OrbitMarkerGlobe.tsx) is NOT the docked
+   globe and must not borrow its class. .orbit-globe-3d is opacity: 0 until
+   data-docked="true", an attribute only components/site/Globe3D sets as it
+   takes the handoff -- so reusing that class rendered this globe perfectly
+   and showed none of it. Caught on the live page: canvas 680x680, computed
+   opacity 0.
+
+   pointer-events: none, like the docked globe and for the same reason. The
+   OrbitControls in it rotate on drag, and on a phone a drag that spins the
+   planet instead of scrolling the page is a trap. The ring of destination
+   links above it stays clickable because it is a sibling, not a child. */
+.orbit-marker-globe {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
 @media (prefers-reduced-motion: reduce) {
   .orbit-globe-3d { transition: none; }
 }
