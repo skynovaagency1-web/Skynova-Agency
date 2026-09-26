@@ -68,7 +68,10 @@ const GUIDE_COUNT = POSTS.length;
  *  points put a wingtip off screen and the nose behind the headline. */
 const GLOBE_POSITIONS = {
   positions: [
-    { top: "52%", left: "76%", scale: 1.4 },
+    // The resting size in the hero, before any scroll. 1.4 put a 350px globe
+    // against a 1440px viewport, which read as an ornament beside the copy
+    // rather than the subject of the page.
+    { top: "52%", left: "76%", scale: 1.85 },
     { top: "26%", left: "78%", scale: 0.9 },
     { top: "50%", left: "50%", scale: 1.8 },
   ],
@@ -95,7 +98,10 @@ const GLOBE_POSITIONS = {
      to the faint opacity at a scale that would otherwise read as a
      companion. */
   narrowPositions: [
-    { top: "38%", left: "80%", scale: 0.75, role: "companion" as const, alignTo: ".scrollstage-title" },
+    // Raised with the desktop, but less far: this one has to bracket the
+    // headline and still clear the lede beneath it, and alignTo keeps it
+    // level with the headline's own box rather than a fixed fraction.
+    { top: "38%", left: "80%", scale: 0.95, role: "companion" as const, alignTo: ".scrollstage-title" },
     { top: "50%", left: "50%", scale: 1.3, role: "backdrop" as const },
     { top: "52%", left: "50%", scale: 1.6, role: "backdrop" as const },
   ],
@@ -108,15 +114,22 @@ const GLOBE_POSITIONS = {
  *  hero and that section into one render tree for no other reason. */
 const DOCK_TARGET = ".orbit-stage";
 
-/** How much of that stage the WebGL planet actually covers, so the globe
- *  arrives the same size rather than half again too big.
+/** How much of that stage the globe covers once it lands.
  *
- *  Derived, not eyeballed. Globe3D frames a sphere of radius 2.2 with a 38-deg
- *  perspective camera at z = 9.4, so the silhouette's half-angle is
- *  asin(2.2 / 9.4) = 13.53deg against a screen half-height of tan(19deg):
- *  tan(13.53deg) / tan(19deg) = 0.699. Docking to the full box instead put a
- *  680px disc over a 476px planet, which is exactly what it looked like. */
-const DOCK_FILL = 0.699;
+ *  0.699 UNTIL NOW, AND THAT NUMBER IS OBSOLETE. It was derived to match the
+ *  WebGL planet that used to fade in underneath -- Globe3D frames a sphere of
+ *  radius 2.2 with a 38-deg camera at z = 9.4, so its silhouette covered
+ *  tan(asin(2.2 / 9.4)) / tan(19deg) = 0.699 of the box, and arriving at any
+ *  other size put a disc over a planet that did not line up with it. That
+ *  planet is gone: this globe IS the one that lives on the stage now, so
+ *  there is nothing left to match and nothing left holding it small.
+ *
+ *  0.9 is set by the ring instead, which is the only real constraint. The
+ *  destination chips orbit at translateZ(clamp(200px, 46vw, 390px)) -- 390px
+ *  on a desktop -- and 0.9 of the 680px stage is a 612px globe, radius 306px.
+ *  That clears the chips by 84px. Past about 0.95 the globe starts reaching
+ *  the near-side chips as they swing across it. */
+const DOCK_FILL = 0.9;
 
 export function HeroStage() {
   const t = useT();
