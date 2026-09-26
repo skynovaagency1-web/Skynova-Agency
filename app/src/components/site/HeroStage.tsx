@@ -98,10 +98,25 @@ const GLOBE_POSITIONS = {
      to the faint opacity at a scale that would otherwise read as a
      companion. */
   narrowPositions: [
-    // Raised with the desktop, but less far: this one has to bracket the
-    // headline and still clear the lede beneath it, and alignTo keeps it
-    // level with the headline's own box rather than a fixed fraction.
-    { top: "38%", left: "80%", scale: 0.95, role: "companion" as const, alignTo: ".scrollstage-title" },
+    /* 0.8, and the ceiling here is geometry rather than taste.
+     *
+     * alignTo pins this globe to the headline's own centre, which is what
+     * "the globe and the headline at the same height" means and is why it
+     * exists. On a 375px screen that centre sits 17px above the lede. A globe
+     * of diameter d therefore reaches d/2 below the headline centre, and
+     * anything past 93px crosses into the lede's first line -- so "level with
+     * the headline" and "much bigger" cannot both be had here.
+     *
+     * Measured live at 0.95: a 143px globe, 25px into the lede. The 0.75 this
+     * replaced was already 10px in, so some overlap is the accepted state
+     * rather than a new fault -- the copy paints over the globe and stays
+     * legible either way. 0.8 is 120px and about 13px in: still larger than
+     * before, and no worse than what was already shipping.
+     *
+     * Clearing the lede outright needs the globe off the headline's line,
+     * which is a different design decision from this one.
+     */
+    { top: "38%", left: "80%", scale: 0.8, role: "companion" as const, alignTo: ".scrollstage-title" },
     { top: "50%", left: "50%", scale: 1.3, role: "backdrop" as const },
     { top: "52%", left: "50%", scale: 1.6, role: "backdrop" as const },
   ],
