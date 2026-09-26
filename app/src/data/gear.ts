@@ -235,3 +235,80 @@ export const GEAR: GearItem[] = [
 
 export const gearByCategory = (category: GearCategory): GearItem[] =>
   GEAR.filter((g) => g.category === category);
+
+/**
+ * Curated groups, which is the thing a boutique does that a category filter
+ * does not.
+ *
+ * Categories answer "what kind of object is this" -- bags, tech, comfort.
+ * These answer "what am I packing for", and they cut ACROSS categories on
+ * purpose: "Carry-on only" is a bag, a set of cubes, a toiletry case and a
+ * battery, and the point is precisely that they are not all bags. A product
+ * can belong to more than one.
+ *
+ * Every slug here is checked against GEAR at module load by gearCollection()
+ * below, so a typo or a product removed from GEAR cannot leave a collection
+ * quietly showing fewer items than it claims.
+ */
+export type GearCollection = {
+  slug: string;
+  title: { en: string; fr: string };
+  blurb: { en: string; fr: string };
+  items: string[];
+};
+
+export const GEAR_COLLECTIONS: GearCollection[] = [
+  {
+    slug: "carry-on-only",
+    title: { en: "Carry-on only", fr: "Cabine uniquement" },
+    blurb: {
+      en: "The bag that is the largest most airlines still accept, and the three things that make it hold a fortnight.",
+      fr: "Le plus grand sac encore accepté en cabine, et les trois objets qui lui font tenir deux semaines.",
+    },
+    items: [
+      "osprey-farpoint-40",
+      "eagle-creek-compression-cubes",
+      "matador-flatpak-toiletry",
+      "anker-power-bank",
+    ],
+  },
+  {
+    slug: "long-haul",
+    title: { en: "Long-haul comfort", fr: "Confort long-courrier" },
+    blurb: {
+      en: "Eleven hours in a seat that was not designed for sleeping. These are the four things that help.",
+      fr: "Onze heures dans un siège qui n’a pas été conçu pour dormir. Voici les quatre objets qui aident.",
+    },
+    items: ["trtl-pillow", "manta-sleep-mask", "everki-atlas", "epicka-universal-adapter"],
+  },
+  {
+    slug: "off-the-grid",
+    title: { en: "Off the grid", fr: "Loin de tout" },
+    blurb: {
+      en: "For trips where the tap water is a question and the nearest socket is a day away.",
+      fr: "Pour les voyages où l’eau du robinet pose question et où la prise la plus proche est à un jour de marche.",
+    },
+    items: ["grayl-geopress", "lifestraw-go", "anker-power-bank", "apple-airtag"],
+  },
+  {
+    slug: "city-days",
+    title: { en: "City days", fr: "Journées en ville" },
+    blurb: {
+      en: "Crowded streets, long days on foot, and everything you own in one bag you cannot see behind you.",
+      fr: "Rues bondées, longues journées à pied, et tout ce que vous possédez dans un sac que vous ne voyez pas.",
+    },
+    items: [
+      "pacsafe-crossbody",
+      "travel-document-organiser",
+      "apple-airtag",
+      "matador-flatpak-toiletry",
+    ],
+  },
+];
+
+/** A collection's real products, in the order the collection lists them.
+ *  Unknown slugs are dropped rather than rendered as holes. */
+export const gearCollectionItems = (collection: GearCollection): GearItem[] =>
+  collection.items
+    .map((slug) => GEAR.find((g) => g.slug === slug))
+    .filter((g): g is GearItem => Boolean(g));

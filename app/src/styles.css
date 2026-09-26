@@ -674,6 +674,172 @@ html {
 
 .hero-stage { position: sticky; top: 0; z-index: 1; height: 100dvh; min-height: 560px; overflow: hidden; }
 
+/* ---- Boutique (see routes/gear.tsx) ----
+   Layout follows Your Next Store (MIT): a banded head, curated collections
+   above the catalogue, and a square-tiled grid at one / two / three columns.
+
+   EVERY COLOUR HERE IS A TOKEN, and that is not a style preference. The first
+   version of this block was written in rgba(255,255,255,...) the way the
+   heroes are, because that is what I had been working in all day. /gear is
+   not a hero: it renders on --sky-bg, which is #ffffff by day. Measured on
+   the live page, the product names came out at a contrast ratio of 1.00 --
+   white on white, the entire catalogue invisible. The site also has a night
+   theme that redefines these tokens, so hardcoding either end would break the
+   other. */
+.boutique-head {
+  padding-block: clamp(2.5rem, 6vw, 4.5rem);
+  background: var(--sky-bg-raised);
+  border-bottom: 1px solid var(--sky-hairline);
+}
+.boutique-disclosure {
+  margin-top: 1.6rem;
+  max-width: 46rem;
+  border: 1px solid var(--sky-hairline);
+  border-radius: 0.75rem;
+  background: var(--sky-bg);
+  padding: 1rem;
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+
+.boutique-section-title {
+  font-size: clamp(1.35rem, 2.4vw, 1.9rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin-block-start: 2.5rem;
+  color: var(--sky-ink);
+}
+.boutique-section-blurb { margin-top: 0.5rem; max-width: 44rem; line-height: 1.7; }
+
+/* The collection rail. Real anchors to the sections below, so they work
+   before hydration and are crawlable. */
+.boutique-collections {
+  margin-top: 1.5rem;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) { .boutique-collections { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .boutique-collections { grid-template-columns: repeat(4, 1fr); } }
+.boutique-collection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.15rem;
+  border: 1px solid var(--sky-hairline);
+  border-radius: 1rem;
+  background: var(--sky-bg-raised);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.boutique-collection:hover {
+  border-color: var(--sky-coral);
+  transform: translateY(-2px);
+}
+.boutique-collection-count {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sky-ink-muted);
+}
+.boutique-collection-title { font-size: 1.05rem; font-weight: 500; color: var(--sky-ink); }
+.boutique-collection-blurb { font-size: 0.85rem; line-height: 1.6; }
+
+/* One, two, three columns -- the YNS grid. */
+.boutique-grid {
+  margin-top: 1.75rem;
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr;
+  list-style: none;
+  padding: 0;
+}
+@media (min-width: 640px) { .boutique-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1200px) { .boutique-grid { grid-template-columns: repeat(3, 1fr); } }
+
+.boutique-card { display: flex; flex-direction: column; }
+
+/* Square, because a grid of mixed heights stops reading as a shelf. The tint
+   is mixed INTO the raised surface rather than laid over it as alpha, so it
+   reads the same on either theme. */
+.boutique-media {
+  position: relative;
+  display: block;
+  aspect-ratio: 1 / 1;
+  border-radius: 1rem;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 100% at 50% 0%,
+      color-mix(in srgb, rgb(var(--tint)) 26%, var(--sky-bg-raised)) 0%,
+      var(--sky-bg-raised) 72%);
+  border: 1px solid var(--sky-hairline);
+  transition: border-color 0.2s ease, transform 0.25s ease;
+}
+.boutique-media:hover {
+  border-color: color-mix(in srgb, rgb(var(--tint)) 60%, transparent);
+  transform: translateY(-2px);
+}
+.boutique-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+/* The plate that stands in for a photograph. Typographic on purpose: it
+   states what the thing IS rather than pretending an image is loading. */
+.boutique-plate {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 1.5rem;
+  text-align: center;
+}
+.boutique-plate-maker {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  /* Mixed toward the ink rather than used raw: these tints are mid-toned and
+     several of them fail against a near-white ground on their own. */
+  color: color-mix(in srgb, rgb(var(--tint)) 55%, var(--sky-ink));
+}
+.boutique-plate-name {
+  font-size: clamp(1.1rem, 2.6vw, 1.6rem);
+  line-height: 1.2;
+  font-weight: 500;
+  color: var(--sky-ink);
+  text-wrap: balance;
+}
+
+.boutique-meta { display: flex; flex-direction: column; margin-top: 1rem; flex: 1; }
+.boutique-maker { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; }
+.boutique-name { margin-top: 0.2rem; font-size: 1.05rem; font-weight: 500; color: var(--sky-ink); }
+.boutique-why { margin-top: 0.6rem; font-size: 0.875rem; line-height: 1.65; flex: 1; }
+.boutique-cta { margin-top: 1.1rem; align-self: flex-start; }
+
+/* The filter chips were white-on-white too -- they predate this page's
+   rebuild and were carried over unexamined. */
+.boutique-chip {
+  border-radius: 999px;
+  border: 1px solid var(--sky-hairline);
+  background: var(--sky-bg);
+  color: var(--sky-ink-muted);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+.boutique-chip:hover { border-color: var(--sky-coral); color: var(--sky-ink); }
+.boutique-chip[aria-pressed="true"] {
+  background: var(--sky-ink);
+  border-color: var(--sky-ink);
+  color: var(--sky-bg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boutique-collection, .boutique-media { transition: none; }
+  .boutique-collection:hover, .boutique-media:hover { transform: none; }
+}
+
 /* ---- Orbit hero (see HeroOrbit.tsx) ----
    The WebGL globe as the hero rather than something scrolled to. No track, no
    hold: the stage is one screen and the page runs straight into TripSearch. */
