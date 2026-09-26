@@ -91,14 +91,25 @@ function Index() {
       <Nav />
       <main>
         <HeroStage />
-        <TripSearch />
-        <div ref={afterglowRef} className="hero-afterglow">
-          <TrustLineSection />
-          <AdvantagesSection />
+        {/* The hero's night ground, carried on.
+            The hero is dark and the page under it was cream, so the surface
+            changed the instant the globe left the stage. This run keeps the
+            same ground from the trip search down to "Popular Right Now",
+            where the page returns to daylight.
+            It is not just a background: every section in here is written for
+            a light ground and uses --sky-ink, so the class also flips the ink
+            tokens. Those values are the night theme's own, not a second set
+            invented for this -- see .night-run in styles.css. */}
+        <div className="night-run">
+          <TripSearch />
+          <div ref={afterglowRef} className="hero-afterglow">
+            <TrustLineSection />
+            <AdvantagesSection />
+          </div>
+          <VerticalExplorerSection />
+          <BookingSpecSection />
+          <TrustSection />
         </div>
-        <VerticalExplorerSection />
-        <BookingSpecSection />
-        <TrustSection />
         <DestinationSlider />
         <MarqueeBand />
         <TripCycle />

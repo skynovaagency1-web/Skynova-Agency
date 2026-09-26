@@ -6460,6 +6460,85 @@ html.lenis body { height: auto; }
    rest); the globe is a clamped layout size the section scales rather than a
    fixed pixel diameter; and the copy column is a max-width in ch, so it
    wraps at the same measure at every width. */
+/* ---- The night run (see routes/index.tsx) ----
+   The hero's ground, carried from the trip search down to "Popular Right
+   Now". The same background value as .herostage, deliberately: both the hero
+   gradient and this one begin and end on #16130d, so the seam where one meets
+   the other is that colour against itself and there is no visible join.
+
+   THE TOKENS MATTER MORE THAN THE BACKGROUND. Every section inside this run
+   -- the trip search, the afterglow, the two cloud-photo bands, the trust
+   strip -- is written against a light page and reads its colours from
+   --sky-ink and friends. Measured before this existed, all of them computed
+   to rgb(28, 26, 20): near-black, which on this ground is invisible. So the
+   class redefines the same tokens the night theme does.
+
+   THE VALUES ARE THE NIGHT THEME'S, copied rather than invented. That theme
+   is already a worked-out dark palette for these exact sections, with its
+   contrast ratios reasoned about in the comments beside it, and a second
+   dark palette would be a second thing to keep true. When the visitor also
+   turns night mode on, both selectors match and set the same values, so
+   nothing fights. */
+.night-run {
+  position: relative;
+  background:
+    radial-gradient(120% 78% at 50% 12%, #2a251c 0%, transparent 64%),
+    linear-gradient(180deg, #16130d 0%, #221d15 62%, #16130d 100%);
+  color: #f5f0e6;
+
+  --sky-bg: #100d08;
+  --sky-bg-raised: #1a150d;
+  --sky-line: #33291a;
+  --sky-ink: #f5efe2;
+  --sky-ink-muted: #b9ad96;
+  --sky-coral: #d9b13d;
+  --sky-coral-deep: #f3d78a;
+  --sky-coral-wash: rgba(217, 177, 61, 0.16);
+  --sky-glass-bg: rgba(26, 21, 13, 0.52);
+  --sky-glass-bg-strong: rgba(26, 21, 13, 0.82);
+  --sky-glass-edge: linear-gradient(
+    180deg,
+    rgba(255, 236, 190, 0.5) 0%,
+    rgba(255, 236, 190, 0.14) 22%,
+    rgba(255, 236, 190, 0) 42%,
+    rgba(255, 236, 190, 0) 58%,
+    rgba(255, 236, 190, 0.1) 78%,
+    rgba(255, 236, 190, 0.42) 100%
+  );
+  --sky-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5), 0 8px 20px -6px rgba(0, 0, 0, 0.6);
+  --sky-shadow-md: 0 2px 4px rgba(0, 0, 0, 0.5), 0 16px 32px -12px rgba(0, 0, 0, 0.66);
+  --sky-shadow-float:
+    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 18px 40px -16px rgba(0, 0, 0, 0.7),
+    0 44px 84px -44px rgba(0, 0, 0, 0.7);
+}
+
+/* The afterglow's gold is hardcoded rather than tokenised, so the token swap
+   alone would leave a bright wash across a dark run. These are the night
+   theme's values for the same element. */
+.night-run .hero-afterglow {
+  background:
+    radial-gradient(140% 180% at 12% -25%, rgba(90, 70, 28, 0.55), transparent 55%),
+    radial-gradient(120% 160% at 100% 130%, rgba(60, 46, 16, 0.5), transparent 60%),
+    linear-gradient(155deg, rgba(28, 22, 12, 0.92) 0%, rgba(22, 17, 9, 0.94) 32%, rgba(18, 14, 8, 0.95) 68%, rgba(16, 13, 8, 0.96) 100%);
+}
+.night-run .hero-afterglow::before {
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 236, 190, 0.12) 45%, rgba(255, 236, 190, 0.04) 52%, transparent 65%);
+}
+
+/* A PRE-EXISTING BUG, found by sweeping this run for contrast and true in
+   night mode too -- measured on the live page, the eyebrow computed to
+   rgb(28, 20, 0) under both.
+   .hero-afterglow sets `--sky-coral-deep: var(--sky-coral-ink)` because the
+   band used to be light gold and the eyebrow that reads this token had to go
+   dark on it. Once the band is dark that override hands the eyebrow near
+   black on near black: "Why Skynova" disappears. Both dark grounds put it
+   back to the night palette's light gold. */
+:root[data-theme="night"] .hero-afterglow,
+.night-run .hero-afterglow {
+  --sky-coral-deep: #f3d78a;
+}
+
 .herostage {
   position: relative;
   /* The same night stage the fly-in hero used, for the same reason: the
