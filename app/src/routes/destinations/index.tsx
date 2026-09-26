@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { Nav } from "@/components/site/Nav";
+import { DestinationCosmos } from "@/components/site/DestinationCosmos";
 import { useReveal } from "@/hooks/use-reveal";
 import { SmoothScroll } from "@/components/site/SmoothScroll";
 import { Footer } from "@/components/site/Footer";
@@ -128,6 +129,14 @@ function DestinationsIndex() {
             </p>
           </div>
         </section>
+
+        {/* Decoration between the heading and the real content: twelve
+            destination photos orbiting a particle sphere. Everything in a
+            canvas is invisible to a crawler, so it sits above the carousel and
+            the directory rather than replacing either -- those links are how
+            forty-two destination pages get found. Loads only on approach, and
+            not at all under reduced motion. */}
+        <DestinationCosmos />
 
         <section className="site-section pt-0">
           <div className="site-container">

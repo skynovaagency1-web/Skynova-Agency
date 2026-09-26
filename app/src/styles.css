@@ -2120,10 +2120,53 @@ html {
    OrbitControls in it rotate on drag, and on a phone a drag that spins the
    planet instead of scrolling the page is a trap. The ring of destination
    links above it stays clickable because it is a sibling, not a child. */
+/* ---- Destination cosmos (see DestinationCosmos.tsx) ----
+   A band, not a hero: tall enough for the sphere to read, short enough that
+   the carousel below it is still on screen on a laptop. The canvas is
+   transparent, so the ground is the page's own. */
+.destination-cosmos {
+  position: relative;
+  width: 100%;
+  height: clamp(300px, 52vh, 520px);
+  margin-bottom: 1rem;
+  /* Written from scroll by DestinationCosmos. The fallback is 1, not 0:
+     the band must be visible for anyone whose JavaScript never writes it,
+     and an invisible default is how three separate heroes in this codebase
+     shipped with nothing on screen. */
+  opacity: var(--cosmos-opacity, 1);
+  /* The sphere is 9 units across and the camera sits back from it, so the
+     cloud reaches the edges; fading them stops it ending on a hard line. */
+  mask-image: radial-gradient(75% 75% at 50% 50%, black 55%, transparent 100%);
+  -webkit-mask-image: radial-gradient(75% 75% at 50% 50%, black 55%, transparent 100%);
+}
+.destination-cosmos canvas {
+  display: block;
+}
+@media (max-width: 720px) {
+  /* Taller box on a phone, because the ring is framed by the SHORT edge --
+     the camera pulls back to fit its width, and without extra height the
+     sphere ends up a small disc floating in a wide letterbox. */
+  .destination-cosmos {
+    height: clamp(300px, 46vh, 420px);
+    mask-image: radial-gradient(85% 80% at 50% 50%, black 60%, transparent 100%);
+    -webkit-mask-image: radial-gradient(85% 80% at 50% 50%, black 60%, transparent 100%);
+  }
+}
+
 .orbit-marker-globe {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  /* Crossfades in as the hero's travelling globe lands on this stage and
+     fades out. data-docked is "true" on any page with no travelling stage,
+     so this is never stuck invisible -- the trap the previous version of this
+     class set for exactly one deploy. */
+  opacity: 0;
+  transition: opacity 520ms ease;
+}
+.orbit-marker-globe[data-docked="true"] { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .orbit-marker-globe { transition: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .orbit-globe-3d { transition: none; }

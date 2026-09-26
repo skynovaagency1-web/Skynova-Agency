@@ -1,5 +1,7 @@
 import { Suspense, lazy, useEffect, useRef, useState, useSyncExternalStore } from "react";
 
+import { onDockedChange } from "@/lib/globe-handoff";
+
 import type { GlobeMarker } from "@/components/ui/3d-globe";
 
 /**
@@ -37,6 +39,24 @@ export function OrbitMarkerGlobe({
   const [seen, setSeen] = useState(false);
 
   /**
+   * Hidden until the hero's travelling globe lands here.
+   *
+   * The same contract components/site/Globe3D.tsx follows, and it matters
+   * again now that HeroStage is the homepage hero: that hero flies a cheap CSS
+   * globe down the page and docks it onto this stage. With this globe simply
+   * always visible, the reader would watch one globe fly toward another globe
+   * already sitting in the target -- which is exactly the "two unrelated
+   * globes four thousand pixels apart" that lib/globe-handoff.ts was written
+   * to get rid of.
+   *
+   * On any page with no travelling stage the signal reports docked
+   * immediately, so this can never end up permanently invisible waiting for a
+   * handoff that is not coming.
+   */
+  const [docked, setDocked] = useState(true);
+  useEffect(() => onDockedChange(setDocked), []);
+
+  /**
    * No IntersectionObserver (a very old browser): load the globe rather than
    * leave an empty hole where it should be.
    *
@@ -72,7 +92,7 @@ export function OrbitMarkerGlobe({
   }, [noObserver]);
 
   return (
-    <div ref={holderRef} className={className}>
+    <div ref={holderRef} className={className} data-docked={docked ? "true" : "false"}>
       {near ? (
         <Suspense fallback={null}>
           <MarkerGlobe

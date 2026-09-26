@@ -2,18 +2,21 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { Nav } from "@/components/site/Nav";
-// The WebGL globe, on screen from the first paint. No scroll sequence to
-// reach it and no handoff: Globe3D reports itself docked whenever no
-// travelling stage is mounted, which is exactly this case. Five alternates
-// stay in the tree, unused: HeroPlay.tsx (the boarding clip played, with the
-// page held until it reached the window), Hero.tsx (that same footage
-// scrubbed frame-by-frame from scroll), ParallaxHero.tsx, HeroScroll.tsx the
-// plane fly-in (which also runs on /flights as FlightHeroScroll), and
-// HeroStage.tsx the scroll stage whose cheap globe flew down five screens to
-// hand over to the real planet. Swapping this one import is still the whole
-// switch, in any direction -- tests/landing-contract.test.ts names whichever
-// one is here and fails if it is not updated with it.
-import { HeroOrbit } from "@/components/site/HeroOrbit";
+// The scroll stage: Skynova's opening carried across four screens, with a
+// globe that travels between them and docks onto the "Fly anywhere" stage
+// further down, where the WebGL globe crossfades in underneath it
+// (lib/globe-handoff.ts). Built on components/ui/landing-page.tsx +
+// components/ui/globe.tsx.
+//
+// Five alternates stay in the tree, unused: HeroOrbit.tsx (the WebGL planet
+// standing still in the hero), HeroPlay.tsx (the boarding clip played, with
+// the page held until it reached the window), Hero.tsx (that same footage
+// scrubbed frame-by-frame from scroll), ParallaxHero.tsx, and HeroScroll.tsx
+// the plane fly-in (which also runs on /flights as FlightHeroScroll).
+// Swapping this one import is still the whole switch, in any direction --
+// tests/landing-contract.test.ts names whichever one is here and fails if it
+// is not updated with it.
+import { HeroStage } from "@/components/site/HeroStage";
 import { TripSearch } from "@/components/site/TripSearch";
 import { TrustSection } from "@/components/site/Sections2";
 import {
@@ -87,7 +90,7 @@ function Index() {
       <StructuredData json={HOME_SCHEMA} />
       <Nav />
       <main>
-        <HeroOrbit />
+        <HeroStage />
         <TripSearch />
         <div ref={afterglowRef} className="hero-afterglow">
           <TrustLineSection />
