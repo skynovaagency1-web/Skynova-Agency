@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Link } from "@tanstack/react-router";
-import { Home, MessageCircle, Heart, Gift, Share2, ChevronRight, MapPin, Newspaper, User, LogOut, Layers, Backpack } from "lucide-react";
+// Gift, Share2, MapPin, Newspaper, Layers and Backpack stay on lucide:
+// line-md is an interface set and has no animated counterpart for any of
+// them. See components/ui/animated-icon.tsx.
+import { Gift, Share2, MapPin, Newspaper, Layers, Backpack } from "lucide-react";
+import { AnimatedIcon } from "@/components/ui/animated-icon";
 
 import { useAuth } from "@/lib/auth-context";
 import { signOut } from "@/lib/api/auth.functions";
@@ -229,16 +233,16 @@ export function Nav() {
                 aria-expanded={accountOpen}
                 onClick={() => setAccountOpen((v) => !v)}
               >
-                <User size={18} />
+                <AnimatedIcon name="account" size={18} />
               </button>
               {accountOpen ? (
                 <div className="site-nav-dropdown-menu site-nav-account-menu">
                   <p className="site-nav-account-email">{user.email}</p>
                   <Link to="/account" className="site-nav-dropdown-item" onClick={() => setAccountOpen(false)}>
-                    <User size={15} /> {t("nav.yourAccount")}
+                    <AnimatedIcon name="account" size={15} /> {t("nav.yourAccount")}
                   </Link>
                   <button type="button" className="site-nav-dropdown-item site-nav-account-signout" onClick={handleSignOut}>
-                    <LogOut size={15} /> {t("nav.signOut")}
+                    <AnimatedIcon name="log-out" size={15} /> {t("nav.signOut")}
                   </button>
                 </div>
               ) : null}
@@ -279,10 +283,10 @@ export function Nav() {
         <div className="site-container site-mobile-menu-inner">
           <div className="mobile-menu-topbar">
             <Link to="/" className="mobile-menu-icon-btn" aria-label={t("nav.home")} onClick={() => setOpen(false)}>
-              <Home size={18} />
+              <AnimatedIcon name="home" size={18} />
             </Link>
             <Link to="/contact" className="mobile-menu-icon-btn" aria-label={t("nav.contact")} onClick={() => setOpen(false)}>
-              <MessageCircle size={18} />
+              <AnimatedIcon name="chat" size={18} />
             </Link>
           </div>
 
@@ -332,9 +336,9 @@ export function Nav() {
               tabIndex={open ? undefined : -1}
               onClick={() => setOpen(false)}
             >
-              <Heart size={20} />
+              <AnimatedIcon name="heart" size={20} />
               <span>{t("nav.wishlist")}</span>
-              <ChevronRight size={16} className="mobile-menu-row-chevron" />
+              <AnimatedIcon name="chevron-right" size={16} className="mobile-menu-row-chevron" />
             </Link>
             <Link
               to="/share"
@@ -345,7 +349,7 @@ export function Nav() {
             >
               <Share2 size={20} />
               <span>{t("nav.share")}</span>
-              <ChevronRight size={16} className="mobile-menu-row-chevron" />
+              <AnimatedIcon name="chevron-right" size={16} className="mobile-menu-row-chevron" />
             </Link>
           </div>
 
@@ -359,7 +363,7 @@ export function Nav() {
             >
               <Gift size={20} />
               <span>{t("nav.gift")}</span>
-              <ChevronRight size={16} className="mobile-menu-row-chevron" />
+              <AnimatedIcon name="chevron-right" size={16} className="mobile-menu-row-chevron" />
             </Link>
           </div>
 
@@ -375,7 +379,7 @@ export function Nav() {
               >
                 <l.icon size={20} />
                 <span>{"labelKey" in l ? t(l.labelKey) : l.label}</span>
-                <ChevronRight size={16} className="mobile-menu-row-chevron" />
+                <AnimatedIcon name="chevron-right" size={16} className="mobile-menu-row-chevron" />
               </Link>
             ))}
           </div>
@@ -391,7 +395,7 @@ export function Nav() {
                 onClick={() => setOpen(false)}
               >
                 <span>{t(l.labelKey)}</span>
-                <ChevronRight size={16} className="mobile-menu-row-chevron" />
+                <AnimatedIcon name="chevron-right" size={16} className="mobile-menu-row-chevron" />
               </Link>
             ))}
           </div>

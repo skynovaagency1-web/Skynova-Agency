@@ -1,5 +1,5 @@
 import type { MouseEvent } from "react";
-import { Heart } from "lucide-react";
+import { AnimatedIcon } from "@/components/ui/animated-icon";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { useAuth } from "@/lib/auth-context";
@@ -85,7 +85,13 @@ export function WishlistButton({
       aria-pressed={isSaved}
       aria-label={isSaved ? "Remove from wishlist" : "Save to wishlist"}
     >
-      <Heart size={variant === "inline" ? 18 : 16} fill={isSaved ? "currentColor" : "none"} />
+      {/* Two icons rather than one with a fill prop: line-md draws its outline
+          and its filled form as different paths, and the swap replays the
+          animation, so saving something draws the heart in. */}
+      <AnimatedIcon
+        name={isSaved ? "heart-filled" : "heart"}
+        size={variant === "inline" ? 18 : 16}
+      />
       {variant === "inline" ? <span>{label ?? (isSaved ? "Saved" : "Save")}</span> : null}
     </button>
   );

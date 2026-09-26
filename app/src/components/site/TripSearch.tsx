@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Search } from "lucide-react";
+import { AnimatedIcon } from "@/components/ui/animated-icon";
 
 import { SEARCH_OPTIONS, resolvePlace } from "@/data/search-cities";
 import { flightsLink, hotelsLink, carRentalLink, toursLink, esimLink } from "@/lib/affiliate";
@@ -179,7 +179,7 @@ export function TripSearch() {
               className="btn-hero-pill trip-search-go"
             >
               <span className="spark" />
-              <Search size={17} aria-hidden="true" />
+              <AnimatedIcon name="search" size={17} />
               <span>{t("search.go", { what: t(active.labelKey).toLowerCase() })}</span>
             </a>
           </div>
