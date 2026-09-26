@@ -249,7 +249,7 @@ function ProductTile({
         <p className="site-ink-muted boutique-maker">{item.maker}</p>
         <h3 className="boutique-name">{item.name}</h3>
         <p className="site-ink-muted boutique-why">{item.why[lang]}</p>
-        <a className="site-btn-secondary boutique-cta" href={href} target="_blank" rel={rel}>
+        <a className="boutique-cta" href={href} target="_blank" rel={rel}>
           {t("gear.check")}
         </a>
       </div>
