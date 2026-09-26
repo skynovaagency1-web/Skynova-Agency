@@ -42,7 +42,7 @@ describe("scroll-scrub website landing contract", () => {
     // reason -- once when the template's name was left behind, once when the
     // hero was swapped without this suite being run -- and caught the swap
     // cleanly the third time.
-    expect(landingRoute).toContain("<HeroGlobeFlight />");
+    expect(landingRoute).toContain("<HeroStage />");
     expect(landingRoute).not.toContain("PromptBox");
     expect(landingRoute).not.toContain("UserGenerations");
     expect(appRoute).toContain('createFileRoute("/app")');

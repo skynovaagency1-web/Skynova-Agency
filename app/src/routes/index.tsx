@@ -16,7 +16,7 @@ import { Nav } from "@/components/site/Nav";
 // this one import is still the whole switch, in any direction --
 // tests/landing-contract.test.ts names whichever one is here and fails if it
 // is not updated with it.
-import { HeroGlobeFlight } from "@/components/site/HeroGlobeFlight";
+import { HeroStage } from "@/components/site/HeroStage";
 import { TripSearch } from "@/components/site/TripSearch";
 import { TrustSection } from "@/components/site/Sections2";
 import {
@@ -90,7 +90,7 @@ function Index() {
       <StructuredData json={HOME_SCHEMA} />
       <Nav />
       <main>
-        <HeroGlobeFlight />
+        <HeroStage />
         {/* The hero's night ground, carried on.
             The hero is dark and the page under it was cream, so the surface
             changed the instant the globe left the stage. This run keeps the

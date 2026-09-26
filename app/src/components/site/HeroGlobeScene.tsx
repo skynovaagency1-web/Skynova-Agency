@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
@@ -31,15 +31,19 @@ import {
 const RADIUS = 1;
 const IDLE_SPIN = 0.045; // radians per second, before anyone scrolls
 
-/** Configured by the loader rather than in render: mutating a texture the
- *  component does not own is impure, and the compiler rejects it outright. */
-function configureTextures(loaded: THREE.Texture | THREE.Texture[]) {
-  const [map, bump] = Array.isArray(loaded) ? loaded : [loaded];
-  if (map) {
-    map.colorSpace = THREE.SRGBColorSpace;
-    map.anisotropy = 8;
-  }
-  if (bump) bump.anisotropy = 4;
+/**
+ * Configured by the loader rather than in render: mutating a texture the
+ * component does not own is impure, and the compiler rejects it outright.
+ *
+ * anisotropy 4, not 8. It costs extra samples per fragment on a surface that
+ * fills the whole screen at the end of the flight, and the globe is never
+ * viewed at the grazing angles anisotropic filtering exists for.
+ */
+function configureTexture(loaded: THREE.Texture | THREE.Texture[]) {
+  const map = Array.isArray(loaded) ? loaded[0] : loaded;
+  if (!map) return;
+  map.colorSpace = THREE.SRGBColorSpace;
+  map.anisotropy = 4;
 }
 
 /** Fresnel rim, on the back face of a slightly larger sphere. */
@@ -72,15 +76,128 @@ function atmosphereMaterial(intensity: number) {
   });
 }
 
-function Flight({ progressRef }: { progressRef: { current: number } }) {
+/**
+ * The real Earth: the glTF already in this repo, the one the Fly-anywhere
+ * globe uses. A normal map, a roughness map, a cloud shell that drifts over
+ * the surface, and its own atmosphere.
+ *
+ * LOADED WITH three's OWN GLTFLoader, NOT drei's useGLTF, and that is not a
+ * style preference. useGLTF installs a meshopt decoder, which instantiates
+ * WebAssembly. This site's Content-Security-Policy is
+ * `script-src 'self' 'unsafe-inline' ...` with no wasm-unsafe-eval, so the
+ * instantiate throws, the promise rejects, and the rejection takes the whole
+ * scene module with it -- the canvas mounts, the textures load, and nothing
+ * is ever drawn. That is exactly what happened, and it killed the plain
+ * sphere too, on a viewport that never asked for the model.
+ *
+ * The CSP is not the thing to change. It is covered by
+ * tests/security-headers.test.ts, and widening script-src to run WebAssembly
+ * so a decorative globe can use a decoder it does not need is a bad trade.
+ * components/site/Globe3D.tsx has loaded this same file with the plain loader
+ * all along, which is why it has always worked.
+ *
+ * THE SPHERE SHOWS UNTIL THE MODEL ARRIVES. 3.18MB is a long time to look at
+ * an empty hero, so the cheap textured globe renders immediately and is
+ * replaced the moment the real one is ready.
+ */
+function EarthLayer({ narrow, map }: { narrow: boolean; map: THREE.Texture }) {
+  const [model, setModel] = useState<THREE.Object3D | null>(null);
+  const live = useRef<{ cloudLayer: THREE.Object3D | null }>({ cloudLayer: null });
+
+  useEffect(() => {
+    // A phone never loads it at all: 3.18MB and two extra spheres of overdraw
+    // are the first things to go when the budget is small.
+    if (narrow) return;
+    let cancelled = false;
+
+    void (async () => {
+      const { GLTFLoader } = await import("three/examples/jsm/loaders/GLTFLoader.js");
+      const gltf = await new GLTFLoader().loadAsync("/assets/models/earth.glb").catch(() => null);
+      if (cancelled || !gltf) return;
+
+      const root = gltf.scene;
+      let cloudLayer: THREE.Object3D | null = null;
+
+      root.traverse((child) => {
+        const mesh = child as THREE.Mesh;
+        if (!mesh.isMesh) return;
+
+        // These two ship with NO material -- confirmed by reading the file:
+        // it declares only `earth_surface` and `clouds` -- and glTF renders a
+        // missing material as opaque white. The atmosphere shell alone
+        // (r = 1.085) would cover the Earth completely. Matched by name so a
+        // re-export can reorder meshes safely.
+        if (mesh.name === "city_lights") {
+          mesh.visible = false;
+          return;
+        }
+        if (mesh.name === "atmosphere") {
+          mesh.material = new THREE.MeshBasicMaterial({
+            color: new THREE.Color("#7fb2ff"),
+            transparent: true,
+            opacity: 0.16,
+            side: THREE.BackSide,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          });
+          return;
+        }
+        if (mesh.name === "clouds") {
+          cloudLayer = mesh;
+          const mat = mesh.material as THREE.MeshStandardMaterial;
+          // Authored alphaMode BLEND, but depthWrite has to go too or the
+          // shell punches a hole in the Earth behind it -- Globe3D's note.
+          mat.transparent = true;
+          mat.depthWrite = false;
+        }
+      });
+
+      live.current = { cloudLayer };
+      setModel(root);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [narrow]);
+
+  useFrame((_, delta) => {
+    // Clouds drift a touch faster than the surface, so they read as weather
+    // rather than as paint on the globe.
+    const layer = live.current.cloudLayer;
+    if (layer?.visible) layer.rotation.y += delta * 0.008;
+  });
+
+  if (model) return <primitive object={model} />;
+
+  return (
+    <mesh>
+      <sphereGeometry args={[RADIUS, 48, 48]} />
+      {/* Lambert, not standard: meshStandardMaterial runs a full BRDF per
+          fragment, and at the end of this flight that is every pixel on
+          screen. A globe lit by one key light does not need it. */}
+      <meshLambertMaterial map={map} />
+    </mesh>
+  );
+}
+
+function Flight({ progressRef, narrow }: { progressRef: { current: number }; narrow: boolean }) {
   const globe = useRef<THREE.Group>(null);
   const marker = useRef<THREE.Mesh>(null);
   const halo = useRef<THREE.Mesh>(null);
 
-  const [map, bump] = useTexture(
-    ["/assets/globe/earth-map.jpg", "/assets/globe/earth-bump.png"],
-    configureTextures,
-  );
+  /* ONE TEXTURE, AND A SMALLER ONE. The map was 4096x2048 -- 8.4M pixels,
+     34MB of GPU memory once decoded, for a sphere that is at most a screen
+     wide. It is 2048x1024 now: 8MB, a quarter of the decode, and 455KB over
+     the wire instead of 1.4MB.
+     The bump map is gone entirely. It was another 8MB resident and a
+     derivative computation in every fragment of a surface that fills the
+     viewport at the end of the flight, to add relief that is invisible from
+     orbit. */
+  /* Loaded on both paths because a hook cannot be conditional, and cheap
+     enough at 455KB that the desktop paying for it is not worth a second
+     component to avoid. */
+  const map = useTexture("/assets/globe/earth-map.jpg", configureTexture);
 
   /** Where Paris sits on the sphere, and the rotation that brings it to face
    *  the camera. Quaternions rather than euler angles: slerping between two
@@ -94,6 +211,7 @@ function Flight({ progressRef }: { progressRef: { current: number } }) {
   }, []);
 
   const atmosphere = useMemo(() => atmosphereMaterial(0.9), []);
+  const atmosphereMesh = useRef<THREE.Mesh>(null);
 
   /* Scratch objects for the frame loop, in REFS rather than useMemo.
      They are written on every frame, and a useMemo result is a render value:
@@ -149,20 +267,30 @@ function Flight({ progressRef }: { progressRef: { current: number } }) {
       halo.current.visible = glow > 0.01;
       halo.current.scale.setScalar(1 + glow * 0.5);
     }
+    /* The atmosphere is a second full-screen pass: a transparent back-faced
+       sphere larger than the globe, so close in it covers everything the
+       planet does, twice. Fading it with the approach removes that overdraw
+       exactly when the globe is biggest -- and it is what the eye expects
+       anyway, since you do not see a halo from inside the atmosphere. */
+    const shell = atmosphereMesh.current;
+    if (shell) {
+      const mat = shell.material as THREE.ShaderMaterial;
+      mat.uniforms.intensity.value = 0.9 * (1 - f.approach * 0.85);
+      shell.visible = f.approach < 0.98;
+    }
     void delta;
   });
 
   return (
     <>
-      <ambientLight intensity={0.55} />
-      <directionalLight position={[4, 2, 5]} intensity={1.6} />
-      <directionalLight position={[-3, 1, -2]} intensity={0.4} color="#8bb8ff" />
+      {/* Two lights, not three. Each one is per-fragment work on a surface
+          that fills the screen; the blue rim fill was doing a job the
+          atmosphere already does. */}
+      <ambientLight intensity={0.62} />
+      <directionalLight position={[4, 2, 5]} intensity={1.5} />
 
       <group ref={globe}>
-        <mesh>
-          <sphereGeometry args={[RADIUS, 64, 64]} />
-          <meshStandardMaterial map={map} bumpMap={bump} bumpScale={0.02} roughness={0.85} metalness={0} />
-        </mesh>
+        <EarthLayer narrow={narrow} map={map} />
 
         {/* Paris. Sitting just off the surface so it is never z-fought by the
             sphere it belongs to. */}
@@ -176,7 +304,7 @@ function Flight({ progressRef }: { progressRef: { current: number } }) {
         </mesh>
       </group>
 
-      <mesh scale={[1.14, 1.14, 1.14]}>
+      <mesh ref={atmosphereMesh} scale={[1.14, 1.14, 1.14]}>
         <sphereGeometry args={[RADIUS, 48, 32]} />
         <primitive object={atmosphere} attach="material" />
       </mesh>
@@ -189,17 +317,21 @@ export default function HeroGlobeScene({
 }: {
   progressRef: { current: number };
 }) {
+  /* Every pixel of this canvas runs the globe's fragment shader, and at the
+     end of the flight the globe covers all of them. Device pixel ratio is
+     therefore the single biggest lever on cost: 1.25 instead of 2 is roughly
+     60% fewer fragments. Narrow screens are both the slowest devices and the
+     ones where the difference is least visible. */
+  const narrow = typeof window !== "undefined" && window.matchMedia("(max-width: 900px)").matches;
+
   return (
     <Canvas
-      /* dpr capped at 1.6 rather than 2: this is a full-bleed hero, and the
-         difference between 1.6x and 2x on a phone is invisible where the cost
-         of the extra pixels is not. */
-      dpr={[1, 1.6]}
+      dpr={narrow ? [1, 1.25] : [1, 1.5]}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       camera={{ fov: FOV_FAR, near: 0.01, far: 100, position: [0, 0, CAMERA_FAR] }}
       style={{ background: "transparent" }}
     >
-      <Flight progressRef={progressRef} />
+      <Flight progressRef={progressRef} narrow={narrow} />
     </Canvas>
   );
 }
