@@ -48,8 +48,29 @@ const COSMOS_IMAGES = [
  * scaled up to compensate, so they end up roughly the same size on screen
  * rather than shrinking to nothing.
  */
-const DESKTOP = { position: [-10, 1.5, 10] as const, fov: 50, imageSize: 1.5 };
-const PHONE = { position: [-13.5, 2, 13.5] as const, fov: 62, imageSize: 2.3 };
+/*
+ * Sized so a card is actually readable, which the supplied framing was not.
+ *
+ * The arithmetic, because eyeballing this through a hidden browser pane is
+ * not available. Visible height in world units is 2 * distance *
+ * tan(fov / 2); pixels per world unit is the band's height divided by that;
+ * a card is imageSize world units across.
+ *
+ *   before, desktop:  d 14.1, fov 50, band 468px -> 35 px/unit -> card  53px
+ *   after,  desktop:  d 12.0, fov 50, band 700px -> 62 px/unit -> card 198px
+ *   after,  phone:    d 13.0, fov 55, band 420px -> 31 px/unit -> card 112px
+ *
+ * imageSize tops out around 3.5: twelve cards on a ring of radius 9 are 4.7
+ * units apart, so beyond that they start touching and the ring reads as a
+ * band rather than as separate photographs.
+ *
+ * The phone no longer tries to fit the whole ring. Fitting it meant a camera
+ * so far back that every card was a stamp; showing four or five large ones
+ * and letting the rest run past the edge is the better trade, and the mask on
+ * .destination-cosmos fades those edges anyway.
+ */
+const DESKTOP = { position: [-8.5, 1.2, 8.5] as const, fov: 50, imageSize: 3.2 };
+const PHONE = { position: [-9.2, 1.4, 9.2] as const, fov: 55, imageSize: 3.5 };
 
 function readNarrow() {
   return window.matchMedia("(max-width: 720px)").matches;

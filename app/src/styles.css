@@ -2127,8 +2127,11 @@ html {
 .destination-cosmos {
   position: relative;
   width: 100%;
-  height: clamp(300px, 52vh, 520px);
-  margin-bottom: 1rem;
+  /* Taller than a band now: the cards are the point of this, and at the old
+     height each one landed at about 53 CSS pixels -- present, but not
+     something you could see. */
+  height: clamp(420px, 68vh, 760px);
+  margin-bottom: 1.5rem;
   /* Written from scroll by DestinationCosmos. The fallback is 1, not 0:
      the band must be visible for anyone whose JavaScript never writes it,
      and an invisible default is how three separate heroes in this codebase
@@ -2136,8 +2139,8 @@ html {
   opacity: var(--cosmos-opacity, 1);
   /* The sphere is 9 units across and the camera sits back from it, so the
      cloud reaches the edges; fading them stops it ending on a hard line. */
-  mask-image: radial-gradient(75% 75% at 50% 50%, black 55%, transparent 100%);
-  -webkit-mask-image: radial-gradient(75% 75% at 50% 50%, black 55%, transparent 100%);
+  mask-image: radial-gradient(92% 88% at 50% 50%, black 72%, transparent 100%);
+  -webkit-mask-image: radial-gradient(92% 88% at 50% 50%, black 72%, transparent 100%);
 }
 .destination-cosmos canvas {
   display: block;
@@ -2147,9 +2150,9 @@ html {
      the camera pulls back to fit its width, and without extra height the
      sphere ends up a small disc floating in a wide letterbox. */
   .destination-cosmos {
-    height: clamp(300px, 46vh, 420px);
-    mask-image: radial-gradient(85% 80% at 50% 50%, black 60%, transparent 100%);
-    -webkit-mask-image: radial-gradient(85% 80% at 50% 50%, black 60%, transparent 100%);
+    height: clamp(360px, 56vh, 480px);
+    mask-image: radial-gradient(96% 92% at 50% 50%, black 76%, transparent 100%);
+    -webkit-mask-image: radial-gradient(96% 92% at 50% 50%, black 76%, transparent 100%);
   }
 }
 
